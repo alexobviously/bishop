@@ -1,5 +1,6 @@
 import 'betza.dart';
 import 'move_definition.dart';
+import 'variant.dart';
 
 class PieceType {
   final String? betza;
@@ -15,6 +16,15 @@ class PieceType {
     this.royal = false,
     this.promotable = false,
   });
+
+  void normalise(BoardSize boardSize) {
+    for (MoveDefinition m in quietMoves) {
+      m.normalised = m.direction.v * boardSize.h + m.direction.h;
+    }
+    for (MoveDefinition m in captureMoves) {
+      m.normalised = m.direction.v * boardSize.h + m.direction.h;
+    }
+  }
 
   factory PieceType.fromBetza(String betza, {bool royal = false, bool promotable = false}) {
     List<Atom> atoms = Betza.parse(betza);

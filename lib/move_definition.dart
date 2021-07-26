@@ -5,6 +5,8 @@ class MoveDefinition {
   final bool firstOnly;
   final bool lame;
 
+  late int normalised;
+
   bool get slider => range != 1;
 
   MoveDefinition({

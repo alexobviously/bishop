@@ -17,7 +17,13 @@ class Variant {
     this.castleTarget,
     required this.startPosition,
     this.promotion = false,
-  });
+  }) {
+    normalisePieces();
+  }
+
+  void normalisePieces() {
+    pieceTypes.forEach((_, p) => p.normalise(boardSize));
+  }
 
   factory Variant.standard() {
     return Variant(
@@ -42,6 +48,7 @@ class Variant {
 class BoardSize {
   final int h;
   final int v;
+  int get numSquares => h * v;
   const BoardSize(this.h, this.v);
   factory BoardSize.standard() => BoardSize(8, 8);
 }
