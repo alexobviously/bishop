@@ -6,15 +6,17 @@ class PieceType {
   final List<MoveDefinition> quietMoves;
   final List<MoveDefinition> captureMoves;
   final bool royal;
+  final bool promotable;
 
   PieceType({
     this.betza,
     required this.quietMoves,
     required this.captureMoves,
     this.royal = false,
+    this.promotable = false,
   });
 
-  factory PieceType.fromBetza(String betza, {bool royal = false}) {
+  factory PieceType.fromBetza(String betza, {bool royal = false, bool promotable = false}) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> quietMoves = [];
     List<MoveDefinition> captureMoves = [];
@@ -36,6 +38,7 @@ class PieceType {
       quietMoves: quietMoves,
       captureMoves: captureMoves,
       royal: royal,
+      promotable: promotable,
     );
   }
 
@@ -44,12 +47,18 @@ class PieceType {
   factory PieceType.rook() => PieceType.fromBetza('R');
   factory PieceType.queen() => PieceType.fromBetza('Q');
   factory PieceType.king() => PieceType.fromBetza('K', royal: true);
-  factory PieceType.pawn() => PieceType.fromBetza('fmWfceFifmnD'); // seriously
+  factory PieceType.pawn() => PieceType.fromBetza('fmWfceFifmnD', promotable: true); // seriously
   factory PieceType.knibis() => PieceType.fromBetza('mNcB');
+  factory PieceType.biskni() => PieceType.fromBetza('mBcN');
+  factory PieceType.kniroo() => PieceType.fromBetza('mNcR');
+  factory PieceType.rookni() => PieceType.fromBetza('mRcN');
+  factory PieceType.archbishop() => PieceType.fromBetza('BN');
+  factory PieceType.chancellor() => PieceType.fromBetza('RN');
+  factory PieceType.amazon() => PieceType.fromBetza('QN');
 }
 
 main(List<String> args) {
-  PieceType pt = PieceType.king();
+  PieceType pt = PieceType.amazon();
   print(pt.quietMoves);
   print(pt.captureMoves);
 }

@@ -7,6 +7,7 @@ class Variant {
   final bool castling;
   final String? castleTarget;
   final String startPosition;
+  final bool promotion;
 
   Variant({
     required this.name,
@@ -15,6 +16,7 @@ class Variant {
     this.castling = false,
     this.castleTarget,
     required this.startPosition,
+    this.promotion = false,
   });
 
   factory Variant.standard() {
@@ -24,6 +26,7 @@ class Variant {
       castling: true,
       castleTarget: 'R',
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      promotion: true,
       pieceTypes: {
         'P': PieceType.pawn(),
         'N': PieceType.knight(),
