@@ -161,7 +161,7 @@ class Game {
     for (MoveDefinition md in pieceType.moves) {
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       for (int i = 0; i < range; i++) {
-        int to = square + md.normalised * dirMult;
+        int to = square + md.normalised * (i + 1) * dirMult;
         if (!onBoard(to, variant.boardSize)) break;
         Square target = board[to];
         bool setEnPassant = variant.enPassant && md.firstOnly && pieceType.enPassantable;
