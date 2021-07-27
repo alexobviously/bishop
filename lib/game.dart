@@ -19,8 +19,8 @@ class Game {
   int? castlingTargetQ;
   int? royalFile;
 
-  Game({required this.variant}) {
-    startPosition = variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition;
+  Game({required this.variant, String? fen}) {
+    startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
     buildBoard();
     if (variant.castling) setupCastling();
   }
