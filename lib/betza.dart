@@ -112,7 +112,7 @@ class Atom {
       if (allDirs || dirMods.contains('f') || dirMods.contains('v')) dirs.add(Direction(0, m));
       if (allDirs || dirMods.contains('b') || dirMods.contains('v')) dirs.add(Direction(0, -m));
       if (allDirs || dirMods.contains('r') || dirMods.contains('s')) dirs.add(Direction(m, 0));
-      if (allDirs || dirMods.contains('l') || dirMods.contains('s')) dirs.add(Direction(m, 0));
+      if (allDirs || dirMods.contains('l') || dirMods.contains('s')) dirs.add(Direction(-m, 0));
     }
     if (baseDir.diagonal) {
       bool vert = allDirs || dirMods.contains('v');
