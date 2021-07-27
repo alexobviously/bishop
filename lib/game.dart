@@ -13,7 +13,7 @@ class Game {
   late List<int> board;
   late String startPosition;
   List<State> history = [];
-  State get currentState => history.last;
+  State get state => history.last;
 
   Game({required this.variant}) {
     startPosition = variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition;
@@ -94,10 +94,10 @@ class Game {
       if (empty > 0) addEmptySquares();
       if (i < variant.boardSize.v - 1) _fen = '$_fen/';
     }
-    String _turn = currentState.turn == WHITE ? 'w' : 'b';
-    String _castling = currentState.castling.formatted;
-    String _ep = currentState.epSquare != null ? squareName(currentState.epSquare!, variant.boardSize) : '-';
-    _fen = '$_fen $_turn $_castling $_ep ${currentState.halfMoves} ${currentState.fullMoves}';
+    String _turn = state.turn == WHITE ? 'w' : 'b';
+    String _castling = state.castling.formatted;
+    String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
+    _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
     return _fen;
   }
 
@@ -146,13 +146,13 @@ class Game {
         int to = square + md.normalised * dirMult;
         if (!onBoard(to)) break;
         Square target = board[to];
-        bool setEnPassant = md.firstOnly && pieceType.enPassantable;
+        bool setEnPassant = variant.enPassant && md.firstOnly && pieceType.enPassantable;
 
         if (target.isEmpty) {
           if (md.quiet) {
-            Move m = Move(to: to, from: from);
+            Move m = Move(to: to, from: from, setEnPassant: setEnPassant);
             moves.add(m);
-          } else if (variant.enPassant && md.enPassant && currentState.epSquare == to) {
+          } else if (variant.enPassant && md.enPassant && state.epSquare == to) {
             Move m = Move(
               to: to,
               from: from,
