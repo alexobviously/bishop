@@ -1,5 +1,7 @@
 import 'castling_rights.dart';
 import 'constants.dart';
+import 'move.dart';
+import 'move_definition.dart';
 import 'piece_type.dart';
 import 'square.dart';
 import 'state.dart';
@@ -116,5 +118,45 @@ class Game {
     }
     output = '$output$border';
     return output;
+  }
+
+  List<Move> generateMoves() {
+    List<Move> moves = [];
+    for (int i = 0; i < board.length; i++) {
+      if (board[i].isNotEmpty) {}
+    }
+    return moves;
+  }
+
+  List<Move> generatePieceMoves(int square) {
+    Square piece = board[square];
+    if (piece.isEmpty) return [];
+    Colour colour = piece.colour;
+
+    List<Move> moves = [];
+    PieceType pieceType = variant.pieces[piece.piece].type;
+    for (MoveDefinition md in pieceType.moves) {
+      int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
+      int from = square;
+      for (int i = 0; i < range; i++) {
+        int to = square + md.normalised;
+
+        if (md.direction.oblique) {}
+
+        if (to.isEmpty) {
+          if (md.quiet) {
+            Move m = Move(to: to, from: from);
+            moves.add(m);
+          } else {
+            break;
+          }
+        }
+        if (to.colour == colour) {
+          break;
+        } else {}
+      }
+    }
+
+    return moves;
   }
 }

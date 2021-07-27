@@ -125,6 +125,8 @@ class BoardSize {
   final int h;
   final int v;
   int get numSquares => h * v;
+  int get minDim => min(h, v);
+  int get maxDim => max(h, v);
   const BoardSize(this.h, this.v);
   factory BoardSize.standard() => BoardSize(8, 8);
 }
