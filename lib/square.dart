@@ -17,7 +17,7 @@ Square makePiece(int piece, Colour colour, [int flags = 0]) {
 }
 
 String squareName(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
-  int rank = square ~/ (boardSize.h * 2) + 1;
+  int rank = boardSize.v - (square ~/ (boardSize.h * 2));
   int file = square % (boardSize.h * 2);
   String fileName = String.fromCharCode(ASCII_a + file);
   return '$fileName$rank';
@@ -32,13 +32,14 @@ int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   String file = match!.group(1)!;
   String rank = match.group(2)!;
   int _file = file.codeUnits[0] - ASCII_a;
-  int _rank = int.parse(rank) - 1;
+  int _rank = boardSize.v - int.parse(rank);
   int square = _rank * boardSize.h * 2 + _file;
   return square;
 }
 
 // TODO: find a clever bitwise way to do this, like 0x88
 bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
+  if (square < 0) return false;
   if (square >= boardSize.numSquares * 2) return false;
   int x = square % (boardSize.h * 2);
   return x < boardSize.h;

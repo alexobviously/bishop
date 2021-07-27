@@ -120,10 +120,14 @@ class Game {
     return output;
   }
 
-  List<Move> generateMoves() {
+  List<Move> generatePlayerMoves(int player) {
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
-      if (board[i].isNotEmpty) {}
+      Square target = board[i];
+      if (target.isNotEmpty && target.colour == player) {
+        List<Move> pieceMoves = generatePieceMoves(i);
+        moves.addAll(pieceMoves);
+      }
     }
     return moves;
   }
@@ -132,28 +136,38 @@ class Game {
     Square piece = board[square];
     if (piece.isEmpty) return [];
     Colour colour = piece.colour;
-
+    int dirMult = PLAYER_DIRECTION[piece.colour];
     List<Move> moves = [];
     PieceType pieceType = variant.pieces[piece.piece].type;
     for (MoveDefinition md in pieceType.moves) {
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       int from = square;
       for (int i = 0; i < range; i++) {
-        int to = square + md.normalised;
+        int to = square + md.normalised * dirMult;
+        if (!onBoard(to)) break;
+        Square target = board[to];
 
-        if (md.direction.oblique) {}
-
-        if (to.isEmpty) {
+        if (target.isEmpty) {
           if (md.quiet) {
             Move m = Move(to: to, from: from);
+            moves.add(m);
+          } else if (variant.enPassant && md.enPassant && currentState.epSquare == to) {
+            Move m = Move(to: to, from: from, capturedPiece: makePiece(variant.epPiece, colour), enPassant: true);
             moves.add(m);
           } else {
             break;
           }
+          continue;
         }
-        if (to.colour == colour) {
+        if (target.colour == colour) {
           break;
-        } else {}
+        } else {
+          if (md.capture) {
+            Move m = Move(to: to, from: from, capturedPiece: target);
+            moves.add(m);
+          }
+          break;
+        }
       }
     }
 

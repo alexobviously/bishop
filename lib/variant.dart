@@ -12,8 +12,10 @@ class Variant {
   final String? startPosition;
   final Function()? startPosBuilder;
   final bool promotion;
+  final bool enPassant;
 
   late List<PieceDefinition> pieces;
+  late int epPiece;
 
   Variant({
     required this.name,
@@ -24,6 +26,7 @@ class Variant {
     this.startPosition,
     this.startPosBuilder,
     this.promotion = false,
+    this.enPassant = false,
   }) {
     assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
     init();
@@ -54,6 +57,7 @@ class Variant {
   void init() {
     normalisePieces();
     buildPieceDefinitions();
+    epPiece = pieces.indexWhere((p) => p.type.enPassantable);
   }
 
   void normalisePieces() {
@@ -73,6 +77,7 @@ class Variant {
       castleTarget: 'R',
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       promotion: true,
+      enPassant: true,
       pieceTypes: {
         'P': PieceType.pawn(),
         'N': PieceType.knight(),

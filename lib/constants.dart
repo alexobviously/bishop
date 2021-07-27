@@ -7,6 +7,8 @@ extension Opponent on Colour {
 const Colour WHITE = 0;
 const Colour BLACK = 1;
 
+const List<int> PLAYER_DIRECTION = [-1, 1];
+
 const ASCII_a = 97;
 
 const Map<String, String> UNICODE_PIECES = {

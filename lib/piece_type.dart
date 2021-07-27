@@ -8,22 +8,24 @@ class PieceType {
   final List<MoveDefinition> moves;
   final bool royal;
   final bool promotable;
+  final bool enPassantable;
 
   PieceType({
     this.betza,
     required this.moves,
     this.royal = false,
     this.promotable = false,
+    this.enPassantable = false,
   });
 
   void normalise(BoardSize boardSize) {
     for (MoveDefinition m in moves) {
-      m.normalised = m.direction.v * boardSize.h + m.direction.h;
+      m.normalised = m.direction.v * boardSize.h * 2 + m.direction.h;
     }
   }
 
   factory PieceType.empty() => PieceType(moves: []);
-  factory PieceType.fromBetza(String betza, {bool royal = false, bool promotable = false}) {
+  factory PieceType.fromBetza(String betza, {bool royal = false, bool promotable = false, bool enPassantable = false}) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> moves = [];
     for (Atom atom in atoms) {
@@ -44,6 +46,7 @@ class PieceType {
       moves: moves,
       royal: royal,
       promotable: promotable,
+      enPassantable: enPassantable,
     );
   }
 
@@ -52,7 +55,7 @@ class PieceType {
   factory PieceType.rook() => PieceType.fromBetza('R');
   factory PieceType.queen() => PieceType.fromBetza('Q');
   factory PieceType.king() => PieceType.fromBetza('K', royal: true);
-  factory PieceType.pawn() => PieceType.fromBetza('fmWfceFifmnD', promotable: true); // seriously
+  factory PieceType.pawn() => PieceType.fromBetza('fmWfceFifmnD', promotable: true, enPassantable: true); // seriously
   factory PieceType.knibis() => PieceType.fromBetza('mNcB');
   factory PieceType.biskni() => PieceType.fromBetza('mBcN');
   factory PieceType.kniroo() => PieceType.fromBetza('mNcR');
