@@ -61,7 +61,7 @@ class Variant {
   }
 
   void buildPieceDefinitions() {
-    pieces = [];
+    pieces = [PieceDefinition.empty()];
     pieceTypes.forEach((s, p) => pieces.add(PieceDefinition(type: p, symbol: s)));
   }
 
@@ -71,7 +71,7 @@ class Variant {
       boardSize: BoardSize.standard(),
       castling: true,
       castleTarget: 'R',
-      //startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       promotion: true,
       pieceTypes: {
         'P': PieceType.pawn(),
@@ -88,6 +88,35 @@ class Variant {
     return Variant.standard().copyWith(
       name: 'Chess960',
       startPosBuilder: build960Position,
+    );
+  }
+
+  factory Variant.capablanca() {
+    Variant standard = Variant.standard();
+    return standard.copyWith(
+      name: 'Capablanca Chess',
+      boardSize: BoardSize(10, 8),
+      startPosition: 'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
+      pieceTypes: standard.pieceTypes
+        ..addAll({
+          'A': PieceType.archbishop(),
+          'C': PieceType.chancellor(),
+        }),
+    );
+  }
+
+  factory Variant.grand() {
+    Variant standard = Variant.standard();
+    return standard.copyWith(
+      name: 'Grand Chess',
+      boardSize: BoardSize(10, 10),
+      startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
+      castling: false,
+      pieceTypes: standard.pieceTypes
+        ..addAll({
+          'C': PieceType.chancellor(), // marshal
+          'A': PieceType.archbishop(), // cardinal
+        }),
     );
   }
 }

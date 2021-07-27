@@ -1,4 +1,5 @@
 import 'betza.dart';
+import 'constants.dart';
 import 'move_definition.dart';
 import 'variant.dart';
 
@@ -26,6 +27,7 @@ class PieceType {
     }
   }
 
+  factory PieceType.empty() => PieceType(quietMoves: [], captureMoves: []);
   factory PieceType.fromBetza(String betza, {bool royal = false, bool promotable = false}) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> quietMoves = [];
@@ -72,4 +74,7 @@ class PieceDefinition {
   final String symbol;
 
   PieceDefinition({required this.type, required this.symbol});
+  factory PieceDefinition.empty() => PieceDefinition(type: PieceType.empty(), symbol: '.');
+
+  String char(Colour colour) => colour == WHITE ? symbol.toUpperCase() : symbol.toLowerCase();
 }
