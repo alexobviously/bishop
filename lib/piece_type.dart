@@ -5,50 +5,43 @@ import 'variant.dart';
 
 class PieceType {
   final String? betza;
-  final List<MoveDefinition> quietMoves;
-  final List<MoveDefinition> captureMoves;
+  final List<MoveDefinition> moves;
   final bool royal;
   final bool promotable;
 
   PieceType({
     this.betza,
-    required this.quietMoves,
-    required this.captureMoves,
+    required this.moves,
     this.royal = false,
     this.promotable = false,
   });
 
   void normalise(BoardSize boardSize) {
-    for (MoveDefinition m in quietMoves) {
-      m.normalised = m.direction.v * boardSize.h + m.direction.h;
-    }
-    for (MoveDefinition m in captureMoves) {
+    for (MoveDefinition m in moves) {
       m.normalised = m.direction.v * boardSize.h + m.direction.h;
     }
   }
 
-  factory PieceType.empty() => PieceType(quietMoves: [], captureMoves: []);
+  factory PieceType.empty() => PieceType(moves: []);
   factory PieceType.fromBetza(String betza, {bool royal = false, bool promotable = false}) {
     List<Atom> atoms = Betza.parse(betza);
-    List<MoveDefinition> quietMoves = [];
-    List<MoveDefinition> captureMoves = [];
+    List<MoveDefinition> moves = [];
     for (Atom atom in atoms) {
       for (Direction d in atom.directions) {
         MoveDefinition md = MoveDefinition(
           direction: d,
           range: atom.range,
+          modality: atom.modality,
           enPassant: atom.enPassant,
           firstOnly: atom.firstOnly,
           lame: atom.lame,
         );
-        if (atom.quiet) quietMoves.add(md);
-        if (atom.capture) captureMoves.add(md);
+        moves.add(md);
       }
     }
     return PieceType(
       betza: betza,
-      quietMoves: quietMoves,
-      captureMoves: captureMoves,
+      moves: moves,
       royal: royal,
       promotable: promotable,
     );

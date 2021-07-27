@@ -1,6 +1,9 @@
+import 'constants.dart';
+
 class MoveDefinition {
   final Direction direction;
   final int range;
+  final int modality;
   final bool enPassant;
   final bool firstOnly;
   final bool lame;
@@ -8,10 +11,13 @@ class MoveDefinition {
   late int normalised;
 
   bool get slider => range != 1;
+  bool get quiet => modality == Modality.BOTH || modality == Modality.QUIET;
+  bool get capture => modality == Modality.BOTH || modality == Modality.CAPTURE;
 
   MoveDefinition({
     required this.direction,
     this.range = 1,
+    this.modality = Modality.BOTH,
     this.enPassant = false,
     this.firstOnly = false,
     this.lame = false,
