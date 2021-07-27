@@ -9,6 +9,7 @@ class Move {
   final int? promoPiece;
   final CastlingRights? castlingDir;
   final bool enPassant;
+  final bool setEnPassant;
 
   bool get capture => capturedPiece != null;
   bool get promotion => promoPiece != null;
@@ -21,6 +22,7 @@ class Move {
     this.promoPiece,
     this.castlingDir,
     this.enPassant = false,
+    this.setEnPassant = false,
   });
 
   String algebraic([BoardSize boardSize = const BoardSize(8, 8)]) {

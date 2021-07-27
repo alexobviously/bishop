@@ -146,24 +146,34 @@ class Game {
         int to = square + md.normalised * dirMult;
         if (!onBoard(to)) break;
         Square target = board[to];
+        bool setEnPassant = md.firstOnly && pieceType.enPassantable;
 
         if (target.isEmpty) {
           if (md.quiet) {
             Move m = Move(to: to, from: from);
             moves.add(m);
           } else if (variant.enPassant && md.enPassant && currentState.epSquare == to) {
-            Move m = Move(to: to, from: from, capturedPiece: makePiece(variant.epPiece, colour), enPassant: true);
+            Move m = Move(
+              to: to,
+              from: from,
+              capturedPiece: makePiece(variant.epPiece, colour),
+              enPassant: true,
+              setEnPassant: setEnPassant,
+            );
             moves.add(m);
           } else {
             break;
           }
-          continue;
-        }
-        if (target.colour == colour) {
+        } else if (target.colour == colour) {
           break;
         } else {
           if (md.capture) {
-            Move m = Move(to: to, from: from, capturedPiece: target);
+            Move m = Move(
+              to: to,
+              from: from,
+              capturedPiece: target,
+              setEnPassant: setEnPassant,
+            );
             moves.add(m);
           }
           break;
