@@ -207,7 +207,8 @@ class Game {
 
       // TODO: if isAttacked(from) break
       for (int i = 0; i < 2; i++) {
-        bool side = i == 0 ? kingside : queenside;
+        bool sideCondition = i == 0 ? kingside : queenside;
+        if (!sideCondition) continue;
         int targetFile = i == 0 ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
         int targetSq = getSquare(targetFile, royalRank, variant.boardSize);
         int rookFile = i == 0 ? castlingTargetK! : castlingTargetQ!;
