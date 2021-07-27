@@ -16,14 +16,14 @@ Square square(int piece, Colour colour, [int flags = 0]) {
   return (flags << 8) + (piece << 1) + colour;
 }
 
-String squareName(int square, BoardSize boardSize) {
+String squareName(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
   int rank = square ~/ boardSize.h + 1;
   int file = square % boardSize.h;
   String fileName = String.fromCharCode(ASCII_a + file);
   return '$fileName$rank';
 }
 
-int squareNumber(String name, BoardSize boardSize) {
+int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   name = name.toLowerCase();
   RegExp rx = RegExp(r'([A-Za-z])([0-9]+)');
   RegExpMatch? match = rx.firstMatch(name);
