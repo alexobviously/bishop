@@ -11,14 +11,14 @@ extension SquareLogic on Square {
   bool get isNotEmpty => this != 0;
 }
 
-Square square(int piece, Colour colour, [int flags = 0]) {
+Square makePiece(int piece, Colour colour, [int flags = 0]) {
   assert(colour <= BLACK);
   return (flags << 8) + (piece << 1) + colour;
 }
 
 String squareName(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
-  int rank = square ~/ boardSize.h + 1;
-  int file = square % boardSize.h;
+  int rank = square ~/ (boardSize.h * 2) + 1;
+  int file = square % (boardSize.h * 2);
   String fileName = String.fromCharCode(ASCII_a + file);
   return '$fileName$rank';
 }
@@ -33,6 +33,13 @@ int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   String rank = match.group(2)!;
   int _file = file.codeUnits[0] - ASCII_a;
   int _rank = int.parse(rank) - 1;
-  int square = _rank * boardSize.h + _file;
+  int square = _rank * boardSize.h * 2 + _file;
   return square;
+}
+
+// TODO: find a clever bitwise way to do this, like 0x88
+bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
+  if (square >= boardSize.numSquares * 2) return false;
+  int x = square % (boardSize.h * 2);
+  return x < boardSize.h;
 }

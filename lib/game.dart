@@ -26,7 +26,7 @@ class Game {
       pieceLookup[variant.pieces[i].symbol] = i;
     }
 
-    board = List.filled(variant.boardSize.numSquares, 0);
+    board = List.filled(variant.boardSize.numSquares * 2, 0);
     List<String> sections = startPosition.split(' ');
     List<String> _board = sections[0].split('');
     String _turn = sections[1];
@@ -44,11 +44,11 @@ class Game {
         sq += emptySquares;
         emptySquares = 0;
       }
-      if (c == '/') continue;
+      if (c == '/') sq += 8;
       if (pieceLookup.containsKey(symbol)) {
         // it's a piece
         Colour colour = c == symbol ? WHITE : BLACK;
-        Square piece = square(pieceLookup[symbol]!, colour);
+        Square piece = makePiece(pieceLookup[symbol]!, colour);
         board[sq] = piece;
         sq++;
       }
@@ -81,7 +81,7 @@ class Game {
 
     for (int i = 0; i < variant.boardSize.v; i++) {
       for (int j = 0; j < variant.boardSize.h; j++) {
-        int s = (i * variant.boardSize.h) + j;
+        int s = (i * variant.boardSize.h * 2) + j;
         Square sq = board[s];
         if (sq.isEmpty)
           empty++;
@@ -109,7 +109,7 @@ class Game {
       String _rank = rank > 9 ? '$rank |' : ' $rank |';
       output = '$output$_rank';
       for (int j in Iterable<int>.generate(variant.boardSize.h).toList()) {
-        Square sq = board[i * variant.boardSize.h + j];
+        Square sq = board[i * variant.boardSize.h * 2 + j];
         String char = variant.pieces[sq.piece].char(sq.colour);
         if (unicode && UNICODE_PIECES.containsKey(char)) char = UNICODE_PIECES[char]!;
         output = '$output $char ';
