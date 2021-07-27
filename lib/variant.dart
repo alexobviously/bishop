@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import '960.dart';
 import 'piece_type.dart';
 
 class Variant {
@@ -6,8 +9,11 @@ class Variant {
   final Map<String, PieceType> pieceTypes;
   final bool castling;
   final String? castleTarget;
-  final String startPosition;
+  final String? startPosition;
+  final Function()? startPosBuilder;
   final bool promotion;
+
+  late List<PieceDefinition> pieces;
 
   Variant({
     required this.name,
@@ -15,14 +21,48 @@ class Variant {
     required this.pieceTypes,
     this.castling = false,
     this.castleTarget,
-    required this.startPosition,
+    this.startPosition,
+    this.startPosBuilder,
     this.promotion = false,
   }) {
+    assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
+    init();
+  }
+
+  Variant copyWith({
+    String? name,
+    BoardSize? boardSize,
+    Map<String, PieceType>? pieceTypes,
+    bool? castling,
+    String? castleTarget,
+    String? startPosition,
+    Function()? startPosBuilder,
+    bool? promotion,
+  }) {
+    return Variant(
+      name: name ?? this.name,
+      boardSize: boardSize ?? this.boardSize,
+      pieceTypes: pieceTypes ?? this.pieceTypes,
+      castling: castling ?? this.castling,
+      castleTarget: castleTarget ?? this.castleTarget,
+      startPosition: startPosition ?? this.startPosition,
+      startPosBuilder: startPosBuilder ?? this.startPosBuilder,
+      promotion: promotion ?? this.promotion,
+    );
+  }
+
+  void init() {
     normalisePieces();
+    buildPieceDefinitions();
   }
 
   void normalisePieces() {
     pieceTypes.forEach((_, p) => p.normalise(boardSize));
+  }
+
+  void buildPieceDefinitions() {
+    pieces = [];
+    pieceTypes.forEach((s, p) => pieces.add(PieceDefinition(type: p, symbol: s)));
   }
 
   factory Variant.standard() {
@@ -31,7 +71,7 @@ class Variant {
       boardSize: BoardSize.standard(),
       castling: true,
       castleTarget: 'R',
-      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      //startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       promotion: true,
       pieceTypes: {
         'P': PieceType.pawn(),
@@ -41,6 +81,13 @@ class Variant {
         'Q': PieceType.queen(),
         'K': PieceType.king(),
       },
+    );
+  }
+
+  factory Variant.chess960() {
+    return Variant.standard().copyWith(
+      name: 'Chess960',
+      startPosBuilder: build960Position,
     );
   }
 }

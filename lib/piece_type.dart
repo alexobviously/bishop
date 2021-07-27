@@ -67,8 +67,9 @@ class PieceType {
   factory PieceType.amazon() => PieceType.fromBetza('QN');
 }
 
-main(List<String> args) {
-  PieceType pt = PieceType.amazon();
-  print(pt.quietMoves);
-  print(pt.captureMoves);
+class PieceDefinition {
+  final PieceType type;
+  final String symbol;
+
+  PieceDefinition({required this.type, required this.symbol});
 }
