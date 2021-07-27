@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '960.dart';
+import 'constants.dart';
 import 'piece_type.dart';
 
 class Variant {
@@ -9,6 +10,8 @@ class Variant {
   final Map<String, PieceType> pieceTypes;
   final bool castling;
   final String? castleTarget;
+  final int? castlingKingsideFile;
+  final int? castlingQueensideFile;
   final String? startPosition;
   final Function()? startPosBuilder;
   final bool promotion;
@@ -16,6 +19,8 @@ class Variant {
 
   late List<PieceDefinition> pieces;
   late int epPiece;
+  late int castlingPiece;
+  late int royalPiece;
 
   Variant({
     required this.name,
@@ -23,6 +28,8 @@ class Variant {
     required this.pieceTypes,
     this.castling = false,
     this.castleTarget,
+    this.castlingKingsideFile,
+    this.castlingQueensideFile,
     this.startPosition,
     this.startPosBuilder,
     this.promotion = false,
@@ -38,9 +45,12 @@ class Variant {
     Map<String, PieceType>? pieceTypes,
     bool? castling,
     String? castleTarget,
+    int? castlingKingsideFile,
+    int? castlingQueensideFile,
     String? startPosition,
     Function()? startPosBuilder,
     bool? promotion,
+    bool? enPassant,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -48,16 +58,21 @@ class Variant {
       pieceTypes: pieceTypes ?? this.pieceTypes,
       castling: castling ?? this.castling,
       castleTarget: castleTarget ?? this.castleTarget,
+      castlingKingsideFile: castlingKingsideFile ?? this.castlingKingsideFile,
+      castlingQueensideFile: castlingQueensideFile ?? this.castlingQueensideFile,
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
       promotion: promotion ?? this.promotion,
+      enPassant: enPassant ?? this.enPassant,
     );
   }
 
   void init() {
     normalisePieces();
     buildPieceDefinitions();
-    epPiece = pieces.indexWhere((p) => p.type.enPassantable);
+    royalPiece = pieces.indexWhere((p) => p.type.royal);
+    if (enPassant) epPiece = pieces.indexWhere((p) => p.type.enPassantable);
+    if (castling) castlingPiece = pieces.indexWhere((p) => p.symbol == castleTarget);
   }
 
   void normalisePieces() {
@@ -73,9 +88,11 @@ class Variant {
     return Variant(
       name: 'Chess',
       boardSize: BoardSize.standard(),
+      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castling: true,
       castleTarget: 'R',
-      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+      castlingKingsideFile: File.G,
+      castlingQueensideFile: File.C,
       promotion: true,
       enPassant: true,
       pieceTypes: {
@@ -102,6 +119,8 @@ class Variant {
       name: 'Capablanca Chess',
       boardSize: BoardSize(10, 8),
       startPosition: 'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
+      castlingKingsideFile: File.I,
+      castlingQueensideFile: File.C,
       pieceTypes: standard.pieceTypes
         ..addAll({
           'A': PieceType.archbishop(),

@@ -15,9 +15,26 @@ class Game {
   List<State> history = [];
   State get state => history.last;
 
+  int? castlingTargetK;
+  int? castlingTargetQ;
+  int? royalFile;
+
   Game({required this.variant}) {
     startPosition = variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition;
     buildBoard();
+    if (variant.castling) setupCastling();
+  }
+  void setupCastling() {
+    for (int i = 0; i < variant.boardSize.h; i++) {
+      if (board[i].piece == variant.royalPiece) royalFile = i;
+      if (board[i].piece == variant.castlingPiece) {
+        if (castlingTargetQ == null) {
+          castlingTargetQ = i;
+        } else {
+          castlingTargetK = i;
+        }
+      }
+    }
   }
 
   void buildBoard() {
@@ -44,7 +61,7 @@ class Game {
         sq += emptySquares;
         emptySquares = 0;
       }
-      if (c == '/') sq += 8;
+      if (c == '/') sq += variant.boardSize.h;
       if (pieceLookup.containsKey(symbol)) {
         // it's a piece
         Colour colour = c == symbol ? WHITE : BLACK;
@@ -139,12 +156,13 @@ class Game {
     int dirMult = PLAYER_DIRECTION[piece.colour];
     List<Move> moves = [];
     PieceType pieceType = variant.pieces[piece.piece].type;
+    int from = square;
+    // Generate normal moves
     for (MoveDefinition md in pieceType.moves) {
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
-      int from = square;
       for (int i = 0; i < range; i++) {
         int to = square + md.normalised * dirMult;
-        if (!onBoard(to)) break;
+        if (!onBoard(to, variant.boardSize)) break;
         Square target = board[to];
         bool setEnPassant = variant.enPassant && md.firstOnly && pieceType.enPassantable;
 
@@ -179,6 +197,41 @@ class Game {
           break;
         }
       }
+    }
+
+    // Generate castling
+    if (variant.castling && pieceType.royal) {
+      bool kingside = colour == WHITE ? state.castling.wk : state.castling.bk;
+      bool queenside = colour == WHITE ? state.castling.bq : state.castling.bq;
+      int royalRank = rank(from, variant.boardSize);
+
+      // TODO: if isAttacked(from) break
+      for (int i = 0; i < 2; i++) {
+        bool side = i == 0 ? kingside : queenside;
+        int targetFile = i == 0 ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
+        int targetSq = getSquare(targetFile, royalRank, variant.boardSize);
+        int rookFile = i == 0 ? castlingTargetK! : castlingTargetQ!;
+        int rookSq = getSquare(rookFile, royalRank, variant.boardSize);
+        if (board[targetSq].isNotEmpty &&
+            (board[targetSq].piece != variant.castlingPiece || board[targetSq].colour != colour)) continue;
+        int numMidSqs = (targetFile - royalFile!).abs();
+        bool _valid = true;
+        for (int j = 1; j < numMidSqs; j++) {
+          int midFile = royalFile! + (i == 0 ? -j : j);
+          int midSq = getSquare(midFile, royalRank, variant.boardSize);
+          if (board[midSq].isNotEmpty) {
+            _valid = false;
+            break;
+          }
+          // TODO: if isAttacked(midSq) break
+        }
+        if (_valid) {
+          int castlingDir = i == 0 ? CASTLING_K : CASTLING_Q;
+          Move m = Move(from: from, to: rookSq, castlingDir: castlingDir);
+          moves.add(m);
+        }
+      }
+      if (kingside) {}
     }
 
     return moves;
