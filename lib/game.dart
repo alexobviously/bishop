@@ -242,7 +242,7 @@ class Game {
     // Generate castling
     if (variant.castling && options.castling && pieceType.royal) {
       bool kingside = colour == WHITE ? state.castlingRights.wk : state.castlingRights.bk;
-      bool queenside = colour == WHITE ? state.castlingRights.bq : state.castlingRights.bq;
+      bool queenside = colour == WHITE ? state.castlingRights.wq : state.castlingRights.bq;
       int royalRank = rank(from, variant.boardSize);
 
       // TODO: if isAttacked(from) break
@@ -257,9 +257,12 @@ class Game {
             (board[targetSq].piece != variant.castlingPiece || board[targetSq].colour != colour)) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
         bool _valid = true;
+        print('nummidsqs $numMidSqs');
         for (int j = 1; j < numMidSqs; j++) {
-          int midFile = royalFile! + (i == 0 ? -j : j);
+          int midFile = royalFile! + (i == 0 ? j : -j);
+          print('midfile $midFile');
           int midSq = getSquare(midFile, royalRank, variant.boardSize);
+          print('midSq ${squareName(midSq, size)}');
           if (board[midSq].isNotEmpty) {
             _valid = false;
             break;
@@ -538,18 +541,20 @@ main(List<String> args) {
   // print(g.sanMoves());
   // print(g.pgn());
 
-  String f = '3qk1r1/r3b1pP/b2p4/1pp2p2/1nP1p2P/N3P3/1B1PPR2/R2QKBN1 w - - 3 22';
+  String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
   Game g = Game(variant: Variant.standard(), fen: f);
   print(g.ascii());
   List<Move> moves = g.generateLegalMoves();
-  Move m = moves[0];
-  print(g.toAlgebraic(m));
-  print(g.toSan(m));
-  //print(moves.map((e) => g.toAlgebraic(e)).toList());
-  //print(moves.map((e) => g.toSan(e)).toList());
-  // Move? m = g.getMove('d1d3');
-  // String s = g.toSan(m!);
-  // print(s);
-  g.makeMove(m);
+  // List<Move> moves = g.generatePlayerMoves(g.state.turn, MoveGenOptions.normal());
   print(g.ascii());
+  // Move m = moves[0];
+  // print(g.toAlgebraic(m));
+  // print(g.toSan(m));
+  print(moves.map((e) => g.toAlgebraic(e)).toList());
+  // print(moves.map((e) => g.toSan(e)).toList());
+  // // // Move? m = g.getMove('d1d3');
+  // // // String s = g.toSan(m!);
+  // // // print(s);
+  // g.makeMove(m);
+  // print(g.ascii());
 }
