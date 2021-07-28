@@ -304,9 +304,12 @@ class Game {
     PieceType fromPiece = variant.pieces[fromSq.piece].type;
     int colour = fromSq.colour;
     if (colour != state.turn) return false;
-
     board[move.from] = EMPTY;
-    if (!move.castling && !move.promotion) board[move.to] = fromSq;
+    if (!move.castling && !move.promotion) {
+      board[move.to] = fromSq;
+    } else if (move.promotion) {
+      board[move.to] = makePiece(move.promoPiece!, state.turn);
+    }
     int _halfMoves = state.halfMoves;
     if (move.capture || fromPiece.promotable)
       _halfMoves = 0;
@@ -385,7 +388,7 @@ class Game {
       board[move.to] = _rook;
     } else {
       if (move.promotion) {
-        board[move.from] = makePiece(move.promoSource!, state.turn.opponent);
+        board[move.from] = makePiece(move.promoSource!, state.turn);
       } else {
         board[move.from] = toSq;
       }
@@ -537,14 +540,16 @@ main(List<String> args) {
 
   String f = '3qk1r1/r3b1pP/b2p4/1pp2p2/1nP1p2P/N3P3/1B1PPR2/R2QKBN1 w - - 3 22';
   Game g = Game(variant: Variant.standard(), fen: f);
+  print(g.ascii());
   List<Move> moves = g.generateLegalMoves();
-  print(g.toAlgebraic(moves[0]));
-  print(g.toSan(moves[0]));
+  Move m = moves[0];
+  print(g.toAlgebraic(m));
+  print(g.toSan(m));
   //print(moves.map((e) => g.toAlgebraic(e)).toList());
   //print(moves.map((e) => g.toSan(e)).toList());
   // Move? m = g.getMove('d1d3');
   // String s = g.toSan(m!);
   // print(s);
-  // g.makeMove(m);
-  // print(g.pgn());
+  g.makeMove(m);
+  print(g.ascii());
 }
