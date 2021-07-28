@@ -11,6 +11,7 @@ extension Castling on CastlingRights {
 
   CastlingRights flip(int right) => this ^ right;
   CastlingRights remove(Colour colour) => this & (colour == WHITE ? CASTLING_WHITE_MASK : CASTLING_BLACK_MASK);
+  bool hasRight(int right) => this & right != 0;
 }
 
 CastlingRights castlingRights(String crString) {

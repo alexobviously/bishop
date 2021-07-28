@@ -3,6 +3,8 @@ import 'variant.dart';
 
 typedef Square = int;
 
+Square EMPTY = 0;
+
 extension SquareLogic on Square {
   Colour get colour => this & 1;
   int get piece => (this >> 1) & 127;

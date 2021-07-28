@@ -20,6 +20,8 @@ class Game {
   int? royalFile;
   late MoveGenOptions royalCaptureOptions;
 
+  BoardSize get size => variant.boardSize;
+
   Game({required this.variant, String? fen}) {
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
     buildBoard();
@@ -81,7 +83,7 @@ class Game {
       halfMoves: int.parse(_halfMoves),
       fullMoves: int.parse(_fullMoves),
       epSquare: ep,
-      castling: castling,
+      castlingRights: castling,
     );
     history.add(_state);
   }
@@ -114,7 +116,7 @@ class Game {
       if (i < variant.boardSize.v - 1) _fen = '$_fen/';
     }
     String _turn = state.turn == WHITE ? 'w' : 'b';
-    String _castling = state.castling.formatted;
+    String _castling = state.castlingRights.formatted;
     String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
     _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
     return _fen;
@@ -210,8 +212,8 @@ class Game {
 
     // Generate castling
     if (variant.castling && options.castling && pieceType.royal) {
-      bool kingside = colour == WHITE ? state.castling.wk : state.castling.bk;
-      bool queenside = colour == WHITE ? state.castling.bq : state.castling.bq;
+      bool kingside = colour == WHITE ? state.castlingRights.wk : state.castlingRights.bk;
+      bool queenside = colour == WHITE ? state.castlingRights.bq : state.castlingRights.bq;
       int royalRank = rank(from, variant.boardSize);
 
       // TODO: if isAttacked(from) break
@@ -241,10 +243,62 @@ class Game {
           moves.add(m);
         }
       }
-      if (kingside) {}
     }
 
     return moves;
+  }
+
+  bool makeMove(Move move) {
+    if (!onBoard(move.from, size) || !onBoard(move.to, size)) return false;
+    // TODO: more validation?
+    Square fromSq = board[move.from];
+    Square toSq = board[move.to];
+    PieceType fromPiece = variant.pieces[fromSq.piece].type;
+    int colour = fromSq.colour;
+    if (colour != state.turn) return false;
+
+    board[move.from] = EMPTY;
+    if (!move.castling && !move.promotion) board[move.to] = fromSq;
+    int _halfMoves = state.halfMoves;
+    if (move.capture || fromPiece.promotable)
+      _halfMoves = 0;
+    else
+      _halfMoves++;
+    int _castlingRights = state.castlingRights;
+
+    // TODO: en passant & set en passant
+
+    if (move.castling) {
+      bool kingside = move.castlingDir == CASTLING_K;
+      int royalRank = rank(fromSq, size);
+      int castlingFile = kingside ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
+      int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
+      int rookSq = getSquare(rookFile, royalRank, size);
+      int kingSq = getSquare(castlingFile, royalRank, size);
+      board[kingSq] = fromSq;
+      board[rookSq] = toSq;
+      _castlingRights = _castlingRights.remove(colour);
+    } else if (fromPiece.royal) {
+      _castlingRights = _castlingRights.remove(colour);
+    } else if (fromSq.piece == variant.castlingPiece) {
+      int fromFile = file(move.from, size);
+      int ks = colour == WHITE ? CASTLING_K : CASTLING_BK;
+      int qs = colour == WHITE ? CASTLING_Q : CASTLING_BQ;
+      if (fromFile == variant.castlingKingsideFile && _castlingRights.hasRight(ks)) {
+        _castlingRights = _castlingRights.flip(ks);
+      } else if (fromFile == variant.castlingQueensideFile && _castlingRights.hasRight(qs)) {
+        _castlingRights = _castlingRights.flip(qs);
+      }
+    }
+
+    State _state = State(
+      turn: 1 - state.turn,
+      halfMoves: _halfMoves,
+      fullMoves: state.turn == BLACK ? state.fullMoves + 1 : state.fullMoves,
+      castlingRights: _castlingRights,
+    );
+    history.add(_state);
+    return true;
   }
 }
 
@@ -296,5 +350,8 @@ main(List<String> args) {
   print(g.ascii());
 
   List<Move> moves = g.generatePlayerMoves(WHITE, MoveGenOptions.onlyCaptures());
-  print(moves.map((e) => e.algebraic(g.variant.boardSize)));
+  print(moves.map((e) => e.algebraic(g.size)));
+  g.makeMove(moves.first);
+
+  print(g.ascii());
 }

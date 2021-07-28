@@ -7,7 +7,7 @@ class State {
   final Colour turn;
   final int halfMoves;
   final int fullMoves;
-  final CastlingRights castling;
+  final CastlingRights castlingRights;
   final int? epSquare;
 
   State({
@@ -15,7 +15,7 @@ class State {
     required this.turn,
     required this.halfMoves,
     required this.fullMoves,
-    required this.castling,
+    required this.castlingRights,
     this.epSquare,
   });
 }
