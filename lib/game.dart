@@ -184,15 +184,30 @@ class Game {
           int blockSq = _from + md.lameNormalised! * dirMult;
           if (board[blockSq].isNotEmpty) break;
         }
+        bool optPromo = false;
+        bool forcedPromo = false;
+        if (pieceType.promotable && variant.promotion) {
+          int toRank = rank(to, size);
+          optPromo =
+              colour == WHITE ? toRank >= variant.promotionRanks[BLACK] : toRank <= variant.promotionRanks[WHITE];
+          if (optPromo) {
+            forcedPromo = colour == WHITE ? toRank >= size.maxRank : toRank <= RANK_1;
+          }
+        }
         Square target = board[to];
         bool setEnPassant = variant.enPassant && md.firstOnly && pieceType.enPassantable;
+
+        void addMove(Move m) {
+          if (optPromo) moves.addAll(generatePromotionMoves(m));
+          if (!forcedPromo) moves.add(m);
+        }
 
         if (target.isEmpty) {
           // TODO: prioritise ep? for moves that could be both ep and quiet
           if (md.quiet) {
             if (!options.quiet) continue;
             Move m = Move(to: to, from: from, setEnPassant: setEnPassant);
-            moves.add(m);
+            addMove(m);
           } else if (variant.enPassant && md.enPassant && state.epSquare == to && options.captures) {
             Move m = Move(
               to: to,
@@ -201,7 +216,7 @@ class Game {
               enPassant: true,
               setEnPassant: setEnPassant,
             );
-            moves.add(m);
+            addMove(m);
           } else {
             break;
           }
@@ -217,7 +232,7 @@ class Game {
               capturedPiece: target,
               setEnPassant: setEnPassant,
             );
-            moves.add(m);
+            addMove(m);
           }
           break;
         }
@@ -267,6 +282,16 @@ class Game {
         undo();
       }
       _remove.forEach((m) => moves.remove(m));
+    }
+    return moves;
+  }
+
+  List<Move> generatePromotionMoves(Move base) {
+    List<Move> moves = [];
+    for (int p in variant.promotionPieces) {
+      Move m = base.copyWith(promoSource: board[base.from].piece, promoPiece: p);
+      moves.add(m);
+      //print('promotion move: ${}');
     }
     return moves;
   }
@@ -359,7 +384,11 @@ class Game {
       board[move.from] = _king;
       board[move.to] = _rook;
     } else {
-      board[move.from] = toSq;
+      if (move.promotion) {
+        board[move.from] = makePiece(move.promoSource!, state.turn.opponent);
+      } else {
+        board[move.from] = toSq;
+      }
       // TODO: en passant
       if (move.capture) {
         board[move.to] = move.capturedPiece!;
@@ -388,6 +417,12 @@ class Game {
     return match;
   }
 
+  String toAlgebraic(Move move) {
+    String alg = move.algebraic(size);
+    if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
+    return alg;
+  }
+
   String toSan(Move move) {
     if (move.castling) {
       return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? "O-O" : "O-O-O";
@@ -396,7 +431,7 @@ class Game {
     PieceDefinition pieceDef = variant.pieces[piece];
 
     String san = '';
-    if (pieceDef.type.promotable) {
+    if (pieceDef.type.noSanSymbol) {
       if (move.capture) san = squareName(move.from, size)[0];
     } else
       san = pieceDef.symbol;
@@ -427,10 +462,8 @@ class Game {
 
   String pgn() {
     List<String> moves = sanMoves();
-    print('state.fullMoves ${state.fullMoves}, moves.length ${moves.length}');
     int firstMove = state.fullMoves - (moves.length ~/ 2);
     int firstTurn = history.first.turn;
-    print('firstmove $firstMove, firstturn $firstTurn');
     int turn = firstTurn;
     String _pgn = '';
     for (int i = 0; i < moves.length; i++) {
@@ -502,7 +535,16 @@ main(List<String> args) {
   // print(g.sanMoves());
   // print(g.pgn());
 
-  Game g = Game(variant: Variant.standard(), fen: 'rnbqk1nr/ppppp2p/5p1b/5Pp1/8/7N/PPPPP1PP/RNBQKB1R w KQkq - 1 4');
+  String f = '3qk1r1/r3b1pP/b2p4/1pp2p2/1nP1p2P/N3P3/1B1PPR2/R2QKBN1 w - - 3 22';
+  Game g = Game(variant: Variant.standard(), fen: f);
   List<Move> moves = g.generateLegalMoves();
-  print(moves.map((e) => g.toSan(e)).toList());
+  print(g.toAlgebraic(moves[0]));
+  print(g.toSan(moves[0]));
+  //print(moves.map((e) => g.toAlgebraic(e)).toList());
+  //print(moves.map((e) => g.toSan(e)).toList());
+  // Move? m = g.getMove('d1d3');
+  // String s = g.toSan(m!);
+  // print(s);
+  // g.makeMove(m);
+  // print(g.pgn());
 }

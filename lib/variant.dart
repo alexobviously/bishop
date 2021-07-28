@@ -15,10 +15,12 @@ class Variant {
   final String? startPosition;
   final Function()? startPosBuilder;
   final bool promotion;
+  final List<int> promotionRanks;
   final bool enPassant;
   final List<List<int>> firstMoveRanks; // e.g. where pawns can double move from
 
   late List<PieceDefinition> pieces;
+  late List<int> promotionPieces;
   late int epPiece;
   late int castlingPiece;
   late int royalPiece;
@@ -34,6 +36,7 @@ class Variant {
     this.startPosition,
     this.startPosBuilder,
     this.promotion = false,
+    this.promotionRanks = const [-1, -1],
     this.enPassant = false,
     this.firstMoveRanks = const [[], []],
   }) {
@@ -52,6 +55,7 @@ class Variant {
     String? startPosition,
     Function()? startPosBuilder,
     bool? promotion,
+    List<int>? promotionRanks,
     bool? enPassant,
     List<List<int>>? firstMoveRanks,
   }) {
@@ -66,6 +70,7 @@ class Variant {
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
       promotion: promotion ?? this.promotion,
+      promotionRanks: promotionRanks ?? this.promotionRanks,
       enPassant: enPassant ?? this.enPassant,
       firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
     );
@@ -86,6 +91,11 @@ class Variant {
   void buildPieceDefinitions() {
     pieces = [PieceDefinition.empty()];
     pieceTypes.forEach((s, p) => pieces.add(PieceDefinition(type: p, symbol: s)));
+    promotionPieces = [];
+    for (int i = 0; i < pieces.length; i++) {
+      // && !pieces[i].type.royal) ?
+      if (pieces[i].type.canPromoteTo) promotionPieces.add(i);
+    }
   }
 
   factory Variant.standard() {
@@ -98,6 +108,7 @@ class Variant {
       castlingKingsideFile: FILE_G,
       castlingQueensideFile: FILE_C,
       promotion: true,
+      promotionRanks: [RANK_1, RANK_8],
       enPassant: true,
       firstMoveRanks: [
         [RANK_2], // white
@@ -145,6 +156,7 @@ class Variant {
       boardSize: BoardSize(10, 10),
       startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
       castling: false,
+      promotionRanks: [RANK_3, RANK_8],
       firstMoveRanks: [
         [RANK_3],
         [RANK_8],
@@ -164,6 +176,8 @@ class BoardSize {
   int get numSquares => h * v;
   int get minDim => min(h, v);
   int get maxDim => max(h, v);
+  int get maxRank => v - 1;
+  int get maxFile => h - 1;
   const BoardSize(this.h, this.v);
   factory BoardSize.standard() => BoardSize(8, 8);
 }
