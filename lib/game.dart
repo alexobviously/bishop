@@ -141,6 +141,8 @@ class Game {
     return output;
   }
 
+  List<Move> generateLegalMoves() => generatePlayerMoves(state.turn, MoveGenOptions.normal());
+
   List<Move> generatePlayerMoves(int player, [MoveGenOptions? options]) {
     if (options == null) options = MoveGenOptions.normal();
     List<Move> moves = [];
@@ -197,6 +199,7 @@ class Game {
         } else {
           if (md.capture) {
             if (!options.captures) break;
+            if (options.onlyPiece && target.piece != options.pieceType) break;
             Move m = Move(
               to: to,
               from: from,
@@ -245,6 +248,15 @@ class Game {
       }
     }
 
+    // if (options.legal) {
+    //   List<Move> _remove = [];
+    //   for (Move m in moves) {
+    //     makeMove(m);
+    //     if (hasKingCapture()) _remove.add(m);
+    //     // TODO: undoMove
+    //   }
+    //   _remove.forEach((m) => moves.remove(m));
+    // }
     return moves;
   }
 
@@ -292,6 +304,7 @@ class Game {
     }
 
     State _state = State(
+      move: move,
       turn: 1 - state.turn,
       halfMoves: _halfMoves,
       fullMoves: state.turn == BLACK ? state.fullMoves + 1 : state.fullMoves,
@@ -299,6 +312,45 @@ class Game {
     );
     history.add(_state);
     return true;
+  }
+
+  bool undo() {
+    if (history.length == 1) return false;
+    State _state = history.removeLast();
+    Move move = _state.move!;
+
+    int fromSq = board[move.from];
+    int toSq = board[move.to];
+
+    if (move.castling) {
+      bool kingside = move.castlingDir == CASTLING_K;
+      int royalRank = rank(fromSq, size);
+      int castlingFile = kingside ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
+      int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
+      int rookSq = getSquare(rookFile, royalRank, size);
+      int kingSq = getSquare(castlingFile, royalRank, size);
+      int _rook = board[rookSq];
+      int _king = board[kingSq];
+      board[kingSq] = EMPTY;
+      board[rookSq] = EMPTY;
+      board[move.from] = _king;
+      board[move.to] = _rook;
+    } else {
+      board[move.from] = toSq;
+      // TODO: en passant
+      if (move.capture) {
+        board[move.to] = move.capturedPiece!;
+      } else {
+        board[move.to] = EMPTY;
+      }
+    }
+
+    return true;
+  }
+
+  bool hasKingCapture() {
+    List<Move> moves = generatePlayerMoves(state.turn, MoveGenOptions.pieceCaptures(variant.royalPiece));
+    return moves.isNotEmpty;
   }
 }
 
@@ -349,9 +401,14 @@ main(List<String> args) {
   Game g = Game(variant: Variant.standard(), fen: '8/8/8/4k3/6b1/2K5/8/3B4 w - - 0 1');
   print(g.ascii());
 
-  List<Move> moves = g.generatePlayerMoves(WHITE, MoveGenOptions.onlyCaptures());
+  List<Move> moves = g.generatePlayerMoves(WHITE, MoveGenOptions.onlyQuiet());
   print(moves.map((e) => e.algebraic(g.size)));
-  g.makeMove(moves.first);
+  g.makeMove(moves[1]);
 
   print(g.ascii());
+  g.undo();
+  print(g.ascii());
+
+  // List<Move> moves2 = g.generatePlayerMoves(BLACK, MoveGenOptions.pieceCaptures(g.variant.royalPiece));
+  // print(moves2.map((e) => e.algebraic(g.size)));
 }
