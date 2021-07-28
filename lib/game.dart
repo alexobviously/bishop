@@ -248,15 +248,15 @@ class Game {
       }
     }
 
-    // if (options.legal) {
-    //   List<Move> _remove = [];
-    //   for (Move m in moves) {
-    //     makeMove(m);
-    //     if (hasKingCapture()) _remove.add(m);
-    //     // TODO: undoMove
-    //   }
-    //   _remove.forEach((m) => moves.remove(m));
-    // }
+    if (options.legal) {
+      List<Move> _remove = [];
+      for (Move m in moves) {
+        makeMove(m);
+        if (hasKingCapture()) _remove.add(m);
+        undo();
+      }
+      _remove.forEach((m) => moves.remove(m));
+    }
     return moves;
   }
 
@@ -401,12 +401,10 @@ main(List<String> args) {
   Game g = Game(variant: Variant.standard(), fen: '8/8/8/4k3/6b1/2K5/8/3B4 w - - 0 1');
   print(g.ascii());
 
-  List<Move> moves = g.generatePlayerMoves(WHITE, MoveGenOptions.onlyQuiet());
+  List<Move> moves = g.generatePlayerMoves(WHITE, MoveGenOptions.normal());
   print(moves.map((e) => e.algebraic(g.size)));
   g.makeMove(moves[1]);
 
-  print(g.ascii());
-  g.undo();
   print(g.ascii());
 
   // List<Move> moves2 = g.generatePlayerMoves(BLACK, MoveGenOptions.pieceCaptures(g.variant.royalPiece));
