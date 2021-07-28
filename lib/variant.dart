@@ -72,15 +72,15 @@ class Variant {
   }
 
   void init() {
-    normalisePieces();
+    initPieces();
     buildPieceDefinitions();
     royalPiece = pieces.indexWhere((p) => p.type.royal);
     if (enPassant) epPiece = pieces.indexWhere((p) => p.type.enPassantable);
     if (castling) castlingPiece = pieces.indexWhere((p) => p.symbol == castleTarget);
   }
 
-  void normalisePieces() {
-    pieceTypes.forEach((_, p) => p.normalise(boardSize));
+  void initPieces() {
+    pieceTypes.forEach((_, p) => p.init(boardSize));
   }
 
   void buildPieceDefinitions() {

@@ -18,9 +18,13 @@ class PieceType {
     this.enPassantable = false,
   });
 
-  void normalise(BoardSize boardSize) {
+  void init(BoardSize boardSize) {
     for (MoveDefinition m in moves) {
       m.normalised = m.direction.v * boardSize.h * 2 + m.direction.h;
+      if (m.lame) {
+        m.lameDirection = Direction(m.direction.h ~/ 2, m.direction.v ~/ 2);
+        m.lameNormalised = m.lameDirection!.v * boardSize.h * 2 + m.lameDirection!.h;
+      }
     }
   }
 

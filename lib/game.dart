@@ -174,15 +174,16 @@ class Game {
     for (MoveDefinition md in pieceType.moves) {
       if (!md.capture && !options.quiet) continue;
       if (!md.quiet && !options.captures) continue;
-      if (md.firstOnly) {
-        print(
-            '~~~ from: ${squareName(from, size)}, md.direction: ${md.direction}, fromRank: $fromRank, firstRanks: ${variant.firstMoveRanks[colour]}');
-      }
       if (md.firstOnly && !variant.firstMoveRanks[colour].contains(fromRank)) continue;
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       for (int i = 0; i < range; i++) {
         int to = square + md.normalised * (i + 1) * dirMult;
         if (!onBoard(to, variant.boardSize)) break;
+        if (md.lame) {
+          int _from = square + md.normalised * i * dirMult;
+          int blockSq = _from + md.lameNormalised! * dirMult;
+          if (board[blockSq].isNotEmpty) break;
+        }
         Square target = board[to];
         bool setEnPassant = variant.enPassant && md.firstOnly && pieceType.enPassantable;
 
@@ -501,7 +502,7 @@ main(List<String> args) {
   // print(g.sanMoves());
   // print(g.pgn());
 
-  // Game g = Game(variant: Variant.standard(), fen: 'rnb1kbnr/pp3ppp/4p3/q1pp4/5P1P/2P4R/PP1PP1P1/RNBQKBN1 w Qkq - 0 5');
-  // List<Move> moves = g.generateLegalMoves();
-  // print(moves.map((e) => g.toSan(e)).toList());
+  Game g = Game(variant: Variant.standard(), fen: 'rnbqk1nr/ppppp2p/5p1b/5Pp1/8/7N/PPPPP1PP/RNBQKB1R w KQkq - 1 4');
+  List<Move> moves = g.generateLegalMoves();
+  print(moves.map((e) => g.toSan(e)).toList());
 }

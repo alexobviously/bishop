@@ -9,6 +9,8 @@ class MoveDefinition {
   final bool lame;
 
   late int normalised;
+  Direction? lameDirection;
+  int? lameNormalised;
 
   bool get slider => range != 1;
   bool get quiet => modality == Modality.BOTH || modality == Modality.QUIET;
