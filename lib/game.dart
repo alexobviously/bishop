@@ -17,6 +17,7 @@ class Game {
   late String startPosition;
   List<State> history = [];
   State get state => history.last;
+  bool get canUndo => history.length > 1;
 
   int? castlingTargetK;
   int? castlingTargetQ;
@@ -329,8 +330,8 @@ class Game {
     return true;
   }
 
-  bool undo() {
-    if (history.length == 1) return false;
+  Move? undo() {
+    if (history.length == 1) return null;
     State _state = history.removeLast();
     Move move = _state.move!;
 
@@ -360,7 +361,7 @@ class Game {
       }
     }
 
-    return true;
+    return move;
   }
 
   bool makeRandomMove() {
@@ -398,6 +399,23 @@ class Game {
     if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
 
     return san;
+  }
+
+  List<String> sanMoves() {
+    List<Move> moveStack = [];
+    while (canUndo) {
+      Move? m = undo();
+      if (m == null) break;
+      moveStack.add(m);
+    }
+    List<String> moves = [];
+    while (moveStack.isNotEmpty) {
+      Move m = moveStack.removeLast();
+      String san = toSan(m);
+      moves.add(san);
+      makeMove(m);
+    }
+    return moves;
   }
 }
 
@@ -445,21 +463,22 @@ class MoveGenOptions {
 }
 
 main(List<String> args) {
-  // Game g = Game(variant: Variant.standard());
+  Game g = Game(variant: Variant.standard());
 
-  // for (int i = 0; i < 50; i++) {
-  //   print(g.ascii());
-  //   if (g.state.move != null) print(g.state.move!.algebraic(g.size));
-  //   print(g.fen);
-  //   g.makeRandomMove();
-  // }
+  for (int i = 0; i < 50; i++) {
+    print(g.ascii());
+    if (g.state.move != null) print(g.state.move!.algebraic(g.size));
+    print(g.fen);
+    g.makeRandomMove();
+  }
 
-  // print(g.ascii());
-  // print(g.state.move!.algebraic(g.size));
-  // print(g.fen);
+  print(g.ascii());
+  print(g.state.move!.algebraic(g.size));
+  print(g.fen);
+  print(g.sanMoves());
 
-  Game g =
-      Game(variant: Variant.standard(), fen: 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1');
-  List<Move> moves = g.generateLegalMoves();
-  print(moves.map((e) => g.toSan(e)).toList());
+  // Game g =
+  //     Game(variant: Variant.standard(), fen: 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1');
+  // List<Move> moves = g.generateLegalMoves();
+  // print(moves.map((e) => g.toSan(e)).toList());
 }
