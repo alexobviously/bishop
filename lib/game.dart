@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'castling_rights.dart';
 import 'constants.dart';
+import 'first_where_extension.dart';
 import 'move.dart';
 import 'move_definition.dart';
 import 'piece_type.dart';
@@ -186,7 +189,7 @@ class Game {
             Move m = Move(
               to: to,
               from: from,
-              capturedPiece: makePiece(variant.epPiece, colour),
+              capturedPiece: makePiece(variant.epPiece, colour.opponent),
               enPassant: true,
               setEnPassant: setEnPassant,
             );
@@ -279,7 +282,6 @@ class Game {
     int _castlingRights = state.castlingRights;
 
     // TODO: en passant & set en passant
-
     if (move.castling) {
       bool kingside = move.castlingDir == CASTLING_K;
       int royalRank = rank(fromSq, size);
@@ -291,14 +293,27 @@ class Game {
       board[rookSq] = toSq;
       _castlingRights = _castlingRights.remove(colour);
     } else if (fromPiece.royal) {
+      // king moved
       _castlingRights = _castlingRights.remove(colour);
     } else if (fromSq.piece == variant.castlingPiece) {
+      // rook moved
       int fromFile = file(move.from, size);
       int ks = colour == WHITE ? CASTLING_K : CASTLING_BK;
       int qs = colour == WHITE ? CASTLING_Q : CASTLING_BQ;
-      if (fromFile == variant.castlingKingsideFile && _castlingRights.hasRight(ks)) {
+      if (fromFile == castlingTargetK && _castlingRights.hasRight(ks)) {
         _castlingRights = _castlingRights.flip(ks);
-      } else if (fromFile == variant.castlingQueensideFile && _castlingRights.hasRight(qs)) {
+      } else if (fromFile == castlingTargetQ && _castlingRights.hasRight(qs)) {
+        _castlingRights = _castlingRights.flip(qs);
+      }
+    } else if (move.capture && move.capturedPiece == variant.castlingPiece) {
+      // rook captured
+      int toFile = file(move.to, size);
+      int opponent = colour.opponent;
+      int ks = opponent == WHITE ? CASTLING_K : CASTLING_BK;
+      int qs = opponent == WHITE ? CASTLING_Q : CASTLING_BQ;
+      if (toFile == castlingTargetK && _castlingRights.hasRight(ks)) {
+        _castlingRights = _castlingRights.flip(ks);
+      } else if (toFile == castlingTargetQ && _castlingRights.hasRight(qs)) {
         _castlingRights = _castlingRights.flip(qs);
       }
     }
@@ -348,9 +363,21 @@ class Game {
     return true;
   }
 
+  bool makeRandomMove() {
+    List<Move> moves = generateLegalMoves();
+    int i = Random().nextInt(moves.length);
+    return makeMove(moves[i]);
+  }
+
   bool hasKingCapture() {
     List<Move> moves = generatePlayerMoves(state.turn, MoveGenOptions.pieceCaptures(variant.royalPiece));
     return moves.isNotEmpty;
+  }
+
+  Move? getMove(String algebraic) {
+    List<Move> moves = generateLegalMoves();
+    Move? match = moves.firstWhereOrNull((m) => m.algebraic(size) == algebraic);
+    return match;
   }
 }
 
@@ -398,15 +425,16 @@ class MoveGenOptions {
 }
 
 main(List<String> args) {
-  Game g = Game(variant: Variant.standard(), fen: '8/8/8/4k3/6b1/2K5/8/3B4 w - - 0 1');
+  Game g = Game(variant: Variant.standard());
+
+  for (int i = 0; i < 50; i++) {
+    print(g.ascii());
+    if (g.state.move != null) print(g.state.move!.algebraic(g.size));
+    print(g.fen);
+    g.makeRandomMove();
+  }
+
   print(g.ascii());
-
-  List<Move> moves = g.generatePlayerMoves(WHITE, MoveGenOptions.normal());
-  print(moves.map((e) => e.algebraic(g.size)));
-  g.makeMove(moves[1]);
-
-  print(g.ascii());
-
-  // List<Move> moves2 = g.generatePlayerMoves(BLACK, MoveGenOptions.pieceCaptures(g.variant.royalPiece));
-  // print(moves2.map((e) => e.algebraic(g.size)));
+  print(g.state.move!.algebraic(g.size));
+  print(g.fen);
 }
