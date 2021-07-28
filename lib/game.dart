@@ -18,11 +18,13 @@ class Game {
   int? castlingTargetK;
   int? castlingTargetQ;
   int? royalFile;
+  late MoveGenOptions royalCaptureOptions;
 
   Game({required this.variant, String? fen}) {
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
     buildBoard();
     if (variant.castling) setupCastling();
+    royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
   }
   void setupCastling() {
     for (int i = 0; i < variant.boardSize.h; i++) {
@@ -137,19 +139,21 @@ class Game {
     return output;
   }
 
-  List<Move> generatePlayerMoves(int player) {
+  List<Move> generatePlayerMoves(int player, [MoveGenOptions? options]) {
+    if (options == null) options = MoveGenOptions.normal();
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
       Square target = board[i];
       if (target.isNotEmpty && target.colour == player) {
-        List<Move> pieceMoves = generatePieceMoves(i);
+        List<Move> pieceMoves = generatePieceMoves(i, options);
         moves.addAll(pieceMoves);
       }
     }
     return moves;
   }
 
-  List<Move> generatePieceMoves(int square) {
+  List<Move> generatePieceMoves(int square, [MoveGenOptions? options]) {
+    if (options == null) options = MoveGenOptions.normal();
     Square piece = board[square];
     if (piece.isEmpty) return [];
     Colour colour = piece.colour;
@@ -159,6 +163,8 @@ class Game {
     int from = square;
     // Generate normal moves
     for (MoveDefinition md in pieceType.moves) {
+      if (!md.capture && !options.quiet) continue;
+      if (!md.quiet && !options.captures) continue;
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       for (int i = 0; i < range; i++) {
         int to = square + md.normalised * (i + 1) * dirMult;
@@ -167,10 +173,12 @@ class Game {
         bool setEnPassant = variant.enPassant && md.firstOnly && pieceType.enPassantable;
 
         if (target.isEmpty) {
+          // TODO: prioritise ep? for moves that could be both ep and quiet
           if (md.quiet) {
+            if (!options.quiet) continue;
             Move m = Move(to: to, from: from, setEnPassant: setEnPassant);
             moves.add(m);
-          } else if (variant.enPassant && md.enPassant && state.epSquare == to) {
+          } else if (variant.enPassant && md.enPassant && state.epSquare == to && options.captures) {
             Move m = Move(
               to: to,
               from: from,
@@ -186,6 +194,7 @@ class Game {
           break;
         } else {
           if (md.capture) {
+            if (!options.captures) break;
             Move m = Move(
               to: to,
               from: from,
@@ -200,7 +209,7 @@ class Game {
     }
 
     // Generate castling
-    if (variant.castling && pieceType.royal) {
+    if (variant.castling && options.castling && pieceType.royal) {
       bool kingside = colour == WHITE ? state.castling.wk : state.castling.bk;
       bool queenside = colour == WHITE ? state.castling.bq : state.castling.bq;
       int royalRank = rank(from, variant.boardSize);
@@ -237,4 +246,55 @@ class Game {
 
     return moves;
   }
+}
+
+class MoveGenOptions {
+  final bool captures;
+  final bool quiet;
+  final bool castling;
+  final bool legal;
+  final int? pieceType;
+
+  bool get onlyPiece => pieceType != null;
+
+  const MoveGenOptions({
+    required this.captures,
+    required this.quiet,
+    required this.castling,
+    required this.legal,
+    this.pieceType,
+  });
+  factory MoveGenOptions.normal() => MoveGenOptions(
+        captures: true,
+        quiet: true,
+        castling: true,
+        legal: true,
+      );
+  factory MoveGenOptions.onlyQuiet() => MoveGenOptions(
+        captures: false,
+        quiet: true,
+        castling: true,
+        legal: true,
+      );
+  factory MoveGenOptions.onlyCaptures() => MoveGenOptions(
+        captures: true,
+        quiet: false,
+        castling: false,
+        legal: true,
+      );
+  factory MoveGenOptions.pieceCaptures(int pieceType) => MoveGenOptions(
+        captures: true,
+        quiet: false,
+        castling: false,
+        legal: false,
+        pieceType: pieceType,
+      );
+}
+
+main(List<String> args) {
+  Game g = Game(variant: Variant.standard(), fen: '8/8/8/4k3/6b1/2K5/8/3B4 w - - 0 1');
+  print(g.ascii());
+
+  List<Move> moves = g.generatePlayerMoves(WHITE, MoveGenOptions.onlyCaptures());
+  print(moves.map((e) => e.algebraic(g.variant.boardSize)));
 }
