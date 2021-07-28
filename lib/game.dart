@@ -257,12 +257,9 @@ class Game {
             (board[targetSq].piece != variant.castlingPiece || board[targetSq].colour != colour)) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
         bool _valid = true;
-        print('nummidsqs $numMidSqs');
         for (int j = 1; j < numMidSqs; j++) {
           int midFile = royalFile! + (i == 0 ? j : -j);
-          print('midfile $midFile');
           int midSq = getSquare(midFile, royalRank, variant.boardSize);
-          print('midSq ${squareName(midSq, size)}');
           if (board[midSq].isNotEmpty) {
             _valid = false;
             break;
@@ -526,35 +523,35 @@ class MoveGenOptions {
 }
 
 main(List<String> args) {
-  // Game g = Game(variant: Variant.standard());
+  Game g = Game(variant: Variant.standard());
 
-  // for (int i = 0; i < 57; i++) {
-  //   print(g.ascii());
-  //   if (g.state.move != null) print(g.state.move!.algebraic(g.size));
-  //   print(g.fen);
-  //   g.makeRandomMove();
-  // }
+  for (int i = 0; i < 57; i++) {
+    print(g.ascii());
+    if (g.state.move != null) print(g.state.move!.algebraic(g.size));
+    print(g.fen);
+    g.makeRandomMove();
+  }
 
-  // print(g.ascii());
-  // print(g.state.move!.algebraic(g.size));
-  // print(g.fen);
-  // print(g.sanMoves());
-  // print(g.pgn());
-
-  String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
-  Game g = Game(variant: Variant.standard(), fen: f);
   print(g.ascii());
-  List<Move> moves = g.generateLegalMoves();
-  // List<Move> moves = g.generatePlayerMoves(g.state.turn, MoveGenOptions.normal());
-  print(g.ascii());
-  // Move m = moves[0];
-  // print(g.toAlgebraic(m));
-  // print(g.toSan(m));
-  print(moves.map((e) => g.toAlgebraic(e)).toList());
-  // print(moves.map((e) => g.toSan(e)).toList());
-  // // // Move? m = g.getMove('d1d3');
-  // // // String s = g.toSan(m!);
-  // // // print(s);
-  // g.makeMove(m);
+  print(g.state.move!.algebraic(g.size));
+  print(g.fen);
+  print(g.sanMoves());
+  print(g.pgn());
+
+  // String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
+  // Game g = Game(variant: Variant.standard(), fen: f);
   // print(g.ascii());
+  // List<Move> moves = g.generateLegalMoves();
+  // // List<Move> moves = g.generatePlayerMoves(g.state.turn, MoveGenOptions.normal());
+  // print(g.ascii());
+  // // Move m = moves[0];
+  // // print(g.toAlgebraic(m));
+  // // print(g.toSan(m));
+  // print(moves.map((e) => g.toAlgebraic(e)).toList());
+  // // print(moves.map((e) => g.toSan(e)).toList());
+  // // // // Move? m = g.getMove('d1d3');
+  // // // // String s = g.toSan(m!);
+  // // // // print(s);
+  // // g.makeMove(m);
+  // // print(g.ascii());
 }
