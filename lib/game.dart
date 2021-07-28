@@ -169,10 +169,16 @@ class Game {
     List<Move> moves = [];
     PieceType pieceType = variant.pieces[piece.piece].type;
     int from = square;
+    int fromRank = rank(from, size);
     // Generate normal moves
     for (MoveDefinition md in pieceType.moves) {
       if (!md.capture && !options.quiet) continue;
       if (!md.quiet && !options.captures) continue;
+      if (md.firstOnly) {
+        print(
+            '~~~ from: ${squareName(from, size)}, md.direction: ${md.direction}, fromRank: $fromRank, firstRanks: ${variant.firstMoveRanks[colour]}');
+      }
+      if (md.firstOnly && !variant.firstMoveRanks[colour].contains(fromRank)) continue;
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       for (int i = 0; i < range; i++) {
         int to = square + md.normalised * (i + 1) * dirMult;
@@ -480,23 +486,22 @@ class MoveGenOptions {
 }
 
 main(List<String> args) {
-  Game g = Game(variant: Variant.standard());
+  // Game g = Game(variant: Variant.standard());
 
-  for (int i = 0; i < 57; i++) {
-    print(g.ascii());
-    if (g.state.move != null) print(g.state.move!.algebraic(g.size));
-    print(g.fen);
-    g.makeRandomMove();
-  }
+  // for (int i = 0; i < 57; i++) {
+  //   print(g.ascii());
+  //   if (g.state.move != null) print(g.state.move!.algebraic(g.size));
+  //   print(g.fen);
+  //   g.makeRandomMove();
+  // }
 
-  print(g.ascii());
-  print(g.state.move!.algebraic(g.size));
-  print(g.fen);
-  print(g.sanMoves());
-  print(g.pgn());
+  // print(g.ascii());
+  // print(g.state.move!.algebraic(g.size));
+  // print(g.fen);
+  // print(g.sanMoves());
+  // print(g.pgn());
 
-  // Game g =
-  //     Game(variant: Variant.standard(), fen: 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1');
+  // Game g = Game(variant: Variant.standard(), fen: 'rnb1kbnr/pp3ppp/4p3/q1pp4/5P1P/2P4R/PP1PP1P1/RNBQKBN1 w Qkq - 0 5');
   // List<Move> moves = g.generateLegalMoves();
   // print(moves.map((e) => g.toSan(e)).toList());
 }

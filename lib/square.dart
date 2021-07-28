@@ -48,6 +48,6 @@ bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
 }
 
 int file(int square, [BoardSize boardSize = const BoardSize(8, 8)]) => square % (boardSize.h * 2);
-int rank(int square, [BoardSize boardSize = const BoardSize(8, 8)]) => boardSize.v - (square ~/ (boardSize.h * 2));
+int rank(int square, [BoardSize boardSize = const BoardSize(8, 8)]) => boardSize.v - (square ~/ (boardSize.h * 2)) - 1;
 int getSquare(int file, int rank, [BoardSize boardSize = const BoardSize(8, 8)]) =>
-    (boardSize.v - rank) * (boardSize.h * 2) + file;
+    (boardSize.v - rank - 1) * (boardSize.h * 2) + file;

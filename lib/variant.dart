@@ -16,6 +16,7 @@ class Variant {
   final Function()? startPosBuilder;
   final bool promotion;
   final bool enPassant;
+  final List<List<int>> firstMoveRanks; // e.g. where pawns can double move from
 
   late List<PieceDefinition> pieces;
   late int epPiece;
@@ -34,6 +35,7 @@ class Variant {
     this.startPosBuilder,
     this.promotion = false,
     this.enPassant = false,
+    this.firstMoveRanks = const [[], []],
   }) {
     assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
     init();
@@ -51,6 +53,7 @@ class Variant {
     Function()? startPosBuilder,
     bool? promotion,
     bool? enPassant,
+    List<List<int>>? firstMoveRanks,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -64,6 +67,7 @@ class Variant {
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
       promotion: promotion ?? this.promotion,
       enPassant: enPassant ?? this.enPassant,
+      firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
     );
   }
 
@@ -91,10 +95,14 @@ class Variant {
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castling: true,
       castleTarget: 'R',
-      castlingKingsideFile: File.G,
-      castlingQueensideFile: File.C,
+      castlingKingsideFile: FILE_G,
+      castlingQueensideFile: FILE_C,
       promotion: true,
       enPassant: true,
+      firstMoveRanks: [
+        [RANK_2], // white
+        [RANK_7], // black
+      ],
       pieceTypes: {
         'P': PieceType.pawn(),
         'N': PieceType.knight(),
@@ -119,8 +127,8 @@ class Variant {
       name: 'Capablanca Chess',
       boardSize: BoardSize(10, 8),
       startPosition: 'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
-      castlingKingsideFile: File.I,
-      castlingQueensideFile: File.C,
+      castlingKingsideFile: FILE_I,
+      castlingQueensideFile: FILE_C,
       pieceTypes: standard.pieceTypes
         ..addAll({
           'A': PieceType.archbishop(),
@@ -129,6 +137,7 @@ class Variant {
     );
   }
 
+  // TODO: flexible promotion rules - https://en.wikipedia.org/wiki/Grand_chess#Rules
   factory Variant.grand() {
     Variant standard = Variant.standard();
     return standard.copyWith(
@@ -136,6 +145,10 @@ class Variant {
       boardSize: BoardSize(10, 10),
       startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
       castling: false,
+      firstMoveRanks: [
+        [RANK_3],
+        [RANK_8],
+      ],
       pieceTypes: standard.pieceTypes
         ..addAll({
           'C': PieceType.chancellor(), // marshal
