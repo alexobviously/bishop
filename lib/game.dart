@@ -397,7 +397,7 @@ class Game {
     san = '$san${squareName(move.to, size)}';
 
     if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
-
+    // todo: check & checkmate
     return san;
   }
 
@@ -416,6 +416,23 @@ class Game {
       makeMove(m);
     }
     return moves;
+  }
+
+  String pgn() {
+    List<String> moves = sanMoves();
+    print('state.fullMoves ${state.fullMoves}, moves.length ${moves.length}');
+    int firstMove = state.fullMoves - (moves.length ~/ 2);
+    int firstTurn = history.first.turn;
+    print('firstmove $firstMove, firstturn $firstTurn');
+    int turn = firstTurn;
+    String _pgn = '';
+    for (int i = 0; i < moves.length; i++) {
+      if (i == 0 || turn == WHITE) _pgn = '$_pgn${firstMove + i ~/ 2}. ';
+      if (i == 0 && turn == BLACK) _pgn = '$_pgn..';
+      _pgn = '$_pgn${moves[i]} ';
+      turn = turn.opponent;
+    }
+    return _pgn;
   }
 }
 
@@ -465,7 +482,7 @@ class MoveGenOptions {
 main(List<String> args) {
   Game g = Game(variant: Variant.standard());
 
-  for (int i = 0; i < 50; i++) {
+  for (int i = 0; i < 57; i++) {
     print(g.ascii());
     if (g.state.move != null) print(g.state.move!.algebraic(g.size));
     print(g.fen);
@@ -476,6 +493,7 @@ main(List<String> args) {
   print(g.state.move!.algebraic(g.size));
   print(g.fen);
   print(g.sanMoves());
+  print(g.pgn());
 
   // Game g =
   //     Game(variant: Variant.standard(), fen: 'r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1');
