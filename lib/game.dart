@@ -425,7 +425,8 @@ class Game {
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
   bool get insufficientMaterial => false;
   bool get repetition => false;
-  bool get halfMoveRule => state.halfMoves >= 100; // TODO: make this configurable
+  bool get halfMoveRule =>
+      variant.halfMoveLimit != null && state.halfMoves >= variant.halfMoveLimit!; // TODO: make this configurable
   bool get inDraw => stalemate || insufficientMaterial || repetition || halfMoveRule;
   bool get gameOver => checkmate || inDraw;
 
