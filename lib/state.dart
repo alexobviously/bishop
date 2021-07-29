@@ -9,6 +9,7 @@ class State {
   final int fullMoves;
   final CastlingRights castlingRights;
   final int? epSquare;
+  final List<int> royalSquares;
 
   State({
     this.move,
@@ -17,5 +18,6 @@ class State {
     required this.fullMoves,
     required this.castlingRights,
     this.epSquare,
+    required this.royalSquares,
   });
 }

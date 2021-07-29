@@ -61,6 +61,7 @@ class Game {
     String _fullMoves = sections[5];
     int sq = 0;
     int emptySquares = 0;
+    List<int> royalSquares = [INVALID, INVALID];
     for (String c in _board) {
       String symbol = c.toUpperCase();
       if (isNumeric(c)) {
@@ -72,9 +73,13 @@ class Game {
       if (c == '/') sq += variant.boardSize.h;
       if (pieceLookup.containsKey(symbol)) {
         // it's a piece
+        int pieceIndex = pieceLookup[symbol]!;
         Colour colour = c == symbol ? WHITE : BLACK;
-        Square piece = makePiece(pieceLookup[symbol]!, colour);
+        Square piece = makePiece(pieceIndex, colour);
         board[sq] = piece;
+        if (variant.pieces[pieceIndex].type.royal) {
+          royalSquares[colour] = sq;
+        }
         sq++;
       }
     }
@@ -88,6 +93,7 @@ class Game {
       fullMoves: int.parse(_fullMoves),
       epSquare: ep,
       castlingRights: castling,
+      royalSquares: royalSquares,
     );
     history.add(_state);
   }
@@ -316,6 +322,7 @@ class Game {
     else
       _halfMoves++;
     int _castlingRights = state.castlingRights;
+    List<int> royalSquares = List.from(state.royalSquares);
 
     // TODO: en passant & set en passant
     if (move.castling) {
@@ -328,9 +335,11 @@ class Game {
       board[kingSq] = fromSq;
       board[rookSq] = toSq;
       _castlingRights = _castlingRights.remove(colour);
+      royalSquares[colour] = kingSq;
     } else if (fromPiece.royal) {
       // king moved
       _castlingRights = _castlingRights.remove(colour);
+      royalSquares[colour] = toSq;
     } else if (fromSq.piece == variant.castlingPiece) {
       // rook moved
       int fromFile = file(move.from, size);
@@ -360,6 +369,7 @@ class Game {
       halfMoves: _halfMoves,
       fullMoves: state.turn == BLACK ? state.fullMoves + 1 : state.fullMoves,
       castlingRights: _castlingRights,
+      royalSquares: royalSquares,
     );
     history.add(_state);
     return true;
@@ -418,7 +428,7 @@ class Game {
     return false;
   }
 
-  bool kingAttacked(int player) => isAttacked(0, player.opponent);
+  bool kingAttacked(int player) => isAttacked(state.royalSquares[player], player.opponent);
 
   bool get inCheck => kingAttacked(state.turn);
   bool get checkmate => inCheck && generateLegalMoves().isEmpty;
