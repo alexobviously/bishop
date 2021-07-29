@@ -414,6 +414,21 @@ class Game {
     return moves.isNotEmpty;
   }
 
+  bool isAttacked(int square, Colour player) {
+    return false;
+  }
+
+  bool kingAttacked(int player) => isAttacked(0, player.opponent);
+
+  bool get inCheck => kingAttacked(state.turn);
+  bool get checkmate => inCheck && generateLegalMoves().isEmpty;
+  bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
+  bool get insufficientMaterial => false;
+  bool get repetition => false;
+  bool get halfMoveRule => state.halfMoves >= 100; // TODO: make this configurable
+  bool get inDraw => stalemate || insufficientMaterial || repetition || halfMoveRule;
+  bool get gameOver => checkmate || inDraw;
+
   Move? getMove(String algebraic) {
     List<Move> moves = generateLegalMoves();
     Move? match = moves.firstWhereOrNull((m) => m.algebraic(size) == algebraic);
