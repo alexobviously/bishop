@@ -18,7 +18,7 @@ class Variant {
   final List<int> promotionRanks;
   final bool enPassant;
   final List<List<int>> firstMoveRanks; // e.g. where pawns can double move from
-  final int? halfMoveLimit;
+  final int? halfMoveDraw; // e.g. set this to 100 for the standard 50-move rule
 
   late List<PieceDefinition> pieces;
   late List<int> promotionPieces;
@@ -40,7 +40,7 @@ class Variant {
     this.promotionRanks = const [-1, -1],
     this.enPassant = false,
     this.firstMoveRanks = const [[], []],
-    this.halfMoveLimit,
+    this.halfMoveDraw,
   }) {
     assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
     init();
@@ -60,7 +60,7 @@ class Variant {
     List<int>? promotionRanks,
     bool? enPassant,
     List<List<int>>? firstMoveRanks,
-    int? halfMoveLimit,
+    int? halfMoveDraw,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -76,7 +76,7 @@ class Variant {
       promotionRanks: promotionRanks ?? this.promotionRanks,
       enPassant: enPassant ?? this.enPassant,
       firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
-      halfMoveLimit: halfMoveLimit ?? this.halfMoveLimit,
+      halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
     );
   }
 
@@ -114,7 +114,7 @@ class Variant {
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
       enPassant: true,
-      halfMoveLimit: 100,
+      halfMoveDraw: 100,
       firstMoveRanks: [
         [RANK_2], // white
         [RANK_7], // black
