@@ -469,7 +469,12 @@ class Game {
     san = '$san${squareName(move.to, size)}';
 
     if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
-    // todo: check & checkmate
+
+    makeMove(move);
+    if (inCheck) {
+      san = '$san${checkmate ? '#' : '?'}';
+    }
+    undo();
     return san;
   }
 
