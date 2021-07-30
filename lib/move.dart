@@ -9,6 +9,7 @@ class Move {
   final int? promoSource; // the piece type that got promoted
   final int? promoPiece; // this piece type that was promoted to
   final CastlingRights? castlingDir;
+  final int? castlingPieceSquare;
   final bool enPassant;
   final bool setEnPassant;
 
@@ -23,6 +24,7 @@ class Move {
     this.promoSource,
     this.promoPiece,
     this.castlingDir,
+    this.castlingPieceSquare,
     this.enPassant = false,
     this.setEnPassant = false,
   });

@@ -218,7 +218,7 @@ class Game {
         if (target.isEmpty) {
           // TODO: prioritise ep? for moves that could be both ep and quiet
           if (md.quiet) {
-            if (!options.quiet) continue;
+            if (!options.quiet && options.onlySquare == null) continue;
             Move m = Move(to: to, from: from, setEnPassant: setEnPassant);
             addMove(m);
           } else if (variant.enPassant && md.enPassant && state.epSquare == to && options.captures) {
@@ -228,6 +228,12 @@ class Game {
               capturedPiece: makePiece(variant.epPiece, colour.opponent),
               enPassant: true,
               setEnPassant: setEnPassant,
+            );
+            addMove(m);
+          } else if (options.onlySquare != null && to == options.onlySquare) {
+            Move m = Move(
+              to: to,
+              from: from,
             );
             addMove(m);
           } else {
@@ -270,18 +276,28 @@ class Game {
             (board[targetSq].piece != variant.castlingPiece || board[targetSq].colour != colour)) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
         bool _valid = true;
-        for (int j = 1; j < numMidSqs; j++) {
+        for (int j = 1; j <= numMidSqs; j++) {
           int midFile = royalFile! + (i == 0 ? j : -j);
           int midSq = getSquare(midFile, royalRank, variant.boardSize);
-          if (board[midSq].isNotEmpty) {
+          if (j != numMidSqs && board[midSq].isNotEmpty) {
+            // squares between to and from must be empty
             _valid = false;
             break;
           }
-          // TODO: if isAttacked(midSq) break
+          if (isAttacked(midSq, colour.opponent)) {
+            // squares between & dest square must not be attacked
+            _valid = false;
+            break;
+          }
         }
         if (_valid) {
           int castlingDir = i == 0 ? CASTLING_K : CASTLING_Q;
-          Move m = Move(from: from, to: rookSq, castlingDir: castlingDir);
+          Move m = Move(
+            from: from,
+            to: targetSq,
+            castlingDir: castlingDir,
+            castlingPieceSquare: rookSq,
+          );
           moves.add(m);
         }
       }
@@ -314,7 +330,6 @@ class Game {
     for (int p in variant.promotionPieces) {
       Move m = base.copyWith(promoSource: board[base.from].piece, promoPiece: p);
       moves.add(m);
-      //print('promotion move: ${}');
     }
     return moves;
   }
@@ -344,13 +359,15 @@ class Game {
     // TODO: en passant & set en passant
     if (move.castling) {
       bool kingside = move.castlingDir == CASTLING_K;
-      int royalRank = rank(fromSq, size);
+      int royalRank = rank(move.from, size);
       int castlingFile = kingside ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
       int rookSq = getSquare(rookFile, royalRank, size);
       int kingSq = getSquare(castlingFile, royalRank, size);
+      int rook = board[move.castlingPieceSquare!];
+      board[move.castlingPieceSquare!] = EMPTY;
       board[kingSq] = fromSq;
-      board[rookSq] = toSq;
+      board[rookSq] = rook;
       _castlingRights = _castlingRights.remove(colour);
       royalSquares[colour] = kingSq;
     } else if (fromPiece.royal) {
@@ -397,22 +414,20 @@ class Game {
     State _state = history.removeLast();
     Move move = _state.move!;
 
-    int fromSq = board[move.from];
     int toSq = board[move.to];
 
     if (move.castling) {
       bool kingside = move.castlingDir == CASTLING_K;
-      int royalRank = rank(fromSq, size);
+      int royalRank = rank(move.from, size);
       int castlingFile = kingside ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
       int rookSq = getSquare(rookFile, royalRank, size);
-      int kingSq = getSquare(castlingFile, royalRank, size);
       int _rook = board[rookSq];
-      int _king = board[kingSq];
-      board[kingSq] = EMPTY;
+      int _king = board[move.to];
+      board[move.to] = EMPTY;
       board[rookSq] = EMPTY;
       board[move.from] = _king;
-      board[move.to] = _rook;
+      board[move.castlingPieceSquare!] = _rook;
     } else {
       if (move.promotion) {
         board[move.from] = makePiece(move.promoSource!, state.turn);
@@ -551,8 +566,7 @@ main(List<String> args) {
 
   //String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
   //String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
-  //String f = 'r3k2r/p6p/8/8/8/8/8/R3K2R w KQ - 0 1';
-  String f = 'r3k2r/p6p/8/8/8/8/R7/4K2R b K - 1 1';
+  String f = 'r3k2r/p6p/8/8/8/8/8/R3K2R w KQ - 0 1';
   Game g = Game(variant: Variant.standard(), fen: f);
   print('turn: ${g.state.turn}');
   print(g.inCheck);
@@ -564,7 +578,7 @@ main(List<String> args) {
   // print(g.toAlgebraic(m));
   // print(g.toSan(m));
   print(moves.map((e) => g.toAlgebraic(e)).toList());
-  //print(moves.map((e) => g.toSan(e)).toList());
+  print(moves.map((e) => g.toSan(e)).toList());
   // g.makeMove(moves.first);
   // print(g.inCheck);
   // print(g.ascii());
