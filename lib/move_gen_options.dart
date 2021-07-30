@@ -4,6 +4,7 @@ class MoveGenOptions {
   final bool castling;
   final bool legal;
   final int? pieceType;
+  final int? onlySquare;
 
   bool get onlyPiece => pieceType != null;
 
@@ -13,6 +14,7 @@ class MoveGenOptions {
     required this.castling,
     required this.legal,
     this.pieceType,
+    this.onlySquare,
   });
   factory MoveGenOptions.normal() => MoveGenOptions(
         captures: true,
@@ -32,11 +34,24 @@ class MoveGenOptions {
         castling: false,
         legal: true,
       );
+  factory MoveGenOptions.attacks() => MoveGenOptions(
+        captures: true,
+        quiet: false,
+        castling: false,
+        legal: false,
+      );
   factory MoveGenOptions.pieceCaptures(int pieceType) => MoveGenOptions(
         captures: true,
         quiet: false,
         castling: false,
         legal: false,
         pieceType: pieceType,
+      );
+  factory MoveGenOptions.squareAttacks(int square) => MoveGenOptions(
+        captures: true,
+        quiet: false,
+        castling: false,
+        legal: false,
+        onlySquare: square,
       );
 }
