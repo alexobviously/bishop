@@ -575,53 +575,69 @@ class Game {
     }
     return _pgn;
   }
+
+  int perft(int depth) {
+    List<Move> moves = generateLegalMoves();
+    int nodes = 0;
+    for (Move m in moves) {
+      makeMove(m);
+      if (depth - 1 > 0) {
+        int childNodes = perft(depth - 1);
+        nodes += childNodes;
+      } else {
+        nodes++;
+      }
+      undo();
+    }
+    return nodes;
+  }
 }
 
 main(List<String> args) {
-  // Game g = Game(variant: Variant.standard());
+  Game g = Game(variant: Variant.standard());
 
-  // for (int i = 0; i < 599; i++) {
-  //   print(g.ascii());
-  //   if (g.state.move != null) print(g.state.move!.algebraic(g.size));
-  //   print(g.fen);
-  //   if (g.gameOver) {
-  //     print('game over');
-  //     break;
-  //   }
-  //   g.makeRandomMove();
-  // }
+  for (int i = 0; i < 599; i++) {
+    print(g.ascii());
+    if (g.state.move != null) print(g.state.move!.algebraic(g.size));
+    print(g.fen);
+    if (g.gameOver) {
+      print('game over');
+      break;
+    }
+    g.makeRandomMove();
+  }
 
-  // print(g.ascii());
-  // print("MOVE ${g.state.fullMoves}");
-  // print(g.state.move!.algebraic(g.size));
-  // print(g.fen);
-  // //print(g.sanMoves());
-  // print(g.pgn());
-  // print('checkmate: ${g.checkmate}');
-  // print('draw: ${g.inDraw}');
-
-  //String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
-  //String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
-  String f = '7k/B7/3R1pnp/7N/PpP5/1P4P1/1KR2p2/1N2q3 w - - 2 80';
-  Game g = Game(variant: Variant.standard(), fen: f);
-  print('turn: ${g.state.turn}');
-  print(g.inCheck);
   print(g.ascii());
-  List<Move> moves = g.generateLegalMoves();
-  // List<Move> moves = g.generatePlayerMoves(g.state.turn, MoveGenOptions.normal());
-  //print(g.ascii());
-  // Move m = moves[0];
-  // print(g.toAlgebraic(m));
-  // print(g.toSan(m));
-  // print(moves.map((e) => g.toAlgebraic(e)).toList());
-  print(moves.map((e) => g.toSan(e, moves)).toList());
-  // g.makeMove(moves.first);
+  print("MOVE ${g.state.fullMoves}");
+  print(g.state.move!.algebraic(g.size));
+  print(g.fen);
+  //print(g.sanMoves());
+  print(g.pgn());
+  print('checkmate: ${g.checkmate}');
+  print('draw: ${g.inDraw}');
+
+  // //String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
+  // //String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
+  // String f = '7k/B7/3R1pnp/7N/PpP5/1P4P1/1KR2p2/1N2q3 w - - 2 80';
+  // Game g = Game(variant: Variant.standard(), fen: f);
+  // print('turn: ${g.state.turn}');
   // print(g.inCheck);
   // print(g.ascii());
-  // print(g.fen);
-  // // // Move? m = g.getMove('d1d3');
-  // // // String s = g.toSan(m!);
-  // // // print(s);
-  // g.makeMove(m);
-  // print(g.ascii());
+  // List<Move> moves = g.generateLegalMoves();
+  // // List<Move> moves = g.generatePlayerMoves(g.state.turn, MoveGenOptions.normal());
+  // //print(g.ascii());
+  // // Move m = moves[0];
+  // // print(g.toAlgebraic(m));
+  // // print(g.toSan(m));
+  // // print(moves.map((e) => g.toAlgebraic(e)).toList());
+  // print(moves.map((e) => g.toSan(e, moves)).toList());
+  // // g.makeMove(moves.first);
+  // // print(g.inCheck);
+  // // print(g.ascii());
+  // // print(g.fen);
+  // // // // Move? m = g.getMove('d1d3');
+  // // // // String s = g.toSan(m!);
+  // // // // print(s);
+  // // g.makeMove(m);
+  // // print(g.ascii());
 }
