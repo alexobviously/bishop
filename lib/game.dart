@@ -484,7 +484,7 @@ class Game {
     return alg;
   }
 
-  String toSan(Move move) {
+  String toSan(Move move, [List<Move>? moves]) {
     if (move.castling) {
       return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? "O-O" : "O-O-O";
     }
@@ -492,10 +492,12 @@ class Game {
     PieceDefinition pieceDef = variant.pieces[piece];
 
     String san = '';
+    String disambiguator = getDisambiguator(move, moves);
     if (pieceDef.type.noSanSymbol) {
       if (move.capture) san = squareName(move.from, size)[0];
     } else
       san = pieceDef.symbol;
+    san = '$san$disambiguator';
     if (move.capture) san = '${san}x';
     san = '$san${squareName(move.to, size)}';
 
@@ -507,6 +509,39 @@ class Game {
     }
     undo();
     return san;
+  }
+
+  // To be used in cases where, given a piece and a destination, there is more than
+  // one possible move. For example, in 'Nbxa4', this function provides the 'b'.
+  String getDisambiguator(Move move, [List<Move>? moves]) {
+    // provide a list of moves to make this more efficient
+    if (moves == null) moves = generateLegalMoves();
+
+    int _piece = board[move.from].piece;
+    int _file = file(move.from, size);
+    bool ambiguity = false;
+    bool needRank = false;
+    bool needFile = false;
+    for (Move m in moves) {
+      if (m.from == move.from) continue;
+      if (m.to != move.to) continue;
+      if (_piece != board[m.from].piece) continue;
+      ambiguity = true;
+      if (file(m.from, size) == _file) {
+        needRank = true;
+      } else {
+        needFile = true;
+      }
+      if (needRank && needFile) break;
+    }
+
+    String disambiguator = '';
+    if (ambiguity) {
+      String _squareName = squareName(move.from, size);
+      if (needFile) disambiguator = _squareName[0];
+      if (needRank) disambiguator = '$disambiguator${_squareName[1]}';
+    }
+    return disambiguator;
   }
 
   List<String> sanMoves() {
@@ -557,16 +592,17 @@ main(List<String> args) {
   // }
 
   // print(g.ascii());
+  // print("MOVE ${g.state.fullMoves}");
   // print(g.state.move!.algebraic(g.size));
   // print(g.fen);
-  // print(g.sanMoves());
+  // //print(g.sanMoves());
   // print(g.pgn());
   // print('checkmate: ${g.checkmate}');
   // print('draw: ${g.inDraw}');
 
   //String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
   //String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
-  String f = 'r3k2r/p6p/8/8/8/8/8/R3K2R w KQ - 0 1';
+  String f = '7k/B7/3R1pnp/7N/PpP5/1P4P1/1KR2p2/1N2q3 w - - 2 80';
   Game g = Game(variant: Variant.standard(), fen: f);
   print('turn: ${g.state.turn}');
   print(g.inCheck);
@@ -577,8 +613,8 @@ main(List<String> args) {
   // Move m = moves[0];
   // print(g.toAlgebraic(m));
   // print(g.toSan(m));
-  print(moves.map((e) => g.toAlgebraic(e)).toList());
-  print(moves.map((e) => g.toSan(e)).toList());
+  // print(moves.map((e) => g.toAlgebraic(e)).toList());
+  print(moves.map((e) => g.toSan(e, moves)).toList());
   // g.makeMove(moves.first);
   // print(g.inCheck);
   // print(g.ascii());
