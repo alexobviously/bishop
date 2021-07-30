@@ -287,6 +287,16 @@ class Game {
       }
     }
 
+    if (options.onlySquare != null) {
+      List<Move> _remove = [];
+      for (Move m in moves) {
+        if (m.to != options.onlySquare) {
+          _remove.add(m);
+        }
+      }
+      _remove.forEach((m) => moves.remove(m));
+    }
+
     if (options.legal) {
       List<Move> _remove = [];
       for (Move m in moves) {
@@ -431,8 +441,8 @@ class Game {
     return moves.isNotEmpty;
   }
 
-  bool isAttacked(int square, Colour player) {
-    List<Move> attacks = generatePlayerMoves(player, MoveGenOptions.squareAttacks(square));
+  bool isAttacked(int square, Colour colour) {
+    List<Move> attacks = generatePlayerMoves(colour, MoveGenOptions.squareAttacks(square));
     return attacks.isNotEmpty;
   }
 
@@ -443,8 +453,7 @@ class Game {
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
   bool get insufficientMaterial => false;
   bool get repetition => false;
-  bool get halfMoveRule =>
-      variant.halfMoveDraw != null && state.halfMoves >= variant.halfMoveDraw!; // TODO: make this configurable
+  bool get halfMoveRule => variant.halfMoveDraw != null && state.halfMoves >= variant.halfMoveDraw!;
   bool get inDraw => stalemate || insufficientMaterial || repetition || halfMoveRule;
   bool get gameOver => checkmate || inDraw;
 
@@ -479,7 +488,7 @@ class Game {
 
     makeMove(move);
     if (inCheck) {
-      san = '$san${checkmate ? '#' : '?'}';
+      san = '$san${checkmate ? '#' : '+'}';
     }
     undo();
     return san;
@@ -541,8 +550,11 @@ main(List<String> args) {
   // print('draw: ${g.inDraw}');
 
   //String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
-  String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
+  //String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
+  //String f = 'r3k2r/p6p/8/8/8/8/8/R3K2R w KQ - 0 1';
+  String f = 'r3k2r/p6p/8/8/8/8/R7/4K2R b K - 1 1';
   Game g = Game(variant: Variant.standard(), fen: f);
+  print('turn: ${g.state.turn}');
   print(g.inCheck);
   print(g.ascii());
   List<Move> moves = g.generateLegalMoves();
@@ -552,7 +564,11 @@ main(List<String> args) {
   // print(g.toAlgebraic(m));
   // print(g.toSan(m));
   print(moves.map((e) => g.toAlgebraic(e)).toList());
-  // print(moves.map((e) => g.toSan(e)).toList());
+  //print(moves.map((e) => g.toSan(e)).toList());
+  // g.makeMove(moves.first);
+  // print(g.inCheck);
+  // print(g.ascii());
+  // print(g.fen);
   // // // Move? m = g.getMove('d1d3');
   // // // String s = g.toSan(m!);
   // // // print(s);
