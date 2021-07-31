@@ -1,6 +1,6 @@
 name: squares
 version: 0.1.0
-description: Squares is a chess logic library with generic variant support
+description: Squares is a chess logic package with flexible variant support
 homepage: https://github.com/alexobviously/squares.dart
 environment:
   sdk: '>=2.13.0-0 <3.0.0'
