@@ -131,7 +131,7 @@ class Variant {
       name: 'Chess960',
       startPosBuilder: build960Position,
       castlingOptions: CastlingOptions.chess960(),
-      outputOptions: OutputOptions.standard(),
+      outputOptions: OutputOptions.chess960(),
     );
   }
 

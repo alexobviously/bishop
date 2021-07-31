@@ -63,9 +63,10 @@ class Squares {
       castlingTargetQ = variant.castlingOptions.qRook;
     } else {
       for (int i = 0; i < 2; i++) {
-        int r = i * (size.v - 1);
+        if (castlingTargetK != null && castlingTargetQ != null) break;
+        int r = i * (size.v - 1) * size.north;
         bool kingside = false;
-        for (int j = 0; j < size.h; i++) {
+        for (int j = 0; j < size.h; j++) {
           int _piece = board[r + j].piece;
           if (_piece == variant.royalPiece)
             kingside = true;
@@ -79,7 +80,7 @@ class Squares {
         }
       }
     }
-    if (variant.outputOptions.castlingFormat == CastlingFenFormat.Shredder) {
+    if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
       String k = fileSymbol(castlingTargetK!);
       String q = fileSymbol(castlingTargetQ!);
       castlingFileSymbols = [k.toUpperCase(), q.toUpperCase(), k, q];
@@ -169,7 +170,7 @@ class Squares {
     }
     String _turn = state.turn == WHITE ? 'w' : 'b';
     String _castling = state.castlingRights.formatted;
-    if (variant.outputOptions.castlingFormat == CastlingFenFormat.Shredder) {
+    if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
       _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols!);
     }
     String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
@@ -321,6 +322,7 @@ class Squares {
         bool _valid = true;
         for (int j = 1; j <= numMidSqs; j++) {
           int midFile = royalFile! + (i == 0 ? j : -j);
+          if (midFile == rookFile) continue; // for some chess960 positions
           int midSq = getSquare(midFile, royalRank, variant.boardSize);
           if (j != numMidSqs && board[midSq].isNotEmpty) {
             // squares between to and from must be empty
