@@ -6,8 +6,9 @@ typedef Square = int;
 Square EMPTY = 0;
 
 extension SquareLogic on Square {
-  Colour get colour => this & 1;
-  int get piece => (this >> 1) & 127;
+  Colour get colour => this & 1; // colour only
+  int get type => (this >> 1) & 127; // piece type only
+  int get piece => this & 255; // piece with colour
   int get flags => (this >> 8) & 15;
   bool get isEmpty => this == 0;
   bool get isNotEmpty => this != 0;

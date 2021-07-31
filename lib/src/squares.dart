@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:squares/squares.dart';
+
 import 'castling_rights.dart';
 import 'constants.dart';
 import 'first_where_extension.dart';
@@ -14,6 +16,7 @@ import 'variant/variant.dart';
 
 class Squares {
   final Variant variant;
+  late Zobrist zobrist;
   late List<int> board;
   late String startPosition;
   List<State> history = [];
@@ -30,6 +33,7 @@ class Squares {
   BoardSize get size => variant.boardSize;
 
   Squares({required this.variant, String? fen}) {
+    zobrist = Zobrist(variant, 7363661891);
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
     buildBoard();
     royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
@@ -67,7 +71,7 @@ class Squares {
         int r = i * (size.v - 1) * size.north;
         bool kingside = false;
         for (int j = 0; j < size.h; j++) {
-          int _piece = board[r + j].piece;
+          int _piece = board[r + j].type;
           if (_piece == variant.royalPiece)
             kingside = true;
           else if (_piece == variant.castlingPiece) {
@@ -138,6 +142,7 @@ class Squares {
       castlingRights: castling,
       royalSquares: royalSquares,
     );
+    _state.hash = zobrist.compute(_state, board);
     history.add(_state);
   }
 
@@ -161,7 +166,7 @@ class Squares {
           empty++;
         else {
           if (empty > 0) addEmptySquares();
-          String char = variant.pieces[sq.piece].char(sq.colour);
+          String char = variant.pieces[sq.type].char(sq.colour);
           _fen = '$_fen$char';
         }
       }
@@ -187,7 +192,7 @@ class Squares {
       output = '$output$_rank';
       for (int j in Iterable<int>.generate(variant.boardSize.h).toList()) {
         Square sq = board[i * variant.boardSize.h * 2 + j];
-        String char = variant.pieces[sq.piece].char(sq.colour);
+        String char = variant.pieces[sq.type].char(sq.colour);
         if (unicode && UNICODE_PIECES.containsKey(char)) char = UNICODE_PIECES[char]!;
         output = '$output $char ';
       }
@@ -219,7 +224,7 @@ class Squares {
     Colour colour = piece.colour;
     int dirMult = PLAYER_DIRECTION[piece.colour];
     List<Move> moves = [];
-    PieceType pieceType = variant.pieces[piece.piece].type;
+    PieceType pieceType = variant.pieces[piece.type].type;
     int from = square;
     int fromRank = rank(from, size);
     bool exit = false;
@@ -289,7 +294,7 @@ class Squares {
         } else {
           if (md.capture) {
             if (!options.captures) break;
-            if (options.onlyPiece && target.piece != options.pieceType) break;
+            if (options.onlyPiece && target.type != options.pieceType) break;
             Move m = Move(
               to: to,
               from: from,
@@ -317,7 +322,7 @@ class Squares {
         int rookFile = i == 0 ? castlingTargetK! : castlingTargetQ!;
         int rookSq = getSquare(rookFile, royalRank, variant.boardSize);
         if (board[targetSq].isNotEmpty &&
-            (board[targetSq].piece != variant.castlingPiece || board[targetSq].colour != colour)) continue;
+            (board[targetSq].type != variant.castlingPiece || board[targetSq].colour != colour)) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
         bool _valid = true;
         for (int j = 1; j <= numMidSqs; j++) {
@@ -373,7 +378,7 @@ class Squares {
   List<Move> generatePromotionMoves(Move base) {
     List<Move> moves = [];
     for (int p in variant.promotionPieces) {
-      Move m = base.copyWith(promoSource: board[base.from].piece, promoPiece: p);
+      Move m = base.copyWith(promoSource: board[base.from].type, promoPiece: p);
       moves.add(m);
     }
     return moves;
@@ -381,17 +386,25 @@ class Squares {
 
   bool makeMove(Move move) {
     if (!onBoard(move.from, size) || !onBoard(move.to, size)) return false;
+    int hash = state.hash;
+    hash ^= zobrist.table[zobrist.TURN][Zobrist.META];
     // TODO: more validation?
     Square fromSq = board[move.from];
     Square toSq = board[move.to];
-    PieceType fromPiece = variant.pieces[fromSq.piece].type;
+    PieceType fromPiece = variant.pieces[fromSq.type].type;
     int colour = fromSq.colour;
     if (colour != state.turn) return false;
+    // Remove the moved piece
+    hash ^= zobrist.table[move.from][fromSq.piece];
     board[move.from] = EMPTY;
     if (!move.castling && !move.promotion) {
+      // Move the piece to the new square
+      hash ^= zobrist.table[move.to][fromSq.piece];
       board[move.to] = fromSq;
     } else if (move.promotion) {
+      // Place the promoted piece
       board[move.to] = makePiece(move.promoPiece!, state.turn);
+      hash ^= zobrist.table[move.to][board[move.to].piece];
     }
     int _halfMoves = state.halfMoves;
     if (move.capture || fromPiece.promotable)
@@ -402,19 +415,26 @@ class Squares {
     List<int> royalSquares = List.from(state.royalSquares);
 
     if (move.enPassant) {
+      // Remove the captured ep piece
       int captureSq = move.to + PLAYER_DIRECTION[colour.opponent] * size.north;
+      hash ^= zobrist.table[captureSq][board[captureSq].piece];
       board[captureSq] = EMPTY;
     }
 
     int? epSquare;
     if (move.setEnPassant) {
+      // Set the new ep square
       int dir = (move.to - move.from) ~/ 2;
       epSquare = move.from + dir;
+      hash ^= zobrist.table[epSquare][Zobrist.META];
     } else {
       epSquare = null;
     }
+    if (state.epSquare != null) {
+      // XOR the old ep square away from the hash
+      hash ^= zobrist.table[state.epSquare!][Zobrist.META];
+    }
 
-    // TODO: en passant & set en passant
     if (move.castling) {
       bool kingside = move.castlingDir == CASTLING_K;
       int royalRank = rank(move.from, size);
@@ -423,24 +443,38 @@ class Squares {
       int rookSq = getSquare(rookFile, royalRank, size);
       int kingSq = getSquare(castlingFile, royalRank, size);
       int rook = board[move.castlingPieceSquare!];
+      hash ^= zobrist.table[move.castlingPieceSquare!][rook.piece];
+      if (board[kingSq].isNotEmpty) hash ^= zobrist.table[kingSq][board[kingSq].piece];
+      hash ^= zobrist.table[kingSq][fromSq.piece];
+      if (board[rookSq].isNotEmpty) hash ^= zobrist.table[rookSq][board[rookSq].piece];
+      hash ^= zobrist.table[rookSq][rook.piece];
       board[move.castlingPieceSquare!] = EMPTY;
       board[kingSq] = fromSq;
       board[rookSq] = rook;
       _castlingRights = _castlingRights.remove(colour);
+      // refactor conditions?
+      hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
+      hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       royalSquares[colour] = kingSq;
     } else if (fromPiece.royal) {
       // king moved
       _castlingRights = _castlingRights.remove(colour);
+      hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
+      hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       royalSquares[colour] = move.to;
-    } else if (fromSq.piece == variant.castlingPiece) {
+    } else if (fromSq.type == variant.castlingPiece) {
       // rook moved
       int fromFile = file(move.from, size);
       int ks = colour == WHITE ? CASTLING_K : CASTLING_BK;
       int qs = colour == WHITE ? CASTLING_Q : CASTLING_BQ;
       if (fromFile == castlingTargetK && _castlingRights.hasRight(ks)) {
         _castlingRights = _castlingRights.flip(ks);
+        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
+        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       } else if (fromFile == castlingTargetQ && _castlingRights.hasRight(qs)) {
         _castlingRights = _castlingRights.flip(qs);
+        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
+        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       }
     } else if (move.capture && move.capturedPiece == variant.castlingPiece) {
       // rook captured
@@ -450,8 +484,12 @@ class Squares {
       int qs = opponent == WHITE ? CASTLING_Q : CASTLING_BQ;
       if (toFile == castlingTargetK && _castlingRights.hasRight(ks)) {
         _castlingRights = _castlingRights.flip(ks);
+        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
+        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       } else if (toFile == castlingTargetQ && _castlingRights.hasRight(qs)) {
         _castlingRights = _castlingRights.flip(qs);
+        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
+        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       }
     }
 
@@ -463,6 +501,7 @@ class Squares {
       castlingRights: _castlingRights,
       royalSquares: royalSquares,
       epSquare: epSquare,
+      hash: hash,
     );
     history.add(_state);
     return true;
@@ -551,7 +590,7 @@ class Squares {
     if (move.castling) {
       return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? "O-O" : "O-O-O";
     }
-    int piece = board[move.from].piece;
+    int piece = board[move.from].type;
     PieceDefinition pieceDef = variant.pieces[piece];
 
     String san = '';
@@ -580,7 +619,7 @@ class Squares {
     // provide a list of moves to make this more efficient
     if (moves == null) moves = generateLegalMoves();
 
-    int _piece = board[move.from].piece;
+    int _piece = board[move.from].type;
     int _file = file(move.from, size);
     bool ambiguity = false;
     bool needRank = false;
@@ -588,7 +627,7 @@ class Squares {
     for (Move m in moves) {
       if (m.from == move.from) continue;
       if (m.to != move.to) continue;
-      if (_piece != board[m.from].piece) continue;
+      if (_piece != board[m.from].type) continue;
       ambiguity = true;
       if (file(m.from, size) == _file) {
         needRank = true;

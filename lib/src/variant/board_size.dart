@@ -4,6 +4,7 @@ class BoardSize {
   final int h;
   final int v;
   int get numSquares => h * v;
+  int get numIndices => numSquares * 2;
   int get minDim => min(h, v);
   int get maxDim => max(h, v);
   int get maxRank => v - 1;
