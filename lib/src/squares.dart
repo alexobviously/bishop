@@ -31,20 +31,54 @@ class Squares {
   Squares({required this.variant, String? fen}) {
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
     buildBoard();
-    if (variant.castling) setupCastling();
     royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
   }
-  void setupCastling() {
-    for (int i = 0; i < variant.boardSize.h; i++) {
-      if (board[i].piece == variant.royalPiece) royalFile = i;
-      if (board[i].piece == variant.castlingPiece) {
-        if (castlingTargetQ == null) {
-          castlingTargetQ = i;
+  int setupCastling(String castlingString, List<int> royalSquares) {
+    if (castlingString == '-') {
+      return 0;
+    }
+    if (!isAlpha(castlingString) || castlingString.length > 4) throw ('Invalid castling string');
+    CastlingRights cr = 0;
+    for (String c in castlingString.split('')) {
+      // there is probably a better way to do all of this
+      bool white = c == c.toUpperCase();
+      royalFile = file(royalSquares[white ? 0 : 1], size);
+      if (CASTLING_SYMBOLS.containsKey(c)) {
+        cr += CASTLING_SYMBOLS[c]!;
+      } else {
+        int _file = c.toLowerCase().codeUnits.first - 97;
+        bool kingside = _file > file(royalSquares[white ? 0 : 1], size);
+        if (kingside) {
+          castlingTargetK = _file;
+          cr += white ? CASTLING_K : CASTLING_BK;
         } else {
-          castlingTargetK = i;
+          castlingTargetQ = _file;
+          cr += white ? CASTLING_Q : CASTLING_BQ;
         }
       }
     }
+    if (variant.castlingOptions.fixedRooks) {
+      castlingTargetK = variant.castlingOptions.kRook;
+      castlingTargetQ = variant.castlingOptions.qRook;
+    } else {
+      for (int i = 0; i < 2; i++) {
+        int r = i * (size.v - 1);
+        bool kingside = false;
+        for (int j = 0; j < size.h; i++) {
+          int _piece = board[r + j].piece;
+          if (_piece == variant.royalPiece)
+            kingside = true;
+          else if (_piece == variant.castlingPiece) {
+            if (kingside) {
+              castlingTargetK = j;
+            } else {
+              castlingTargetQ = j;
+            }
+          }
+        }
+      }
+    }
+    return cr;
   }
 
   void buildBoard() {
@@ -88,7 +122,7 @@ class Squares {
 
     int turn = _turn == 'w' ? WHITE : BLACK;
     int? ep = _ep == '-' ? null : squareNumber(_ep, variant.boardSize);
-    int castling = castlingRights(_castling);
+    int castling = variant.castling ? setupCastling(_castling, royalSquares) : 0;
     State _state = State(
       turn: turn,
       halfMoves: int.parse(_halfMoves),
@@ -268,7 +302,7 @@ class Squares {
       for (int i = 0; i < 2; i++) {
         bool sideCondition = i == 0 ? kingside : queenside;
         if (!sideCondition) continue;
-        int targetFile = i == 0 ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
+        int targetFile = i == 0 ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
         int targetSq = getSquare(targetFile, royalRank, variant.boardSize);
         int rookFile = i == 0 ? castlingTargetK! : castlingTargetQ!;
         int rookSq = getSquare(rookFile, royalRank, variant.boardSize);
@@ -373,7 +407,7 @@ class Squares {
     if (move.castling) {
       bool kingside = move.castlingDir == CASTLING_K;
       int royalRank = rank(move.from, size);
-      int castlingFile = kingside ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
+      int castlingFile = kingside ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
       int rookSq = getSquare(rookFile, royalRank, size);
       int kingSq = getSquare(castlingFile, royalRank, size);
@@ -433,7 +467,7 @@ class Squares {
     if (move.castling) {
       bool kingside = move.castlingDir == CASTLING_K;
       int royalRank = rank(move.from, size);
-      int castlingFile = kingside ? variant.castlingKingsideFile! : variant.castlingQueensideFile!;
+      int castlingFile = kingside ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
       int rookSq = getSquare(rookFile, royalRank, size);
       int _rook = board[rookSq];

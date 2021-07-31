@@ -78,8 +78,7 @@ class Variant {
     buildPieceDefinitions();
     royalPiece = pieces.indexWhere((p) => p.type.royal);
     if (enPassant) epPiece = pieces.indexWhere((p) => p.type.enPassantable);
-    if (castling && !castlingOptions.fixedRooks)
-      castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
+    if (castling) castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
   }
 
   void initPieces() {
