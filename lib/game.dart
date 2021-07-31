@@ -385,7 +385,7 @@ class Game {
     } else if (fromPiece.royal) {
       // king moved
       _castlingRights = _castlingRights.remove(colour);
-      royalSquares[colour] = toSq;
+      royalSquares[colour] = move.to;
     } else if (fromSq.piece == variant.castlingPiece) {
       // rook moved
       int fromFile = file(move.from, size);
