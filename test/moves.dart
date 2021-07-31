@@ -1,12 +1,9 @@
-import 'package:squares/game.dart';
-import 'package:squares/move.dart';
-import 'package:squares/square.dart';
-import 'package:squares/variant.dart';
+import 'package:squares/squares.dart';
 
 import 'constants.dart';
 
 main(List<String> args) {
-  Game g = Game(variant: Variant.standard(), fen: Positions.ROOK_PIN);
+  Squares g = Squares(variant: Variant.standard(), fen: Positions.ROOK_PIN);
   List<Move> moves = g.generateLegalMoves();
   print(moves.length);
   // for (Move m in moves) {

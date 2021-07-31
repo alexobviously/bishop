@@ -1,17 +1,17 @@
 import 'dart:math';
 
-import '960.dart';
-import 'constants.dart';
-import 'piece_type.dart';
+import '../constants.dart';
+import '../piece_type.dart';
+
+part '960.dart';
+part 'board_size.dart';
+part 'castling_options.dart';
 
 class Variant {
   final String name;
   final BoardSize boardSize;
   final Map<String, PieceType> pieceTypes;
-  final bool castling;
-  final String? castleTarget;
-  final int? castlingKingsideFile;
-  final int? castlingQueensideFile;
+  final CastlingOptions castlingOptions;
   final String? startPosition;
   final Function()? startPosBuilder;
   final bool promotion;
@@ -26,14 +26,13 @@ class Variant {
   late int castlingPiece;
   late int royalPiece;
 
+  bool get castling => castlingOptions.enabled;
+
   Variant({
     required this.name,
     required this.boardSize,
     required this.pieceTypes,
-    this.castling = false,
-    this.castleTarget,
-    this.castlingKingsideFile,
-    this.castlingQueensideFile,
+    required this.castlingOptions,
     this.startPosition,
     this.startPosBuilder,
     this.promotion = false,
@@ -50,10 +49,7 @@ class Variant {
     String? name,
     BoardSize? boardSize,
     Map<String, PieceType>? pieceTypes,
-    bool? castling,
-    String? castleTarget,
-    int? castlingKingsideFile,
-    int? castlingQueensideFile,
+    CastlingOptions? castlingOptions,
     String? startPosition,
     Function()? startPosBuilder,
     bool? promotion,
@@ -66,10 +62,7 @@ class Variant {
       name: name ?? this.name,
       boardSize: boardSize ?? this.boardSize,
       pieceTypes: pieceTypes ?? this.pieceTypes,
-      castling: castling ?? this.castling,
-      castleTarget: castleTarget ?? this.castleTarget,
-      castlingKingsideFile: castlingKingsideFile ?? this.castlingKingsideFile,
-      castlingQueensideFile: castlingQueensideFile ?? this.castlingQueensideFile,
+      castlingOptions: castlingOptions ?? this.castlingOptions,
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
       promotion: promotion ?? this.promotion,
@@ -85,7 +78,8 @@ class Variant {
     buildPieceDefinitions();
     royalPiece = pieces.indexWhere((p) => p.type.royal);
     if (enPassant) epPiece = pieces.indexWhere((p) => p.type.enPassantable);
-    if (castling) castlingPiece = pieces.indexWhere((p) => p.symbol == castleTarget);
+    if (castling && !castlingOptions.fixedRooks)
+      castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
   }
 
   void initPieces() {
@@ -107,10 +101,7 @@ class Variant {
       name: 'Chess',
       boardSize: BoardSize.standard(),
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      castling: true,
-      castleTarget: 'R',
-      castlingKingsideFile: FILE_G,
-      castlingQueensideFile: FILE_C,
+      castlingOptions: CastlingOptions.standard(),
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
       enPassant: true,
@@ -134,6 +125,7 @@ class Variant {
     return Variant.standard().copyWith(
       name: 'Chess960',
       startPosBuilder: build960Position,
+      castlingOptions: CastlingOptions.chess960(),
     );
   }
 
@@ -143,8 +135,7 @@ class Variant {
       name: 'Capablanca Chess',
       boardSize: BoardSize(10, 8),
       startPosition: 'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
-      castlingKingsideFile: FILE_I,
-      castlingQueensideFile: FILE_C,
+      castlingOptions: CastlingOptions.capablanca(),
       pieceTypes: standard.pieceTypes
         ..addAll({
           'A': PieceType.archbishop(),
@@ -153,14 +144,13 @@ class Variant {
     );
   }
 
-  // TODO: flexible promotion rules - https://en.wikipedia.org/wiki/Grand_chess#Rules
   factory Variant.grand() {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Grand Chess',
       boardSize: BoardSize(10, 10),
       startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
-      castling: false,
+      castlingOptions: CastlingOptions.none(),
       promotionRanks: [RANK_3, RANK_8],
       firstMoveRanks: [
         [RANK_3],
@@ -173,17 +163,4 @@ class Variant {
         }),
     );
   }
-}
-
-class BoardSize {
-  final int h;
-  final int v;
-  int get numSquares => h * v;
-  int get minDim => min(h, v);
-  int get maxDim => max(h, v);
-  int get maxRank => v - 1;
-  int get maxFile => h - 1;
-  int get north => h * 2;
-  const BoardSize(this.h, this.v);
-  factory BoardSize.standard() => BoardSize(8, 8);
 }

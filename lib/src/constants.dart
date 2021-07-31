@@ -10,6 +10,7 @@ const Colour BLACK = 1;
 const int INVALID = -1;
 
 const List<int> PLAYER_DIRECTION = [-1, 1];
+const List<String> PLAYER_NAME = ['hite', 'Black'];
 
 const ASCII_a = 97;
 

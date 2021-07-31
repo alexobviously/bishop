@@ -1,5 +1,5 @@
 import 'constants.dart';
-import 'variant.dart';
+import 'variant/variant.dart';
 
 typedef Square = int;
 

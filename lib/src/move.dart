@@ -1,6 +1,6 @@
 import 'castling_rights.dart';
 import 'square.dart';
-import 'variant.dart';
+import 'variant/variant.dart';
 
 class Move {
   final int from;

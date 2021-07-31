@@ -10,15 +10,16 @@ import 'piece_type.dart';
 import 'square.dart';
 import 'state.dart';
 import 'utils.dart';
-import 'variant.dart';
+import 'variant/variant.dart';
 
-class Game {
+class Squares {
   final Variant variant;
   late List<int> board;
   late String startPosition;
   List<State> history = [];
   State get state => history.last;
   bool get canUndo => history.length > 1;
+  Colour get turn => state.turn;
 
   int? castlingTargetK;
   int? castlingTargetQ;
@@ -27,7 +28,7 @@ class Game {
 
   BoardSize get size => variant.boardSize;
 
-  Game({required this.variant, String? fen}) {
+  Squares({required this.variant, String? fen}) {
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
     buildBoard();
     if (variant.castling) setupCastling();
@@ -461,14 +462,15 @@ class Game {
     return move;
   }
 
-  bool makeRandomMove() {
+  Move makeRandomMove() {
     List<Move> moves = generateLegalMoves();
     int i = Random().nextInt(moves.length);
-    return makeMove(moves[i]);
+    makeMove(moves[i]);
+    return moves[i];
   }
 
   bool hasKingCapture() {
-    List<Move> moves = generatePlayerMoves(state.turn, MoveGenOptions.pieceCaptures(variant.royalPiece));
+    List<Move> moves = generatePlayerMoves(state.turn, royalCaptureOptions);
     return moves.isNotEmpty;
   }
 
@@ -635,7 +637,8 @@ main(List<String> args) {
   // //String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
   // //String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
   // String f = '7k/B7/3R1pnp/7N/PpP5/1P4P1/1KR2p2/1N2q3 w - - 2 80';
-  Game g = Game(variant: Variant.standard(), fen: 'rnbqkbnr/pp1pppp1/7p/2pP4/8/8/PPP1PPPP/RNBQKBNR w KQkq c6 0 3');
+  Squares g =
+      Squares(variant: Variant.standard(), fen: 'rnbqkbnr/pp1pppp1/7p/2pP4/8/8/PPP1PPPP/RNBQKBNR w KQkq c6 0 3');
   // print('turn: ${g.state.turn}');
   // print(g.inCheck);
   // print(g.ascii());

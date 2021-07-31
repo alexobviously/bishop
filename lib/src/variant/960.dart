@@ -1,4 +1,4 @@
-import 'dart:math';
+part of 'variant.dart';
 
 String build960Position() {
   const KNIGHT = 'N';

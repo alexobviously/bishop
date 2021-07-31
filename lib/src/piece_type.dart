@@ -1,7 +1,7 @@
 import 'betza.dart';
 import 'constants.dart';
 import 'move_definition.dart';
-import 'variant.dart';
+import 'variant/variant.dart';
 
 class PieceType {
   final String? betza;
