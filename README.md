@@ -6,7 +6,6 @@ Squares is designed with flexibility in mind. The goal is to be able to build an
 As a result of the amount of generalisation required to make a package like this work, performance does take a bit of a hit. As such, it might be difficult to build a strong engine with this. However, it's perfectly sufficient for logic generation and validation, etc. Hopefully the performance can be improved in the future though - this is a work in progress!
 
 ### Upcoming Features
-* Zobrist hashing / repetition draws
 * Insufficient material draws
 * Hopper pieces (e.g. xiangqi cannon)
 * X-FEN output (input works)

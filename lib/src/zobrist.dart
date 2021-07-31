@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:squares/squares.dart';
+import 'package:squares/src/castling_rights.dart';
 
 class Zobrist {
   static const int META = 0;
   late List<List<int>> table;
+  Map<int, int> hashes = {};
 
   late int CASTLING;
   late int TURN;
@@ -17,13 +19,13 @@ class Zobrist {
     const int NUM_AUX = 16; // we need some extra entries for castling rights, ep, etc
     const int PARTS = 4;
     Random r = Random(seed);
-    int numEntries = variant.boardSize.numIndices + NUM_AUX;
-    int numPieces = variant.pieces.length * 2;
-    CASTLING = numPieces + 1;
-    TURN = numPieces + 2;
-    table = List<List<int>>.generate(numEntries, (i) => List<int>.generate(numPieces, (j) => 0));
-    for (int i = 0; i < numEntries; i++) {
-      for (int j = 0; j < numPieces; j++) {
+    int dimX = variant.boardSize.numIndices + NUM_AUX;
+    int dimY = max(variant.pieces.length * 2, CASTLING_MASK + 1);
+    CASTLING = dimY + 1;
+    TURN = dimY + 2;
+    table = List<List<int>>.generate(dimX, (i) => List<int>.generate(dimY, (j) => 0));
+    for (int i = 0; i < dimX; i++) {
+      for (int j = 0; j < dimY; j++) {
         int value = 0;
         for (int k = 0; k < PARTS; k++) {
           // compute a random 64 bit int
@@ -47,4 +49,29 @@ class Zobrist {
 
     return _hash;
   }
+
+  int incrementHash(int hash) {
+    if (hashes.containsKey(hash)) {
+      hashes[hash] = hashes[hash]! + 1;
+    } else {
+      hashes[hash] = 1;
+    }
+    return hashes[hash]!;
+  }
+
+  int decrementHash(int hash) {
+    if (hashes.containsKey(hash)) {
+      hashes[hash] = hashes[hash]! - 1;
+      int hits = hashes[hash]!;
+      if (hashes[hash]! < 1) {
+        hashes.remove(hash);
+        hits = 0;
+      }
+      return hits;
+    } else {
+      return 0;
+    }
+  }
+
+  int hashHits(int hash) => hashes.containsKey(hash) ? hashes[hash]! : 0;
 }

@@ -143,6 +143,7 @@ class Squares {
       royalSquares: royalSquares,
     );
     _state.hash = zobrist.compute(_state, board);
+    zobrist.incrementHash(_state.hash);
     history.add(_state);
   }
 
@@ -504,6 +505,7 @@ class Squares {
       hash: hash,
     );
     history.add(_state);
+    zobrist.incrementHash(hash);
     return true;
   }
 
@@ -543,6 +545,7 @@ class Squares {
       }
     }
 
+    zobrist.decrementHash(_state.hash);
     return move;
   }
 
@@ -569,10 +572,12 @@ class Squares {
   bool get checkmate => inCheck && generateLegalMoves().isEmpty;
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
   bool get insufficientMaterial => false;
-  bool get repetition => false;
+  bool get repetition => variant.repetitionDraw != null ? hashHits >= variant.repetitionDraw! : false;
   bool get halfMoveRule => variant.halfMoveDraw != null && state.halfMoves >= variant.halfMoveDraw!;
   bool get inDraw => stalemate || insufficientMaterial || repetition || halfMoveRule;
   bool get gameOver => checkmate || inDraw;
+
+  int get hashHits => zobrist.hashHits(state.hash);
 
   Move? getMove(String algebraic) {
     List<Move> moves = generateLegalMoves();
