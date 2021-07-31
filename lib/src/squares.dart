@@ -24,6 +24,7 @@ class Squares {
   int? castlingTargetK;
   int? castlingTargetQ;
   int? royalFile;
+  List<String>? castlingFileSymbols;
   late MoveGenOptions royalCaptureOptions;
 
   BoardSize get size => variant.boardSize;
@@ -77,6 +78,11 @@ class Squares {
           }
         }
       }
+    }
+    if (variant.outputOptions.castlingFormat == CastlingFenFormat.Shredder) {
+      String k = fileSymbol(castlingTargetK!);
+      String q = fileSymbol(castlingTargetQ!);
+      castlingFileSymbols = [k.toUpperCase(), q.toUpperCase(), k, q];
     }
     return cr;
   }
@@ -163,6 +169,9 @@ class Squares {
     }
     String _turn = state.turn == WHITE ? 'w' : 'b';
     String _castling = state.castlingRights.formatted;
+    if (variant.outputOptions.castlingFormat == CastlingFenFormat.Shredder) {
+      _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols!);
+    }
     String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
     _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
     return _fen;

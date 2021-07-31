@@ -6,12 +6,14 @@ import '../piece_type.dart';
 part '960.dart';
 part 'board_size.dart';
 part 'castling_options.dart';
+part 'output_options.dart';
 
 class Variant {
   final String name;
   final BoardSize boardSize;
   final Map<String, PieceType> pieceTypes;
   final CastlingOptions castlingOptions;
+  final OutputOptions outputOptions;
   final String? startPosition;
   final Function()? startPosBuilder;
   final bool promotion;
@@ -33,6 +35,7 @@ class Variant {
     required this.boardSize,
     required this.pieceTypes,
     required this.castlingOptions,
+    required this.outputOptions,
     this.startPosition,
     this.startPosBuilder,
     this.promotion = false,
@@ -50,6 +53,7 @@ class Variant {
     BoardSize? boardSize,
     Map<String, PieceType>? pieceTypes,
     CastlingOptions? castlingOptions,
+    OutputOptions? outputOptions,
     String? startPosition,
     Function()? startPosBuilder,
     bool? promotion,
@@ -63,6 +67,7 @@ class Variant {
       boardSize: boardSize ?? this.boardSize,
       pieceTypes: pieceTypes ?? this.pieceTypes,
       castlingOptions: castlingOptions ?? this.castlingOptions,
+      outputOptions: outputOptions ?? this.outputOptions,
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
       promotion: promotion ?? this.promotion,
@@ -101,6 +106,7 @@ class Variant {
       boardSize: BoardSize.standard(),
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.standard(),
+      outputOptions: OutputOptions.standard(),
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
       enPassant: true,
@@ -125,6 +131,7 @@ class Variant {
       name: 'Chess960',
       startPosBuilder: build960Position,
       castlingOptions: CastlingOptions.chess960(),
+      outputOptions: OutputOptions.standard(),
     );
   }
 
