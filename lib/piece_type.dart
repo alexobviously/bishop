@@ -27,7 +27,7 @@ class PieceType {
       m.normalised = m.direction.v * boardSize.h * 2 + m.direction.h;
       if (m.lame) {
         m.lameDirection = Direction(m.direction.h ~/ 2, m.direction.v ~/ 2);
-        m.lameNormalised = m.lameDirection!.v * boardSize.h * 2 + m.lameDirection!.h;
+        m.lameNormalised = m.lameDirection!.v * boardSize.north + m.lameDirection!.h;
       }
     }
   }

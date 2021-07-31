@@ -190,7 +190,7 @@ class Game {
         int to = square + md.normalised * (i + 1) * dirMult;
         if (!onBoard(to, variant.boardSize)) break;
         if (md.lame) {
-          int _from = square + md.normalised * i * dirMult;
+          int _from = from + md.normalised * i * dirMult;
           int blockSq = _from + md.lameNormalised! * dirMult;
           if (board[blockSq].isNotEmpty) break;
         }
@@ -264,7 +264,6 @@ class Game {
       bool queenside = colour == WHITE ? state.castlingRights.wq : state.castlingRights.bq;
       int royalRank = rank(from, variant.boardSize);
 
-      // TODO: if isAttacked(from) break
       for (int i = 0; i < 2; i++) {
         bool sideCondition = i == 0 ? kingside : queenside;
         if (!sideCondition) continue;
@@ -317,7 +316,7 @@ class Game {
       List<Move> _remove = [];
       for (Move m in moves) {
         makeMove(m);
-        if (hasKingCapture()) _remove.add(m);
+        if (kingAttacked(colour)) _remove.add(m);
         undo();
       }
       _remove.forEach((m) => moves.remove(m));
@@ -355,6 +354,19 @@ class Game {
       _halfMoves++;
     int _castlingRights = state.castlingRights;
     List<int> royalSquares = List.from(state.royalSquares);
+
+    if (move.enPassant) {
+      int captureSq = move.to + PLAYER_DIRECTION[colour.opponent] * size.north;
+      board[captureSq] = EMPTY;
+    }
+
+    int? epSquare;
+    if (move.setEnPassant) {
+      int dir = (move.to - move.from) ~/ 2;
+      epSquare = move.from + dir;
+    } else {
+      epSquare = null;
+    }
 
     // TODO: en passant & set en passant
     if (move.castling) {
@@ -404,6 +416,7 @@ class Game {
       fullMoves: state.turn == BLACK ? state.fullMoves + 1 : state.fullMoves,
       castlingRights: _castlingRights,
       royalSquares: royalSquares,
+      epSquare: epSquare,
     );
     history.add(_state);
     return true;
@@ -434,8 +447,11 @@ class Game {
       } else {
         board[move.from] = toSq;
       }
-      // TODO: en passant
-      if (move.capture) {
+      if (move.enPassant) {
+        int captureSq = move.to + PLAYER_DIRECTION[move.capturedPiece!.colour] * size.north;
+        board[captureSq] = move.capturedPiece!;
+      }
+      if (move.capture && !move.enPassant) {
         board[move.to] = move.capturedPiece!;
       } else {
         board[move.to] = EMPTY;
@@ -594,36 +610,50 @@ class Game {
 }
 
 main(List<String> args) {
-  Game g = Game(variant: Variant.standard());
+  // Game g = Game(variant: Variant.standard());
 
-  for (int i = 0; i < 599; i++) {
-    print(g.ascii());
-    if (g.state.move != null) print(g.state.move!.algebraic(g.size));
-    print(g.fen);
-    if (g.gameOver) {
-      print('game over');
-      break;
-    }
-    g.makeRandomMove();
-  }
+  // for (int i = 0; i < 599; i++) {
+  //   print(g.ascii());
+  //   if (g.state.move != null) print(g.state.move!.algebraic(g.size));
+  //   print(g.fen);
+  //   if (g.gameOver) {
+  //     print('game over');
+  //     break;
+  //   }
+  //   g.makeRandomMove();
+  // }
 
-  print(g.ascii());
-  print("MOVE ${g.state.fullMoves}");
-  print(g.state.move!.algebraic(g.size));
-  print(g.fen);
-  //print(g.sanMoves());
-  print(g.pgn());
-  print('checkmate: ${g.checkmate}');
-  print('draw: ${g.inDraw}');
+  // print(g.ascii());
+  // print("MOVE ${g.state.fullMoves}");
+  // print(g.state.move!.algebraic(g.size));
+  // print(g.fen);
+  // //print(g.sanMoves());
+  // print(g.pgn());
+  // print('checkmate: ${g.checkmate}');
+  // print('draw: ${g.inDraw}');
 
   // //String f = 'r1bqkb2/p1pppppr/1p3n2/4n2p/7P/2P1PP2/PP1PK1P1/RNBQ1BNR w q - 1 7';
   // //String f = '3k4/3r4/8/8/8/8/3K4/8 w - - 0 1';
   // String f = '7k/B7/3R1pnp/7N/PpP5/1P4P1/1KR2p2/1N2q3 w - - 2 80';
-  // Game g = Game(variant: Variant.standard(), fen: f);
+  Game g = Game(variant: Variant.standard(), fen: 'rnbqkbnr/pp1pppp1/7p/2pP4/8/8/PPP1PPPP/RNBQKBNR w KQkq c6 0 3');
   // print('turn: ${g.state.turn}');
   // print(g.inCheck);
   // print(g.ascii());
-  // List<Move> moves = g.generateLegalMoves();
+  List<Move> moves = g.generateLegalMoves();
+  Move m = g.getMove('d5c6')!;
+  print(m.algebraic());
+  print(g.toSan(m));
+  print(m.enPassant);
+  Square fromSq = g.board[m.from];
+  int colour = fromSq.colour;
+  int captureSq = m.to + PLAYER_DIRECTION[colour.opponent] * g.size.h * 2;
+  print(squareName(captureSq, g.size));
+  g.makeMove(m);
+  print(g.ascii());
+  print(g.fen);
+  g.undo();
+  print(g.ascii());
+  print(g.fen);
   // // List<Move> moves = g.generatePlayerMoves(g.state.turn, MoveGenOptions.normal());
   // //print(g.ascii());
   // // Move m = moves[0];

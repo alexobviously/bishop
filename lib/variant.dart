@@ -183,6 +183,7 @@ class BoardSize {
   int get maxDim => max(h, v);
   int get maxRank => v - 1;
   int get maxFile => h - 1;
+  int get north => h * 2;
   const BoardSize(this.h, this.v);
   factory BoardSize.standard() => BoardSize(8, 8);
 }

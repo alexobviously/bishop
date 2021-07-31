@@ -37,8 +37,11 @@ class PerftBenchmark extends BenchmarkBase {
 
 void main() {
   List<PerftBenchmark> perfts = [
-    PerftBenchmark(Positions.STANDARD_DEFAULT, STANDARD, 4, 197281),
-    PerftBenchmark(Positions.KIWIPETE, STANDARD, 2, 2039),
+    //PerftBenchmark(Positions.STANDARD_DEFAULT, STANDARD, 3, 8902),
+    //PerftBenchmark(Positions.STANDARD_DEFAULT, STANDARD, 4, 197281),
+    //PerftBenchmark(Positions.KIWIPETE, STANDARD, 1, 48),
+    //PerftBenchmark(Positions.KIWIPETE, STANDARD, 2, 2039),
+    PerftBenchmark(Positions.ROOK_PIN, STANDARD, 1, 14),
   ];
   for (PerftBenchmark perft in perfts) {
     perft.report();
