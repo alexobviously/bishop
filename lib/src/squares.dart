@@ -248,7 +248,28 @@ class Squares {
         moves.addAll(pieceMoves);
       }
     }
+    if (variant.hands && options.quiet && !options.onlyPiece) moves.addAll(generateDrops(player));
     return moves;
+  }
+
+  List<Move> generateDrops(int colour) {
+    List<Move> drops = [];
+    Set<int> _hand = state.hands![colour].toSet();
+    for (int i = 0; i < size.numIndices; i++) {
+      if (!onBoard(i, size)) continue;
+      if (board[i].isNotEmpty) continue;
+      for (int p in _hand) {
+        int _rank = rank(i, size);
+        bool onPromoRank = colour == WHITE ? _rank == size.maxRank : _rank == RANK_1;
+        if (onPromoRank && variant.pieces[p].type.promotable) continue;
+        int dropPiece = p;
+        // TODO: support more than one promo piece in this case
+        if (p.hasFlag(FLAG_PROMO)) dropPiece = variant.promotionPieces[0];
+        Move m = Move.drop(to: i, dropPiece: dropPiece);
+        drops.add(m);
+      }
+    }
+    return drops;
   }
 
   List<Move> generatePieceMoves(int square, [MoveGenOptions? options]) {
@@ -536,6 +557,7 @@ class Squares {
       royalSquares: royalSquares,
       epSquare: epSquare,
       hash: hash,
+      hands: state.hands,
     );
     history.add(_state);
     zobrist.incrementHash(hash);
@@ -621,6 +643,7 @@ class Squares {
   String toAlgebraic(Move move) {
     String alg = move.algebraic(size);
     if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
+    if (move.from == HAND) alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
     return alg;
   }
 
@@ -628,20 +651,26 @@ class Squares {
     if (move.castling) {
       return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? "O-O" : "O-O-O";
     }
-    int piece = board[move.from].type;
-    PieceDefinition pieceDef = variant.pieces[piece];
 
     String san = '';
-    String disambiguator = getDisambiguator(move, moves);
-    if (pieceDef.type.noSanSymbol) {
-      if (move.capture) san = squareName(move.from, size)[0];
-    } else
-      san = pieceDef.symbol;
-    san = '$san$disambiguator';
-    if (move.capture) san = '${san}x';
-    san = '$san${squareName(move.to, size)}';
+    if (move.from == HAND) {
+      PieceDefinition _pieceDef = variant.pieces[move.dropPiece!];
+      san = move.algebraic(size);
+      if (!_pieceDef.type.noSanSymbol) san = '${_pieceDef.symbol.toUpperCase()}$san';
+    } else {
+      int piece = board[move.from].type;
+      PieceDefinition pieceDef = variant.pieces[piece];
+      String disambiguator = getDisambiguator(move, moves);
+      if (pieceDef.type.noSanSymbol) {
+        if (move.capture) san = squareName(move.from, size)[0];
+      } else
+        san = pieceDef.symbol;
+      san = '$san$disambiguator';
+      if (move.capture) san = '${san}x';
+      san = '$san${squareName(move.to, size)}';
 
-    if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
+      if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
+    }
 
     makeMove(move);
     if (inCheck) {
@@ -663,6 +692,7 @@ class Squares {
     bool needRank = false;
     bool needFile = false;
     for (Move m in moves) {
+      if (m.drop) continue;
       if (m.from == move.from) continue;
       if (m.to != move.to) continue;
       if (_piece != board[m.from].type) continue;
@@ -735,7 +765,10 @@ class Squares {
 
 main(List<String> args) {
   Squares game = Squares(
-      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] w Qkq - 0 10');
+      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] b Qkq - 0 10');
   print(game.state.hands);
   print(game.fen);
+  List<Move> moves = game.generateLegalMoves();
+  print(moves.length);
+  print(moves.map((e) => game.toSan(e)).toList());
 }

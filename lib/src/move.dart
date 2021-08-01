@@ -1,3 +1,5 @@
+import 'package:squares/squares.dart';
+
 import 'castling_rights.dart';
 import 'square.dart';
 import 'variant/variant.dart';
@@ -12,10 +14,12 @@ class Move {
   final int? castlingPieceSquare;
   final bool enPassant;
   final bool setEnPassant;
+  final int? dropPiece;
 
   bool get capture => capturedPiece != null;
   bool get promotion => promoPiece != null;
   bool get castling => castlingDir != null;
+  bool get drop => dropPiece != null;
 
   Move({
     required this.from,
@@ -27,6 +31,7 @@ class Move {
     this.castlingPieceSquare,
     this.enPassant = false,
     this.setEnPassant = false,
+    this.dropPiece,
   });
 
   Move copyWith({
@@ -51,9 +56,11 @@ class Move {
     );
   }
 
+  factory Move.drop({required int to, required int dropPiece}) => Move(from: HAND, to: to, dropPiece: dropPiece);
+
   String algebraic([BoardSize boardSize = const BoardSize(8, 8)]) {
+    String _from = from == HAND ? '@' : squareName(from, boardSize);
     String _to = squareName(to, boardSize);
-    String _from = squareName(from, boardSize);
     return '$_from$_to';
   }
 }

@@ -8,6 +8,7 @@ const Colour WHITE = 0;
 const Colour BLACK = 1;
 
 const int INVALID = -1;
+const int HAND = -2;
 
 const List<int> PLAYER_DIRECTION = [-1, 1];
 const List<String> PLAYER_NAME = ['hite', 'Black'];
