@@ -13,6 +13,7 @@ extension SquareLogic on Square {
   int get flags => (this >> 8) & 15;
   bool get isEmpty => this == 0;
   bool get isNotEmpty => this != 0;
+  bool hasFlag(int flag) => this & (flag << 8) != 0;
 }
 
 Square makePiece(int piece, Colour colour, [int flags = 0]) {

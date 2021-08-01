@@ -168,6 +168,7 @@ class Squares {
         else {
           if (empty > 0) addEmptySquares();
           String char = variant.pieces[sq.type].char(sq.colour);
+          if (variant.outputOptions.showPromoted && sq.hasFlag(FLAG_PROMO)) char += '~';
           _fen = '$_fen$char';
         }
       }
