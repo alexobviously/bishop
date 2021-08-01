@@ -5,6 +5,8 @@ Squares is designed with flexibility in mind. The goal is to be able to build an
 
 As a result of the amount of generalisation required to make a package like this work, performance does take a bit of a hit. As such, it might be difficult to build a strong engine with this. However, it's perfectly sufficient for logic generation and validation, etc. Hopefully the performance can be improved in the future though - this is a work in progress!
 
+Squares is written in pure dart with no dependencies.
+
 ### Upcoming Features
 * Insufficient material draws
 * Hopper pieces (e.g. xiangqi cannon)
@@ -92,3 +94,10 @@ Variant capablanca = Variant.standard().copyWith(
 ```
 
 For variants such as [Chess960](https://en.wikipedia.org/wiki/Fischer_random_chess), which can start from many positions, a `startPosBuilder` function can be defined, that returns a FEN string. A builder for Chess960 is included.
+
+### Thanks
+
+Thanks to the following projects for inspiration and reference:
+- [Pychess](https://github.com/gbtami/pychess-variants)
+- [Fairy Stockfish](https://github.com/ianfab/Fairy-Stockfish)
+- [Chess.dart](https://pub.dev/packages/chess)
