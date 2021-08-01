@@ -404,7 +404,7 @@ class Squares {
       board[move.to] = fromSq;
     } else if (move.promotion) {
       // Place the promoted piece
-      board[move.to] = makePiece(move.promoPiece!, state.turn);
+      board[move.to] = makePiece(move.promoPiece!, state.turn, FLAG_PROMO);
       hash ^= zobrist.table[move.to][board[move.to].piece];
     }
     int _halfMoves = state.halfMoves;

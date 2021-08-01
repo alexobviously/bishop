@@ -3,7 +3,8 @@ import 'variant/variant.dart';
 
 typedef Square = int;
 
-Square EMPTY = 0;
+const Square EMPTY = 0;
+const int FLAG_PROMO = 1;
 
 extension SquareLogic on Square {
   Colour get colour => this & 1; // colour only
