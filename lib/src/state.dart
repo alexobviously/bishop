@@ -10,6 +10,7 @@ class State {
   final CastlingRights castlingRights;
   final int? epSquare;
   final List<int> royalSquares;
+  final List<List<int>>? hands;
   int hash; // Needs to be set after construction for the first hash
 
   State({
@@ -20,6 +21,7 @@ class State {
     required this.castlingRights,
     this.epSquare,
     required this.royalSquares,
+    this.hands,
     this.hash = 0,
   });
 }

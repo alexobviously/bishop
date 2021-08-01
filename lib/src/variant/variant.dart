@@ -22,6 +22,7 @@ class Variant {
   final List<List<int>> firstMoveRanks; // e.g. where pawns can double move from
   final int? halfMoveDraw; // e.g. set this to 100 for the standard 50-move rule
   final int? repetitionDraw; // e.g. set this to 3 for standard threefold repetition
+  final bool hands; // allow hands, like in crazyhouse
 
   late List<PieceDefinition> pieces;
   late List<int> promotionPieces;
@@ -45,6 +46,7 @@ class Variant {
     this.firstMoveRanks = const [[], []],
     this.halfMoveDraw,
     this.repetitionDraw,
+    this.hands = false,
   }) {
     assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
     init();
@@ -64,6 +66,7 @@ class Variant {
     List<List<int>>? firstMoveRanks,
     int? halfMoveDraw,
     int? repetitionDraw,
+    bool? hands,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -79,6 +82,7 @@ class Variant {
       firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
       repetitionDraw: repetitionDraw ?? this.repetitionDraw,
+      hands: hands ?? this.hands,
     );
   }
 
@@ -137,6 +141,13 @@ class Variant {
       startPosBuilder: build960Position,
       castlingOptions: CastlingOptions.chess960(),
       outputOptions: OutputOptions.chess960(),
+    );
+  }
+
+  factory Variant.crazyhouse() {
+    return Variant.standard().copyWith(
+      name: 'Crazyhouse',
+      hands: true,
     );
   }
 

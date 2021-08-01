@@ -35,7 +35,7 @@ class Squares {
   Squares({required this.variant, String? fen}) {
     zobrist = Zobrist(variant, 7363661891);
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
-    buildBoard();
+    setup();
     royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
   }
   int setupCastling(String castlingString, List<int> royalSquares) {
@@ -92,7 +92,7 @@ class Squares {
     return cr;
   }
 
-  void buildBoard() {
+  void setup() {
     Map<String, int> pieceLookup = {};
     for (int i = 0; i < variant.pieces.length; i++) {
       pieceLookup[variant.pieces[i].symbol] = i;
@@ -100,6 +100,28 @@ class Squares {
 
     board = List.filled(variant.boardSize.numSquares * 2, 0);
     List<String> sections = startPosition.split(' ');
+
+    // Parse hands for variants with drops
+
+    List<List<int>>? _hands;
+    if (variant.hands) {
+      _hands = [[], []];
+      RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
+      RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
+      if (handMatch != null) {
+        sections[0] = sections[0].substring(0, handMatch.start);
+        String hand = handMatch.group(1)!;
+        _hands = [[], []];
+        for (String c in hand.split('')) {
+          String _upper = c.toUpperCase();
+          if (pieceLookup.containsKey(_upper)) {
+            bool white = c == _upper;
+            _hands[white ? 0 : 1].add(pieceLookup[_upper]!);
+          }
+        }
+      }
+    }
+
     List<String> _board = sections[0].split('');
     String _turn = sections[1];
     String _castling = sections[2];
@@ -110,6 +132,10 @@ class Squares {
     int emptySquares = 0;
     List<int> royalSquares = [INVALID, INVALID];
     for (String c in _board) {
+      if (c == '~') {
+        board[sq - 1] = board[sq - 1] + FLAG_PROMO;
+        continue;
+      }
       String symbol = c.toUpperCase();
       if (isNumeric(c)) {
         emptySquares = (emptySquares * 10) + int.parse(c);
@@ -141,6 +167,7 @@ class Squares {
       epSquare: ep,
       castlingRights: castling,
       royalSquares: royalSquares,
+      hands: _hands,
     );
     _state.hash = zobrist.compute(_state, board);
     zobrist.incrementHash(_state.hash);
@@ -174,6 +201,11 @@ class Squares {
       }
       if (empty > 0) addEmptySquares();
       if (i < variant.boardSize.v - 1) _fen = '$_fen/';
+    }
+    if (variant.hands) {
+      String whiteHand = state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
+      String blackHand = state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      _fen = '$_fen[$whiteHand$blackHand]';
     }
     String _turn = state.turn == WHITE ? 'w' : 'b';
     String _castling = state.castlingRights.formatted;
@@ -699,4 +731,11 @@ class Squares {
     }
     return nodes;
   }
+}
+
+main(List<String> args) {
+  Squares game = Squares(
+      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] w Qkq - 0 10');
+  print(game.state.hands);
+  print(game.fen);
 }
