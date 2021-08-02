@@ -27,29 +27,31 @@ class CastlingOptions {
 
   factory CastlingOptions.none() => CastlingOptions(enabled: false);
 
-  factory CastlingOptions.standard() => CastlingOptions(
+  factory CastlingOptions.standard([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
         kTarget: FILE_G,
         qTarget: FILE_C,
         fixedRooks: true,
         kRook: FILE_H,
         qRook: FILE_A,
+        rookPiece: rookPiece,
       );
 
-  factory CastlingOptions.chess960() => CastlingOptions(
+  factory CastlingOptions.chess960([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
         kTarget: FILE_G,
         qTarget: FILE_C,
         fixedRooks: false,
-        rookPiece: 'R',
+        rookPiece: rookPiece,
       );
 
-  factory CastlingOptions.capablanca() => CastlingOptions(
+  factory CastlingOptions.capablanca([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
         kTarget: FILE_I,
         qTarget: FILE_C,
         fixedRooks: true,
         kRook: FILE_J,
         qRook: FILE_A,
+        rookPiece: rookPiece,
       );
 }

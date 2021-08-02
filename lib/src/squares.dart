@@ -364,7 +364,7 @@ class Squares {
     }
 
     // Generate castling
-    if (variant.castling && options.castling && pieceType.royal) {
+    if (variant.castling && options.castling && pieceType.royal && !inCheck) {
       bool kingside = colour == WHITE ? state.castlingRights.wk : state.castlingRights.bk;
       bool queenside = colour == WHITE ? state.castlingRights.wq : state.castlingRights.bq;
       int royalRank = rank(from, variant.boardSize);
@@ -531,7 +531,7 @@ class Squares {
         hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
         hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       }
-    } else if (move.capture && move.capturedPiece == variant.castlingPiece) {
+    } else if (move.capture && move.capturedPiece!.type == variant.castlingPiece) {
       // rook captured
       int toFile = file(move.to, size);
       int opponent = colour.opponent;
@@ -636,7 +636,7 @@ class Squares {
 
   Move? getMove(String algebraic) {
     List<Move> moves = generateLegalMoves();
-    Move? match = moves.firstWhereOrNull((m) => m.algebraic(size) == algebraic);
+    Move? match = moves.firstWhereOrNull((m) => toAlgebraic(m) == algebraic);
     return match;
   }
 
@@ -747,6 +747,7 @@ class Squares {
   }
 
   int perft(int depth) {
+    if (depth < 1) return 1;
     List<Move> moves = generateLegalMoves();
     int nodes = 0;
     for (Move m in moves) {
@@ -761,14 +762,27 @@ class Squares {
     }
     return nodes;
   }
+
+  Map<String, int> divide(int depth) {
+    List<Move> moves = generateLegalMoves();
+    Map<String, int> perfts = {};
+    for (Move m in moves) {
+      makeMove(m);
+      perfts[toAlgebraic(m)] = perft(depth - 1);
+      undo();
+    }
+    return perfts;
+  }
 }
 
 main(List<String> args) {
   Squares game = Squares(
-      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] b Qkq - 0 10');
+      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] w Qkq - 0 10');
   print(game.state.hands);
   print(game.fen);
   List<Move> moves = game.generateLegalMoves();
   print(moves.length);
   print(moves.map((e) => game.toSan(e)).toList());
+  Move? m = game.getMove('p@b4');
+  print(m?.dropPiece);
 }
