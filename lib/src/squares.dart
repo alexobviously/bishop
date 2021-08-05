@@ -378,8 +378,7 @@ class Squares {
     return moves;
   }
 
-  bool makeMove(Move move, [bool debug = false]) {
-    if (debug) print('${move.algebraic(size)} ${squareName(move.to)}');
+  bool makeMove(Move move) {
     //if (!onBoard(move.from)) print(move.from);
 
     if ((move.from != HAND && !onBoard(move.from, size)) || !onBoard(move.to, size)) return false;
@@ -389,7 +388,6 @@ class Squares {
         state.hands != null ? List.generate(state.hands!.length, (i) => List.from(state.hands![i])) : null;
     // TODO: more validation?
     Square fromSq = move.from >= BOARD_START ? board[move.from] : EMPTY;
-    if (debug) print(fromSq);
     Square toSq = board[move.to];
     PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq != EMPTY && fromSq.colour != state.turn) return false;
@@ -400,8 +398,13 @@ class Squares {
       board[move.from] = EMPTY;
     }
 
+    // Add captured piece to hand
+    if (variant.hands && move.capture) {
+      int _piece = move.capturedPiece!.hasFlag(FLAG_PROMO) ? variant.promotionPieces[0] : move.capturedPiece!.type;
+      _hands![colour].add(_piece);
+    }
+
     if (!move.castling && !move.promotion) {
-      if (debug) print('dropping ${move.dropPiece}');
       // Move the piece to the new square
       int putPiece = move.from >= BOARD_START ? fromSq : makePiece(move.dropPiece!, colour);
       hash ^= zobrist.table[move.to][putPiece.piece];
@@ -413,11 +416,13 @@ class Squares {
       board[move.to] = makePiece(move.promoPiece!, state.turn, FLAG_PROMO);
       hash ^= zobrist.table[move.to][board[move.to].piece];
     }
+    // Manage halfmove counter
     int _halfMoves = state.halfMoves;
     if (move.capture || fromPiece.promotable)
       _halfMoves = 0;
     else
       _halfMoves++;
+
     int _castlingRights = state.castlingRights;
     List<int> royalSquares = List.from(state.royalSquares);
 
@@ -790,19 +795,19 @@ class Squares {
 }
 
 main(List<String> args) {
-  Squares game = Squares(
-      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] b Qkq - 0 10');
+  Squares game =
+      Squares(variant: Variant.crazyhouse(), fen: 'rnb1kbnr/pppp1Npp/5q2/8/8/8/PPPPPPPP/RNBQKB1R[PP] b KQkq - 0 3');
   print(game.state.hands);
   print(game.fen);
   List<Move> moves = game.generateLegalMoves();
   print(moves.length);
   print(moves.map((e) => game.toSan(e)).toList());
-  Move? m = game.getMove('p@b4');
-  //print(m);
-  print(m?.dropPiece);
+  Move? m = game.getMove('f6f7');
+  // //print(m);
+  // print(m?.dropPiece);
   print(game.ascii());
   print(game.fen);
-  game.makeMove(m!, true);
+  game.makeMove(m!);
   print(game.ascii());
   print(game.fen);
   game.undo();
