@@ -1,7 +1,7 @@
 import 'package:bishop/bishop.dart';
 
 main(List<String> args) {
-  Bishop game = Bishop(variant: Variant.standard());
+  Game game = Game(variant: Variant.standard());
 
   while (!game.gameOver) {
     game.makeRandomMove();
