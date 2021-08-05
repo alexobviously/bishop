@@ -765,6 +765,18 @@ class Game {
     return output;
   }
 
+  List<String> boardSymbols([bool full = false]) {
+    List<String> symbols = [];
+    for (int i = 0; i < board.length; i++) {
+      if (full || onBoard(i, size)) {
+        int _piece = board[i];
+        String symbol = _piece == EMPTY ? '' : variant.pieces[_piece.type].symbol;
+        symbols.add(_piece.colour == WHITE ? symbol.toUpperCase() : symbol.toLowerCase());
+      }
+    }
+    return symbols;
+  }
+
   int perft(int depth) {
     if (depth < 1) return 1;
     List<Move> moves = generateLegalMoves();
