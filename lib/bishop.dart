@@ -1,9 +1,9 @@
-library squares;
+library bishop;
 
 export 'src/betza.dart';
 export 'src/constants.dart';
 export 'src/first_where_extension.dart';
-export 'src/squares.dart';
+export 'src/game.dart';
 export 'src/move_definition.dart';
 export 'src/move_gen_options.dart';
 export 'src/move.dart';

@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:squares/squares.dart';
-import 'package:squares/src/castling_rights.dart';
+import 'package:bishop/bishop.dart';
+import 'package:bishop/src/castling_rights.dart';
 
 class Zobrist {
   static const int META = 0;

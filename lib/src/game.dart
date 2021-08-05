@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:squares/squares.dart';
+import 'package:bishop/bishop.dart';
 
 import 'castling_rights.dart';
 import 'constants.dart';
@@ -14,7 +14,7 @@ import 'state.dart';
 import 'utils.dart';
 import 'variant/variant.dart';
 
-class Squares {
+class Game {
   final Variant variant;
   late Zobrist zobrist;
   late List<int> board;
@@ -32,7 +32,7 @@ class Squares {
 
   BoardSize get size => variant.boardSize;
 
-  Squares({required this.variant, String? fen}) {
+  Game({required this.variant, String? fen}) {
     zobrist = Zobrist(variant, 7363661891);
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
     setup();
@@ -792,25 +792,4 @@ class Squares {
     }
     return perfts;
   }
-}
-
-main(List<String> args) {
-  Squares game =
-      Squares(variant: Variant.crazyhouse(), fen: 'rnb1kbnr/pppp1Npp/5q2/8/8/8/PPPPPPPP/RNBQKB1R[PP] b KQkq - 0 3');
-  print(game.state.hands);
-  print(game.fen);
-  List<Move> moves = game.generateLegalMoves();
-  print(moves.length);
-  print(moves.map((e) => game.toSan(e)).toList());
-  Move? m = game.getMove('f6f7');
-  // //print(m);
-  // print(m?.dropPiece);
-  print(game.ascii());
-  print(game.fen);
-  game.makeMove(m!);
-  print(game.ascii());
-  print(game.fen);
-  game.undo();
-  print(game.ascii());
-  print(game.fen);
 }

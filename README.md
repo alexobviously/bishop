@@ -1,23 +1,22 @@
-# Squares
+# Bishop
 #### A chess logic package with flexible variant support.
 
-Squares is designed with flexibility in mind. The goal is to be able to build and play any arbitrary variant of chess without having to build a new package every time. Right now, this is limited to mostly fairy variants, but support for more complex rules such as drops is coming soon.
+Bishop is designed with flexibility in mind. The goal is to be able to build and play any arbitrary variant of chess without having to build a new package every time. Right now, this is limited to mostly fairy variants, but support for more complex rules such as drops is coming soon.
 
 As a result of the amount of generalisation required to make a package like this work, performance does take a bit of a hit. As such, it might be difficult to build a strong engine with this. However, it's perfectly sufficient for logic generation and validation, etc. Hopefully the performance can be improved in the future though - this is a work in progress!
 
-Squares is written in pure dart with no dependencies.
+Bishop is written in pure dart with no dependencies.
 
 ### Upcoming Features
 * Insufficient material draws
-* Hopper pieces (e.g. xiangqi cannon)
+* Hopper pieces (e.g. Xiangqi cannon)
 * X-FEN output (input works)
-* Piece drops (e.g. Crazyhouse)
 * Piece gating (e.g. Seirawan Chess)
 
 ### A Random Game
 Playing a random game is easy!
 ```dart
-Squares game = Squares(variant: Variant.standard());
+Game game = Game(variant: Variant.standard());
 
 while (!game.gameOver) {
     game.makeRandomMove();
@@ -29,21 +28,21 @@ print(game.pgn());
 ### Generating and Making Moves
 Get a list of legal moves, formatted in SAN notation:
 ```dart
-Squares game = Squares(variant: Variant.grand());
+Game game = Game(variant: Variant.grand());
 List<Move> moves = game.generateLegalMoves();
 print(moves.map((e) => g.toSan(e)).toList());
 ```
 
 Pick a move with algebraic notation, and play it:
 ```dart
-Squares game = Squares(variant: Variant.standard());
+Game game = Game(variant: Variant.standard());
 Move? m = g.getMove('e2e4')!; // returns null if the move isn't found
 bool result = game.makeMove(m); // returns false if the move is invalid
 ```
 
 Start a game from an arbitrary position
 ```dart
-Squares game = Squares(variant: Variant.standard(), fen: 'rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3');
+Game game = Game(variant: Variant.standard(), fen: 'rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3');
 ```
 
 ### Piece Definition

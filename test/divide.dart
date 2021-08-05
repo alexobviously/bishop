@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:squares/squares.dart';
+import 'package:bishop/bishop.dart';
 
 import 'constants.dart';
 
@@ -9,7 +9,7 @@ main(List<String> args) async {
   bool showCorrect = true;
   String fen = Positions.POSITION_5;
   int depth = 3;
-  Squares game = Squares(variant: Variant.standard(), fen: fen);
+  Game game = Game(variant: Variant.standard(), fen: fen);
   Map<String, dynamic> results = game.divide(depth);
   results.forEach((key, value) => print('$key: $value'));
 

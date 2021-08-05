@@ -1,7 +1,7 @@
-import 'package:squares/squares.dart';
+import 'package:bishop/bishop.dart';
 
 main(List<String> args) {
-  Squares game = Squares(variant: Variant.standard());
+  Bishop game = Bishop(variant: Variant.standard());
 
   while (!game.gameOver) {
     game.makeRandomMove();

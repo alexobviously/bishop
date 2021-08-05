@@ -1,4 +1,4 @@
-import 'package:squares/squares.dart';
+import 'package:bishop/bishop.dart';
 
 import 'castling_rights.dart';
 import 'square.dart';

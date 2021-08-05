@@ -1,5 +1,5 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
-import 'package:squares/squares.dart';
+import 'package:bishop/bishop.dart';
 import 'constants.dart';
 
 const int STANDARD = 0;
@@ -9,7 +9,7 @@ class PerftBenchmark extends BenchmarkBase {
   final int variant;
   final int depth;
   final int nodes;
-  Squares? game;
+  Game? game;
 
   PerftBenchmark(String fen, this.variant, this.depth, this.nodes)
       : this.fen = fen,
@@ -21,7 +21,7 @@ class PerftBenchmark extends BenchmarkBase {
       STANDARD: Variant.standard(),
       CHESS960: Variant.chess960(),
     };
-    game = Squares(variant: variants[variant]!, fen: fen);
+    game = Game(variant: variants[variant]!, fen: fen);
   }
 
   @override
