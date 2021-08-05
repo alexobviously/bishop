@@ -4,9 +4,12 @@ extension Opponent on Colour {
   Colour get opponent => 1 - this;
 }
 
+typedef Hand = List<int>;
+
 const Colour WHITE = 0;
 const Colour BLACK = 1;
 
+const int BOARD_START = 0;
 const int INVALID = -1;
 const int HAND = -2;
 

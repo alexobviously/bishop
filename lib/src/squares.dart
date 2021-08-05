@@ -38,6 +38,7 @@ class Squares {
     setup();
     royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
   }
+
   int setupCastling(String castlingString, List<int> royalSquares) {
     if (castlingString == '-') {
       return 0;
@@ -172,68 +173,6 @@ class Squares {
     _state.hash = zobrist.compute(_state, board);
     zobrist.incrementHash(_state.hash);
     history.add(_state);
-  }
-
-  String get fen {
-    assert(board.length == variant.boardSize.numSquares);
-    String _fen = '';
-    int empty = 0;
-
-    void addEmptySquares() {
-      if (empty > 0) {
-        _fen = '$_fen$empty';
-        empty = 0;
-      }
-    }
-
-    for (int i = 0; i < variant.boardSize.v; i++) {
-      for (int j = 0; j < variant.boardSize.h; j++) {
-        int s = (i * variant.boardSize.h * 2) + j;
-        Square sq = board[s];
-        if (sq.isEmpty)
-          empty++;
-        else {
-          if (empty > 0) addEmptySquares();
-          String char = variant.pieces[sq.type].char(sq.colour);
-          if (variant.outputOptions.showPromoted && sq.hasFlag(FLAG_PROMO)) char += '~';
-          _fen = '$_fen$char';
-        }
-      }
-      if (empty > 0) addEmptySquares();
-      if (i < variant.boardSize.v - 1) _fen = '$_fen/';
-    }
-    if (variant.hands) {
-      String whiteHand = state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
-      String blackHand = state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
-      _fen = '$_fen[$whiteHand$blackHand]';
-    }
-    String _turn = state.turn == WHITE ? 'w' : 'b';
-    String _castling = state.castlingRights.formatted;
-    if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
-      _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols!);
-    }
-    String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
-    _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
-    return _fen;
-  }
-
-  String ascii([bool unicode = false]) {
-    String border = '   +${'-' * (variant.boardSize.h * 3)}+';
-    String output = '$border\n';
-    for (int i in Iterable<int>.generate(variant.boardSize.v).toList()) {
-      int rank = variant.boardSize.v - i;
-      String _rank = rank > 9 ? '$rank |' : ' $rank |';
-      output = '$output$_rank';
-      for (int j in Iterable<int>.generate(variant.boardSize.h).toList()) {
-        Square sq = board[i * variant.boardSize.h * 2 + j];
-        String char = variant.pieces[sq.type].char(sq.colour);
-        if (unicode && UNICODE_PIECES.containsKey(char)) char = UNICODE_PIECES[char]!;
-        output = '$output $char ';
-      }
-      output = '$output|\n';
-    }
-    output = '$output$border';
-    return output;
   }
 
   List<Move> generateLegalMoves() => generatePlayerMoves(state.turn, MoveGenOptions.normal());
@@ -439,23 +378,36 @@ class Squares {
     return moves;
   }
 
-  bool makeMove(Move move) {
-    if (!onBoard(move.from, size) || !onBoard(move.to, size)) return false;
+  bool makeMove(Move move, [bool debug = false]) {
+    if (debug) print('${move.algebraic(size)} ${squareName(move.to)}');
+    //if (!onBoard(move.from)) print(move.from);
+
+    if ((move.from != HAND && !onBoard(move.from, size)) || !onBoard(move.to, size)) return false;
     int hash = state.hash;
     hash ^= zobrist.table[zobrist.TURN][Zobrist.META];
+    List<Hand>? _hands =
+        state.hands != null ? List.generate(state.hands!.length, (i) => List.from(state.hands![i])) : null;
     // TODO: more validation?
-    Square fromSq = board[move.from];
+    Square fromSq = move.from >= BOARD_START ? board[move.from] : EMPTY;
+    if (debug) print(fromSq);
     Square toSq = board[move.to];
     PieceType fromPiece = variant.pieces[fromSq.type].type;
-    int colour = fromSq.colour;
-    if (colour != state.turn) return false;
-    // Remove the moved piece
-    hash ^= zobrist.table[move.from][fromSq.piece];
-    board[move.from] = EMPTY;
+    if (fromSq != EMPTY && fromSq.colour != state.turn) return false;
+    int colour = turn;
+    // Remove the moved piece, if this wasn't a drop
+    if (move.from >= BOARD_START) {
+      hash ^= zobrist.table[move.from][fromSq.piece];
+      board[move.from] = EMPTY;
+    }
+
     if (!move.castling && !move.promotion) {
+      if (debug) print('dropping ${move.dropPiece}');
       // Move the piece to the new square
-      hash ^= zobrist.table[move.to][fromSq.piece];
-      board[move.to] = fromSq;
+      int putPiece = move.from >= BOARD_START ? fromSq : makePiece(move.dropPiece!, colour);
+      hash ^= zobrist.table[move.to][putPiece.piece];
+      board[move.to] = putPiece;
+      //if (move.from == HAND) print('$colour ${move.dropPiece!}');
+      if (move.from == HAND) _hands![colour].remove(move.dropPiece!);
     } else if (move.promotion) {
       // Place the promoted piece
       board[move.to] = makePiece(move.promoPiece!, state.turn, FLAG_PROMO);
@@ -557,7 +509,7 @@ class Squares {
       royalSquares: royalSquares,
       epSquare: epSquare,
       hash: hash,
-      hands: state.hands,
+      hands: _hands,
     );
     history.add(_state);
     zobrist.incrementHash(hash);
@@ -587,7 +539,7 @@ class Squares {
       if (move.promotion) {
         board[move.from] = makePiece(move.promoSource!, state.turn);
       } else {
-        board[move.from] = toSq;
+        if (move.from >= BOARD_START) board[move.from] = toSq;
       }
       if (move.enPassant) {
         int captureSq = move.to + PLAYER_DIRECTION[move.capturedPiece!.colour] * size.north;
@@ -648,6 +600,7 @@ class Squares {
   }
 
   String toSan(Move move, [List<Move>? moves]) {
+    String _alg = move.algebraic(size);
     if (move.castling) {
       return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? "O-O" : "O-O-O";
     }
@@ -671,7 +624,6 @@ class Squares {
 
       if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
     }
-
     makeMove(move);
     if (inCheck) {
       san = '$san${checkmate ? '#' : '+'}';
@@ -746,6 +698,68 @@ class Squares {
     return _pgn;
   }
 
+  String get fen {
+    assert(board.length == variant.boardSize.numSquares);
+    String _fen = '';
+    int empty = 0;
+
+    void addEmptySquares() {
+      if (empty > 0) {
+        _fen = '$_fen$empty';
+        empty = 0;
+      }
+    }
+
+    for (int i = 0; i < variant.boardSize.v; i++) {
+      for (int j = 0; j < variant.boardSize.h; j++) {
+        int s = (i * variant.boardSize.h * 2) + j;
+        Square sq = board[s];
+        if (sq.isEmpty)
+          empty++;
+        else {
+          if (empty > 0) addEmptySquares();
+          String char = variant.pieces[sq.type].char(sq.colour);
+          if (variant.outputOptions.showPromoted && sq.hasFlag(FLAG_PROMO)) char += '~';
+          _fen = '$_fen$char';
+        }
+      }
+      if (empty > 0) addEmptySquares();
+      if (i < variant.boardSize.v - 1) _fen = '$_fen/';
+    }
+    if (variant.hands) {
+      String whiteHand = state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
+      String blackHand = state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      _fen = '$_fen[$whiteHand$blackHand]';
+    }
+    String _turn = state.turn == WHITE ? 'w' : 'b';
+    String _castling = state.castlingRights.formatted;
+    if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
+      _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols!);
+    }
+    String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
+    _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
+    return _fen;
+  }
+
+  String ascii([bool unicode = false]) {
+    String border = '   +${'-' * (variant.boardSize.h * 3)}+';
+    String output = '$border\n';
+    for (int i in Iterable<int>.generate(variant.boardSize.v).toList()) {
+      int rank = variant.boardSize.v - i;
+      String _rank = rank > 9 ? '$rank |' : ' $rank |';
+      output = '$output$_rank';
+      for (int j in Iterable<int>.generate(variant.boardSize.h).toList()) {
+        Square sq = board[i * variant.boardSize.h * 2 + j];
+        String char = variant.pieces[sq.type].char(sq.colour);
+        if (unicode && UNICODE_PIECES.containsKey(char)) char = UNICODE_PIECES[char]!;
+        output = '$output $char ';
+      }
+      output = '$output|\n';
+    }
+    output = '$output$border';
+    return output;
+  }
+
   int perft(int depth) {
     if (depth < 1) return 1;
     List<Move> moves = generateLegalMoves();
@@ -777,12 +791,21 @@ class Squares {
 
 main(List<String> args) {
   Squares game = Squares(
-      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] w Qkq - 0 10');
+      variant: Variant.crazyhouse(), fen: 'rnb1k1nr/pppq1pR1/3b4/8/8/N7/PPPPPP2/R1BQKBq~1[Ppppnr] b Qkq - 0 10');
   print(game.state.hands);
   print(game.fen);
   List<Move> moves = game.generateLegalMoves();
   print(moves.length);
   print(moves.map((e) => game.toSan(e)).toList());
   Move? m = game.getMove('p@b4');
+  //print(m);
   print(m?.dropPiece);
+  print(game.ascii());
+  print(game.fen);
+  game.makeMove(m!, true);
+  print(game.ascii());
+  print(game.fen);
+  game.undo();
+  print(game.ascii());
+  print(game.fen);
 }

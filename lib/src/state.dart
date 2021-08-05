@@ -10,7 +10,7 @@ class State {
   final CastlingRights castlingRights;
   final int? epSquare;
   final List<int> royalSquares;
-  final List<List<int>>? hands;
+  final List<Hand>? hands;
   int hash; // Needs to be set after construction for the first hash
 
   State({

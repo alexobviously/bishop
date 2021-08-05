@@ -20,6 +20,7 @@ class Move {
   bool get promotion => promoPiece != null;
   bool get castling => castlingDir != null;
   bool get drop => dropPiece != null;
+  bool get gate => drop && from >= BOARD_START;
 
   Move({
     required this.from,
