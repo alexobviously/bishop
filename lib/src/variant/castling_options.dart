@@ -23,7 +23,7 @@ class CastlingOptions {
   }) {
     if (enabled) assert(kTarget != null || qTarget != null);
     if (fixedRooks == true)
-      assert(kRook != null && qRook != null);
+      assert(kRook != null || qRook != null);
     else
       assert(rookPiece != null);
   }
