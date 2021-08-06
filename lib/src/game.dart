@@ -781,6 +781,13 @@ class Game {
     return symbols;
   }
 
+  GameInfo get info => GameInfo(
+        lastMove: state.move,
+        lastFrom: state.move != null ? (state.move!.from == HAND ? 'hand' : squareName(state.move!.from, size)) : null,
+        lastTo: state.move != null ? squareName(state.move!.to, size) : null,
+        checkSq: inCheck ? squareName(state.royalSquares[state.turn], size) : null,
+      );
+
   int perft(int depth) {
     if (depth < 1) return 1;
     List<Move> moves = generateLegalMoves();

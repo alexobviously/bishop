@@ -5,6 +5,7 @@ export 'src/constants.dart';
 export 'src/engine.dart';
 export 'src/first_where_extension.dart';
 export 'src/game.dart';
+export 'src/game_info.dart';
 export 'src/move_definition.dart';
 export 'src/move_gen_options.dart';
 export 'src/move.dart';
