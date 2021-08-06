@@ -1,3 +1,6 @@
+### 0.2.4
+- Fixed engine not wanting to checkmate you
+
 ### 0.2.3
 - Basic engine
 - Fixed CastlingOptions assertion

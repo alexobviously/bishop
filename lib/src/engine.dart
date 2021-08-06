@@ -58,9 +58,9 @@ class Engine {
       if (game.inDraw) {
         return 0;
       } else if (game.turn == player) {
-        return -MATE_UPPER;
-      } else {
         return MATE_UPPER;
+      } else {
+        return -MATE_UPPER;
       }
     }
     // -evaluate because we are currently looking at this asthe other player
