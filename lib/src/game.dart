@@ -309,7 +309,8 @@ class Game {
       int royalRank = rank(from, variant.boardSize);
 
       for (int i = 0; i < 2; i++) {
-        bool sideCondition = i == 0 ? kingside : queenside;
+        bool sideCondition =
+            i == 0 ? (kingside && variant.castlingOptions.kingside) : (queenside && variant.castlingOptions.queenside);
         if (!sideCondition) continue;
         int targetFile = i == 0 ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
         int targetSq = getSquare(targetFile, royalRank, variant.boardSize);
@@ -607,7 +608,10 @@ class Game {
   String toSan(Move move, [List<Move>? moves]) {
     String _alg = move.algebraic(size);
     if (move.castling) {
-      return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? "O-O" : "O-O-O";
+      // if queenside is the only castling option, render it as 'O-O'
+      String kingside = 'O-O';
+      String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
+      return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? kingside : queenside;
     }
 
     String san = '';

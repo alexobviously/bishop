@@ -11,6 +11,7 @@ class PieceType {
   final bool canPromoteTo;
   final bool enPassantable;
   final bool noSanSymbol; // for pawns, e.g. b4 instead of Pb4
+  final int value; // in centipawns, can override in variant
 
   PieceType({
     this.betza,
@@ -20,6 +21,7 @@ class PieceType {
     this.canPromoteTo = true,
     this.enPassantable = false,
     this.noSanSymbol = false,
+    this.value = DEFAULT_PIECE_VALUE,
   });
 
   void init(BoardSize boardSize) {
@@ -40,6 +42,7 @@ class PieceType {
     bool canPromoteTo = true,
     bool enPassantable = false,
     bool noSanSymbol = false,
+    int value = DEFAULT_PIECE_VALUE,
   }) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> moves = [];
@@ -64,13 +67,14 @@ class PieceType {
       canPromoteTo: canPromoteTo,
       enPassantable: enPassantable,
       noSanSymbol: noSanSymbol,
+      value: value,
     );
   }
 
-  factory PieceType.knight() => PieceType.fromBetza('N');
-  factory PieceType.bishop() => PieceType.fromBetza('B');
-  factory PieceType.rook() => PieceType.fromBetza('R');
-  factory PieceType.queen() => PieceType.fromBetza('Q');
+  factory PieceType.knight() => PieceType.fromBetza('N', value: 300);
+  factory PieceType.bishop() => PieceType.fromBetza('B', value: 300);
+  factory PieceType.rook() => PieceType.fromBetza('R', value: 500);
+  factory PieceType.queen() => PieceType.fromBetza('Q', value: 900);
   factory PieceType.king() => PieceType.fromBetza('K', royal: true, canPromoteTo: false);
   factory PieceType.pawn() => PieceType.fromBetza(
         'fmWfceFifmnD',
@@ -78,22 +82,26 @@ class PieceType {
         enPassantable: true,
         canPromoteTo: false,
         noSanSymbol: true,
+        value: 100,
       ); // seriously
   factory PieceType.knibis() => PieceType.fromBetza('mNcB');
   factory PieceType.biskni() => PieceType.fromBetza('mBcN');
   factory PieceType.kniroo() => PieceType.fromBetza('mNcR');
   factory PieceType.rookni() => PieceType.fromBetza('mRcN');
-  factory PieceType.archbishop() => PieceType.fromBetza('BN');
-  factory PieceType.chancellor() => PieceType.fromBetza('RN');
-  factory PieceType.amazon() => PieceType.fromBetza('QN');
+  factory PieceType.bisroo() => PieceType.fromBetza('mBcR');
+  factory PieceType.roobis() => PieceType.fromBetza('mRcB');
+  factory PieceType.archbishop() => PieceType.fromBetza('BN', value: 900);
+  factory PieceType.chancellor() => PieceType.fromBetza('RN', value: 900);
+  factory PieceType.amazon() => PieceType.fromBetza('QN', value: 1200);
 }
 
 class PieceDefinition {
   final PieceType type;
   final String symbol;
+  final int value;
 
-  PieceDefinition({required this.type, required this.symbol});
-  factory PieceDefinition.empty() => PieceDefinition(type: PieceType.empty(), symbol: '.');
+  PieceDefinition({required this.type, required this.symbol, required this.value});
+  factory PieceDefinition.empty() => PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
 
   String char(Colour colour) => colour == WHITE ? symbol.toUpperCase() : symbol.toLowerCase();
 }

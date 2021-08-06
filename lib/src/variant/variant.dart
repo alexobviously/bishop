@@ -23,8 +23,10 @@ class Variant {
   final int? halfMoveDraw; // e.g. set this to 100 for the standard 50-move rule
   final int? repetitionDraw; // e.g. set this to 3 for standard threefold repetition
   final bool hands; // allow hands, like in crazyhouse
+  final Map<String, int>? pieceValues;
 
   late List<PieceDefinition> pieces;
+  late Map<String, PieceDefinition> pieceLookup;
   late List<int> promotionPieces;
   late int epPiece;
   late int castlingPiece;
@@ -47,6 +49,7 @@ class Variant {
     this.halfMoveDraw,
     this.repetitionDraw,
     this.hands = false,
+    this.pieceValues,
   }) {
     assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
     init();
@@ -67,6 +70,7 @@ class Variant {
     int? halfMoveDraw,
     int? repetitionDraw,
     bool? hands,
+    Map<String, int>? pieceValues,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -83,6 +87,7 @@ class Variant {
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
       repetitionDraw: repetitionDraw ?? this.repetitionDraw,
       hands: hands ?? this.hands,
+      pieceValues: pieceValues ?? this.pieceValues,
     );
   }
 
@@ -100,7 +105,14 @@ class Variant {
 
   void buildPieceDefinitions() {
     pieces = [PieceDefinition.empty()];
-    pieceTypes.forEach((s, p) => pieces.add(PieceDefinition(type: p, symbol: s)));
+    pieceLookup = {};
+    pieceTypes.forEach((s, p) {
+      int value = p.royal ? MATE_UPPER : p.value;
+      if (pieceValues?.containsKey(s) ?? false) value = pieceValues![s]!;
+      PieceDefinition _piece = PieceDefinition(type: p, symbol: s, value: value);
+      pieces.add(_piece);
+      pieceLookup[s] = _piece;
+    });
     promotionPieces = [];
     for (int i = 0; i < pieces.length; i++) {
       // && !pieces[i].type.royal) ?
@@ -183,6 +195,22 @@ class Variant {
           'C': PieceType.chancellor(), // marshal
           'A': PieceType.archbishop(), // cardinal
         }),
+    );
+  }
+
+  factory Variant.mini() {
+    Variant standard = Variant.standard();
+    return standard.copyWith(
+      name: 'Mini Chess',
+      boardSize: BoardSize(5, 5),
+      startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
+      promotionRanks: [RANK_1, RANK_5],
+      castlingOptions: CastlingOptions(
+        enabled: true,
+        qTarget: FILE_B,
+        qRook: FILE_A,
+        fixedRooks: true, // might need to be false with diff start fens
+      ),
     );
   }
 }

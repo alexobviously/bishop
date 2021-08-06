@@ -9,6 +9,9 @@ class CastlingOptions {
   final int? qRook;
   final String? rookPiece;
 
+  bool get kingside => kTarget != null;
+  bool get queenside => qTarget != null;
+
   CastlingOptions({
     required this.enabled,
     this.kTarget,

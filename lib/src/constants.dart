@@ -16,7 +16,10 @@ const int HAND = -2;
 const List<int> PLAYER_DIRECTION = [-1, 1];
 const List<String> PLAYER_NAME = ['hite', 'Black'];
 
-const ASCII_a = 97;
+const int ASCII_a = 97;
+const int MATE_LOWER = 90000;
+const int MATE_UPPER = 100000;
+const int DEFAULT_PIECE_VALUE = 200;
 
 const Map<String, String> UNICODE_PIECES = {
   'R': '♜',

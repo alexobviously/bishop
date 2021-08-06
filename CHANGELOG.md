@@ -1,3 +1,8 @@
+### 0.2.2
+- Mini variant
+- Independent side castling (e.g. only queenside for Minichess)
+- Piece values
+
 ### 0.2.1
 - Added *Game.boardSymbols()*, for use with the **squares** package
 
