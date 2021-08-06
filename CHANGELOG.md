@@ -1,5 +1,6 @@
 ### 0.2.4
 - Fixed engine not wanting to checkmate you
+- Micro variant
 
 ### 0.2.3
 - Basic engine

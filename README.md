@@ -7,6 +7,15 @@ As a result of the amount of generalisation required to make a package like this
 
 Bishop is written in pure dart with no dependencies.
 
+### Features 
+* Game logic - making moves, detecting end conditions, etc
+* Legal move generation
+* FEN & PGN input and output
+* Easy and flexible variant definition
+* Fairy pieces
+* Hands & dropping
+* An engine (not strong but fine for testing)
+
 ### Upcoming Features
 * Insufficient material draws
 * Hopper pieces (e.g. Xiangqi cannon)
