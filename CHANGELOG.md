@@ -1,3 +1,6 @@
+### 0.2.3
+- Fixed CastlingOptions assertion
+
 ### 0.2.2
 - Mini variant
 - Independent side castling (e.g. only queenside for Minichess)
