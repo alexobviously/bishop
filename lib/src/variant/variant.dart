@@ -12,7 +12,7 @@ class Variant {
   final String name;
   final BoardSize boardSize;
   final Map<String, PieceType> pieceTypes;
-  final CastlingOptionSet castlingOptions;
+  final CastlingOptions castlingOptions;
   final OutputOptions outputOptions;
   final String? startPosition;
   final Function()? startPosBuilder;
@@ -59,7 +59,7 @@ class Variant {
     String? name,
     BoardSize? boardSize,
     Map<String, PieceType>? pieceTypes,
-    CastlingOptionSet? castlingOptions,
+    CastlingOptions? castlingOptions,
     OutputOptions? outputOptions,
     String? startPosition,
     Function()? startPosBuilder,
@@ -96,7 +96,7 @@ class Variant {
     buildPieceDefinitions();
     royalPiece = pieces.indexWhere((p) => p.type.royal);
     if (enPassant) epPiece = pieces.indexWhere((p) => p.type.enPassantable);
-    //if (castling) castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
+    if (castling) castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
   }
 
   void initPieces() {
@@ -125,7 +125,7 @@ class Variant {
       name: 'Chess',
       boardSize: BoardSize.standard(),
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      castlingOptions: CastlingOptionSet.standard(),
+      castlingOptions: CastlingOptions.standard(),
       outputOptions: OutputOptions.standard(),
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
@@ -151,7 +151,7 @@ class Variant {
     return Variant.standard().copyWith(
       name: 'Chess960',
       startPosBuilder: build960Position,
-      castlingOptions: CastlingOptionSet.chess960(),
+      castlingOptions: CastlingOptions.chess960(),
       outputOptions: OutputOptions.chess960(),
     );
   }
@@ -169,7 +169,7 @@ class Variant {
       name: 'Capablanca Chess',
       boardSize: BoardSize(10, 8),
       startPosition: 'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
-      castlingOptions: CastlingOptionSet.capablanca(),
+      castlingOptions: CastlingOptions.capablanca(),
       pieceTypes: standard.pieceTypes
         ..addAll({
           'A': PieceType.archbishop(),
@@ -184,7 +184,7 @@ class Variant {
       name: 'Grand Chess',
       boardSize: BoardSize(10, 10),
       startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
-      castlingOptions: CastlingOptionSet.none(),
+      castlingOptions: CastlingOptions.none(),
       promotionRanks: [RANK_3, RANK_8],
       firstMoveRanks: [
         [RANK_3],
@@ -205,7 +205,7 @@ class Variant {
       boardSize: BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
       promotionRanks: [RANK_1, RANK_5],
-      castlingOptions: CastlingOptionSet.mini(),
+      castlingOptions: CastlingOptions.mini(),
     );
   }
 
@@ -216,7 +216,7 @@ class Variant {
       boardSize: BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
       promotionRanks: [RANK_1, RANK_5],
-      castlingOptions: CastlingOptionSet.micro(),
+      castlingOptions: CastlingOptions.micro(),
     );
   }
 }

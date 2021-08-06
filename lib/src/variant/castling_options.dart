@@ -1,26 +1,5 @@
 part of 'variant.dart';
 
-class CastlingOptionSet {
-  final List<CastlingOptions> options;
-  late bool enabled;
-
-  CastlingOptionSet(this.options) {
-    if (options.length == 1) options.add(options.first);
-    assert(options.length == 2);
-    enabled = options[0].enabled || options[1].enabled;
-  }
-  factory CastlingOptionSet.symmetrical(CastlingOptions options) => CastlingOptionSet([options, options]);
-
-  factory CastlingOptionSet.none() => CastlingOptionSet.symmetrical(CastlingOptions.none());
-  factory CastlingOptionSet.standard() => CastlingOptionSet.symmetrical(CastlingOptions.standard());
-  factory CastlingOptionSet.chess960() => CastlingOptionSet.symmetrical(CastlingOptions.chess960());
-  factory CastlingOptionSet.capablanca() => CastlingOptionSet.symmetrical(CastlingOptions.capablanca());
-  factory CastlingOptionSet.mini() => CastlingOptionSet.symmetrical(CastlingOptions.mini());
-  factory CastlingOptionSet.micro() => CastlingOptionSet([CastlingOptions.micro(true), CastlingOptions.micro(false)]);
-
-  CastlingOptions operator [](int index) => options[index];
-}
-
 class CastlingOptions {
   final bool enabled;
   final int? kTarget;
@@ -86,12 +65,13 @@ class CastlingOptions {
         fixedRooks: true, // might need to be false with diff start fens
       );
 
-  factory CastlingOptions.micro(bool white) => CastlingOptions(
+  factory CastlingOptions.micro([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
-        kTarget: !white ? FILE_C : null,
-        kRook: !white ? FILE_D : null,
-        qTarget: white ? FILE_B : null,
-        qRook: white ? FILE_A : null,
+        kTarget: FILE_C,
+        kRook: FILE_D,
+        qTarget: FILE_B,
+        qRook: FILE_A,
+        rookPiece: rookPiece,
         fixedRooks: true,
       );
 }
