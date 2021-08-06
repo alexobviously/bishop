@@ -1,4 +1,5 @@
 ### 0.2.3
+- Basic engine
 - Fixed CastlingOptions assertion
 
 ### 0.2.2

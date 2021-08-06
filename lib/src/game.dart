@@ -808,4 +808,22 @@ class Game {
     }
     return perfts;
   }
+
+  int evaluate(Colour player) {
+    int eval = 0;
+    for (int i = 0; i < size.numIndices; i++) {
+      if (!onBoard(i, size)) continue;
+      Square square = board[i];
+      if (square.isNotEmpty) {
+        Colour colour = square.colour;
+        int type = square.type;
+        int value = variant.pieces[type].value;
+        if (colour == player)
+          eval += value;
+        else
+          eval -= value;
+      }
+    }
+    return eval;
+  }
 }
