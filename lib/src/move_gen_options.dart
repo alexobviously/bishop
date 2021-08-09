@@ -3,6 +3,7 @@ class MoveGenOptions {
   final bool quiet;
   final bool castling;
   final bool legal;
+  final bool ignorePieces;
   final int? pieceType;
   final int? onlySquare;
 
@@ -13,6 +14,7 @@ class MoveGenOptions {
     required this.quiet,
     required this.castling,
     required this.legal,
+    this.ignorePieces = false,
     this.pieceType,
     this.onlySquare,
   });
@@ -53,5 +55,12 @@ class MoveGenOptions {
         castling: false,
         legal: false,
         onlySquare: square,
+      );
+  factory MoveGenOptions.premoves() => MoveGenOptions(
+        captures: true,
+        quiet: true,
+        castling: true,
+        legal: false,
+        ignorePieces: true,
       );
 }

@@ -176,6 +176,7 @@ class Game {
   }
 
   List<Move> generateLegalMoves() => generatePlayerMoves(state.turn, MoveGenOptions.normal());
+  List<Move> generatePremoves() => generatePlayerMoves(state.turn.opponent, MoveGenOptions.premoves());
 
   List<Move> generatePlayerMoves(int player, [MoveGenOptions? options]) {
     if (options == null) options = MoveGenOptions.normal();
@@ -236,7 +237,7 @@ class Game {
         if (md.lame) {
           int _from = from + md.normalised * i * dirMult;
           int blockSq = _from + md.lameNormalised! * dirMult;
-          if (board[blockSq].isNotEmpty) break;
+          if (board[blockSq].isNotEmpty && !options.ignorePieces) break;
         }
         bool optPromo = false;
         bool forcedPromo = false;
@@ -265,7 +266,10 @@ class Game {
             if (!options.quiet && options.onlySquare == null) continue;
             Move m = Move(to: to, from: from, setEnPassant: setEnPassant);
             addMove(m);
-          } else if (variant.enPassant && md.enPassant && state.epSquare == to && options.captures) {
+          } else if (variant.enPassant &&
+              md.enPassant &&
+              (state.epSquare == to || options.ignorePieces) &&
+              options.captures) {
             Move m = Move(
               to: to,
               from: from,
@@ -281,10 +285,14 @@ class Game {
             );
             addMove(m);
           } else {
-            break;
+            if (!options.ignorePieces) break;
+            Move m = Move(from: from, to: to);
+            addMove(m);
           }
         } else if (target.colour == colour) {
-          break;
+          if (!options.ignorePieces) break;
+          Move m = Move(from: from, to: to);
+          addMove(m);
         } else {
           if (md.capture) {
             if (!options.captures) break;
@@ -320,19 +328,21 @@ class Game {
             (board[targetSq].type != variant.castlingPiece || board[targetSq].colour != colour)) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
         bool _valid = true;
-        for (int j = 1; j <= numMidSqs; j++) {
-          int midFile = royalFile! + (i == 0 ? j : -j);
-          if (midFile == rookFile) continue; // for some chess960 positions
-          int midSq = getSquare(midFile, royalRank, variant.boardSize);
-          if (j != numMidSqs && board[midSq].isNotEmpty) {
-            // squares between to and from must be empty
-            _valid = false;
-            break;
-          }
-          if (isAttacked(midSq, colour.opponent)) {
-            // squares between & dest square must not be attacked
-            _valid = false;
-            break;
+        if (!options.ignorePieces) {
+          for (int j = 1; j <= numMidSqs; j++) {
+            int midFile = royalFile! + (i == 0 ? j : -j);
+            if (midFile == rookFile) continue; // for some chess960 positions
+            int midSq = getSquare(midFile, royalRank, variant.boardSize);
+            if (j != numMidSqs && board[midSq].isNotEmpty) {
+              // squares between to and from must be empty
+              _valid = false;
+              break;
+            }
+            if (isAttacked(midSq, colour.opponent)) {
+              // squares between & dest square must not be attacked
+              _valid = false;
+              break;
+            }
           }
         }
         if (_valid) {
