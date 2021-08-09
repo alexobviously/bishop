@@ -206,6 +206,10 @@ class Variant {
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
       promotionRanks: [RANK_1, RANK_5],
       castlingOptions: CastlingOptions.mini(),
+      firstMoveRanks: [
+        [RANK_2],
+        [RANK_4],
+      ],
     );
   }
 
@@ -217,6 +221,10 @@ class Variant {
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
       promotionRanks: [RANK_1, RANK_5],
       castlingOptions: CastlingOptions.micro(),
+      firstMoveRanks: [
+        [RANK_2],
+        [RANK_4],
+      ],
     );
   }
 }
