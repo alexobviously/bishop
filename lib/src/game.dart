@@ -305,7 +305,7 @@ class Game {
             );
             addMove(m);
           }
-          break;
+          if (!options.ignorePieces) break;
         }
       }
     }

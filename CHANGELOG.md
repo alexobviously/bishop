@@ -1,3 +1,6 @@
+### 0.2.5
+- Premove generation
+
 ### 0.2.4
 - Fixed engine not wanting to checkmate you
 - Micro variant
