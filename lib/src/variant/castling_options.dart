@@ -21,6 +21,7 @@ class CastlingOptions {
     this.qRook,
     this.rookPiece,
   }) {
+    print('castlingoptions.enabled $enabled');
     if (enabled) {
       assert(kTarget != null || qTarget != null);
       if (fixedRooks)
