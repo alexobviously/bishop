@@ -21,11 +21,13 @@ class CastlingOptions {
     this.qRook,
     this.rookPiece,
   }) {
-    if (enabled) assert(kTarget != null || qTarget != null);
-    if (enabled && fixedRooks)
-      assert(kRook != null || qRook != null);
-    else
-      assert(rookPiece != null);
+    if (enabled) {
+      assert(kTarget != null || qTarget != null);
+      if (fixedRooks)
+        assert(kRook != null || qRook != null);
+      else
+        assert(rookPiece != null);
+    }
   }
 
   factory CastlingOptions.none() => CastlingOptions(enabled: false);

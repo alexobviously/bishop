@@ -1,7 +1,7 @@
 import 'package:bishop/bishop.dart';
 
 main(List<String> args) {
-  Game game = Game(variant: Variant.micro());
+  Game game = Game(variant: Variant.grand());
 
   while (!game.gameOver) {
     print(game.ascii());

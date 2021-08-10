@@ -718,7 +718,7 @@ class Game {
   }
 
   String get fen {
-    assert(board.length == variant.boardSize.numSquares);
+    assert(board.length == variant.boardSize.numIndices);
     String _fen = '';
     int empty = 0;
 
