@@ -1,3 +1,6 @@
+### 0.2.6
+- Support loading incomplete FEN strings
+
 ### 0.2.5
 - Premove generation
 - Game.loadFen() function

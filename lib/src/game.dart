@@ -128,11 +128,11 @@ class Game {
     }
 
     List<String> _board = sections[0].split('');
-    String _turn = sections[1];
-    String _castling = sections[2];
-    String _ep = sections[3];
-    String _halfMoves = sections[4];
-    String _fullMoves = sections[5];
+    String _turn = sections.length > 1 ? sections[1] : 'w';
+    String _castling = sections.length > 2 ? sections[2] : 'KQkq'; // TODO: get default castling for variant
+    String _ep = sections.length > 3 ? sections[3] : '-';
+    String _halfMoves = sections.length > 4 ? sections[4] : '0';
+    String _fullMoves = sections.length > 5 ? sections[5] : '1';
     int sq = 0;
     int emptySquares = 0;
     List<int> royalSquares = [INVALID, INVALID];
