@@ -33,9 +33,12 @@ class Game {
   BoardSize get size => variant.boardSize;
 
   Game({required this.variant, String? fen}) {
-    zobrist = Zobrist(variant, 7363661891);
+    setup(fen);
+  }
+
+  void setup([String? fen]) {
     startPosition = fen ?? (variant.startPosBuilder != null ? variant.startPosBuilder!() : variant.startPosition);
-    setup();
+    loadFen(startPosition);
     royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
   }
 
@@ -93,14 +96,15 @@ class Game {
     return cr;
   }
 
-  void setup() {
+  void loadFen(String fen) {
+    zobrist = Zobrist(variant, ZOBRIST_SEED);
     Map<String, int> pieceLookup = {};
     for (int i = 0; i < variant.pieces.length; i++) {
       pieceLookup[variant.pieces[i].symbol] = i;
     }
 
     board = List.filled(variant.boardSize.numSquares * 2, 0);
-    List<String> sections = startPosition.split(' ');
+    List<String> sections = fen.split(' ');
 
     // Parse hands for variants with drops
 

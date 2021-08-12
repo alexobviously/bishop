@@ -1,5 +1,6 @@
 ### 0.2.5
 - Premove generation
+- Game.loadFen() function
 
 ### 0.2.4
 - Fixed engine not wanting to checkmate you

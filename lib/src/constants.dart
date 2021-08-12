@@ -79,3 +79,5 @@ const int RANK_13 = 12;
 const int RANK_14 = 13;
 const int RANK_15 = 14;
 const int RANK_16 = 15;
+
+const ZOBRIST_SEED = 7363661891;
