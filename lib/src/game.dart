@@ -96,7 +96,7 @@ class Game {
     return cr;
   }
 
-  void loadFen(String fen) {
+  void loadFen(String fen, [bool strict = false]) {
     zobrist = Zobrist(variant, ZOBRIST_SEED);
     Map<String, int> pieceLookup = {};
     for (int i = 0; i < variant.pieces.length; i++) {
@@ -128,11 +128,12 @@ class Game {
     }
 
     List<String> _board = sections[0].split('');
-    String _turn = sections.length > 1 ? sections[1] : 'w';
-    String _castling = sections.length > 2 ? sections[2] : 'KQkq'; // TODO: get default castling for variant
-    String _ep = sections.length > 3 ? sections[3] : '-';
-    String _halfMoves = sections.length > 4 ? sections[4] : '0';
-    String _fullMoves = sections.length > 5 ? sections[5] : '1';
+    String _turn = (strict || sections.length > 1) ? sections[1] : 'w';
+    if (!(['w', 'b'].contains(_turn))) throw ("Invalid FEN: colour should be 'w' or 'b'");
+    String _castling = (strict || sections.length > 2) ? sections[2] : 'KQkq'; // TODO: get default castling for variant
+    String _ep = (strict || sections.length > 3) ? sections[3] : '-';
+    String _halfMoves = (strict || sections.length > 4) ? sections[4] : '0';
+    String _fullMoves = (strict || sections.length > 5) ? sections[5] : '1';
     int sq = 0;
     int emptySquares = 0;
     List<int> royalSquares = [INVALID, INVALID];
@@ -144,12 +145,14 @@ class Game {
       String symbol = c.toUpperCase();
       if (isNumeric(c)) {
         emptySquares = (emptySquares * 10) + int.parse(c);
+        if (!onBoard(sq + emptySquares - 1)) throw ('Invalid FEN: rank overflow [$c]');
       } else {
         sq += emptySquares;
         emptySquares = 0;
       }
       if (c == '/') sq += variant.boardSize.h;
       if (pieceLookup.containsKey(symbol)) {
+        if (!onBoard(sq)) throw ('Invalid FEN: rank overflow [$symbol]');
         // it's a piece
         int pieceIndex = pieceLookup[symbol]!;
         Colour colour = c == symbol ? WHITE : BLACK;

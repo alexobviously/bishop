@@ -1,3 +1,5 @@
+import 'package:bishop/bishop.dart';
+
 bool isNumeric(String s) {
   return RegExp(r'^-?[0-9]+$').hasMatch(s);
 }
@@ -13,4 +15,15 @@ String replaceMultiple(String source, List<String> originals, List<String> repla
     output = output.replaceAll(originals[i], replacements[i]);
   }
   return output;
+}
+
+bool validateFen({required Variant variant, required String fen, bool strict = false}) {
+  try {
+    Game g = Game(variant: variant);
+    g.loadFen(fen, strict);
+  } catch (e) {
+    print('$e ($fen)');
+    return false;
+  }
+  return true;
 }
