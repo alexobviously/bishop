@@ -1,3 +1,6 @@
+### 0.2.8
+- Fixed another 960 castling bug (370 / BNRKRBNQ)
+
 ### 0.2.7
 - Fixed a castling bug in some 960 positions (e.g. 938 / RKRNBBQN)
 

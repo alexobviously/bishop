@@ -337,8 +337,8 @@ class Game {
         int rookSq = getSquare(rookFile, royalRank, size); // where the rook starts
         int rookTargetFile = i == 0 ? targetFile - 1 : targetFile + 1;
         int rookTargetSq = getSquare(rookTargetFile, royalRank, size); // where the rook lands
-        // Check rook target square is empty (or occupied by the rook already)
-        if (board[rookTargetSq].isNotEmpty && rookTargetSq != rookSq) continue;
+        // Check rook target square is empty (or occupied by the rook/king already)
+        if (board[rookTargetSq].isNotEmpty && rookTargetSq != rookSq && rookTargetSq != from) continue;
         // Check king target square is empty (or occupied by the castling rook)
         if (board[targetSq].isNotEmpty && targetSq != rookSq) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
