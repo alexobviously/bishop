@@ -8,6 +8,7 @@ class CastlingOptions {
   final int? kRook;
   final int? qRook;
   final String? rookPiece;
+  final bool useRookAsTarget; // e.g. standard castling is e1h1 instead of e1g1
 
   bool get kingside => kTarget != null;
   bool get queenside => qTarget != null;
@@ -20,6 +21,7 @@ class CastlingOptions {
     this.kRook,
     this.qRook,
     this.rookPiece,
+    this.useRookAsTarget = false,
   });
   // these cause problems for some reason, figure it out when you have time
   // {
@@ -50,6 +52,7 @@ class CastlingOptions {
         qTarget: FILE_C,
         fixedRooks: false,
         rookPiece: rookPiece,
+        useRookAsTarget: true,
       );
 
   factory CastlingOptions.capablanca([String rookPiece = 'R']) => CastlingOptions(

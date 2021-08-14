@@ -59,9 +59,9 @@ class Move {
 
   factory Move.drop({required int to, required int dropPiece}) => Move(from: HAND, to: to, dropPiece: dropPiece);
 
-  String algebraic([BoardSize boardSize = const BoardSize(8, 8)]) {
-    String _from = from == HAND ? '@' : squareName(from, boardSize);
-    String _to = squareName(to, boardSize);
+  String algebraic({BoardSize size = const BoardSize(8, 8), bool useRookForCastling = false}) {
+    String _from = from == HAND ? '@' : squareName(from, size);
+    String _to = squareName((castling && useRookForCastling) ? castlingPieceSquare! : to, size);
     return '$_from$_to';
   }
 }

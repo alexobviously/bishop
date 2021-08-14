@@ -1,5 +1,7 @@
 ### 0.2.6
 - Support loading incomplete FEN strings
+- Game.validateFen() function
+- CastlingOptions.useRookAsTarget: formats algebraic moves correctly for Chess960
 
 ### 0.2.5
 - Premove generation

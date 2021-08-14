@@ -616,14 +616,14 @@ class Game {
   }
 
   String toAlgebraic(Move move) {
-    String alg = move.algebraic(size);
+    String alg = move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
     if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
     if (move.from == HAND) alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
     return alg;
   }
 
   String toSan(Move move, [List<Move>? moves]) {
-    String _alg = move.algebraic(size);
+    String _alg = move.algebraic(size: size);
     if (move.castling) {
       // if queenside is the only castling option, render it as 'O-O'
       String kingside = 'O-O';
@@ -634,7 +634,7 @@ class Game {
     String san = '';
     if (move.from == HAND) {
       PieceDefinition _pieceDef = variant.pieces[move.dropPiece!];
-      san = move.algebraic(size);
+      san = move.algebraic(size: size);
       if (!_pieceDef.type.noSanSymbol) san = '${_pieceDef.symbol.toUpperCase()}$san';
     } else {
       int piece = board[move.from].type;
