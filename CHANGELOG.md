@@ -1,3 +1,6 @@
+### 0.2.7
+- Fixed a castling bug in some 960 positions (e.g. 938 / RKRNBBQN)
+
 ### 0.2.6
 - Support loading incomplete FEN strings
 - Game.validateFen() function

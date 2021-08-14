@@ -327,26 +327,37 @@ class Game {
         bool sideCondition =
             i == 0 ? (kingside && variant.castlingOptions.kingside) : (queenside && variant.castlingOptions.queenside);
         if (!sideCondition) continue;
+        // Conditions for castling:
+        // * All squares between the king's start and end (inclusive) must be free and not attacked
+        // * Obviously the king's start is occupied by the king, but it can't be in check
+        // * The square the rook lands on must be free (but can be attacked)
         int targetFile = i == 0 ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
-        int targetSq = getSquare(targetFile, royalRank, variant.boardSize);
+        int targetSq = getSquare(targetFile, royalRank, size); // where the king lands
         int rookFile = i == 0 ? castlingTargetK! : castlingTargetQ!;
-        int rookSq = getSquare(rookFile, royalRank, variant.boardSize);
-        if (board[targetSq].isNotEmpty &&
-            (board[targetSq].type != variant.castlingPiece || board[targetSq].colour != colour)) continue;
+        int rookSq = getSquare(rookFile, royalRank, size); // where the rook starts
+        int rookTargetFile = i == 0 ? targetFile - 1 : targetFile + 1;
+        int rookTargetSq = getSquare(rookTargetFile, royalRank, size); // where the rook lands
+        // Check rook target square is empty (or occupied by the rook already)
+        if (board[rookTargetSq].isNotEmpty && rookTargetSq != rookSq) continue;
+        // Check king target square is empty (or occupied by the castling rook)
+        if (board[targetSq].isNotEmpty && targetSq != rookSq) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
         bool _valid = true;
         if (!options.ignorePieces) {
           for (int j = 1; j <= numMidSqs; j++) {
             int midFile = royalFile! + (i == 0 ? j : -j);
-            if (midFile == rookFile) continue; // for some chess960 positions
             int midSq = getSquare(midFile, royalRank, variant.boardSize);
-            if (j != numMidSqs && board[midSq].isNotEmpty) {
-              // squares between to and from must be empty
+            // None of these squares can be attacked
+            if (isAttacked(midSq, colour.opponent)) {
+              // squares between & dest square must not be attacked
               _valid = false;
               break;
             }
-            if (isAttacked(midSq, colour.opponent)) {
-              // squares between & dest square must not be attacked
+            if (midFile == rookFile) continue; // for some chess960 positions
+            if (midFile == targetFile && targetFile == royalFile) continue; // king starting on target
+
+            if (j != numMidSqs && board[midSq].isNotEmpty) {
+              // squares between to and from must be empty
               _valid = false;
               break;
             }
