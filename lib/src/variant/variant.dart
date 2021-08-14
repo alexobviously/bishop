@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:bishop/src/variant/material_conditions.dart';
+
 import '../constants.dart';
 import '../piece_type.dart';
 
@@ -13,6 +15,7 @@ class Variant {
   final BoardSize boardSize;
   final Map<String, PieceType> pieceTypes;
   final CastlingOptions castlingOptions;
+  final MaterialConditions materialConditions;
   final OutputOptions outputOptions;
   final String? startPosition;
   final Function()? startPosBuilder;
@@ -39,6 +42,7 @@ class Variant {
     required this.boardSize,
     required this.pieceTypes,
     required this.castlingOptions,
+    required this.materialConditions,
     required this.outputOptions,
     this.startPosition,
     this.startPosBuilder,
@@ -60,6 +64,7 @@ class Variant {
     BoardSize? boardSize,
     Map<String, PieceType>? pieceTypes,
     CastlingOptions? castlingOptions,
+    MaterialConditions? materialConditions,
     OutputOptions? outputOptions,
     String? startPosition,
     Function()? startPosBuilder,
@@ -77,6 +82,7 @@ class Variant {
       boardSize: boardSize ?? this.boardSize,
       pieceTypes: pieceTypes ?? this.pieceTypes,
       castlingOptions: castlingOptions ?? this.castlingOptions,
+      materialConditions: materialConditions ?? this.materialConditions,
       outputOptions: outputOptions ?? this.outputOptions,
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
@@ -132,6 +138,7 @@ class Variant {
       boardSize: BoardSize.standard(),
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.standard(),
+      materialConditions: MaterialConditions.standard(),
       outputOptions: OutputOptions.standard(),
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
