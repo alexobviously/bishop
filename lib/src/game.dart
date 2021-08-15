@@ -145,14 +145,14 @@ class Game {
       String symbol = c.toUpperCase();
       if (isNumeric(c)) {
         emptySquares = (emptySquares * 10) + int.parse(c);
-        if (!onBoard(sq + emptySquares - 1)) throw ('Invalid FEN: rank overflow [$c]');
+        if (!onBoard(sq + emptySquares - 1, size)) throw ('Invalid FEN: rank overflow [$c, ${sq + emptySquares - 1}]');
       } else {
         sq += emptySquares;
         emptySquares = 0;
       }
       if (c == '/') sq += variant.boardSize.h;
       if (pieceLookup.containsKey(symbol)) {
-        if (!onBoard(sq)) throw ('Invalid FEN: rank overflow [$symbol]');
+        if (!onBoard(sq, size)) throw ('Invalid FEN: rank overflow [$symbol, $sq]');
         // it's a piece
         int pieceIndex = pieceLookup[symbol]!;
         Colour colour = c == symbol ? WHITE : BLACK;
