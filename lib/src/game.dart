@@ -809,6 +809,13 @@ class Game {
     return symbols;
   }
 
+  List<List<String>> handSymbols() {
+    if (!variant.hands) return [[], []];
+    List<String> whiteHand = state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
+    List<String> blackHand = state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
+    return [whiteHand, blackHand];
+  }
+
   GameInfo get info => GameInfo(
         lastMove: state.move,
         lastFrom: state.move != null ? (state.move!.from == HAND ? 'hand' : squareName(state.move!.from, size)) : null,
