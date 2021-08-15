@@ -8,7 +8,7 @@ As a result of the amount of generalisation required to make a package like this
 Bishop is written in pure dart with no dependencies.
 
 Take a look at the [Squares](https://pub.dev/packages/squares) package for a Flutter chessboard widget
-designed to be interopable with Bishop.
+designed to be interoperable with Bishop.
 
 ### Features 
 * Game logic - making moves, detecting end conditions, etc
