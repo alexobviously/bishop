@@ -1,5 +1,6 @@
 ### 0.2.9
 - Fixed FEN validation for small boards
+- Added some documentation
 
 ### 0.2.8
 - Fixed another 960 castling bug (370 / BNRKRBNQ)
