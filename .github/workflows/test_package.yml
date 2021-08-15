@@ -1,0 +1,29 @@
+name: Bishop Package Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    container:
+      image:  google/dart:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Print Dart SDK version
+        run: dart --version
+
+      - name: Install dependencies
+        run: dart pub get
+      
+      - name: Run Perft tests
+        run: dart test test/test_perft.dart
+
+      - name: Run Validation tests
+        run: dart test test/test_validation.dart
