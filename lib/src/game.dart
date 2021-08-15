@@ -14,6 +14,7 @@ import 'state.dart';
 import 'utils.dart';
 import 'variant/variant.dart';
 
+/// Tracks the state of the game, handles move generation and validation, and generates output.
 class Game {
   final Variant variant;
   late Zobrist zobrist;
@@ -96,6 +97,8 @@ class Game {
     return cr;
   }
 
+  /// Load a position from a FEN string.
+  /// If [strict] is enabled, a full string must be provided, including turn, ep square, etc.
   void loadFen(String fen, [bool strict = false]) {
     zobrist = Zobrist(variant, ZOBRIST_SEED);
     Map<String, int> pieceLookup = {};
@@ -182,23 +185,29 @@ class Game {
     history.add(_state);
   }
 
+  /// Generates all legal moves for the player whose turn it is.
   List<Move> generateLegalMoves() => generatePlayerMoves(state.turn, MoveGenOptions.normal());
+
+  /// Generates all possible moves that could be played by the other player next turn,
+  /// not respecting blocking pieces or checks.
   List<Move> generatePremoves() => generatePlayerMoves(state.turn.opponent, MoveGenOptions.premoves());
 
-  List<Move> generatePlayerMoves(int player, [MoveGenOptions? options]) {
+  /// Generates all moves for the specified [colour]. See [MoveGenOptions] for possibilities.
+  List<Move> generatePlayerMoves(int colour, [MoveGenOptions? options]) {
     if (options == null) options = MoveGenOptions.normal();
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
       Square target = board[i];
-      if (target.isNotEmpty && target.colour == player) {
+      if (target.isNotEmpty && target.colour == colour) {
         List<Move> pieceMoves = generatePieceMoves(i, options);
         moves.addAll(pieceMoves);
       }
     }
-    if (variant.hands && options.quiet && !options.onlyPiece) moves.addAll(generateDrops(player));
+    if (variant.hands && options.quiet && !options.onlyPiece) moves.addAll(generateDrops(colour));
     return moves;
   }
 
+  /// Generates drop moves for [colour]. Used for variants with hands, e.g. Crazyhouse.
   List<Move> generateDrops(int colour) {
     List<Move> drops = [];
     Set<int> _hand = state.hands![colour].toSet();
@@ -219,6 +228,7 @@ class Game {
     return drops;
   }
 
+  /// Generates all moves for the piece on [square] in accordance with [options].
   List<Move> generatePieceMoves(int square, [MoveGenOptions? options]) {
     if (options == null) options = MoveGenOptions.normal();
     Square piece = board[square];
@@ -398,6 +408,7 @@ class Game {
     return moves;
   }
 
+  /// Generates a move for each piece in [variant.promotionPieces] for the [base] move.
   List<Move> generatePromotionMoves(Move base) {
     List<Move> moves = [];
     for (int p in variant.promotionPieces) {
@@ -407,9 +418,8 @@ class Game {
     return moves;
   }
 
+  /// Make a move and modify the game state. Returns true if the move was valid and made successfully.
   bool makeMove(Move move) {
-    //if (!onBoard(move.from)) print(move.from);
-
     if ((move.from != HAND && !onBoard(move.from, size)) || !onBoard(move.to, size)) return false;
     int hash = state.hash;
     hash ^= zobrist.table[zobrist.TURN][Zobrist.META];
@@ -550,6 +560,8 @@ class Game {
     return true;
   }
 
+  /// Revert to the previous state in [history] and undoes the move that was last made.
+  /// Returns the move that was undone.
   Move? undo() {
     if (history.length == 1) return null;
     State _state = history.removeLast();
@@ -590,6 +602,7 @@ class Game {
     return move;
   }
 
+  /// Makes a random valid move for the current player.
   Move makeRandomMove() {
     List<Move> moves = generateLegalMoves();
     int i = Random().nextInt(moves.length);
@@ -597,35 +610,55 @@ class Game {
     return moves[i];
   }
 
-  bool hasKingCapture() {
-    List<Move> moves = generatePlayerMoves(state.turn, royalCaptureOptions);
-    return moves.isNotEmpty;
-  }
-
+  /// Checks if [square] is attacked by [colour].
+  /// Works by generating all legal moves for the other player, and therefore is slow.
   bool isAttacked(int square, Colour colour) {
     List<Move> attacks = generatePlayerMoves(colour, MoveGenOptions.squareAttacks(square));
     return attacks.isNotEmpty;
   }
 
+  /// Check if [player]'s king is currently attacked.
   bool kingAttacked(int player) => isAttacked(state.royalSquares[player], player.opponent);
 
+  /// Is the current player's king in check?
   bool get inCheck => kingAttacked(state.turn);
+
+  /// Is this checkmate?
   bool get checkmate => inCheck && generateLegalMoves().isEmpty;
+
+  /// Is this stalemate?
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
+
+  /// Check if there is currently sufficient material on the board for one player to mate the other.
+  /// Returns true if there *isn't* sufficient material (and therefore it's a draw).
   bool get insufficientMaterial => false;
+
+  /// Check if we have reached the repetition draw limit (threefold repetition in standard chess).
+  /// Configurable in [Variant.repetitionDraw].
   bool get repetition => variant.repetitionDraw != null ? hashHits >= variant.repetitionDraw! : false;
+
+  /// Check if we have reached the half move rule (aka the 50 move rule in standard chess).
+  /// Configurable in [variant.halfMoveDraw].
   bool get halfMoveRule => variant.halfMoveDraw != null && state.halfMoves >= variant.halfMoveDraw!;
+
+  /// Check if there is any kind of draw.
   bool get inDraw => stalemate || insufficientMaterial || repetition || halfMoveRule;
+
+  /// Check if it's checkmate or a draw.
   bool get gameOver => checkmate || inDraw;
 
+  /// Check the number of times the current position has occurred in the hash table.
   int get hashHits => zobrist.hashHits(state.hash);
 
+  /// Generates legal moves and returns the one that matches [algebraic].
+  /// Returns null if no move is found.
   Move? getMove(String algebraic) {
     List<Move> moves = generateLegalMoves();
     Move? match = moves.firstWhereOrNull((m) => toAlgebraic(m) == algebraic);
     return match;
   }
 
+  /// Returns the algebraic representation of [move], with respect to the board size.
   String toAlgebraic(Move move) {
     String alg = move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
     if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
@@ -633,6 +666,10 @@ class Game {
     return alg;
   }
 
+  /// Returns the SAN (Standard Algebraic Notation) representation of a move.
+  /// Optionally, provide [moves] - a list of legal moves in the current position, which
+  /// is used to determine the disambiguator. Use this if you need speed and have already
+  /// generated the list of moves elsewhere.
   String toSan(Move move, [List<Move>? moves]) {
     String _alg = move.algebraic(size: size);
     if (move.castling) {
@@ -669,8 +706,10 @@ class Game {
     return san;
   }
 
-  // To be used in cases where, given a piece and a destination, there is more than
-  // one possible move. For example, in 'Nbxa4', this function provides the 'b'.
+  /// To be used in cases where, given a piece and a destination, there is more than
+  /// one possible move. For example, in 'Nbxa4', this function provides the 'b'.
+  /// Optionally, provide [moves] - a list of legal moves. This will be generated
+  /// if it is not specified.
   String getDisambiguator(Move move, [List<Move>? moves]) {
     // provide a list of moves to make this more efficient
     if (moves == null) moves = generateLegalMoves();
@@ -797,6 +836,8 @@ class Game {
     return output;
   }
 
+  /// Converts the internal board representation to a list of piece symbols (e.g. 'P', 'q').
+  /// You probably need this for interopability with other applications (such as the Squares package).
   List<String> boardSymbols([bool full = false]) {
     List<String> symbols = [];
     for (int i = 0; i < board.length; i++) {
@@ -809,6 +850,8 @@ class Game {
     return symbols;
   }
 
+  /// Converts the internal representation of the hands to a list of piece symbols (e.g. 'P', 'q').
+  /// You probably need this for interopability with other applications (such as the Squares package).
   List<List<String>> handSymbols() {
     if (!variant.hands) return [[], []];
     List<String> whiteHand = state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
@@ -823,6 +866,7 @@ class Game {
         checkSq: inCheck ? squareName(state.royalSquares[state.turn], size) : null,
       );
 
+  /// Perform a [perft test](https://www.chessprogramming.org/Perft) on the current position, to [depth].
   int perft(int depth) {
     if (depth < 1) return 1;
     List<Move> moves = generateLegalMoves();
@@ -840,6 +884,7 @@ class Game {
     return nodes;
   }
 
+  /// Performs a [divide perft test](https://www.chessprogramming.org/Perft#Divide), to [depth].
   Map<String, int> divide(int depth) {
     List<Move> moves = generateLegalMoves();
     Map<String, int> perfts = {};
@@ -851,6 +896,9 @@ class Game {
     return perfts;
   }
 
+  /// Returns a naive material evaluation of the current position, from the perspective of [player].
+  /// Return value is in [centipawns](https://www.chessprogramming.org/Centipawns).
+  /// For example, if white has captured a rook from black with no compensation, this will return +500.
   int evaluate(Colour player) {
     int eval = 0;
     for (int i = 0; i < size.numIndices; i++) {

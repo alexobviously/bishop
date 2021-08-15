@@ -10,22 +10,59 @@ part 'board_size.dart';
 part 'castling_options.dart';
 part 'output_options.dart';
 
+/// Specifies the rules and pieces to be used, size of the board,
+/// information on how FENs are outputted, and so on and so on.
 class Variant {
+  /// A human-friendly name.
   final String name;
+
+  /// The size of the board.
   final BoardSize boardSize;
+
+  /// The pieces to be used in this variant, in the form symbol: pieceType.
+  /// Symbols are single uppercase letters, such as 'P' (pawn) or 'N' (knight).
   final Map<String, PieceType> pieceTypes;
+
+  /// The castling rules for this variant.
   final CastlingOptions castlingOptions;
   final MaterialConditions materialConditions;
   final OutputOptions outputOptions;
+
+  /// If the variant has a fixed starting position, specify it here as a full [FEN string](https://en.wikipedia.org/wiki/Forsyth–Edwards_Notation).
   final String? startPosition;
+
+  /// If this variant can start in a number of different positions, such as Chess960,
+  /// provide a function that does this. See [Variant.chess960()] for an example.
   final Function()? startPosBuilder;
+
+  /// Is promotion enabled?
   final bool promotion;
+
+  /// The first ranks for [WHITE, BLACK] that pieces can be promoted on.
+  /// If the rank specified is not the final rank the piece can reach, then promotion
+  /// will be optional on every rank up until the final rank, when it becomes mandatory.
   final List<int> promotionRanks;
+
+  /// Is en passant allowed in this variant?
   final bool enPassant;
-  final List<List<int>> firstMoveRanks; // e.g. where pawns can double move from
-  final int? halfMoveDraw; // e.g. set this to 100 for the standard 50-move rule
-  final int? repetitionDraw; // e.g. set this to 3 for standard threefold repetition
-  final bool hands; // allow hands, like in crazyhouse
+
+  /// The ranks for [WHITE, BLACK] that a piece with a 'first-only' move can make that
+  /// move from. For example, a pawn's double move.
+  final List<List<int>> firstMoveRanks;
+
+  /// Set this to 100 for the 50-move rule in standard chess.
+  final int? halfMoveDraw;
+
+  /// Set this to 3 for the threefold repeition rule in standard chess.
+  final int? repetitionDraw;
+
+  /// Are hands enabled in this variant? For example, Crazyhouse.
+  final bool hands;
+
+  /// The relative values of pieces. These are usually already set in the [PieceType]
+  /// definitions, so only use this if you want to override those.
+  /// For example, you have a variant where a pawn is worth 200 instead of 100,
+  /// but you still want to use the normal pawn definition.
   final Map<String, int>? pieceValues;
 
   late List<PieceDefinition> pieces;

@@ -1,3 +1,4 @@
+/// A chess logic package with flexible variant support.
 library bishop;
 
 export 'src/betza.dart';
