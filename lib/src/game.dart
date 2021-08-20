@@ -817,6 +817,7 @@ class Game {
     return _fen;
   }
 
+  /// Generates an ASCII representation of the board.
   String ascii([bool unicode = false]) {
     String border = '   +${'-' * (variant.boardSize.h * 3)}+';
     String output = '$border\n';
@@ -832,7 +833,10 @@ class Game {
       }
       output = '$output|\n';
     }
-    output = '$output$border';
+    output = '$output$border\n     ';
+    for (String i in Iterable<int>.generate(variant.boardSize.h).map((e) => String.fromCharCode(e + 97)).toList()) {
+      output = '$output$i  ';
+    }
     return output;
   }
 
