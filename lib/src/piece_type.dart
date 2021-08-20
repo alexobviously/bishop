@@ -84,6 +84,13 @@ class PieceType {
         noSanSymbol: true,
         value: 100,
       ); // seriously
+  factory PieceType.simplePawn() => PieceType.fromBetza(
+        'fmWfcF',
+        promotable: true,
+        canPromoteTo: false,
+        noSanSymbol: true,
+        value: 100,
+      );
   factory PieceType.knibis() => PieceType.fromBetza('mNcB');
   factory PieceType.biskni() => PieceType.fromBetza('mBcN');
   factory PieceType.kniroo() => PieceType.fromBetza('mNcR');

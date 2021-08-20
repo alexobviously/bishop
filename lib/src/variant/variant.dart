@@ -251,15 +251,12 @@ class Variant {
   factory Variant.mini() {
     Variant standard = Variant.standard();
     return standard.copyWith(
-      name: 'Mini Chess',
-      boardSize: BoardSize(5, 5),
-      startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
-      promotionRanks: [RANK_1, RANK_5],
+      boardSize: BoardSize(6, 6),
+      startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
+      pieceTypes: standard.pieceTypes..['P'] = PieceType.simplePawn(),
       castlingOptions: CastlingOptions.mini(),
-      firstMoveRanks: [
-        [RANK_2],
-        [RANK_4],
-      ],
+      enPassant: false,
+      promotionRanks: [RANK_1, RANK_6],
     );
   }
 
@@ -267,10 +264,25 @@ class Variant {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Micro Chess',
+      boardSize: BoardSize(5, 5),
+      startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
+      promotionRanks: [RANK_1, RANK_5],
+      castlingOptions: CastlingOptions.micro(),
+      firstMoveRanks: [
+        [RANK_2],
+        [RANK_4],
+      ],
+    );
+  }
+
+  factory Variant.nano() {
+    Variant standard = Variant.standard();
+    return standard.copyWith(
+      name: 'Nano Chess',
       boardSize: BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
       promotionRanks: [RANK_1, RANK_5],
-      castlingOptions: CastlingOptions.micro(),
+      castlingOptions: CastlingOptions.nano(),
       firstMoveRanks: [
         [RANK_2],
         [RANK_4],

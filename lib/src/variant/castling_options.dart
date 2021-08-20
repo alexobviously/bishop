@@ -67,12 +67,22 @@ class CastlingOptions {
 
   factory CastlingOptions.mini() => CastlingOptions(
         enabled: true,
+        kTarget: FILE_E,
+        qTarget: FILE_B,
+        fixedRooks: true,
+        kRook: FILE_F,
+        qRook: FILE_A,
+        useRookAsTarget: true,
+      );
+
+  factory CastlingOptions.micro() => CastlingOptions(
+        enabled: true,
         qTarget: FILE_B,
         qRook: FILE_A,
         fixedRooks: true, // might need to be false with diff start fens
       );
 
-  factory CastlingOptions.micro([String rookPiece = 'R']) => CastlingOptions(
+  factory CastlingOptions.nano([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
         kTarget: FILE_C,
         kRook: FILE_D,

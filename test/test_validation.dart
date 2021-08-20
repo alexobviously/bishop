@@ -32,10 +32,10 @@ void main() {
           variant: Variant.crazyhouse(),
           fen: 'rnbqkb1r/ppp2p1p/3p1np1/8/5p2/2NQ4/PPP2PPP/2KR1BNR[Pbp] b kq - 1 9',
           valid: true),
-      FenTest(variant: Variant.mini(), fen: Positions.STANDARD_MINI, valid: true),
-      FenTest(variant: Variant.mini(), fen: 'rnbqk/ppppp/10/PPPPP/RNBQK w Qq - 0 1', valid: false),
       FenTest(variant: Variant.micro(), fen: Positions.STANDARD_MICRO, valid: true),
-      FenTest(variant: Variant.micro(), fen: 'knbr/p3/4/3P/RBNNK w Qk - 0 1', valid: false),
+      FenTest(variant: Variant.micro(), fen: 'rnbqk/ppppp/10/PPPPP/RNBQK w Qq - 0 1', valid: false),
+      FenTest(variant: Variant.nano(), fen: Positions.STANDARD_NANO, valid: true),
+      FenTest(variant: Variant.nano(), fen: 'knbr/p3/4/3P/RBNNK w Qk - 0 1', valid: false),
     ];
 
     for (FenTest ft in fens) {
