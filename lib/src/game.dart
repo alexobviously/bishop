@@ -210,7 +210,7 @@ class Game {
   }
 
   /// Generates drop moves for [colour]. Used for variants with hands, e.g. Crazyhouse.
-  List<Move> generateDrops(int colour) {
+  List<Move> generateDrops(int colour, [bool legal = true]) {
     List<Move> drops = [];
     Set<int> _hand = state.hands![colour].toSet();
     for (int i = 0; i < size.numIndices; i++) {
@@ -226,6 +226,16 @@ class Game {
         Move m = Move.drop(to: i, dropPiece: dropPiece);
         drops.add(m);
       }
+    }
+
+    if (legal) {
+      List<Move> _remove = [];
+      for (Move m in drops) {
+        makeMove(m);
+        if (kingAttacked(colour)) _remove.add(m);
+        undo();
+      }
+      _remove.forEach((m) => drops.remove(m));
     }
     return drops;
   }
@@ -694,7 +704,7 @@ class Game {
         if (move.capture) san = squareName(move.from, size)[0];
       } else
         san = pieceDef.symbol;
-      san = '$san$disambiguator';
+      san = pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
       if (move.capture) san = '${san}x';
       san = '$san${squareName(move.to, size)}';
 

@@ -1,6 +1,8 @@
 ### 0.2.10
 - Another small variant (mini - 6x6)
 - *buildRandomPosition()* for generating arbitrary random positions, see Variant.miniRandom for an example
+- Fixed a bug in which drop moves were not being legalised
+- Fixed SAN disambiguators for pawns
 - Various minor improvements
 
 ### 0.2.9
