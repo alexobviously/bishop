@@ -11,5 +11,7 @@ class BoardSize {
   int get maxFile => h - 1;
   int get north => h * 2;
   const BoardSize(this.h, this.v);
-  factory BoardSize.standard() => BoardSize(8, 8);
+  //factory BoardSize.standard() => BoardSize(8, 8);
+  static const STANDARD = const BoardSize(8, 8);
+  static const MINI = const BoardSize(6, 6);
 }

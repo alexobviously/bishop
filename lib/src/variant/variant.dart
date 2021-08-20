@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:bishop/bishop.dart';
+import 'package:bishop/src/castling_rights.dart';
 import 'package:bishop/src/variant/material_conditions.dart';
 
 import '../constants.dart';
@@ -172,7 +174,7 @@ class Variant {
   factory Variant.standard() {
     return Variant(
       name: 'Chess',
-      boardSize: BoardSize.standard(),
+      boardSize: BoardSize.STANDARD,
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.standard(),
       materialConditions: MaterialConditions.standard(),
@@ -251,12 +253,23 @@ class Variant {
   factory Variant.mini() {
     Variant standard = Variant.standard();
     return standard.copyWith(
-      boardSize: BoardSize(6, 6),
+      name: 'Mini Chess',
+      boardSize: BoardSize.MINI,
       startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
       pieceTypes: standard.pieceTypes..['P'] = PieceType.simplePawn(),
       castlingOptions: CastlingOptions.mini(),
       enPassant: false,
       promotionRanks: [RANK_1, RANK_6],
+    );
+  }
+
+  factory Variant.miniRandom() {
+    Variant mini = Variant.mini();
+    return mini.copyWith(
+      name: 'Mini Random',
+      startPosBuilder: () => buildRandomPosition(size: BoardSize.MINI),
+      castlingOptions: CastlingOptions.miniRandom(),
+      outputOptions: OutputOptions.chess960(),
     );
   }
 

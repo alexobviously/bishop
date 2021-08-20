@@ -36,6 +36,8 @@ void main() {
       FenTest(variant: Variant.micro(), fen: 'rnbqk/ppppp/10/PPPPP/RNBQK w Qq - 0 1', valid: false),
       FenTest(variant: Variant.nano(), fen: Positions.STANDARD_NANO, valid: true),
       FenTest(variant: Variant.nano(), fen: 'knbr/p3/4/3P/RBNNK w Qk - 0 1', valid: false),
+      FenTest(variant: Variant.mini(), fen: Positions.STANDARD_MINI, valid: true),
+      FenTest(variant: Variant.miniRandom(), fen: 'rqnqkn/pppppp/6/6/PPPPPP/RQNQKN w Kk - 0 1', valid: true),
     ];
 
     for (FenTest ft in fens) {

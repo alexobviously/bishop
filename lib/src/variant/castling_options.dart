@@ -75,6 +75,15 @@ class CastlingOptions {
         useRookAsTarget: true,
       );
 
+  factory CastlingOptions.miniRandom([String rookPiece = 'R']) => CastlingOptions(
+        enabled: true,
+        kTarget: FILE_E,
+        qTarget: FILE_B,
+        fixedRooks: false,
+        rookPiece: rookPiece,
+        useRookAsTarget: true,
+      );
+
   factory CastlingOptions.micro() => CastlingOptions(
         enabled: true,
         qTarget: FILE_B,

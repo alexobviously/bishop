@@ -30,6 +30,8 @@ const int CASTLING_BQ = 8;
 const int CASTLING_WHITE_MASK = 12;
 const int CASTLING_BLACK_MASK = 3;
 const int CASTLING_MASK = 15;
+const int CASTLING_BOTH_K = 5;
+const int CASTLING_BOTH_Q = 10;
 
 const Map<String, int> CASTLING_SYMBOLS = {
   'K': CASTLING_K,

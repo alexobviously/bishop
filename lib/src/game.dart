@@ -28,7 +28,7 @@ class Game {
   int? castlingTargetK;
   int? castlingTargetQ;
   int? royalFile;
-  List<String>? castlingFileSymbols;
+  List<String> castlingFileSymbols = ['K', 'Q', 'k', 'q'];
   late MoveGenOptions royalCaptureOptions;
 
   BoardSize get size => variant.boardSize;
@@ -90,8 +90,10 @@ class Game {
       }
     }
     if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
-      String k = fileSymbol(castlingTargetK!);
-      String q = fileSymbol(castlingTargetQ!);
+      // Actually if these are null then we should never need the file symbol,
+      // but let's set it to something anyway.
+      String k = castlingTargetK != null ? fileSymbol(castlingTargetK!) : 'k';
+      String q = castlingTargetQ != null ? fileSymbol(castlingTargetQ!) : 'q';
       castlingFileSymbols = [k.toUpperCase(), q.toUpperCase(), k, q];
     }
     return cr;
@@ -810,7 +812,7 @@ class Game {
     String _turn = state.turn == WHITE ? 'w' : 'b';
     String _castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
-      _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols!);
+      _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols);
     }
     String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
     _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
