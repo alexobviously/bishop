@@ -3,15 +3,34 @@ import 'constants.dart';
 import 'move_definition.dart';
 import 'variant/variant.dart';
 
+/// Specifies a piece type, with all of its moves and attributes.
 class PieceType {
+  /// A Betza notation string that defines the piece.
+  /// See: https://www.gnu.org/software/xboard/Betza.html
   final String? betza;
+
+  /// All of the different move groups this piece can make.
   final List<MoveDefinition> moves;
+
+  /// Royal pieces can be checkmated, and can castle.
   final bool royal;
+
+  /// Whether this piece type can be promoted.
   final bool promotable;
+
+  /// Whether this piece type can be promoted to by a promotable piece.
   final bool canPromoteTo;
+
+  /// Whether this piece can set the en passant flag.
   final bool enPassantable;
-  final bool noSanSymbol; // for pawns, e.g. b4 instead of Pb4
-  final int value; // in centipawns, can override in variant
+
+  /// If true, the piece symbol will be omitted in SAN representations of moves.
+  /// For example, pawn moves should be like 'b4', rather than 'Pb4'.
+  final bool noSanSymbol;
+
+  /// The value of the piece, in centipawns (a pawn is 100).
+  /// Can be overridden in a `Variant`.
+  final int value;
 
   PieceType({
     this.betza,
@@ -24,6 +43,7 @@ class PieceType {
     this.value = DEFAULT_PIECE_VALUE,
   });
 
+  /// Initialise the `PieceType`.
   void init(BoardSize boardSize) {
     for (MoveDefinition m in moves) {
       m.normalised = m.direction.v * boardSize.h * 2 + m.direction.h;
@@ -35,6 +55,8 @@ class PieceType {
   }
 
   factory PieceType.empty() => PieceType(moves: [], canPromoteTo: false);
+
+  /// Generate a piece type with all of its moves from [Betza notation](https://www.gnu.org/software/xboard/Betza.html).
   factory PieceType.fromBetza(
     String betza, {
     bool royal = false,
@@ -84,6 +106,8 @@ class PieceType {
         noSanSymbol: true,
         value: 100,
       ); // seriously
+
+  /// A pawn with no double move and no en passant.
   factory PieceType.simplePawn() => PieceType.fromBetza(
         'fmWfcF',
         promotable: true,
@@ -102,6 +126,8 @@ class PieceType {
   factory PieceType.amazon() => PieceType.fromBetza('QN', value: 1200);
 }
 
+/// A definition of a `PieceType`, specific to a `Variant`.
+/// You don't ever need to build these, they are generated in variant initialisation.
 class PieceDefinition {
   final PieceType type;
   final String symbol;

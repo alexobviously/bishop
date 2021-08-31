@@ -1,3 +1,6 @@
+### 0.3.0
+- 
+
 ### 0.2.10
 - Another small variant (mini - 6x6)
 - *buildRandomPosition()* for generating arbitrary random positions, see Variant.miniRandom for an example
