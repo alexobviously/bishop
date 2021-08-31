@@ -114,22 +114,26 @@ class Game {
     // Parse hands for variants with drops
 
     List<List<int>>? _hands;
-    if (variant.hands) {
-      _hands = [[], []];
+    List<List<int>>? _gates;
+    if (variant.hands || (variant.gatingMode == GatingMode.FLEX)) {
+      List<List<int>> _temp = [[], []];
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
       RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
       if (handMatch != null) {
         sections[0] = sections[0].substring(0, handMatch.start);
         String hand = handMatch.group(1)!;
-        _hands = [[], []];
+        _temp = [[], []];
         for (String c in hand.split('')) {
           String _upper = c.toUpperCase();
           if (pieceLookup.containsKey(_upper)) {
             bool white = c == _upper;
-            _hands[white ? 0 : 1].add(pieceLookup[_upper]!);
+            _temp[white ? 0 : 1].add(pieceLookup[_upper]!);
           }
         }
       }
+      if (variant.hands)
+        _hands = _temp;
+      else if (variant.gatingMode == GatingMode.FLEX) _gates = _temp;
     }
 
     List<String> _board = sections[0].split('');
@@ -181,6 +185,7 @@ class Game {
       castlingRights: castling,
       royalSquares: royalSquares,
       hands: _hands,
+      gates: _gates,
     );
     _state.hash = zobrist.compute(_state, board);
     zobrist.incrementHash(_state.hash);
@@ -437,16 +442,26 @@ class Game {
     hash ^= zobrist.table[zobrist.TURN][Zobrist.META];
     List<Hand>? _hands =
         state.hands != null ? List.generate(state.hands!.length, (i) => List.from(state.hands![i])) : null;
+    List<Hand>? _gates =
+        state.gates != null ? List.generate(state.gates!.length, (i) => List.from(state.gates![i])) : null;
     // TODO: more validation?
     Square fromSq = move.from >= BOARD_START ? board[move.from] : EMPTY;
     Square toSq = board[move.to];
     PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq != EMPTY && fromSq.colour != state.turn) return false;
     int colour = turn;
-    // Remove the moved piece, if this wasn't a drop
+    // Remove the moved piece, if this piece came from on the board
     if (move.from >= BOARD_START) {
       hash ^= zobrist.table[move.from][fromSq.piece];
-      board[move.from] = EMPTY;
+      if (move.gate) {
+        // Move piece from gate to board
+        _gates![colour].remove(move.dropPiece!);
+        int dropPiece = makePiece(move.dropPiece!, colour);
+        hash ^= zobrist.table[move.from][dropPiece.piece];
+        board[move.from] = makePiece(dropPiece, colour);
+      } else {
+        board[move.from] = EMPTY;
+      }
     }
 
     // Add captured piece to hand
@@ -455,7 +470,8 @@ class Game {
       _hands![colour].add(_piece);
     }
 
-    if (!move.castling && !move.promotion) {
+    // Remove gated piece from gate
+    if (move.gate) if (!move.castling && !move.promotion) {
       // Move the piece to the new square
       int putPiece = move.from >= BOARD_START ? fromSq : makePiece(move.dropPiece!, colour);
       hash ^= zobrist.table[move.to][putPiece.piece];
@@ -707,6 +723,7 @@ class Game {
       san = pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
       if (move.capture) san = '${san}x';
       san = '$san${squareName(move.to, size)}';
+      if (move.gate) san = '$san/${variant.pieces[move.dropPiece!].symbol}';
 
       if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
     }
@@ -732,7 +749,8 @@ class Game {
     bool needRank = false;
     bool needFile = false;
     for (Move m in moves) {
-      if (m.drop) continue;
+      if (m.handDrop) continue;
+      if (m.drop && m.dropPiece != move.dropPiece) continue;
       if (m.from == move.from) continue;
       if (m.to != move.to) continue;
       if (_piece != board[m.from].type) continue;

@@ -61,6 +61,9 @@ class Variant {
   /// Are hands enabled in this variant? For example, Crazyhouse.
   final bool hands;
 
+  /// What type of gating, if any, is used in this variant?
+  final int gatingMode;
+
   /// The relative values of pieces. These are usually already set in the [PieceType]
   /// definitions, so only use this if you want to override those.
   /// For example, you have a variant where a pawn is worth 200 instead of 100,
@@ -75,6 +78,7 @@ class Variant {
   late int royalPiece;
 
   bool get castling => castlingOptions.enabled;
+  bool get gating => gatingMode > GatingMode.NONE;
 
   Variant({
     required this.name,
@@ -92,6 +96,7 @@ class Variant {
     this.halfMoveDraw,
     this.repetitionDraw,
     this.hands = false,
+    this.gatingMode = GatingMode.NONE,
     this.pieceValues,
   }) {
     assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
@@ -114,6 +119,7 @@ class Variant {
     int? halfMoveDraw,
     int? repetitionDraw,
     bool? hands,
+    int? gatingMode,
     Map<String, int>? pieceValues,
   }) {
     return Variant(
@@ -132,6 +138,7 @@ class Variant {
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
       repetitionDraw: repetitionDraw ?? this.repetitionDraw,
       hands: hands ?? this.hands,
+      gatingMode: gatingMode ?? this.gatingMode,
       pieceValues: pieceValues ?? this.pieceValues,
     );
   }

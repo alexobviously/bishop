@@ -14,7 +14,7 @@ const int INVALID = -1;
 const int HAND = -2;
 
 const List<int> PLAYER_DIRECTION = [-1, 1];
-const List<String> PLAYER_NAME = ['hite', 'Black'];
+const List<String> PLAYER_NAME = ['White', 'Black'];
 
 const int ASCII_a = 97;
 const int MATE_LOWER = 90000;
@@ -43,6 +43,12 @@ class Modality {
   static const int BOTH = 2;
 
   static const List<int> ALL = [QUIET, CAPTURE, BOTH];
+}
+
+class GatingMode {
+  static const int NONE = 0;
+  static const int FLEX = 1; // e.g. Seirawan Chess
+  static const int FIXED = 2; // e.g. Musketeer Chess
 }
 
 // Just shorthands for building variants

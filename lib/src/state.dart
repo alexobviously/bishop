@@ -28,8 +28,12 @@ class State {
   final List<int> royalSquares;
 
   /// Two lists of pieces, for each player's hand.
-  /// Index 0 - white, Index 1 - black.
+  /// Index 0 - white, index 1 - black.
   final List<Hand>? hands;
+
+  /// Two lists of pieces, for each player's gate.
+  /// Index 0 - white, index 1 - black.
+  final List<Hand>? gates;
 
   /// The Zobrist hash of the game state.
   /// Needs to be set after construction of the first hash, but otherwise is
@@ -45,6 +49,7 @@ class State {
     this.epSquare,
     required this.royalSquares,
     this.hands,
+    this.gates,
     this.hash = 0,
   });
 }
