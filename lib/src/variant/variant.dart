@@ -309,4 +309,18 @@ class Variant {
       ],
     );
   }
+
+  factory Variant.seirawan() {
+    Variant standard = Variant.standard();
+    return standard.copyWith(
+      name: 'Seirawan Chess',
+      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkq - 0 1',
+      gatingMode: GatingMode.FLEX,
+      pieceTypes: standard.pieceTypes
+        ..addAll({
+          'H': PieceType.archbishop(),
+          'E': PieceType.chancellor(),
+        }),
+    );
+  }
 }
