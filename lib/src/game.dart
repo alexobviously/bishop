@@ -837,6 +837,11 @@ class Game {
       String blackHand = state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
       _fen = '$_fen[$whiteHand$blackHand]';
     }
+    if (variant.gatingMode == GatingMode.FLEX) {
+      String whiteGate = state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
+      String blackGate = state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      _fen = '$_fen[$whiteGate$blackGate]';
+    }
     String _turn = state.turn == WHITE ? 'w' : 'b';
     String _castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
@@ -950,4 +955,11 @@ class Game {
     }
     return eval;
   }
+}
+
+main(List<String> args) {
+  Game g = Game(variant: Variant.seirawan());
+  print(g.ascii());
+  print(g.fen);
+  print(g.state.gates);
 }
