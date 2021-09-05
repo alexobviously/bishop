@@ -17,13 +17,16 @@ designed to be interoperable with Bishop.
 * Easy and flexible variant definition
 * Fairy pieces
 * Hands & dropping
+* Flex gating (e.g. Seirawan)
 * An engine (not strong but fine for testing)
 
 ### Upcoming Features
 * Insufficient material draws
 * Hopper pieces (e.g. Xiangqi cannon)
 * X-FEN output (input works)
-* Piece gating (e.g. Seirawan Chess)
+* Fixed piece gating (e.g. Musketeer chess)
+* Different game end conditions for variants like three-check
+* Atomic chess exploding pieces (and more generally, flexible capture behaviour)
 
 ### A Random Game
 Playing a random game is easy!

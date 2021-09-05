@@ -1,8 +1,12 @@
+### 0.3.1
+- 
+
 ### 0.3.0
 - Gating drops and the Seirawan Chess variant
 - Virgin file tracking
 - Lots more documentation
 - Allow a custom seed to be specified (for Zobrist hashing)
+- Fixed SAN for castling with check
 
 ### 0.2.10
 - Another small variant (mini - 6x6)
