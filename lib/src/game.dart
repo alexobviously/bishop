@@ -16,7 +16,12 @@ import 'variant/variant.dart';
 
 /// Tracks the state of the game, handles move generation and validation, and generates output.
 class Game {
+  /// The variant that specifies the gameplay rules for this game.
   final Variant variant;
+
+  /// A random number generator seed.
+  /// Used by the Zobrist hash table.
+  final int seed;
   late Zobrist zobrist;
   late List<int> board;
   late String startPosition;
@@ -33,7 +38,7 @@ class Game {
 
   BoardSize get size => variant.boardSize;
 
-  Game({required this.variant, String? fen}) {
+  Game({required this.variant, String? fen, this.seed = DEFAULT_SEED}) {
     setup(fen);
   }
 
@@ -103,7 +108,7 @@ class Game {
   /// Load a position from a FEN string.
   /// If [strict] is enabled, a full string must be provided, including turn, ep square, etc.
   void loadFen(String fen, [bool strict = false]) {
-    zobrist = Zobrist(variant, ZOBRIST_SEED);
+    zobrist = Zobrist(variant, seed);
     Map<String, int> pieceLookup = {};
     for (int i = 0; i < variant.pieces.length; i++) {
       pieceLookup[variant.pieces[i].symbol] = i;
