@@ -304,12 +304,19 @@ class Game {
             forcedPromo = colour == WHITE ? toRank >= size.maxRank : toRank <= RANK_1;
           }
         }
+
         Square target = board[to];
         bool setEnPassant = variant.enPassant && md.firstOnly && pieceType.enPassantable;
 
         void addMove(Move m) {
           if (optPromo) moves.addAll(generatePromotionMoves(m));
           if (!forcedPromo) moves.add(m);
+          if (variant.gating) {
+            int _rank = rank(m.from, size);
+            if ((_rank == RANK_1 && colour == WHITE) || (_rank == size.maxRank && colour == BLACK)) {
+              moves.addAll(generateGatingMoves(m));
+            }
+          }
           if (options!.onlySquare != null && m.to == options.onlySquare) {
             exit = true;
           }
@@ -456,6 +463,24 @@ class Game {
     return moves;
   }
 
+  /// Generates a move for each gating possibility for the [base] move.
+  /// Doesn't include the option where a piece is not gated.
+  List<Move> generateGatingMoves(Move base) {
+    if (state.gates == null || state.gates!.isEmpty) return [];
+    int _file = file(base.from);
+    Square piece = board[base.from];
+    Colour colour = piece.colour;
+    if (piece.isEmpty) return [];
+    if (!(state.virginFiles[colour].contains(_file))) return [];
+    List<Move> moves = [];
+    // TODO: GatingMode.fixed
+    for (int p in state.gates![colour]) {
+      Move m = base.copyWith(dropPiece: p);
+      moves.add(m);
+    }
+    return moves;
+  }
+
   /// Make a move and modify the game state. Returns true if the move was valid and made successfully.
   bool makeMove(Move move) {
     if ((move.from != HAND && !onBoard(move.from, size)) || !onBoard(move.to, size)) return false;
@@ -480,7 +505,7 @@ class Game {
       if (move.gate) {
         // Move piece from gate to board.
         _gates![colour].remove(move.dropPiece!);
-        int dropPiece = makePiece(move.dropPiece!, colour);
+        int dropPiece = move.dropPiece!;
         hash ^= zobrist.table[move.from][dropPiece.piece];
         board[move.from] = makePiece(dropPiece, colour);
       } else {
@@ -499,7 +524,10 @@ class Game {
     }
 
     // Remove gated piece from gate
-    if (move.gate) {}
+    if (move.gate) {
+      _gates![colour].remove(move.dropPiece!);
+    }
+
     if (!move.castling && !move.promotion) {
       // Move the piece to the new square
       int putPiece = move.from >= BOARD_START ? fromSq : makePiece(move.dropPiece!, colour);
@@ -722,6 +750,7 @@ class Game {
     String alg = move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
     if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
     if (move.from == HAND) alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
+    if (move.gate) alg = '$alg${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
     return alg;
   }
 
@@ -780,7 +809,6 @@ class Game {
     bool needRank = false;
     bool needFile = false;
     for (Move m in moves) {
-      print('getDisambiguator ${m.drop}');
       if (m.handDrop) continue;
       if (m.drop && m.dropPiece != move.dropPiece) continue;
       if (m.from == move.from) continue;
@@ -991,21 +1019,5 @@ class Game {
       }
     }
     return eval;
-  }
-}
-
-main(List<String> args) {
-  Game g = Game(variant: Variant.seirawan());
-  Move m = Move(from: 96, to: 80);
-  print(g.ascii());
-  print(g.fen);
-  print(g.state.gates);
-  print(g.state.castlingRights.formatted);
-  for (int i = 0; i < 8; i++) {
-    g.makeRandomMove();
-    print(g.ascii());
-    print(g.fen);
-    print(g.state.gates);
-    print(g.state.castlingRights.formatted);
   }
 }

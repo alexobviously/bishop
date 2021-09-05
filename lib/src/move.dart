@@ -43,8 +43,10 @@ class Move {
     int? promoSource,
     int? promoPiece,
     CastlingRights? castlingDir,
+    int? castlingPieceSquare,
     bool? enPassant,
     bool? setEnPassant,
+    int? dropPiece,
   }) {
     return Move(
       from: from ?? this.from,
@@ -53,13 +55,19 @@ class Move {
       promoSource: promoSource ?? this.promoSource,
       promoPiece: promoPiece ?? this.promoPiece,
       castlingDir: castlingDir ?? this.castlingDir,
+      castlingPieceSquare: castlingPieceSquare ?? this.castlingPieceSquare,
       enPassant: enPassant ?? this.enPassant,
       setEnPassant: setEnPassant ?? this.setEnPassant,
+      dropPiece: dropPiece ?? this.dropPiece,
     );
   }
 
   factory Move.drop({required int to, required int dropPiece}) => Move(from: HAND, to: to, dropPiece: dropPiece);
 
+  /// Provides the most basic algebraic form of the move.
+  /// This is not entirely descriptive, and doesn't provide information on promo
+  /// or gated pieces, for example.
+  /// Use `Game.toAlgebraic` in almost every situation.
   String algebraic({BoardSize size = const BoardSize(8, 8), bool useRookForCastling = false}) {
     String _from = from == HAND ? '@' : squareName(from, size);
     String _to = squareName((castling && useRookForCastling) ? castlingPieceSquare! : to, size);
