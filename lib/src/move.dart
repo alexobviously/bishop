@@ -4,23 +4,55 @@ import 'castling_rights.dart';
 import 'square.dart';
 import 'variant/variant.dart';
 
+/// A representation of a single move.
+/// This is a move that is made in a game, not a definition of a type of move
+/// that can be made by a piece. For that, see `MoveDefinition`.
 class Move {
+  /// The board location this move starts at.
   final int from;
+
+  /// The board location this move ends at.
   final int to;
+
+  /// The piece (including colour and flags) that is being captured, if one is.
   final int? capturedPiece;
+
+  /// The piece that exists before the promotion.
   final int? promoSource; // the piece type that got promoted
+  /// The piece (type only) that is being promoted to.
   final int? promoPiece; // this piece type that was promoted to
+  /// If this is a castling move, in which direction is castling happening?
   final CastlingRights? castlingDir;
+
+  /// The square where the castling piece (e.g. a rook), is located.
   final int? castlingPieceSquare;
+
+  /// If this move is en passant.
   final bool enPassant;
+
+  /// If this move sets the en passant flag.
   final bool setEnPassant;
+
+  /// The piece (type only) that is being dropped, if one is.
   final int? dropPiece;
 
+  /// Whether a piece is captured as a result of this move.
   bool get capture => capturedPiece != null;
+
+  /// Whether the moved piece is promoted.
   bool get promotion => promoPiece != null;
+
+  /// Whether this is a castling move.
   bool get castling => castlingDir != null;
+
+  /// Whether this is a drop move (any type, including gating).
   bool get drop => dropPiece != null;
+
+  /// Whether this was a drop move where the piece came from the hand to an empty
+  /// square, e.g. the drops in Crazyhouse.
   bool get handDrop => drop && from == HAND;
+
+  /// Whether this was a gated drop, e.g. the drops in Seirawan chess.
   bool get gate => drop && from >= BOARD_START;
 
   Move({

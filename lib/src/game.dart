@@ -691,7 +691,6 @@ class Game {
   /// Makes a random valid move for the current player.
   Move makeRandomMove() {
     List<Move> moves = generateLegalMoves();
-    print('moes.length ${moves.length}');
     int i = Random().nextInt(moves.length);
     makeMove(moves[i]);
     return moves[i];
