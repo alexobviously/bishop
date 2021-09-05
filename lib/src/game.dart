@@ -47,7 +47,8 @@ class Game {
     if (castlingString == '-') {
       return 0;
     }
-    if (!isAlpha(castlingString) || castlingString.length > 4) throw ('Invalid castling string');
+    if (!isAlpha(castlingString) || (castlingString.length > 4 && !variant.outputOptions.virginFiles))
+      throw ('Invalid castling string');
     CastlingRights cr = 0;
     for (String c in castlingString.split('')) {
       // there is probably a better way to do all of this
@@ -56,7 +57,7 @@ class Game {
       if (CASTLING_SYMBOLS.containsKey(c)) {
         cr += CASTLING_SYMBOLS[c]!;
       } else {
-        int _file = c.toLowerCase().codeUnits.first - 97;
+        int _file = fileFromSymbol(c);
         bool kingside = _file > file(royalSquares[white ? 0 : 1], size);
         if (kingside) {
           castlingTargetK = _file;
@@ -174,6 +175,25 @@ class Game {
       }
     }
 
+    List<List<int>> _virginFiles = [[], []];
+    if (variant.outputOptions.virginFiles) {
+      String __castling = _castling; // so we can modify _castling in place
+      for (int i = 0; i < __castling.length; i++) {
+        String _char = __castling[i];
+        String _lower = _char.toLowerCase();
+        int _colour = _lower == _char ? BLACK : WHITE;
+        int _file = fileFromSymbol(_lower);
+        if (_file < 0 || _file >= size.h) continue;
+
+        if (_virginFiles[_colour].contains(_file)) continue;
+        _virginFiles[_colour].add(_file);
+        _castling = _castling.replaceFirst(_char, '');
+      }
+    } else {
+      List<int> _vf = List.generate(size.h, (i) => i);
+      _virginFiles = [_vf, List.from(_vf)]; // just in case
+    }
+
     int turn = _turn == 'w' ? WHITE : BLACK;
     int? ep = _ep == '-' ? null : squareNumber(_ep, variant.boardSize);
     int castling = variant.castling ? setupCastling(_castling, royalSquares) : 0;
@@ -184,6 +204,7 @@ class Game {
       epSquare: ep,
       castlingRights: castling,
       royalSquares: royalSquares,
+      virginFiles: _virginFiles,
       hands: _hands,
       gates: _gates,
     );
@@ -444,23 +465,30 @@ class Game {
         state.hands != null ? List.generate(state.hands!.length, (i) => List.from(state.hands![i])) : null;
     List<Hand>? _gates =
         state.gates != null ? List.generate(state.gates!.length, (i) => List.from(state.gates![i])) : null;
+    List<List<int>> _virginFiles = List.generate(state.virginFiles.length, (i) => List.from(state.virginFiles[i]));
+
     // TODO: more validation?
     Square fromSq = move.from >= BOARD_START ? board[move.from] : EMPTY;
     Square toSq = board[move.to];
+    int fromRank = rank(move.from, size);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq != EMPTY && fromSq.colour != state.turn) return false;
     int colour = turn;
-    // Remove the moved piece, if this piece came from on the board
+    // Remove the moved piece, if this piece came from on the board.
     if (move.from >= BOARD_START) {
       hash ^= zobrist.table[move.from][fromSq.piece];
       if (move.gate) {
-        // Move piece from gate to board
+        // Move piece from gate to board.
         _gates![colour].remove(move.dropPiece!);
         int dropPiece = makePiece(move.dropPiece!, colour);
         hash ^= zobrist.table[move.from][dropPiece.piece];
         board[move.from] = makePiece(dropPiece, colour);
       } else {
         board[move.from] = EMPTY;
+      }
+      // Mark the file as touched.
+      if ((fromRank == 0 && colour == WHITE) || (fromRank == size.v - 1 && colour == BLACK)) {
+        _virginFiles[colour].remove(file(move.from, size));
       }
     }
 
@@ -471,7 +499,8 @@ class Game {
     }
 
     // Remove gated piece from gate
-    if (move.gate) if (!move.castling && !move.promotion) {
+    if (move.gate) {}
+    if (!move.castling && !move.promotion) {
       // Move the piece to the new square
       int putPiece = move.from >= BOARD_START ? fromSq : makePiece(move.dropPiece!, colour);
       hash ^= zobrist.table[move.to][putPiece.piece];
@@ -516,11 +545,10 @@ class Game {
 
     if (move.castling) {
       bool kingside = move.castlingDir == CASTLING_K;
-      int royalRank = rank(move.from, size);
       int castlingFile = kingside ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
-      int rookSq = getSquare(rookFile, royalRank, size);
-      int kingSq = getSquare(castlingFile, royalRank, size);
+      int rookSq = getSquare(rookFile, fromRank, size);
+      int kingSq = getSquare(castlingFile, fromRank, size);
       int rook = board[move.castlingPieceSquare!];
       hash ^= zobrist.table[move.castlingPieceSquare!][rook.piece];
       if (board[kingSq].isNotEmpty) hash ^= zobrist.table[kingSq][board[kingSq].piece];
@@ -579,9 +607,11 @@ class Game {
       fullMoves: state.turn == BLACK ? state.fullMoves + 1 : state.fullMoves,
       castlingRights: _castlingRights,
       royalSquares: royalSquares,
+      virginFiles: _virginFiles,
       epSquare: epSquare,
       hash: hash,
       hands: _hands,
+      gates: _gates,
     );
     history.add(_state);
     zobrist.incrementHash(hash);
@@ -633,6 +663,7 @@ class Game {
   /// Makes a random valid move for the current player.
   Move makeRandomMove() {
     List<Move> moves = generateLegalMoves();
+    print('moes.length ${moves.length}');
     int i = Random().nextInt(moves.length);
     makeMove(moves[i]);
     return moves[i];
@@ -749,6 +780,7 @@ class Game {
     bool needRank = false;
     bool needFile = false;
     for (Move m in moves) {
+      print('getDisambiguator ${m.drop}');
       if (m.handDrop) continue;
       if (m.drop && m.dropPiece != move.dropPiece) continue;
       if (m.from == move.from) continue;
@@ -846,6 +878,11 @@ class Game {
     String _castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
       _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols);
+    }
+    if (variant.outputOptions.virginFiles) {
+      String _whiteVfiles = state.virginFiles[WHITE].map((e) => fileSymbol(e).toUpperCase()).join('');
+      String _blackVfiles = state.virginFiles[BLACK].map((e) => fileSymbol(e)).join('');
+      _castling = '$_castling$_whiteVfiles$_blackVfiles';
     }
     String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
     _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
@@ -959,7 +996,16 @@ class Game {
 
 main(List<String> args) {
   Game g = Game(variant: Variant.seirawan());
+  Move m = Move(from: 96, to: 80);
   print(g.ascii());
   print(g.fen);
   print(g.state.gates);
+  print(g.state.castlingRights.formatted);
+  for (int i = 0; i < 8; i++) {
+    g.makeRandomMove();
+    print(g.ascii());
+    print(g.fen);
+    print(g.state.gates);
+    print(g.state.castlingRights.formatted);
+  }
 }

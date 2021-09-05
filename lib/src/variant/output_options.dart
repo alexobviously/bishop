@@ -12,17 +12,18 @@ class OutputOptions {
   /// If true, the castling field in the FEN string will be combined with a list
   /// of files where the starting pieces haven't moved from them.
   /// For example, to be used with Seirawan gates.
-  final bool showVirginFiles;
+  final bool virginFiles;
 
   OutputOptions({
     required this.castlingFormat,
     this.showPromoted = false,
-    this.showVirginFiles = false,
+    this.virginFiles = false,
   });
 
   factory OutputOptions.standard() => OutputOptions(castlingFormat: CastlingFormat.Standard);
   factory OutputOptions.chess960() => OutputOptions(castlingFormat: CastlingFormat.Shredder);
   factory OutputOptions.crazyhouse() => OutputOptions(castlingFormat: CastlingFormat.Standard, showPromoted: true);
+  factory OutputOptions.seirawan() => OutputOptions(castlingFormat: CastlingFormat.Standard, virginFiles: true);
 }
 
 /// Determines how castling rights are represented in FEN strings.

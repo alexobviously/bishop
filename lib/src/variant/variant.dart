@@ -314,8 +314,9 @@ class Variant {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Seirawan Chess',
-      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkq - 0 1',
+      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
       gatingMode: GatingMode.FLEX,
+      outputOptions: OutputOptions.seirawan(),
       pieceTypes: standard.pieceTypes
         ..addAll({
           'H': PieceType.archbishop(),

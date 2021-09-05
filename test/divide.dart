@@ -20,7 +20,7 @@ main(List<String> args) async {
       for (var line in data.split("\n")) {
         for (var entry in line.split(",")) {
           int colon = entry.indexOf(':');
-          if (entry != null && colon != -1) {
+          if (colon != -1) {
             String key = entry.substring(0, colon);
             int value = int.parse(entry.substring(colon + 2));
             stockfish[key] = value;

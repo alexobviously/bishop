@@ -27,6 +27,12 @@ class State {
   /// Index 0 - white, index 1 - black.
   final List<int> royalSquares;
 
+  /// A list of files that have been untouched for each player.
+  /// For use with e.g. Seirawan chess, where pieces can only be gated on files
+  /// that haven't had their pieces move yet.
+  /// Only works for variants where all non-pawn pieces start on the back rank.
+  final List<List<int>> virginFiles;
+
   /// Two lists of pieces, for each player's hand.
   /// Index 0 - white, index 1 - black.
   final List<Hand>? hands;
@@ -48,6 +54,7 @@ class State {
     required this.castlingRights,
     this.epSquare,
     required this.royalSquares,
+    required this.virginFiles,
     this.hands,
     this.gates,
     this.hash = 0,

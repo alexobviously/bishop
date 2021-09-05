@@ -29,6 +29,7 @@ String squareName(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
 }
 
 String fileSymbol(int file) => String.fromCharCode(ASCII_a + file);
+int fileFromSymbol(String symbol) => symbol.toLowerCase().codeUnits[0] - ASCII_a;
 
 int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   name = name.toLowerCase();
