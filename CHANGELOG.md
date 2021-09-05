@@ -1,5 +1,7 @@
 ### 0.3.0
-- 
+- Gating drops and the Seirawan Chess variant
+- Virgin file tracking
+- Lots more documentation
 
 ### 0.2.10
 - Another small variant (mini - 6x6)
