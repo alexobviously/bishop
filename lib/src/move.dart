@@ -36,6 +36,10 @@ class Move {
   /// The piece (type only) that is being dropped, if one is.
   final int? dropPiece;
 
+  /// For gating drops that are also castling moves - should we gate on square
+  /// that the king came from (false) or the rook (true).
+  final bool dropOnRookSquare;
+
   /// Whether a piece is captured as a result of this move.
   bool get capture => capturedPiece != null;
 
@@ -66,6 +70,7 @@ class Move {
     this.enPassant = false,
     this.setEnPassant = false,
     this.dropPiece,
+    this.dropOnRookSquare = false,
   });
 
   Move copyWith({
@@ -79,6 +84,7 @@ class Move {
     bool? enPassant,
     bool? setEnPassant,
     int? dropPiece,
+    bool? dropOnRookSquare,
   }) {
     return Move(
       from: from ?? this.from,
@@ -91,6 +97,7 @@ class Move {
       enPassant: enPassant ?? this.enPassant,
       setEnPassant: setEnPassant ?? this.setEnPassant,
       dropPiece: dropPiece ?? this.dropPiece,
+      dropOnRookSquare: dropOnRookSquare ?? this.dropOnRookSquare,
     );
   }
 

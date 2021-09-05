@@ -432,6 +432,12 @@ class Game {
             castlingPieceSquare: rookSq,
           );
           moves.add(m);
+          if (variant.gating) {
+            int _rank = rank(m.from, size);
+            if ((_rank == RANK_1 && colour == WHITE) || (_rank == size.maxRank && colour == BLACK)) {
+              moves.addAll(generateGatingMoves(m));
+            }
+          }
         }
       }
     }
@@ -482,6 +488,10 @@ class Game {
     for (int p in state.gates![colour]) {
       Move m = base.copyWith(dropPiece: p);
       moves.add(m);
+      if (m.castling) {
+        Move m2 = base.copyWith(dropPiece: p, dropOnRookSquare: true);
+        moves.add(m2);
+      }
     }
     return moves;
   }
@@ -508,11 +518,15 @@ class Game {
     if (move.from >= BOARD_START) {
       hash ^= zobrist.table[move.from][fromSq.piece];
       if (move.gate) {
-        // Move piece from gate to board.
-        _gates![colour].remove(move.dropPiece!);
-        int dropPiece = move.dropPiece!;
-        hash ^= zobrist.table[move.from][dropPiece.piece];
-        board[move.from] = makePiece(dropPiece, colour);
+        if (!(move.castling && move.dropOnRookSquare)) {
+          // Move piece from gate to board.
+          _gates![colour].remove(move.dropPiece!);
+          int dropPiece = move.dropPiece!;
+          hash ^= zobrist.table[move.from][dropPiece.piece];
+          board[move.from] = makePiece(dropPiece, colour);
+        } else {
+          board[move.from] = EMPTY;
+        }
       } else {
         board[move.from] = EMPTY;
       }
@@ -596,6 +610,12 @@ class Game {
       hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
       hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
       royalSquares[colour] = kingSq;
+
+      if (move.gate && move.dropOnRookSquare) {
+        int dropPiece = makePiece(move.dropPiece!, colour);
+        board[move.castlingPieceSquare!] = dropPiece;
+        hash ^= zobrist.table[move.castlingPieceSquare!][dropPiece.piece];
+      }
     } else if (fromPiece.royal) {
       // king moved
       _castlingRights = _castlingRights.remove(colour);
@@ -754,7 +774,14 @@ class Game {
     String alg = move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
     if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
     if (move.from == HAND) alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
-    if (move.gate) alg = '$alg${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
+    if (move.gate) {
+      alg = '$alg/${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
+      if (move.castling) {
+        String _dropSq =
+            move.dropOnRookSquare ? squareName(move.castlingPieceSquare!, size) : squareName(move.from, size);
+        alg = '$alg$_dropSq';
+      }
+    }
     return alg;
   }
 
@@ -763,33 +790,39 @@ class Game {
   /// is used to determine the disambiguator. Use this if you need speed and have already
   /// generated the list of moves elsewhere.
   String toSan(Move move, [List<Move>? moves]) {
-    String _alg = move.algebraic(size: size);
+    String san = '';
     if (move.castling) {
       // if queenside is the only castling option, render it as 'O-O'
       String kingside = 'O-O';
       String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
-      return ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? kingside : queenside;
-    }
-
-    String san = '';
-    if (move.from == HAND) {
-      PieceDefinition _pieceDef = variant.pieces[move.dropPiece!];
-      san = move.algebraic(size: size);
-      if (!_pieceDef.type.noSanSymbol) san = '${_pieceDef.symbol.toUpperCase()}$san';
+      san = ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? kingside : queenside;
     } else {
-      int piece = board[move.from].type;
-      PieceDefinition pieceDef = variant.pieces[piece];
-      String disambiguator = getDisambiguator(move, moves);
-      if (pieceDef.type.noSanSymbol) {
-        if (move.capture) san = squareName(move.from, size)[0];
-      } else
-        san = pieceDef.symbol;
-      san = pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
-      if (move.capture) san = '${san}x';
-      san = '$san${squareName(move.to, size)}';
-      if (move.gate) san = '$san/${variant.pieces[move.dropPiece!].symbol}';
+      if (move.from == HAND) {
+        PieceDefinition _pieceDef = variant.pieces[move.dropPiece!];
+        san = move.algebraic(size: size);
+        if (!_pieceDef.type.noSanSymbol) san = '${_pieceDef.symbol.toUpperCase()}$san';
+      } else {
+        int piece = board[move.from].type;
+        PieceDefinition pieceDef = variant.pieces[piece];
+        String disambiguator = getDisambiguator(move, moves);
+        if (pieceDef.type.noSanSymbol) {
+          if (move.capture) san = squareName(move.from, size)[0];
+        } else
+          san = pieceDef.symbol;
+        san = pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
+        if (move.capture) san = '${san}x';
+        san = '$san${squareName(move.to, size)}';
 
-      if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
+        if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
+      }
+    }
+    if (move.gate) {
+      san = '$san/${variant.pieces[move.dropPiece!].symbol}';
+      if (move.castling) {
+        String _dropSq =
+            move.dropOnRookSquare ? squareName(move.castlingPieceSquare!, size) : squareName(move.from, size);
+        san = '$san$_dropSq';
+      }
     }
     makeMove(move);
     if (inCheck) {
@@ -965,6 +998,15 @@ class Game {
     List<String> whiteHand = state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
     List<String> blackHand = state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
     return [whiteHand, blackHand];
+  }
+
+  /// Converts the internal representation of the gates to a list of piece symbols (e.g. 'P', 'q').
+  /// You probably need this for interopability with other applications (such as the Squares package).
+  List<List<String>> gateSymbols() {
+    if (!variant.gating) return [[], []];
+    List<String> whiteGate = state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
+    List<String> blackGate = state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
+    return [whiteGate, blackGate];
   }
 
   GameInfo get info => GameInfo(
