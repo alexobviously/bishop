@@ -46,6 +46,9 @@ class State {
   /// updated in `Game.makeMove()`.
   int hash;
 
+  @override
+  String toString() => 'State(turn: $turn, moves: $fullMoves, hash: $hash)';
+
   State({
     this.move,
     required this.turn,

@@ -133,6 +133,9 @@ class PieceDefinition {
   final String symbol;
   final int value;
 
+  @override
+  String toString() => 'PieceDefinition($symbol)';
+
   PieceDefinition({required this.type, required this.symbol, required this.value});
   factory PieceDefinition.empty() => PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
 

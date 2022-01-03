@@ -14,4 +14,7 @@ class BoardSize {
   //factory BoardSize.standard() => BoardSize(8, 8);
   static const STANDARD = const BoardSize(8, 8);
   static const MINI = const BoardSize(6, 6);
+
+  @override
+  String toString() => 'BoardSize($h, $v)';
 }

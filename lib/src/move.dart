@@ -52,12 +52,23 @@ class Move {
   /// Whether this is a drop move (any type, including gating).
   bool get drop => dropPiece != null;
 
-  /// Whether this was a drop move where the piece came from the hand to an empty
+  /// Whether this is a drop move where the piece came from the hand to an empty
   /// square, e.g. the drops in Crazyhouse.
   bool get handDrop => drop && from == HAND;
 
-  /// Whether this was a gated drop, e.g. the drops in Seirawan chess.
+  /// Whether this is a gated drop, e.g. the drops in Seirawan chess.
   bool get gate => drop && from >= BOARD_START;
+
+  @override
+  String toString() {
+    List<String> _params = ['from: $from', 'to: $to'];
+    if (promotion) _params.add('promo: $promoPiece');
+    if (castling) _params.add('castling: $castlingDir');
+    if (drop) _params.add('drop: $dropPiece');
+    if (enPassant) _params.add('enPassant');
+    if (setEnPassant) _params.add('setEnPassant');
+    return 'Move(${_params.join(', ')})';
+  }
 
   Move({
     required this.from,

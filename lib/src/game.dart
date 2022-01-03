@@ -38,6 +38,9 @@ class Game {
 
   BoardSize get size => variant.boardSize;
 
+  @override
+  String toString() => 'Game(${variant.name}, $fen)';
+
   Game({required this.variant, String? fen, this.seed = DEFAULT_SEED}) {
     setup(fen);
   }

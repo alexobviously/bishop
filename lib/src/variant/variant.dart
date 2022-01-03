@@ -80,6 +80,9 @@ class Variant {
   bool get castling => castlingOptions.enabled;
   bool get gating => gatingMode > GatingMode.NONE;
 
+  @override
+  String toString() => name;
+
   Variant({
     required this.name,
     required this.boardSize,
