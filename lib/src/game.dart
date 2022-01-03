@@ -146,6 +146,7 @@ class Game {
     }
 
     List<String> _board = sections[0].split('');
+    if (_board.where((e) => e == '/').length != variant.boardSize.v - 1) throw ("Invalid FEN: wrong number of ranks");
     String _turn = (strict || sections.length > 1) ? sections[1] : 'w';
     if (!(['w', 'b'].contains(_turn))) throw ("Invalid FEN: colour should be 'w' or 'b'");
     String _castling = (strict || sections.length > 2) ? sections[2] : 'KQkq'; // TODO: get default castling for variant

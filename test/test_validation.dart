@@ -20,6 +20,7 @@ void main() {
           variant: Variant.standard(),
           fen: 'rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR h KQkq - 0 2',
           valid: false),
+      FenTest(variant: Variant.standard(), fen: 'rnbqkbnr/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', valid: false),
       FenTest(
           variant: Variant.chess960(),
           fen: 'r1bqkbrn/pp1p1ppQ/2n5/2p5/4P3/2p5/PPP2PPP/1RB1KBRN b Kkq - 1 6',

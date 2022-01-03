@@ -1,5 +1,6 @@
 ### 0.3.1
-- 
+- Improved FEN validation
+- Various minor improvements
 
 ### 0.3.0
 - Gating drops and the Seirawan Chess variant
