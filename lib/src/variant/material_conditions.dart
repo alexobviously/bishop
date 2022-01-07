@@ -36,6 +36,7 @@ class MaterialConditions<T> {
   static const STANDARD = const MaterialConditions(
     enabled: true,
     soloMaters: ['P', 'Q', 'R', 'A', 'C'],
+    pairMaters: ['N'], // although a knight cannot force mate, it can happen if the opponent helps
     combinedPairMaters: ['B'],
     specialCases: [
       ['B', 'N']
