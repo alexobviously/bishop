@@ -191,6 +191,7 @@ class Variant {
         enabled: true,
         soloMaters: materialConditions.soloMaters.map((e) => pieceIndex(e)).toList(),
         pairMaters: materialConditions.pairMaters.map((e) => pieceIndex(e)).toList(),
+        combinedPairMaters: materialConditions.combinedPairMaters.map((e) => pieceIndex(e)).toList(),
         specialCases: materialConditions.specialCases.map((e) => e.map((p) => pieceIndex(p)).toList()).toList(),
       );
     }

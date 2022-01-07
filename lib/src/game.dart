@@ -756,7 +756,35 @@ class Game {
 
   /// Check if there is currently sufficient material on the board for one player to mate the other.
   /// Returns true if there *isn't* sufficient material (and therefore it's a draw).
-  bool get insufficientMaterial => false;
+  bool get insufficientMaterial {
+    if (hasSufficientMaterial(WHITE)) return false;
+    return !hasSufficientMaterial(BLACK);
+  }
+
+  /// Determines whether there is sufficient material for [player] to deliver mate in the board
+  /// position specified in [state].
+  /// [state] defaults to the current board state if unspecified.
+  bool hasSufficientMaterial(Colour player, {State? state}) {
+    State _state = state ?? this.state;
+    for (int p in variant.materialConditionsInt.soloMaters) {
+      if (_state.pieces[makePiece(p, player)] > 0) return true;
+    }
+    // TODO: figure out how to track square colours to check bishop pairs
+    for (int p in variant.materialConditionsInt.pairMaters) {
+      if (_state.pieces[makePiece(p, player)] > 1) return true;
+    }
+    for (int p in variant.materialConditionsInt.combinedPairMaters) {
+      if (_state.pieces[makePiece(p, player)] + _state.pieces[makePiece(p, player.opponent)] > 1) return true;
+    }
+    for (List<int> c in variant.materialConditionsInt.specialCases) {
+      bool met = true;
+      for (int p in c) {
+        if (_state.pieces[makePiece(p, player)] < 1) met = false;
+      }
+      if (met) return true;
+    }
+    return false;
+  }
 
   /// Check if we have reached the repetition draw limit (threefold repetition in standard chess).
   /// Configurable in [Variant.repetitionDraw].

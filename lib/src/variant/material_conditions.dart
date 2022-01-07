@@ -10,10 +10,14 @@ class MaterialConditions<T> {
   /// e.g. Queens and Rooks in standard chess.
   final List<T> soloMaters;
 
-  /// Pieces that can mate if there are two of them on opposite colours.
-  /// The pieces can belong to different players.
-  /// e.g. Bishops in standard chess. Note: two bishops of the same colour can't deliver mate!
+  /// Pieces that can mate if there are two of them. The pieces can belong to different players.
+  /// Note: this doesn't consider the fact that two bishops of the same colour can't deliver mate.
   final List<T> pairMaters;
+
+  /// Pieces that can mate if there are two of them. **The pieces can belong to different players**.
+  /// e.g. Bishops in standard chess.
+  /// Note: this doesn't consider the fact that two bishops of the same colour can't deliver mate.
+  final List<T> combinedPairMaters;
 
   /// Specific sets of pieces that can deliver mate.
   /// e.g. a Knight and a Bishop in standard chess.
@@ -23,6 +27,7 @@ class MaterialConditions<T> {
     required this.enabled,
     this.soloMaters = const [],
     this.pairMaters = const [],
+    this.combinedPairMaters = const [],
     this.specialCases = const [],
   });
 
@@ -30,8 +35,8 @@ class MaterialConditions<T> {
   /// with chancellor and archbishop only (e.g. Capablanca).
   static const STANDARD = const MaterialConditions(
     enabled: true,
-    soloMaters: ['Q', 'R', 'A', 'C'],
-    pairMaters: ['B'],
+    soloMaters: ['P', 'Q', 'R', 'A', 'C'],
+    combinedPairMaters: ['B'],
     specialCases: [
       ['B', 'N']
     ],
