@@ -30,3 +30,6 @@ jobs:
         
       - name: Run Comparison tests
         run: dart test test/test_comparison.dart
+
+      - name: Run Draw tests
+        run: dart test test/test_draw.dart
