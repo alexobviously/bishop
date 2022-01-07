@@ -1,4 +1,5 @@
 ### 0.3.1
+- Insufficient material draws
 - Improved FEN validation
 - Fixed a Zobrist hashing bug (on captures)
 - Various minor improvements
