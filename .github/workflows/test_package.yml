@@ -28,5 +28,5 @@ jobs:
       - name: Run Validation tests
         run: dart test test/test_validation.dart
         
-      - name: Run Zobrist tests
-        run: dart test test/test_zobrist.dart
+      - name: Run Comparison tests
+        run: dart test test/test_comparison.dart
