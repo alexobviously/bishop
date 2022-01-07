@@ -2,6 +2,7 @@
 library bishop;
 
 export 'src/betza.dart';
+export 'src/castling_rights.dart';
 export 'src/constants.dart';
 export 'src/engine.dart';
 export 'src/first_where_extension.dart';
