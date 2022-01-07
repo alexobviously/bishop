@@ -14,6 +14,7 @@ extension SquareLogic on Square {
   bool get isEmpty => this == 0;
   bool get isNotEmpty => this != 0;
   bool hasFlag(int flag) => this & (flag << 8) != 0;
+  Square get flipColour => this ^ 1;
 }
 
 Square makePiece(int piece, Colour colour, [int flags = 0]) {
