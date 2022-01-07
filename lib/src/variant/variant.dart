@@ -161,6 +161,7 @@ class Variant {
   }
 
   int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
+  List<int> pieceIndices(List<String> symbols) => symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
 
   void initPieces() {
     pieceTypes.forEach((_, p) => p.init(boardSize));
@@ -189,10 +190,10 @@ class Variant {
     else {
       materialConditionsInt = MaterialConditions(
         enabled: true,
-        soloMaters: materialConditions.soloMaters.map((e) => pieceIndex(e)).toList(),
-        pairMaters: materialConditions.pairMaters.map((e) => pieceIndex(e)).toList(),
-        combinedPairMaters: materialConditions.combinedPairMaters.map((e) => pieceIndex(e)).toList(),
-        specialCases: materialConditions.specialCases.map((e) => e.map((p) => pieceIndex(p)).toList()).toList(),
+        soloMaters: pieceIndices(materialConditions.soloMaters),
+        pairMaters: pieceIndices(materialConditions.pairMaters),
+        combinedPairMaters: pieceIndices(materialConditions.combinedPairMaters),
+        specialCases: materialConditions.specialCases.map((e) => pieceIndices(e)).toList(),
       );
     }
   }
