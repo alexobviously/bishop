@@ -41,6 +41,8 @@ class State {
   /// Index 0 - white, index 1 - black.
   final List<Hand>? gates;
 
+  final List<int> pieces;
+
   /// The Zobrist hash of the game state.
   /// Needs to be set after construction of the first hash, but otherwise is
   /// updated in `Game.makeMove()`.
@@ -60,6 +62,7 @@ class State {
     required this.virginFiles,
     this.hands,
     this.gates,
+    required this.pieces,
     this.hash = 0,
   });
 }

@@ -1,5 +1,6 @@
 ### 0.3.1
 - Improved FEN validation
+- Fixed a Zobrist hashing bug (on captures)
 - Various minor improvements
 
 ### 0.3.0
