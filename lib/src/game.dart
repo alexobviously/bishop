@@ -3,16 +3,6 @@ import 'dart:math';
 import 'package:bishop/bishop.dart';
 
 import 'castling_rights.dart';
-import 'constants.dart';
-import 'first_where_extension.dart';
-import 'move.dart';
-import 'move_definition.dart';
-import 'move_gen_options.dart';
-import 'piece_type.dart';
-import 'square.dart';
-import 'state.dart';
-import 'utils.dart';
-import 'variant/variant.dart';
 
 /// Tracks the state of the game, handles move generation and validation, and generates output.
 class Game {

@@ -1,7 +1,5 @@
 import 'dart:math';
-
 import 'package:bishop/bishop.dart';
-import 'package:bishop/src/castling_rights.dart';
 
 class Zobrist {
   static const int META = 0;

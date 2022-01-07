@@ -1,9 +1,5 @@
 import 'package:bishop/bishop.dart';
 
-import 'castling_rights.dart';
-import 'square.dart';
-import 'variant/variant.dart';
-
 /// A representation of a single move.
 /// This is a move that is made in a game, not a definition of a type of move
 /// that can be made by a piece. For that, see `MoveDefinition`.

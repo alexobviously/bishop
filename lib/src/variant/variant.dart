@@ -1,16 +1,12 @@
 import 'dart:math';
 
 import 'package:bishop/bishop.dart';
-import 'package:bishop/src/castling_rights.dart';
-import 'package:bishop/src/variant/material_conditions.dart';
-
-import '../constants.dart';
-import '../piece_type.dart';
 
 part '960.dart';
 part 'board_size.dart';
 part 'castling_options.dart';
 part 'output_options.dart';
+part 'material_conditions.dart';
 
 /// Specifies the rules and pieces to be used, size of the board,
 /// information on how FENs are outputted, and so on and so on.
