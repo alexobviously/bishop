@@ -27,7 +27,9 @@ class Variant {
 
   /// The castling rules for this variant.
   final CastlingOptions castlingOptions;
-  final MaterialConditions materialConditions;
+
+  /// Material conditions that define how insufficient material draws should be decided.
+  final MaterialConditions<String> materialConditions;
   final OutputOptions outputOptions;
 
   /// If the variant has a fixed starting position, specify it here as a full [FEN string](https://en.wikipedia.org/wiki/Forsyth–Edwards_Notation).
@@ -76,6 +78,7 @@ class Variant {
   late int epPiece;
   late int castlingPiece;
   late int royalPiece;
+  late MaterialConditions<int> materialConditionsInt;
 
   bool get castling => castlingOptions.enabled;
   bool get gating => gatingMode > GatingMode.NONE;
@@ -88,7 +91,7 @@ class Variant {
     required this.boardSize,
     required this.pieceTypes,
     required this.castlingOptions,
-    required this.materialConditions,
+    this.materialConditions = MaterialConditions.NONE,
     required this.outputOptions,
     this.startPosition,
     this.startPosBuilder,
@@ -111,7 +114,7 @@ class Variant {
     BoardSize? boardSize,
     Map<String, PieceType>? pieceTypes,
     CastlingOptions? castlingOptions,
-    MaterialConditions? materialConditions,
+    MaterialConditions<String>? materialConditions,
     OutputOptions? outputOptions,
     String? startPosition,
     Function()? startPosBuilder,
@@ -149,6 +152,7 @@ class Variant {
   void init() {
     initPieces();
     buildPieceDefinitions();
+    convertMaterialConditions();
     royalPiece = pieces.indexWhere((p) => p.type.royal);
     if (enPassant)
       epPiece = pieces.indexWhere((p) => p.type.enPassantable);
@@ -159,6 +163,8 @@ class Variant {
     else
       castlingPiece = INVALID;
   }
+
+  int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
 
   void initPieces() {
     pieceTypes.forEach((_, p) => p.init(boardSize));
@@ -181,13 +187,26 @@ class Variant {
     }
   }
 
+  void convertMaterialConditions() {
+    if (!materialConditions.enabled)
+      materialConditionsInt = MaterialConditions(enabled: false);
+    else {
+      materialConditionsInt = MaterialConditions(
+        enabled: true,
+        soloMaters: materialConditions.soloMaters.map((e) => pieceIndex(e)).toList(),
+        pairMaters: materialConditions.pairMaters.map((e) => pieceIndex(e)).toList(),
+        specialCases: materialConditions.specialCases.map((e) => e.map((p) => pieceIndex(p)).toList()).toList(),
+      );
+    }
+  }
+
   factory Variant.standard() {
     return Variant(
       name: 'Chess',
       boardSize: BoardSize.STANDARD,
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.standard(),
-      materialConditions: MaterialConditions.standard(),
+      materialConditions: MaterialConditions.STANDARD,
       outputOptions: OutputOptions.standard(),
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
