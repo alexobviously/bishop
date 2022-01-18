@@ -115,7 +115,7 @@ class Game {
     List<List<int>>? _hands;
     List<List<int>>? _gates;
     List<int> _pieces = List.filled((variant.pieces.length + 1) * 2, 0);
-    if (variant.hands || (variant.gatingMode == GatingMode.FLEX)) {
+    if (variant.hands || variant.gatingMode == GatingMode.FLEX) {
       List<List<int>> _temp = [[], []];
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
       RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
@@ -139,16 +139,55 @@ class Game {
     }
 
     List<String> _board = sections[0].split('');
-    if (_board.where((e) => e == '/').length != variant.boardSize.v - 1) throw ("Invalid FEN: wrong number of ranks");
+    if (_board.where((e) => e == '/').length !=
+        (variant.boardSize.v - 1 + (variant.gatingMode == GatingMode.FIXED ? 2 : 0)))
+      throw ("Invalid FEN: wrong number of ranks");
     String _turn = (strict || sections.length > 1) ? sections[1] : 'w';
     if (!(['w', 'b'].contains(_turn))) throw ("Invalid FEN: colour should be 'w' or 'b'");
     String _castling = (strict || sections.length > 2) ? sections[2] : 'KQkq'; // TODO: get default castling for variant
     String _ep = (strict || sections.length > 3) ? sections[3] : '-';
     String _halfMoves = (strict || sections.length > 4) ? sections[4] : '0';
     String _fullMoves = (strict || sections.length > 5) ? sections[5] : '1';
+
+    // Process fixed gates, for variants like musketeer.
+    // gate/rbn...BNR/GATE
+    if (variant.gatingMode == GatingMode.FIXED) {
+      _gates = [List.filled(size.h, 0), List.filled(size.h, 0)];
+      // extract the first and last segments
+      List<String> _fileStrings = sections[0].split('/');
+      List<String> _gateStrings = [_fileStrings.removeAt(0), _fileStrings.removeAt(_fileStrings.length - 1)];
+      _board = _fileStrings.join('/').split(''); // rebuild
+      for (int i = 1; i < 2; i++) {
+        int _sq = 0;
+        int _empty = 0;
+        for (String c in _gateStrings[i].split('')) {
+          String symbol = c.toUpperCase();
+          if (isNumeric(c)) {
+            _empty = (_empty * 10) + int.parse(c);
+            if (_sq + _empty - 1 > size.h) {
+              // todo: this might be wrong
+              throw ('Invalid FEN: gate ($i) overflow [$c, ${_sq + _empty - 1}]');
+            }
+          } else {
+            _sq += _empty;
+            _empty = 0;
+          }
+
+          if (pieceLookup.containsKey(symbol)) {
+            // it's a piece
+            int _piece = pieceLookup[symbol]!;
+            _gates[1 - i][_sq] = _piece;
+            _pieces[makePiece(_piece, 1 - i)]++;
+            _sq++;
+          }
+        }
+      }
+    }
+
     int sq = 0;
     int emptySquares = 0;
     List<int> royalSquares = [INVALID, INVALID];
+
     for (String c in _board) {
       if (c == '~') {
         board[sq - 1] = board[sq - 1] + FLAG_PROMO;

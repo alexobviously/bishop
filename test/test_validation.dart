@@ -1,4 +1,5 @@
 import 'package:bishop/bishop.dart';
+import 'package:bishop/src/variant/musketeer.dart';
 import 'package:test/test.dart';
 
 import 'constants.dart';
@@ -39,6 +40,17 @@ void main() {
       FenTest(variant: Variant.nano(), fen: 'knbr/p3/4/3P/RBNNK w Qk - 0 1', valid: false),
       FenTest(variant: Variant.mini(), fen: Positions.STANDARD_MINI, valid: true),
       FenTest(variant: Variant.miniRandom(), fen: 'rqnqkn/pppppp/6/6/PPPPPP/RQNQKN w Kk - 0 1', valid: true),
+      FenTest(variant: Musketeer.variant(), fen: Musketeer.DEFAULT_FEN, valid: true),
+      FenTest(
+        variant: Musketeer.variant(),
+        fen: '8/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
+        valid: false,
+      ),
+      FenTest(
+        variant: Musketeer.variant(),
+        fen: '1a4o1/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/2A2A2 w KQkq - 0 1',
+        valid: true,
+      ),
     ];
 
     for (FenTest ft in fens) {
