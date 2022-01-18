@@ -1,3 +1,6 @@
+### 0.3.2
+- 
+
 ### 0.3.1
 - Insufficient material draws
 - Improved FEN validation
