@@ -70,6 +70,7 @@ class Variant {
 
   late List<PieceDefinition> pieces;
   late Map<String, PieceDefinition> pieceLookup;
+  late Map<String, int> pieceIndexLookup;
   late List<int> promotionPieces;
   late int epPiece;
   late int castlingPiece;
@@ -170,12 +171,14 @@ class Variant {
   void buildPieceDefinitions() {
     pieces = [PieceDefinition.empty()];
     pieceLookup = {};
+    pieceIndexLookup = {};
     pieceTypes.forEach((s, p) {
       int value = p.royal ? MATE_UPPER : p.value;
       if (pieceValues?.containsKey(s) ?? false) value = pieceValues![s]!;
       PieceDefinition _piece = PieceDefinition(type: p, symbol: s, value: value);
       pieces.add(_piece);
       pieceLookup[s] = _piece;
+      pieceIndexLookup[s] = pieces.length - 1;
     });
     promotionPieces = [];
     for (int i = 0; i < pieces.length; i++) {
