@@ -157,7 +157,7 @@ class Game {
       List<String> _fileStrings = sections[0].split('/');
       List<String> _gateStrings = [_fileStrings.removeAt(0), _fileStrings.removeAt(_fileStrings.length - 1)];
       _board = _fileStrings.join('/').split(''); // rebuild
-      for (int i = 1; i < 2; i++) {
+      for (int i = 0; i < 2; i++) {
         int _sq = 0;
         int _empty = 0;
         for (String c in _gateStrings[i].split('')) {
