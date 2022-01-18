@@ -1,5 +1,5 @@
 ### 0.3.2
-- 
+- Fixed gating support (e.g. gating in Muskteeer chess)
 
 ### 0.3.1
 - Insufficient material draws

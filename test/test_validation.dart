@@ -48,7 +48,7 @@ void main() {
       ),
       FenTest(
         variant: Musketeer.variant(),
-        fen: '1a4o1/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/2A2A2 w KQkq - 0 1',
+        fen: '1a4o1/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/2A2O2 w KQkq - 0 1',
         valid: true,
       ),
     ];
