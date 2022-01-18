@@ -33,3 +33,6 @@ jobs:
 
       - name: Run Draw tests
         run: dart test test/test_draw.dart
+      
+      - name: Run Piece tests
+        run: dart test test/test_pieces.dart
