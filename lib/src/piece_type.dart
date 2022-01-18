@@ -32,7 +32,7 @@ class PieceType {
   /// Can be overridden in a `Variant`.
   final int value;
 
-  PieceType({
+  const PieceType({
     this.betza,
     required this.moves,
     this.royal = false,

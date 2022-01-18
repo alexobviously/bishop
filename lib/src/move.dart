@@ -66,7 +66,7 @@ class Move {
     return 'Move(${_params.join(', ')})';
   }
 
-  Move({
+  const Move({
     required this.from,
     required this.to,
     this.capturedPiece,
