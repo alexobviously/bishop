@@ -864,18 +864,18 @@ class Game {
 
   /// Generates legal moves and returns the one that matches [algebraic].
   /// Returns null if no move is found.
-  Move? getMove(String algebraic) {
+  Move? getMove(String algebraic, {bool simplifyFixedGating = true}) {
     List<Move> moves = generateLegalMoves();
-    Move? match = moves.firstWhereOrNull((m) => toAlgebraic(m) == algebraic);
+    Move? match = moves.firstWhereOrNull((m) => toAlgebraic(m, simplifyFixedGating: simplifyFixedGating) == algebraic);
     return match;
   }
 
   /// Returns the algebraic representation of [move], with respect to the board size.
-  String toAlgebraic(Move move) {
+  String toAlgebraic(Move move, {bool simplifyFixedGating = true}) {
     String alg = move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
     if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
     if (move.from == HAND) alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
-    if (move.gate) {
+    if (move.gate && !(variant.gatingMode == GatingMode.FIXED && simplifyFixedGating)) {
       alg = '$alg/${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
       if (move.castling) {
         String _dropSq =
