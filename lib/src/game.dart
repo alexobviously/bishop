@@ -353,13 +353,18 @@ class Game {
 
         void addMove(Move m) {
           if (optPromo) moves.addAll(generatePromotionMoves(m));
-          if (!forcedPromo) moves.add(m);
+          bool addBase = !forcedPromo;
           if (variant.gating) {
             int _rank = rank(m.from, size);
             if ((_rank == RANK_1 && colour == WHITE) || (_rank == size.maxRank && colour == BLACK)) {
-              moves.addAll(generateGatingMoves(m));
+              final _gatingMoves = generateGatingMoves(m);
+              moves.addAll(_gatingMoves);
+              if (_gatingMoves.isNotEmpty) {
+                addBase = false;
+              }
             }
           }
+          if (addBase) moves.add(m);
           if (options!.onlySquare != null && m.to == options.onlySquare) {
             exit = true;
           }
@@ -469,7 +474,7 @@ class Game {
             castlingDir: castlingDir,
             castlingPieceSquare: rookSq,
           );
-          moves.add(m);
+          if (variant.gatingMode != GatingMode.FIXED) moves.add(m);
           if (variant.gating) {
             int _rank = rank(m.from, size);
             if ((_rank == RANK_1 && colour == WHITE) || (_rank == size.maxRank && colour == BLACK)) {
@@ -522,13 +527,23 @@ class Game {
     if (piece.isEmpty) return [];
     if (!(state.virginFiles[colour].contains(_file))) return [];
     List<Move> moves = [];
-    // TODO: GatingMode.fixed
-    for (int p in state.gates![colour]) {
+    void addGatingMove(int p) {
       Move m = base.copyWith(dropPiece: p);
       moves.add(m);
       if (m.castling) {
         Move m2 = base.copyWith(dropPiece: p, dropOnRookSquare: true);
         moves.add(m2);
+      }
+    }
+
+    if (variant.gatingMode == GatingMode.FLEX) {
+      for (int p in state.gates![colour]) {
+        addGatingMove(p);
+      }
+    } else if (variant.gatingMode == GatingMode.FIXED) {
+      int p = state.gates![colour][_file];
+      if (p != 0) {
+        addGatingMove(p);
       }
     }
     return moves;
@@ -550,6 +565,7 @@ class Game {
     Square fromSq = move.from >= BOARD_START ? board[move.from] : EMPTY;
     Square toSq = board[move.to];
     int fromRank = rank(move.from, size);
+    int fromFile = file(move.from, size);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq != EMPTY && fromSq.colour != state.turn) return false;
     int colour = turn;
@@ -562,7 +578,11 @@ class Game {
       if (move.gate) {
         if (!(move.castling && move.dropOnRookSquare)) {
           // Move piece from gate to board.
-          _gates![colour].remove(move.dropPiece!);
+          if (variant.gatingMode == GatingMode.FLEX) {
+            _gates![colour].remove(move.dropPiece!);
+          } else if (variant.gatingMode == GatingMode.FIXED) {
+            _gates![colour][fromFile] = EMPTY;
+          }
           int dropPiece = move.dropPiece!;
           hash ^= zobrist.table[move.from][dropPiece.piece];
           board[move.from] = makePiece(dropPiece, colour);
