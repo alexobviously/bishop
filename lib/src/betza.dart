@@ -132,7 +132,43 @@ class Atom {
     }
     if (baseDir.oblique) {
       // TODO: parse directional modifiers for oblique moves
-      dirs.addAll(baseDir.permutations);
+      if (allDirs) {
+        dirs.addAll(baseDir.permutations);
+      } else {
+        // this is extremely cursed but thinking of a better way hurts my brain
+        String _dirString = dirMods.join('');
+        bool hasDir(String d) {
+          bool _contains = _dirString.contains(d);
+          if (!_contains) return false;
+          _dirString = _dirString.replaceFirst(d, '');
+          return true;
+        }
+
+        bool _fh = hasDir('fh');
+        bool _bh = hasDir('bh');
+        bool _lv = hasDir('lv');
+        bool _rv = hasDir('rv');
+        bool _ll = hasDir('ll');
+        bool _rr = hasDir('rr');
+        bool _ff = hasDir('ff');
+        bool _bb = hasDir('bb');
+        bool _fs = hasDir('fs');
+        bool _bs = hasDir('bs');
+        bool _hl = hasDir('hl');
+        bool _hr = hasDir('hr');
+        bool _lh = hasDir('lh');
+        bool _rh = hasDir('rh');
+        bool _v = hasDir('v');
+        bool _s = hasDir('s');
+        if (hasDir('fr') || _fh || _rr || _hl || _rh || _fs || _s) dirs.add(Direction(h, v)); // fr
+        if (hasDir('fl') || _fh || _ll || _hr || _lh || _fs || _s) dirs.add(Direction(-h, v)); // fl
+        if (hasDir('br') || _bh || _rr || _hr || _rh || _bs || _s) dirs.add(Direction(h, -v)); // br
+        if (hasDir('bl') || _bh || _ll || _hl || _lh || _bs || _s) dirs.add(Direction(-h, -v)); // bl
+        if (hasDir('rf') || _fh || _rv || _hr || _rh || _ff || _v) dirs.add(Direction(v, h)); // rf
+        if (hasDir('rb') || _bh || _rv || _hl || _rh || _bb || _v) dirs.add(Direction(v, -h)); // rb
+        if (hasDir('lf') || _fh || _lv || _hl || _lh || _ff || _v) dirs.add(Direction(-v, h)); // lf
+        if (hasDir('lb') || _bh || _lv || _hr || _lh || _bb || _v) dirs.add(Direction(-v, -h)); // lb
+      }
     }
     return dirs;
   }

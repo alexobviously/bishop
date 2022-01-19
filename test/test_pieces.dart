@@ -11,6 +11,13 @@ void main() {
     CountMovesTest('FWDA', 16), // musketeer elephant
     CountMovesTest('B2ND', 16), // musketeer spider
     CountMovesTest('FWDsN', 16), // musketeer cannon
+    CountMovesTest('rbB', 1),
+    CountMovesTest('fR', 1),
+    CountMovesTest('bB', 2),
+    CountMovesTest('fsN', 2),
+    CountMovesTest('vZ', 4),
+    CountMovesTest('lfC', 1),
+    CountMovesTest('flrbN', 2), // works but should it?
   ];
   group('Betza - Count Moves', () {
     for (CountMovesTest t in countMoveTests) {
