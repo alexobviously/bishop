@@ -1,5 +1,5 @@
 ### 0.3.2
-- Fixed gating support (e.g. gating in Muskteeer chess)
+- Supprot for fixed gating (e.g. gating in Muskteeer chess)
 - Support for directional modifiers for oblique pieces in Betza parser (e.g. fN is now possible)
 
 ### 0.3.1
