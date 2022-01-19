@@ -18,13 +18,12 @@ designed to be interoperable with Bishop.
 * Fairy pieces
 * Hands & dropping
 * Flex gating (e.g. Seirawan)
+* Fixed gating (e.g. Musketeer)
 * An engine (not strong but fine for testing)
 
 ### Upcoming Features
-* Insufficient material draws
 * Hopper pieces (e.g. Xiangqi cannon)
 * X-FEN output (input works)
-* Fixed piece gating (e.g. Musketeer chess)
 * Different game end conditions for variants like three-check
 * Atomic chess exploding pieces (and more generally, flexible capture behaviour)
 
