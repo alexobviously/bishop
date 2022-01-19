@@ -1040,6 +1040,35 @@ class Game {
       String blackGate = state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
       _fen = '$_fen[$whiteGate$blackGate]';
     }
+    if (variant.gatingMode == GatingMode.FIXED) {
+      String whiteGate = state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
+      String blackGate = state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      // replaces dots with numbers
+      String processGate(String g) {
+        String o = '';
+        int n = 0;
+        for (String c in g.split('')) {
+          if (c == '.') {
+            n++;
+          } else {
+            if (n > 0) {
+              o = '$o$n';
+              n = 0;
+            }
+            o = '$o$c';
+          }
+        }
+        if (n > 0) {
+          o = '$o$n';
+        }
+        return o;
+      }
+
+      whiteGate = processGate(whiteGate);
+      blackGate = processGate(blackGate);
+
+      _fen = '$whiteGate/$_fen/$blackGate';
+    }
     String _turn = state.turn == WHITE ? 'w' : 'b';
     String _castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.Shredder) {
