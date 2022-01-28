@@ -19,6 +19,12 @@ void main() {
       pos2: 'rnbqkbnr/pp2pppp/8/2pp4/4P3/5N2/PPPP1PPP/RNBQKB1R w KQkq - 0 3',
       moves: ['e4d5'],
     ),
+    CompareTest(
+      variant: Variant.threeCheck(),
+      pos1: 'rnbqkbnr/pppQpppp/8/8/4p3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 3 +1+0',
+      pos2: Positions.STANDARD_DEFAULT,
+      moves: ['e2e4', 'd7d5', 'd1g4', 'd5e4', 'g4d7'],
+    ),
   ];
   group('Zobrist Hashing', () {
     for (CompareTest t in tests) {

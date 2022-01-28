@@ -5,6 +5,7 @@ import 'package:bishop/bishop.dart';
 part '960.dart';
 part 'board_size.dart';
 part 'castling_options.dart';
+part 'game_end_conditions.dart';
 part 'output_options.dart';
 part 'material_conditions.dart';
 
@@ -26,6 +27,9 @@ class Variant {
 
   /// Material conditions that define how insufficient material draws should be decided.
   final MaterialConditions<String> materialConditions;
+
+  final GameEndConditions gameEndConditions;
+
   final OutputOptions outputOptions;
 
   /// If the variant has a fixed starting position, specify it here as a full [FEN string](https://en.wikipedia.org/wiki/Forsyth–Edwards_Notation).
@@ -89,6 +93,7 @@ class Variant {
     required this.pieceTypes,
     required this.castlingOptions,
     this.materialConditions = MaterialConditions.NONE,
+    this.gameEndConditions = GameEndConditions.standard,
     required this.outputOptions,
     this.startPosition,
     this.startPosBuilder,
@@ -112,6 +117,7 @@ class Variant {
     Map<String, PieceType>? pieceTypes,
     CastlingOptions? castlingOptions,
     MaterialConditions<String>? materialConditions,
+    GameEndConditions? gameEndConditions,
     OutputOptions? outputOptions,
     String? startPosition,
     Function()? startPosBuilder,
@@ -131,6 +137,7 @@ class Variant {
       pieceTypes: pieceTypes ?? this.pieceTypes,
       castlingOptions: castlingOptions ?? this.castlingOptions,
       materialConditions: materialConditions ?? this.materialConditions,
+      gameEndConditions: gameEndConditions ?? this.gameEndConditions,
       outputOptions: outputOptions ?? this.outputOptions,
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
@@ -347,4 +354,6 @@ class Variant {
         }),
     );
   }
+
+  factory Variant.threeCheck() => Variant.standard().copyWith(gameEndConditions: GameEndConditions.threeCheck);
 }

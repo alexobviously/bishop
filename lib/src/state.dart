@@ -41,7 +41,12 @@ class State {
   /// Index 0 - white, index 1 - black.
   final List<Hand>? gates;
 
+  /// A list of pieces each player has.
   final List<int> pieces;
+
+  /// The number of times each player has been checked.
+  /// For use with variants such as three-check.
+  final List<int> checks;
 
   /// The Zobrist hash of the game state.
   /// Needs to be set after construction of the first hash, but otherwise is
@@ -63,6 +68,38 @@ class State {
     this.hands,
     this.gates,
     required this.pieces,
+    this.checks = const [0, 0],
     this.hash = 0,
   });
+
+  State copyWith({
+    Move? move,
+    Colour? turn,
+    int? halfMoves,
+    int? fullMoves,
+    CastlingRights? castlingRights,
+    int? epSquare,
+    List<int>? royalSquares,
+    List<List<int>>? virginFiles,
+    List<Hand>? hands,
+    List<Hand>? gates,
+    List<int>? pieces,
+    List<int>? checks,
+    int? hash,
+  }) =>
+      State(
+        move: move ?? this.move,
+        turn: turn ?? this.turn,
+        halfMoves: halfMoves ?? this.halfMoves,
+        fullMoves: fullMoves ?? this.fullMoves,
+        castlingRights: castlingRights ?? this.castlingRights,
+        epSquare: epSquare ?? this.epSquare,
+        royalSquares: royalSquares ?? this.royalSquares,
+        virginFiles: virginFiles ?? this.virginFiles,
+        hands: hands ?? this.hands,
+        gates: gates ?? this.gates,
+        pieces: pieces ?? this.pieces,
+        checks: checks ?? this.checks,
+        hash: hash ?? this.hash,
+      );
 }

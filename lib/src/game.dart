@@ -115,6 +115,7 @@ class Game {
     List<List<int>>? _hands;
     List<List<int>>? _gates;
     List<int> _pieces = List.filled((variant.pieces.length + 1) * 2, 0);
+    List<int> _checks = [0, 0];
     if (variant.hands || variant.gatingMode == GatingMode.FLEX) {
       List<List<int>> _temp = [[], []];
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
@@ -148,6 +149,7 @@ class Game {
     String _ep = (strict || sections.length > 3) ? sections[3] : '-';
     String _halfMoves = (strict || sections.length > 4) ? sections[4] : '0';
     String _fullMoves = (strict || sections.length > 5) ? sections[5] : '1';
+    String _aux = sections.length > 6 ? sections[6] : '';
 
     // Process fixed gates, for variants like musketeer.
     // gate/rbn...BNR/GATE
@@ -236,6 +238,15 @@ class Game {
       _virginFiles = [_vf, List.from(_vf)]; // just in case
     }
 
+    // handle extra data
+    if (_aux.isNotEmpty) {
+      final checksRegex = RegExp(r'(\+)([0-9]+)(\+)([0-9]+)');
+      RegExpMatch? checksMatch = checksRegex.firstMatch(_aux);
+      if (checksMatch != null) {
+        _checks = [int.parse(checksMatch[2]!), int.parse(checksMatch[4]!)];
+      }
+    }
+
     int turn = _turn == 'w' ? WHITE : BLACK;
     int? ep = _ep == '-' ? null : squareNumber(_ep, variant.boardSize);
     int castling = variant.castling ? setupCastling(_castling, royalSquares) : 0;
@@ -250,6 +261,7 @@ class Game {
       hands: _hands,
       gates: _gates,
       pieces: _pieces,
+      checks: _checks,
     );
     _state.hash = zobrist.compute(_state, board);
     zobrist.incrementHash(_state.hash);
@@ -738,8 +750,20 @@ class Game {
       hands: _hands,
       gates: _gates,
       pieces: _pieces,
+      checks: List.from(state.checks),
     );
     history.add(_state);
+
+    // kind of messy doing it like this, but inCheck depends on the current state
+    // maybe that's a case for refactoring some methods into State?
+    if (variant.gameEndConditions.checkLimit != null) {
+      if (inCheck) {
+        history.last = _state.copyWith(
+          checks: List.from(_state.checks)..[_state.turn.opponent] += 1,
+        );
+      }
+    }
+
     zobrist.incrementHash(hash);
     return true;
   }
@@ -1080,7 +1104,11 @@ class Game {
       _castling = '$_castling$_whiteVfiles$_blackVfiles';
     }
     String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
-    _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}';
+    String _aux = '';
+    if (variant.gameEndConditions.checkLimit != null) {
+      _aux = ' +${state.checks[WHITE]}+${state.checks[BLACK]}';
+    }
+    _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}$_aux';
     return _fen;
   }
 
