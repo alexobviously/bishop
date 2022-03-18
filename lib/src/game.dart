@@ -832,7 +832,16 @@ class Game {
   bool get inCheck => kingAttacked(state.turn);
 
   /// Is this checkmate?
-  bool get checkmate => inCheck && generateLegalMoves().isEmpty;
+  /// Currently, other win/lose game end conditions (like three check), also
+  /// count as a checkmate.
+  bool get checkmate {
+    if (variant.gameEndConditions.checkLimit != null) {
+      if (state.checks[state.turn.opponent] >= variant.gameEndConditions.checkLimit!) {
+        return true;
+      }
+    }
+    return inCheck && generateLegalMoves().isEmpty;
+  }
 
   /// Is this stalemate?
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;

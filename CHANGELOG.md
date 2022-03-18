@@ -1,3 +1,7 @@
+### 0.3.3
+- Fixed flex gating not generating no-drop moves
+- Added support for variants that end after a number of checks (e.g. Three-Check)
+
 ### 0.3.2
 - Support for fixed gating (e.g. gating in Muskteeer chess)
 - Support for directional modifiers for oblique pieces in Betza parser (e.g. fN is now possible)
