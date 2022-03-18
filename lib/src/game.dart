@@ -371,7 +371,7 @@ class Game {
             if ((_rank == RANK_1 && colour == WHITE) || (_rank == size.maxRank && colour == BLACK)) {
               final _gatingMoves = generateGatingMoves(m);
               moves.addAll(_gatingMoves);
-              if (_gatingMoves.isNotEmpty) {
+              if (_gatingMoves.isNotEmpty && variant.gatingMode == GatingMode.FIXED) {
                 addBase = false;
               }
             }
