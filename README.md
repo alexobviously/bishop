@@ -1,4 +1,7 @@
-# Bishop
+<p align="center">
+<img src="https://raw.githubusercontent.com/alexobviously/bishop/main/images/banner.png" height="100" alt="Bishop" />
+</p>
+
 #### A chess logic package with flexible variant support.
 
 Bishop is designed with flexibility in mind. The goal is to be able to build and play any arbitrary variant of chess without having to build a new package every time. Right now, this is limited to mostly fairy variants, but support for more complex rules such as drops is coming soon.
