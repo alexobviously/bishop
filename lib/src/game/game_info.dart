@@ -1,5 +1,5 @@
 // A convenience class for use with other packages (e.g. Squares)
-import 'package:bishop/bishop.dart';
+part of 'game.dart';
 
 class GameInfo {
   final Move? lastMove;
