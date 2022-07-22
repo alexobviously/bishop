@@ -1,3 +1,7 @@
+### 0.4.0
+- Improved structure and formatting of codebase.
+- There are some minor breaking changes, mostly related to CONSTANT_NAMES being changed to camelCase, and otherwise being more logically grouped. Some factory constructors were also changed to static constants, e.g. `MaterialConditions.standard()` is now `MaterialConditions.standard`.
+
 ### 0.3.3
 - Fixed flex gating not generating no-drop moves
 - Added support for variants that end after a number of checks (e.g. Three-Check)
