@@ -4,7 +4,7 @@
 
 #### A chess logic package with flexible variant support.
 
-Bishop is designed with flexibility in mind. The goal is to be able to build and play any arbitrary variant of chess without having to build a new package every time. Right now, this is limited to mostly fairy variants, but support for more complex rules such as drops is coming soon.
+Bishop is designed with flexibility in mind. The goal is to be able to build and play any arbitrary variant of chess without having to build a new package every time. Currently, it supports a variety of fairy piece variants, variants with drops like Crazyhouse, and many others. More features are coming, including support for Asian games like Xiangqi.
 
 As a result of the amount of generalisation required to make a package like this work, performance does take a bit of a hit. As such, it might be difficult to build a strong engine with this. However, it's perfectly sufficient for logic generation and validation, etc. Hopefully the performance can be improved in the future though - this is a work in progress!
 
