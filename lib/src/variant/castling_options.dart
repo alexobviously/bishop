@@ -38,18 +38,18 @@ class CastlingOptions {
 
   factory CastlingOptions.standard([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
-        kTarget: FILE_G,
-        qTarget: FILE_C,
+        kTarget: Bishop.fileG,
+        qTarget: Bishop.fileC,
         fixedRooks: true,
-        kRook: FILE_H,
-        qRook: FILE_A,
+        kRook: Bishop.fileH,
+        qRook: Bishop.fileA,
         rookPiece: rookPiece,
       );
 
   factory CastlingOptions.chess960([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
-        kTarget: FILE_G,
-        qTarget: FILE_C,
+        kTarget: Bishop.fileG,
+        qTarget: Bishop.fileC,
         fixedRooks: false,
         rookPiece: rookPiece,
         useRookAsTarget: true,
@@ -57,28 +57,28 @@ class CastlingOptions {
 
   factory CastlingOptions.capablanca([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
-        kTarget: FILE_I,
-        qTarget: FILE_C,
+        kTarget: Bishop.fileI,
+        qTarget: Bishop.fileC,
         fixedRooks: true,
-        kRook: FILE_J,
-        qRook: FILE_A,
+        kRook: Bishop.fileJ,
+        qRook: Bishop.fileA,
         rookPiece: rookPiece,
       );
 
   factory CastlingOptions.mini() => CastlingOptions(
         enabled: true,
-        kTarget: FILE_E,
-        qTarget: FILE_B,
+        kTarget: Bishop.fileE,
+        qTarget: Bishop.fileB,
         fixedRooks: true,
-        kRook: FILE_F,
-        qRook: FILE_A,
+        kRook: Bishop.fileF,
+        qRook: Bishop.fileA,
         useRookAsTarget: true,
       );
 
   factory CastlingOptions.miniRandom([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
-        kTarget: FILE_E,
-        qTarget: FILE_B,
+        kTarget: Bishop.fileE,
+        qTarget: Bishop.fileB,
         fixedRooks: false,
         rookPiece: rookPiece,
         useRookAsTarget: true,
@@ -86,17 +86,17 @@ class CastlingOptions {
 
   factory CastlingOptions.micro() => CastlingOptions(
         enabled: true,
-        qTarget: FILE_B,
-        qRook: FILE_A,
+        qTarget: Bishop.fileB,
+        qRook: Bishop.fileA,
         fixedRooks: true, // might need to be false with diff start fens
       );
 
   factory CastlingOptions.nano([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,
-        kTarget: FILE_C,
-        kRook: FILE_D,
-        qTarget: FILE_B,
-        qRook: FILE_A,
+        kTarget: Bishop.fileC,
+        kRook: Bishop.fileD,
+        qTarget: Bishop.fileB,
+        qRook: Bishop.fileA,
         rookPiece: rookPiece,
         fixedRooks: true,
       );

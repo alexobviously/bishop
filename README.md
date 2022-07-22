@@ -74,7 +74,7 @@ Variant chess = Variant(
   castlingOptions: CastlingOptions.standard(),
   outputOptions: OutputOptions.standard(),
   promotion: true,
-  promotionRanks: [RANK_1, RANK_8],
+  promotionRanks: [Bishop.rank1, Bishop.rank8],
   enPassant: true,
   halfMoveDraw: 100,
   firstMoveRanks: [

@@ -8,13 +8,13 @@ void main() {
   final List<CompareTest> tests = [
     CompareTest(
       variant: Variant.standard(),
-      pos1: Positions.STANDARD_DEFAULT,
-      pos2: Positions.STANDARD_DEFAULT,
+      pos1: Positions.standardDefault,
+      pos2: Positions.standardDefault,
     ),
     CompareTest(
       variant: Variant.standard(),
       pos1: 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
-      pos2: Positions.STANDARD_DEFAULT,
+      pos2: Positions.standardDefault,
       moves: ['e2e4', 'c7c5'],
     ),
     CompareTest(
@@ -26,7 +26,7 @@ void main() {
     CompareTest(
       variant: Variant.threeCheck(),
       pos1: 'rnbqkbnr/pppQpppp/8/8/4p3/8/PPPP1PPP/RNB1KBNR b KQkq - 1 3 +1+0',
-      pos2: Positions.STANDARD_DEFAULT,
+      pos2: Positions.standardDefault,
       moves: ['e2e4', 'd7d5', 'd1g4', 'd5e4', 'g4d7'],
     ),
   ];

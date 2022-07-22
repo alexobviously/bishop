@@ -107,8 +107,10 @@ class Variant {
     this.gatingMode = GatingMode.none,
     this.pieceValues,
   }) {
-    assert(startPosition != null || startPosBuilder != null,
-        'Variant needs either a startPosition or startPosBuilder');
+    assert(
+      startPosition != null || startPosBuilder != null,
+      'Variant needs either a startPosition or startPosBuilder',
+    );
     init();
   }
 
@@ -162,12 +164,12 @@ class Variant {
     if (enPassant) {
       epPiece = pieces.indexWhere((p) => p.type.enPassantable);
     } else {
-      epPiece = INVALID;
+      epPiece = Bishop.invalid;
     }
     if (castling) {
       castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
     } else {
-      castlingPiece = INVALID;
+      castlingPiece = Bishop.invalid;
     }
   }
 
@@ -184,11 +186,11 @@ class Variant {
     pieceLookup = {};
     pieceIndexLookup = {};
     pieceTypes.forEach((s, p) {
-      int value = p.royal ? MATE_UPPER : p.value;
+      int value = p.royal ? Bishop.mateUpper : p.value;
       if (pieceValues?.containsKey(s) ?? false) value = pieceValues![s]!;
-      PieceDefinition _piece = PieceDefinition(type: p, symbol: s, value: value);
-      pieces.add(_piece);
-      pieceLookup[s] = _piece;
+      PieceDefinition piece = PieceDefinition(type: p, symbol: s, value: value);
+      pieces.add(piece);
+      pieceLookup[s] = piece;
       pieceIndexLookup[s] = pieces.length - 1;
     });
     promotionPieces = [];
@@ -221,13 +223,13 @@ class Variant {
       materialConditions: MaterialConditions.standard,
       outputOptions: OutputOptions.standard,
       promotion: true,
-      promotionRanks: [RANK_1, RANK_8],
+      promotionRanks: [Bishop.rank1, Bishop.rank8],
       enPassant: true,
       halfMoveDraw: 100,
       repetitionDraw: 3,
       firstMoveRanks: [
-        [RANK_2], // white
-        [RANK_7], // black
+        [Bishop.rank2], // white
+        [Bishop.rank7], // black
       ],
       pieceTypes: {
         'P': PieceType.pawn(),
@@ -278,10 +280,10 @@ class Variant {
       boardSize: BoardSize(10, 10),
       startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
       castlingOptions: CastlingOptions.none,
-      promotionRanks: [RANK_3, RANK_8],
+      promotionRanks: [Bishop.rank3, Bishop.rank8],
       firstMoveRanks: [
-        [RANK_3],
-        [RANK_8],
+        [Bishop.rank3],
+        [Bishop.rank8],
       ],
       pieceTypes: standard.pieceTypes
         ..addAll({
@@ -300,7 +302,7 @@ class Variant {
       pieceTypes: standard.pieceTypes..['P'] = PieceType.simplePawn(),
       castlingOptions: CastlingOptions.mini(),
       enPassant: false,
-      promotionRanks: [RANK_1, RANK_6],
+      promotionRanks: [Bishop.rank1, Bishop.rank6],
     );
   }
 
@@ -320,11 +322,11 @@ class Variant {
       name: 'Micro Chess',
       boardSize: BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
-      promotionRanks: [RANK_1, RANK_5],
+      promotionRanks: [Bishop.rank1, Bishop.rank5],
       castlingOptions: CastlingOptions.micro(),
       firstMoveRanks: [
-        [RANK_2],
-        [RANK_4],
+        [Bishop.rank2],
+        [Bishop.rank4],
       ],
     );
   }
@@ -335,11 +337,11 @@ class Variant {
       name: 'Nano Chess',
       boardSize: BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
-      promotionRanks: [RANK_1, RANK_5],
+      promotionRanks: [Bishop.rank1, Bishop.rank5],
       castlingOptions: CastlingOptions.nano(),
       firstMoveRanks: [
-        [RANK_2],
-        [RANK_4],
+        [Bishop.rank2],
+        [Bishop.rank4],
       ],
     );
   }

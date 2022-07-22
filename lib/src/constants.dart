@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 typedef Colour = int;
 
 extension Opponent on Colour {
@@ -6,36 +8,85 @@ extension Opponent on Colour {
 
 typedef Hand = List<int>;
 
+class Bishop {
+  static const Colour white = 0;
+  static const Colour black = 1;
+
+  static const int boardStart = 0;
+  static const int invalid = -1;
+  static const int hand = -2;
+
+  static const List<int> playerDirection = [-1, 1];
+  static const List<String> playerName = ['White', 'Black'];
+
+  static const int asciiA = 97;
+  static const int mateLower = 90000;
+  static const int mateUpper = 100000;
+  static const int defaultPieceValue = 200;
+
+  // Just shorthands for building variants
+  static const int fileA = 0;
+  static const int fileB = 1;
+  static const int fileC = 2;
+  static const int fileD = 3;
+  static const int fileE = 4;
+  static const int fileF = 5;
+  static const int fileG = 6;
+  static const int fileH = 7;
+  static const int fileI = 8;
+  static const int fileJ = 9;
+  static const int fileK = 10;
+  static const int fileL = 11;
+  static const int fileM = 12;
+  static const int fileN = 13;
+  static const int fileO = 14;
+  static const int fileP = 15;
+
+  static const int rank1 = 0;
+  static const int rank2 = 1;
+  static const int rank3 = 2;
+  static const int rank4 = 3;
+  static const int rank5 = 4;
+  static const int rank6 = 5;
+  static const int rank7 = 6;
+  static const int rank8 = 7;
+  static const int rank9 = 8;
+  static const int rank10 = 9;
+  static const int rank11 = 10;
+  static const int rank12 = 11;
+  static const int rank13 = 12;
+  static const int rank14 = 13;
+  static const int rank15 = 14;
+  static const int rank16 = 15;
+
+  static const Map<String, String> unicodePieces = {
+    'R': '♜',
+    'N': '♞',
+    'B': '♝',
+    'Q': '♛',
+    'K': '♚',
+    'P': '♟',
+    'r': '♖',
+    'n': '♘',
+    'b': '♗',
+    'q': '♕',
+    'k': '♔',
+    'p': '♙',
+    '.': '·'
+  };
+}
+
+@Deprecated('Use Bishop.white')
 const Colour WHITE = 0;
+@Deprecated('Use Bishop.black')
 const Colour BLACK = 1;
 
+@Deprecated('Use Bishop.boardStart')
 const int BOARD_START = 0;
+@Deprecated('Use Bishop.invalid')
 const int INVALID = -1;
+@Deprecated('Use Bishop.hand')
 const int HAND = -2;
-
-const List<int> PLAYER_DIRECTION = [-1, 1];
-const List<String> PLAYER_NAME = ['White', 'Black'];
-
-const int ASCII_a = 97;
-const int MATE_LOWER = 90000;
-const int MATE_UPPER = 100000;
-const int DEFAULT_PIECE_VALUE = 200;
-
-const Map<String, String> UNICODE_PIECES = {
-  'R': '♜',
-  'N': '♞',
-  'B': '♝',
-  'Q': '♛',
-  'K': '♚',
-  'P': '♟',
-  'r': '♖',
-  'n': '♘',
-  'b': '♗',
-  'q': '♕',
-  'k': '♔',
-  'p': '♙',
-  '.': '·'
-};
 
 class Modality {
   static const int quiet = 0;
@@ -51,39 +102,4 @@ class GatingMode {
   static const int fixed = 2; // e.g. Musketeer Chess
 }
 
-// Just shorthands for building variants
-const int FILE_A = 0;
-const int FILE_B = 1;
-const int FILE_C = 2;
-const int FILE_D = 3;
-const int FILE_E = 4;
-const int FILE_F = 5;
-const int FILE_G = 6;
-const int FILE_H = 7;
-const int FILE_I = 8;
-const int FILE_J = 9;
-const int FILE_K = 10;
-const int FILE_L = 11;
-const int FILE_M = 12;
-const int FILE_N = 13;
-const int FILE_O = 14;
-const int FILE_P = 15;
-
-const int RANK_1 = 0;
-const int RANK_2 = 1;
-const int RANK_3 = 2;
-const int RANK_4 = 3;
-const int RANK_5 = 4;
-const int RANK_6 = 5;
-const int RANK_7 = 6;
-const int RANK_8 = 7;
-const int RANK_9 = 8;
-const int RANK_10 = 9;
-const int RANK_11 = 10;
-const int RANK_12 = 11;
-const int RANK_13 = 12;
-const int RANK_14 = 13;
-const int RANK_15 = 14;
-const int RANK_16 = 15;
-
-const DEFAULT_SEED = 7363661891;
+const defaultSeed = 7363661891;

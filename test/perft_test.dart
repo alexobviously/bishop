@@ -6,12 +6,12 @@ import 'constants.dart';
 void main() {
   group('Perft', () {
     List<PerftTest> perfts = [
-      PerftTest(variant: Variant.standard(), fen: Positions.STANDARD_DEFAULT, depth: 3, nodes: 8902),
-      PerftTest(variant: Variant.standard(), fen: Positions.KIWIPETE, depth: 2, nodes: 2039),
-      PerftTest(variant: Variant.standard(), fen: Positions.ROOK_PIN, depth: 4, nodes: 43238),
-      PerftTest(variant: Variant.standard(), fen: Positions.POSITION_4, depth: 3, nodes: 9467),
-      PerftTest(variant: Variant.standard(), fen: Positions.POSITION_5, depth: 3, nodes: 62379),
-      PerftTest(variant: Variant.standard(), fen: Positions.POSITION_6, depth: 3, nodes: 89890),
+      PerftTest(variant: Variant.standard(), fen: Positions.standardDefault, depth: 3, nodes: 8902),
+      PerftTest(variant: Variant.standard(), fen: Positions.kiwiPete, depth: 2, nodes: 2039),
+      PerftTest(variant: Variant.standard(), fen: Positions.rookPin, depth: 4, nodes: 43238),
+      PerftTest(variant: Variant.standard(), fen: Positions.position4, depth: 3, nodes: 9467),
+      PerftTest(variant: Variant.standard(), fen: Positions.position5, depth: 3, nodes: 62379),
+      PerftTest(variant: Variant.standard(), fen: Positions.position6, depth: 3, nodes: 89890),
     ];
 
     for (PerftTest pt in perfts) {

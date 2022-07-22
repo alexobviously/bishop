@@ -50,10 +50,10 @@ class Move {
 
   /// Whether this is a drop move where the piece came from the hand to an empty
   /// square, e.g. the drops in Crazyhouse.
-  bool get handDrop => drop && from == HAND;
+  bool get handDrop => drop && from == Bishop.hand;
 
   /// Whether this is a gated drop, e.g. the drops in Seirawan chess.
-  bool get gate => drop && from >= BOARD_START;
+  bool get gate => drop && from >= Bishop.boardStart;
 
   @override
   String toString() {
@@ -109,7 +109,7 @@ class Move {
   }
 
   factory Move.drop({required int to, required int dropPiece}) =>
-      Move(from: HAND, to: to, dropPiece: dropPiece);
+      Move(from: Bishop.hand, to: to, dropPiece: dropPiece);
 
   /// Provides the most basic algebraic form of the move.
   /// This is not entirely descriptive, and doesn't provide information on promo
@@ -119,7 +119,7 @@ class Move {
     BoardSize size = BoardSize.standard,
     bool useRookForCastling = false,
   }) {
-    String fromStr = from == HAND ? '@' : squareName(from, size);
+    String fromStr = from == Bishop.hand ? '@' : squareName(from, size);
     String toStr = squareName((castling && useRookForCastling) ? castlingPieceSquare! : to, size);
     return '$fromStr$toStr';
   }

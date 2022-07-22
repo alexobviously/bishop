@@ -40,7 +40,7 @@ class PieceType {
     this.canPromoteTo = true,
     this.enPassantable = false,
     this.noSanSymbol = false,
-    this.value = DEFAULT_PIECE_VALUE,
+    this.value = Bishop.defaultPieceValue,
   });
 
   /// Initialise the `PieceType`.
@@ -64,7 +64,7 @@ class PieceType {
     bool canPromoteTo = true,
     bool enPassantable = false,
     bool noSanSymbol = false,
-    int value = DEFAULT_PIECE_VALUE,
+    int value = Bishop.defaultPieceValue,
   }) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> moves = [];
@@ -145,5 +145,6 @@ class PieceDefinition {
   factory PieceDefinition.empty() =>
       PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
 
-  String char(Colour colour) => colour == WHITE ? symbol.toUpperCase() : symbol.toLowerCase();
+  String char(Colour colour) =>
+      colour == Bishop.white ? symbol.toUpperCase() : symbol.toLowerCase();
 }

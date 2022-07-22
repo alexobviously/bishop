@@ -29,7 +29,7 @@ class Game {
   @override
   String toString() => 'Game(${variant.name}, $fen)';
 
-  Game({required this.variant, String? fen, this.seed = DEFAULT_SEED}) {
+  Game({required this.variant, String? fen, this.seed = defaultSeed}) {
     setup(fen);
   }
 
@@ -56,13 +56,13 @@ class Game {
       if (Castling.symbols.containsKey(c)) {
         cr += Castling.symbols[c]!;
       } else {
-        int _file = fileFromSymbol(c);
-        bool kingside = _file > file(royalSquares[white ? 0 : 1], size);
+        int cFile = fileFromSymbol(c);
+        bool kingside = cFile > file(royalSquares[white ? 0 : 1], size);
         if (kingside) {
-          castlingTargetK = _file;
+          castlingTargetK = cFile;
           cr += white ? Castling.k : Castling.bk;
         } else {
-          castlingTargetQ = _file;
+          castlingTargetQ = cFile;
           cr += white ? Castling.q : Castling.bq;
         }
       }
@@ -76,10 +76,10 @@ class Game {
         int r = i * (size.v - 1) * size.north;
         bool kingside = false;
         for (int j = 0; j < size.h; j++) {
-          int _piece = board[r + j].type;
-          if (_piece == variant.royalPiece) {
+          int piece = board[r + j].type;
+          if (piece == variant.royalPiece) {
             kingside = true;
-          } else if (_piece == variant.castlingPiece) {
+          } else if (piece == variant.castlingPiece) {
             if (kingside) {
               castlingTargetK = j;
             } else {
@@ -112,84 +112,83 @@ class Game {
     List<String> sections = fen.split(' ');
 
     // Parse hands for variants with drops
-
-    List<List<int>>? _hands;
-    List<List<int>>? _gates;
-    List<int> _pieces = List.filled((variant.pieces.length + 1) * 2, 0);
-    List<int> _checks = [0, 0];
+    List<List<int>>? hands;
+    List<List<int>>? gates;
+    List<int> pieces = List.filled((variant.pieces.length + 1) * 2, 0);
+    List<int> checks = [0, 0];
     if (variant.hands || variant.gatingMode == GatingMode.flex) {
-      List<List<int>> _temp = [[], []];
+      List<List<int>> temp = [[], []];
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
       RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
       if (handMatch != null) {
         sections[0] = sections[0].substring(0, handMatch.start);
         String hand = handMatch.group(1)!;
-        _temp = [[], []];
+        temp = [[], []];
         for (String c in hand.split('')) {
-          String _upper = c.toUpperCase();
-          if (pieceLookup.containsKey(_upper)) {
-            bool white = c == _upper;
-            int _piece = pieceLookup[_upper]!;
-            _temp[white ? 0 : 1].add(_piece);
-            _pieces[makePiece(_piece, white ? 0 : 1)]++;
+          String upper = c.toUpperCase();
+          if (pieceLookup.containsKey(upper)) {
+            bool white = c == upper;
+            int piece = pieceLookup[upper]!;
+            temp[white ? 0 : 1].add(piece);
+            pieces[makePiece(piece, white ? 0 : 1)]++;
           }
         }
       }
       if (variant.hands) {
-        _hands = _temp;
+        hands = temp;
       } else if (variant.gatingMode == GatingMode.flex) {
-        _gates = _temp;
+        gates = temp;
       }
     }
 
-    List<String> _board = sections[0].split('');
-    if (_board.where((e) => e == '/').length !=
+    List<String> boardSymbols = sections[0].split('');
+    if (boardSymbols.where((e) => e == '/').length !=
         (variant.boardSize.v - 1 + (variant.gatingMode == GatingMode.fixed ? 2 : 0))) {
       throw ('Invalid FEN: wrong number of ranks');
     }
-    String _turn = (strict || sections.length > 1) ? sections[1] : 'w';
-    if (!(['w', 'b'].contains(_turn))) throw ("Invalid FEN: colour should be 'w' or 'b'");
-    String _castling = (strict || sections.length > 2)
+    String turnStr = (strict || sections.length > 1) ? sections[1] : 'w';
+    if (!(['w', 'b'].contains(turnStr))) throw ("Invalid FEN: colour should be 'w' or 'b'");
+    String castlingStr = (strict || sections.length > 2)
         ? sections[2]
         : 'KQkq'; // TODO: get default castling for variant
-    String _ep = (strict || sections.length > 3) ? sections[3] : '-';
-    String _halfMoves = (strict || sections.length > 4) ? sections[4] : '0';
-    String _fullMoves = (strict || sections.length > 5) ? sections[5] : '1';
-    String _aux = sections.length > 6 ? sections[6] : '';
+    String epStr = (strict || sections.length > 3) ? sections[3] : '-';
+    String halfMoves = (strict || sections.length > 4) ? sections[4] : '0';
+    String fullMoves = (strict || sections.length > 5) ? sections[5] : '1';
+    String aux = sections.length > 6 ? sections[6] : '';
 
     // Process fixed gates, for variants like musketeer.
     // gate/rbn...BNR/GATE
     if (variant.gatingMode == GatingMode.fixed) {
-      _gates = [List.filled(size.h, 0), List.filled(size.h, 0)];
+      gates = [List.filled(size.h, 0), List.filled(size.h, 0)];
       // extract the first and last segments
-      List<String> _fileStrings = sections[0].split('/');
-      List<String> _gateStrings = [
-        _fileStrings.removeAt(0),
-        _fileStrings.removeAt(_fileStrings.length - 1)
+      List<String> fileStrings = sections[0].split('/');
+      List<String> gateStrings = [
+        fileStrings.removeAt(0),
+        fileStrings.removeAt(fileStrings.length - 1)
       ];
-      _board = _fileStrings.join('/').split(''); // rebuild
+      boardSymbols = fileStrings.join('/').split(''); // rebuild
       for (int i = 0; i < 2; i++) {
-        int _sq = 0;
-        int _empty = 0;
-        for (String c in _gateStrings[i].split('')) {
+        int squareIndex = 0;
+        int empty = 0;
+        for (String c in gateStrings[i].split('')) {
           String symbol = c.toUpperCase();
           if (isNumeric(c)) {
-            _empty = (_empty * 10) + int.parse(c);
-            if (_sq + _empty - 1 > size.h) {
+            empty = (empty * 10) + int.parse(c);
+            if (squareIndex + empty - 1 > size.h) {
               // todo: this might be wrong
-              throw ('Invalid FEN: gate ($i) overflow [$c, ${_sq + _empty - 1}]');
+              throw ('Invalid FEN: gate ($i) overflow [$c, ${squareIndex + empty - 1}]');
             }
           } else {
-            _sq += _empty;
-            _empty = 0;
+            squareIndex += empty;
+            empty = 0;
           }
 
           if (pieceLookup.containsKey(symbol)) {
             // it's a piece
-            int _piece = pieceLookup[symbol]!;
-            _gates[1 - i][_sq] = _piece;
-            _pieces[makePiece(_piece, 1 - i)]++;
-            _sq++;
+            int piece = pieceLookup[symbol]!;
+            gates[1 - i][squareIndex] = piece;
+            pieces[makePiece(piece, 1 - i)]++;
+            squareIndex++;
           }
         }
       }
@@ -197,9 +196,9 @@ class Game {
 
     int sq = 0;
     int emptySquares = 0;
-    List<int> royalSquares = [INVALID, INVALID];
+    List<int> royalSquares = [Bishop.invalid, Bishop.invalid];
 
-    for (String c in _board) {
+    for (String c in boardSymbols) {
       if (c == '~') {
         board[sq - 1] = board[sq - 1] + promoFlag;
         continue;
@@ -219,10 +218,10 @@ class Game {
         if (!onBoard(sq, size)) throw ('Invalid FEN: rank overflow [$symbol, $sq]');
         // it's a piece
         int pieceIndex = pieceLookup[symbol]!;
-        Colour colour = c == symbol ? WHITE : BLACK;
+        Colour colour = c == symbol ? Bishop.white : Bishop.black;
         Square piece = makePiece(pieceIndex, colour);
         board[sq] = piece;
-        _pieces[piece]++;
+        pieces[piece]++;
         if (variant.pieces[pieceIndex].type.royal) {
           royalSquares[colour] = sq;
         }
@@ -230,53 +229,53 @@ class Game {
       }
     }
 
-    List<List<int>> _virginFiles = [[], []];
+    List<List<int>> virginFiles = [[], []];
     if (variant.outputOptions.virginFiles) {
-      String __castling = _castling; // so we can modify _castling in place
-      for (int i = 0; i < __castling.length; i++) {
-        String _char = __castling[i];
-        String _lower = _char.toLowerCase();
-        int _colour = _lower == _char ? BLACK : WHITE;
-        int _file = fileFromSymbol(_lower);
-        if (_file < 0 || _file >= size.h) continue;
+      String castlingStrMod = castlingStr; // so we can modify _castling in place
+      for (int i = 0; i < castlingStrMod.length; i++) {
+        String char = castlingStrMod[i];
+        String lower = char.toLowerCase();
+        int colour = lower == char ? Bishop.black : Bishop.white;
+        int cFile = fileFromSymbol(lower);
+        if (cFile < 0 || cFile >= size.h) continue;
 
-        if (_virginFiles[_colour].contains(_file)) continue;
-        _virginFiles[_colour].add(_file);
-        _castling = _castling.replaceFirst(_char, '');
+        if (virginFiles[colour].contains(cFile)) continue;
+        virginFiles[colour].add(cFile);
+        castlingStr = castlingStr.replaceFirst(char, '');
       }
     } else {
-      List<int> _vf = List.generate(size.h, (i) => i);
-      _virginFiles = [_vf, List.from(_vf)]; // just in case
+      List<int> vf = List.generate(size.h, (i) => i);
+      virginFiles = [vf, List.from(vf)]; // just in case
     }
 
     // handle extra data
-    if (_aux.isNotEmpty) {
+    if (aux.isNotEmpty) {
       final checksRegex = RegExp(r'(\+)([0-9]+)(\+)([0-9]+)');
-      RegExpMatch? checksMatch = checksRegex.firstMatch(_aux);
+      RegExpMatch? checksMatch = checksRegex.firstMatch(aux);
       if (checksMatch != null) {
-        _checks = [int.parse(checksMatch[2]!), int.parse(checksMatch[4]!)];
+        checks = [int.parse(checksMatch[2]!), int.parse(checksMatch[4]!)];
       }
     }
 
-    int turn = _turn == 'w' ? WHITE : BLACK;
-    int? ep = _ep == '-' ? null : squareNumber(_ep, variant.boardSize);
-    int castling = variant.castling ? setupCastling(_castling, royalSquares) : 0;
-    State _state = State(
+    int turn = turnStr == 'w' ? Bishop.white : Bishop.black;
+    int? ep = epStr == '-' ? null : squareNumber(epStr, variant.boardSize);
+    int castling = variant.castling ? setupCastling(castlingStr, royalSquares) : 0;
+    State newState = State(
       turn: turn,
-      halfMoves: int.parse(_halfMoves),
-      fullMoves: int.parse(_fullMoves),
+      halfMoves: int.parse(halfMoves),
+      fullMoves: int.parse(fullMoves),
       epSquare: ep,
       castlingRights: castling,
       royalSquares: royalSquares,
-      virginFiles: _virginFiles,
-      hands: _hands,
-      gates: _gates,
-      pieces: _pieces,
-      checks: _checks,
+      virginFiles: virginFiles,
+      hands: hands,
+      gates: gates,
+      pieces: pieces,
+      checks: checks,
     );
-    _state.hash = zobrist.compute(_state, board);
-    zobrist.incrementHash(_state.hash);
-    history.add(_state);
+    newState.hash = zobrist.compute(newState, board);
+    zobrist.incrementHash(newState.hash);
+    history.add(newState);
   }
 
   /// Generates all legal moves for the player whose turn it is.
@@ -305,13 +304,13 @@ class Game {
   /// Generates drop moves for [colour]. Used for variants with hands, e.g. Crazyhouse.
   List<Move> generateDrops(int colour, [bool legal = true]) {
     List<Move> drops = [];
-    Set<int> _hand = state.hands![colour].toSet();
+    Set<int> hand = state.hands![colour].toSet();
     for (int i = 0; i < size.numIndices; i++) {
       if (!onBoard(i, size)) continue;
       if (board[i].isNotEmpty) continue;
-      for (int p in _hand) {
-        int _rank = rank(i, size);
-        bool onPromoRank = colour == WHITE ? _rank == size.maxRank : _rank == RANK_1;
+      for (int p in hand) {
+        int hRank = rank(i, size);
+        bool onPromoRank = colour == Bishop.white ? hRank == size.maxRank : hRank == Bishop.rank1;
         if (onPromoRank && variant.pieces[p].type.promotable) continue;
         int dropPiece = p;
         // TODO: support more than one promo piece in this case
@@ -341,7 +340,7 @@ class Game {
     Square piece = board[square];
     if (piece.isEmpty) return [];
     Colour colour = piece.colour;
-    int dirMult = PLAYER_DIRECTION[piece.colour];
+    int dirMult = Bishop.playerDirection[piece.colour];
     List<Move> moves = [];
     PieceType pieceType = variant.pieces[piece.type].type;
     int from = square;
@@ -359,19 +358,19 @@ class Game {
         int to = square + md.normalised * (i + 1) * dirMult;
         if (!onBoard(to, variant.boardSize)) break;
         if (md.lame) {
-          int _from = from + md.normalised * i * dirMult;
-          int blockSq = _from + md.lameNormalised! * dirMult;
+          int fromLame = from + md.normalised * i * dirMult;
+          int blockSq = fromLame + md.lameNormalised! * dirMult;
           if (board[blockSq].isNotEmpty && !options.ignorePieces) break;
         }
         bool optPromo = false;
         bool forcedPromo = false;
         if (pieceType.promotable && variant.promotion) {
           int toRank = rank(to, size);
-          optPromo = colour == WHITE
-              ? toRank >= variant.promotionRanks[BLACK]
-              : toRank <= variant.promotionRanks[WHITE];
+          optPromo = colour == Bishop.white
+              ? toRank >= variant.promotionRanks[Bishop.black]
+              : toRank <= variant.promotionRanks[Bishop.white];
           if (optPromo) {
-            forcedPromo = colour == WHITE ? toRank >= size.maxRank : toRank <= RANK_1;
+            forcedPromo = colour == Bishop.white ? toRank >= size.maxRank : toRank <= Bishop.rank1;
           }
         }
 
@@ -382,12 +381,12 @@ class Game {
           if (optPromo) moves.addAll(generatePromotionMoves(m));
           bool addBase = !forcedPromo;
           if (variant.gating) {
-            int _rank = rank(m.from, size);
-            if ((_rank == RANK_1 && colour == WHITE) ||
-                (_rank == size.maxRank && colour == BLACK)) {
-              final _gatingMoves = generateGatingMoves(m);
-              moves.addAll(_gatingMoves);
-              if (_gatingMoves.isNotEmpty && variant.gatingMode == GatingMode.fixed) {
+            int gRank = rank(m.from, size);
+            if ((gRank == Bishop.rank1 && colour == Bishop.white) ||
+                (gRank == size.maxRank && colour == Bishop.black)) {
+              final gatingMoves = generateGatingMoves(m);
+              moves.addAll(gatingMoves);
+              if (gatingMoves.isNotEmpty && variant.gatingMode == GatingMode.fixed) {
                 addBase = false;
               }
             }
@@ -450,8 +449,8 @@ class Game {
 
     // Generate castling
     if (variant.castling && options.castling && pieceType.royal && !inCheck) {
-      bool kingside = colour == WHITE ? state.castlingRights.wk : state.castlingRights.bk;
-      bool queenside = colour == WHITE ? state.castlingRights.wq : state.castlingRights.bq;
+      bool kingside = colour == Bishop.white ? state.castlingRights.wk : state.castlingRights.bk;
+      bool queenside = colour == Bishop.white ? state.castlingRights.wq : state.castlingRights.bq;
       int royalRank = rank(from, variant.boardSize);
 
       for (int i = 0; i < 2; i++) {
@@ -477,7 +476,7 @@ class Game {
         // Check king target square is empty (or occupied by the castling rook)
         if (board[targetSq].isNotEmpty && targetSq != rookSq) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
-        bool _valid = true;
+        bool valid = true;
         if (!options.ignorePieces) {
           for (int j = 1; j <= numMidSqs; j++) {
             int midFile = royalFile! + (i == 0 ? j : -j);
@@ -485,7 +484,7 @@ class Game {
             // None of these squares can be attacked
             if (isAttacked(midSq, colour.opponent)) {
               // squares between & dest square must not be attacked
-              _valid = false;
+              valid = false;
               break;
             }
             if (midFile == rookFile) continue; // for some chess960 positions
@@ -495,12 +494,12 @@ class Game {
 
             if (j != numMidSqs && board[midSq].isNotEmpty) {
               // squares between to and from must be empty
-              _valid = false;
+              valid = false;
               break;
             }
           }
         }
-        if (_valid) {
+        if (valid) {
           int castlingDir = i == 0 ? Castling.k : Castling.q;
           Move m = Move(
             from: from,
@@ -510,9 +509,9 @@ class Game {
           );
           if (variant.gatingMode != GatingMode.fixed) moves.add(m);
           if (variant.gating) {
-            int _rank = rank(m.from, size);
-            if ((_rank == RANK_1 && colour == WHITE) ||
-                (_rank == size.maxRank && colour == BLACK)) {
+            int gRank = rank(m.from, size);
+            if ((gRank == Bishop.rank1 && colour == Bishop.white) ||
+                (gRank == size.maxRank && colour == Bishop.black)) {
               moves.addAll(generateGatingMoves(m));
             }
           }
@@ -521,23 +520,27 @@ class Game {
     }
 
     if (options.onlySquare != null) {
-      List<Move> _remove = [];
+      List<Move> remove = [];
       for (Move m in moves) {
         if (m.to != options.onlySquare) {
-          _remove.add(m);
+          remove.add(m);
         }
       }
-      _remove.forEach((m) => moves.remove(m));
+      for (Move m in remove) {
+        moves.remove(m);
+      }
     }
 
     if (options.legal) {
-      List<Move> _remove = [];
+      List<Move> remove = [];
       for (Move m in moves) {
         makeMove(m);
-        if (kingAttacked(colour)) _remove.add(m);
+        if (kingAttacked(colour)) remove.add(m);
         undo();
       }
-      _remove.forEach((m) => moves.remove(m));
+      for (Move m in remove) {
+        moves.remove(m);
+      }
     }
     return moves;
   }
@@ -556,11 +559,11 @@ class Game {
   /// Doesn't include the option where a piece is not gated.
   List<Move> generateGatingMoves(Move base) {
     if (state.gates == null || state.gates!.isEmpty) return [];
-    int _file = file(base.from);
+    int gFile = file(base.from);
     Square piece = board[base.from];
     Colour colour = piece.colour;
     if (piece.isEmpty) return [];
-    if (!(state.virginFiles[colour].contains(_file))) return [];
+    if (!(state.virginFiles[colour].contains(gFile))) return [];
     List<Move> moves = [];
     void addGatingMove(int p) {
       Move m = base.copyWith(dropPiece: p);
@@ -576,7 +579,7 @@ class Game {
         addGatingMove(p);
       }
     } else if (variant.gatingMode == GatingMode.fixed) {
-      int p = state.gates![colour][_file];
+      int p = state.gates![colour][gFile];
       if (p != 0) {
         addGatingMove(p);
       }
@@ -586,40 +589,42 @@ class Game {
 
   /// Make a move and modify the game state. Returns true if the move was valid and made successfully.
   bool makeMove(Move move) {
-    if ((move.from != HAND && !onBoard(move.from, size)) || !onBoard(move.to, size)) return false;
+    if ((move.from != Bishop.hand && !onBoard(move.from, size)) || !onBoard(move.to, size)) {
+      return false;
+    }
     int hash = state.hash;
-    hash ^= zobrist.table[zobrist.TURN][Zobrist.META];
-    List<Hand>? _hands = state.hands != null
+    hash ^= zobrist.table[zobrist.turn][Zobrist.meta];
+    List<Hand>? hands = state.hands != null
         ? List.generate(state.hands!.length, (i) => List.from(state.hands![i]))
         : null;
-    List<Hand>? _gates = state.gates != null
+    List<Hand>? gates = state.gates != null
         ? List.generate(state.gates!.length, (i) => List.from(state.gates![i]))
         : null;
-    List<List<int>> _virginFiles =
+    List<List<int>> virginFiles =
         List.generate(state.virginFiles.length, (i) => List.from(state.virginFiles[i]));
-    List<int> _pieces = List.from(state.pieces);
+    List<int> pieces = List.from(state.pieces);
 
     // TODO: more validation?
-    Square fromSq = move.from >= BOARD_START ? board[move.from] : empty;
-    Square toSq = board[move.to];
+    Square fromSq = move.from >= Bishop.boardStart ? board[move.from] : empty;
+    // Square toSq = board[move.to];
     int fromRank = rank(move.from, size);
     int fromFile = file(move.from, size);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq != empty && fromSq.colour != state.turn) return false;
     int colour = turn;
     // Remove the moved piece, if this piece came from on the board.
-    if (move.from >= BOARD_START) {
+    if (move.from >= Bishop.boardStart) {
       hash ^= zobrist.table[move.from][fromSq.piece];
       if (move.promotion) {
-        _pieces[fromSq.piece]--;
+        pieces[fromSq.piece]--;
       }
       if (move.gate) {
         if (!(move.castling && move.dropOnRookSquare)) {
           // Move piece from gate to board.
           if (variant.gatingMode == GatingMode.flex) {
-            _gates![colour].remove(move.dropPiece!);
+            gates![colour].remove(move.dropPiece!);
           } else if (variant.gatingMode == GatingMode.fixed) {
-            _gates![colour][fromFile] = empty;
+            gates![colour][fromFile] = empty;
           }
           int dropPiece = move.dropPiece!;
           hash ^= zobrist.table[move.from][dropPiece.piece];
@@ -631,44 +636,45 @@ class Game {
         board[move.from] = empty;
       }
       // Mark the file as touched.
-      if ((fromRank == 0 && colour == WHITE) || (fromRank == size.v - 1 && colour == BLACK)) {
-        _virginFiles[colour].remove(file(move.from, size));
+      if ((fromRank == 0 && colour == Bishop.white) ||
+          (fromRank == size.v - 1 && colour == Bishop.black)) {
+        virginFiles[colour].remove(file(move.from, size));
       }
     }
 
     // Add captured piece to hand
     if (variant.hands && move.capture) {
-      int _piece = move.capturedPiece!.hasFlag(promoFlag)
+      int piece = move.capturedPiece!.hasFlag(promoFlag)
           ? variant.promotionPieces[0]
           : move.capturedPiece!.type;
-      _hands![colour].add(_piece);
-      _pieces[makePiece(_piece, colour)]++;
+      hands![colour].add(piece);
+      pieces[makePiece(piece, colour)]++;
     }
 
     // Remove gated piece from gate
     if (move.gate) {
-      _gates![colour].remove(move.dropPiece!);
+      gates![colour].remove(move.dropPiece!);
     }
 
     // Remove captured piece from hash and pieces list
     if (move.capture && !move.enPassant) {
-      int _p = board[move.to].piece;
-      hash ^= zobrist.table[move.to][_p];
-      _pieces[_p]--;
+      int p = board[move.to].piece;
+      hash ^= zobrist.table[move.to][p];
+      pieces[p]--;
     }
 
     if (!move.castling && !move.promotion) {
       // Move the piece to the new square
-      int putPiece = move.from >= BOARD_START ? fromSq : makePiece(move.dropPiece!, colour);
+      int putPiece = move.from >= Bishop.boardStart ? fromSq : makePiece(move.dropPiece!, colour);
       hash ^= zobrist.table[move.to][putPiece.piece];
       board[move.to] = putPiece;
       //if (move.from == HAND) print('$colour ${move.dropPiece!}');
-      if (move.from == HAND) _hands![colour].remove(move.dropPiece!);
+      if (move.from == Bishop.hand) hands![colour].remove(move.dropPiece!);
     } else if (move.promotion) {
       // Place the promoted piece
       board[move.to] = makePiece(move.promoPiece!, state.turn, promoFlag);
       hash ^= zobrist.table[move.to][board[move.to].piece];
-      _pieces[board[move.to].piece]++;
+      pieces[board[move.to].piece]++;
     }
     // Manage halfmove counter
     int halfMoves = state.halfMoves;
@@ -678,15 +684,15 @@ class Game {
       halfMoves++;
     }
 
-    int _castlingRights = state.castlingRights;
+    int castlingRights = state.castlingRights;
     List<int> royalSquares = List.from(state.royalSquares);
 
     if (move.enPassant) {
       // Remove the captured ep piece
-      int captureSq = move.to + PLAYER_DIRECTION[colour.opponent] * size.north;
+      int captureSq = move.to + Bishop.playerDirection[colour.opponent] * size.north;
       hash ^= zobrist.table[captureSq][board[captureSq].piece];
       board[captureSq] = empty;
-      _pieces[board[captureSq].piece]--;
+      pieces[board[captureSq].piece]--;
     }
 
     int? epSquare;
@@ -694,13 +700,13 @@ class Game {
       // Set the new ep square
       int dir = (move.to - move.from) ~/ 2;
       epSquare = move.from + dir;
-      hash ^= zobrist.table[epSquare][Zobrist.META];
+      hash ^= zobrist.table[epSquare][Zobrist.meta];
     } else {
       epSquare = null;
     }
     if (state.epSquare != null) {
       // XOR the old ep square away from the hash
-      hash ^= zobrist.table[state.epSquare!][Zobrist.META];
+      hash ^= zobrist.table[state.epSquare!][Zobrist.meta];
     }
 
     if (move.castling) {
@@ -719,10 +725,10 @@ class Game {
       board[move.castlingPieceSquare!] = empty;
       board[kingSq] = fromSq;
       board[rookSq] = rook;
-      _castlingRights = _castlingRights.remove(colour);
+      castlingRights = castlingRights.remove(colour);
       // refactor conditions?
-      hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
-      hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
+      hash ^= zobrist.table[zobrist.castling][state.castlingRights];
+      hash ^= zobrist.table[zobrist.castling][castlingRights];
       royalSquares[colour] = kingSq;
 
       if (move.gate && move.dropOnRookSquare) {
@@ -732,64 +738,64 @@ class Game {
       }
     } else if (fromPiece.royal) {
       // king moved
-      _castlingRights = _castlingRights.remove(colour);
-      hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
-      hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
+      castlingRights = castlingRights.remove(colour);
+      hash ^= zobrist.table[zobrist.castling][state.castlingRights];
+      hash ^= zobrist.table[zobrist.castling][castlingRights];
       royalSquares[colour] = move.to;
     } else if (fromSq.type == variant.castlingPiece) {
       // rook moved
       int fromFile = file(move.from, size);
-      int ks = colour == WHITE ? Castling.k : Castling.bk;
-      int qs = colour == WHITE ? Castling.q : Castling.bq;
-      if (fromFile == castlingTargetK && _castlingRights.hasRight(ks)) {
-        _castlingRights = _castlingRights.flip(ks);
-        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
-        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
-      } else if (fromFile == castlingTargetQ && _castlingRights.hasRight(qs)) {
-        _castlingRights = _castlingRights.flip(qs);
-        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
-        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
+      int ks = colour == Bishop.white ? Castling.k : Castling.bk;
+      int qs = colour == Bishop.white ? Castling.q : Castling.bq;
+      if (fromFile == castlingTargetK && castlingRights.hasRight(ks)) {
+        castlingRights = castlingRights.flip(ks);
+        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
+        hash ^= zobrist.table[zobrist.castling][castlingRights];
+      } else if (fromFile == castlingTargetQ && castlingRights.hasRight(qs)) {
+        castlingRights = castlingRights.flip(qs);
+        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
+        hash ^= zobrist.table[zobrist.castling][castlingRights];
       }
     } else if (move.capture && move.capturedPiece!.type == variant.castlingPiece) {
       // rook captured
       int toFile = file(move.to, size);
       int opponent = colour.opponent;
-      int ks = opponent == WHITE ? Castling.k : Castling.bk;
-      int qs = opponent == WHITE ? Castling.q : Castling.bq;
-      if (toFile == castlingTargetK && _castlingRights.hasRight(ks)) {
-        _castlingRights = _castlingRights.flip(ks);
-        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
-        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
-      } else if (toFile == castlingTargetQ && _castlingRights.hasRight(qs)) {
-        _castlingRights = _castlingRights.flip(qs);
-        hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
-        hash ^= zobrist.table[zobrist.CASTLING][_castlingRights];
+      int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
+      int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
+      if (toFile == castlingTargetK && castlingRights.hasRight(ks)) {
+        castlingRights = castlingRights.flip(ks);
+        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
+        hash ^= zobrist.table[zobrist.castling][castlingRights];
+      } else if (toFile == castlingTargetQ && castlingRights.hasRight(qs)) {
+        castlingRights = castlingRights.flip(qs);
+        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
+        hash ^= zobrist.table[zobrist.castling][castlingRights];
       }
     }
 
-    State _state = State(
+    State newState = State(
       move: move,
       turn: 1 - state.turn,
       halfMoves: halfMoves,
-      fullMoves: state.turn == BLACK ? state.fullMoves + 1 : state.fullMoves,
-      castlingRights: _castlingRights,
+      fullMoves: state.turn == Bishop.black ? state.fullMoves + 1 : state.fullMoves,
+      castlingRights: castlingRights,
       royalSquares: royalSquares,
-      virginFiles: _virginFiles,
+      virginFiles: virginFiles,
       epSquare: epSquare,
       hash: hash,
-      hands: _hands,
-      gates: _gates,
-      pieces: _pieces,
+      hands: hands,
+      gates: gates,
+      pieces: pieces,
       checks: List.from(state.checks),
     );
-    history.add(_state);
+    history.add(newState);
 
     // kind of messy doing it like this, but inCheck depends on the current state
     // maybe that's a case for refactoring some methods into State?
     if (variant.gameEndConditions.checkLimit != null) {
       if (inCheck) {
-        history.last = _state.copyWith(
-          checks: List.from(_state.checks)..[_state.turn.opponent] += 1,
+        history.last = newState.copyWith(
+          checks: List.from(newState.checks)..[newState.turn.opponent] += 1,
         );
       }
     }
@@ -802,8 +808,8 @@ class Game {
   /// Returns the move that was undone.
   Move? undo() {
     if (history.length == 1) return null;
-    State _state = history.removeLast();
-    Move move = _state.move!;
+    State lastState = history.removeLast();
+    Move move = lastState.move!;
 
     int toSq = board[move.to];
 
@@ -814,20 +820,20 @@ class Game {
           kingside ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
       int rookSq = getSquare(rookFile, royalRank, size);
-      int _rook = board[rookSq];
-      int _king = board[move.to];
+      int rook = board[rookSq];
+      int king = board[move.to];
       board[move.to] = empty;
       board[rookSq] = empty;
-      board[move.from] = _king;
-      board[move.castlingPieceSquare!] = _rook;
+      board[move.from] = king;
+      board[move.castlingPieceSquare!] = rook;
     } else {
       if (move.promotion) {
         board[move.from] = makePiece(move.promoSource!, state.turn);
       } else {
-        if (move.from >= BOARD_START) board[move.from] = toSq;
+        if (move.from >= Bishop.boardStart) board[move.from] = toSq;
       }
       if (move.enPassant) {
-        int captureSq = move.to + PLAYER_DIRECTION[move.capturedPiece!.colour] * size.north;
+        int captureSq = move.to + Bishop.playerDirection[move.capturedPiece!.colour] * size.north;
         board[captureSq] = move.capturedPiece!;
       }
       if (move.capture && !move.enPassant) {
@@ -837,7 +843,7 @@ class Game {
       }
     }
 
-    zobrist.decrementHash(_state.hash);
+    zobrist.decrementHash(lastState.hash);
     return move;
   }
 
@@ -880,31 +886,32 @@ class Game {
   /// Check if there is currently sufficient material on the board for one player to mate the other.
   /// Returns true if there *isn't* sufficient material (and therefore it's a draw).
   bool get insufficientMaterial {
-    if (hasSufficientMaterial(WHITE)) return false;
-    return !hasSufficientMaterial(BLACK);
+    if (hasSufficientMaterial(Bishop.white)) return false;
+    return !hasSufficientMaterial(Bishop.black);
   }
 
   /// Determines whether there is sufficient material for [player] to deliver mate in the board
   /// position specified in [state].
   /// [state] defaults to the current board state if unspecified.
   bool hasSufficientMaterial(Colour player, {State? state}) {
-    State _state = state ?? this.state;
+    State newState = state ?? this.state;
     for (int p in variant.materialConditionsInt.soloMaters) {
-      if (_state.pieces[makePiece(p, player)] > 0) return true;
+      if (newState.pieces[makePiece(p, player)] > 0) return true;
     }
     // TODO: figure out how to track square colours to check bishop pairs
     for (int p in variant.materialConditionsInt.pairMaters) {
-      if (_state.pieces[makePiece(p, player)] > 1) return true;
+      if (newState.pieces[makePiece(p, player)] > 1) return true;
     }
     for (int p in variant.materialConditionsInt.combinedPairMaters) {
-      if (_state.pieces[makePiece(p, player)] + _state.pieces[makePiece(p, player.opponent)] > 1) {
+      if (newState.pieces[makePiece(p, player)] + newState.pieces[makePiece(p, player.opponent)] >
+          1) {
         return true;
       }
     }
     for (List<int> c in variant.materialConditionsInt.specialCases) {
       bool met = true;
       for (int p in c) {
-        if (_state.pieces[makePiece(p, player)] < 1) met = false;
+        if (newState.pieces[makePiece(p, player)] < 1) met = false;
       }
       if (met) return true;
     }
@@ -934,7 +941,8 @@ class Game {
   Move? getMove(String algebraic, {bool simplifyFixedGating = true}) {
     List<Move> moves = generateLegalMoves();
     Move? match = moves.firstWhereOrNull(
-        (m) => toAlgebraic(m, simplifyFixedGating: simplifyFixedGating) == algebraic);
+      (m) => toAlgebraic(m, simplifyFixedGating: simplifyFixedGating) == algebraic,
+    );
     return match;
   }
 
@@ -942,15 +950,19 @@ class Game {
   String toAlgebraic(Move move, {bool simplifyFixedGating = true}) {
     String alg =
         move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
-    if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
-    if (move.from == HAND) alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
+    if (move.promotion) {
+      alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
+    }
+    if (move.from == Bishop.hand) {
+      alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
+    }
     if (move.gate && !(variant.gatingMode == GatingMode.fixed && simplifyFixedGating)) {
       alg = '$alg/${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
       if (move.castling) {
-        String _dropSq = move.dropOnRookSquare
+        String dropSq = move.dropOnRookSquare
             ? squareName(move.castlingPieceSquare!, size)
             : squareName(move.from, size);
-        alg = '$alg$_dropSq';
+        alg = '$alg$dropSq';
       }
     }
     return alg;
@@ -968,10 +980,10 @@ class Game {
       String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
       san = ([Castling.k, Castling.bk].contains(move.castlingDir)) ? kingside : queenside;
     } else {
-      if (move.from == HAND) {
-        PieceDefinition _pieceDef = variant.pieces[move.dropPiece!];
+      if (move.from == Bishop.hand) {
+        PieceDefinition pieceDef = variant.pieces[move.dropPiece!];
         san = move.algebraic(size: size);
-        if (!_pieceDef.type.noSanSymbol) san = '${_pieceDef.symbol.toUpperCase()}$san';
+        if (!pieceDef.type.noSanSymbol) san = '${pieceDef.symbol.toUpperCase()}$san';
       } else {
         int piece = board[move.from].type;
         PieceDefinition pieceDef = variant.pieces[piece];
@@ -991,10 +1003,10 @@ class Game {
     if (move.gate) {
       san = '$san/${variant.pieces[move.dropPiece!].symbol}';
       if (move.castling) {
-        String _dropSq = move.dropOnRookSquare
+        String dropSq = move.dropOnRookSquare
             ? squareName(move.castlingPieceSquare!, size)
             : squareName(move.from, size);
-        san = '$san$_dropSq';
+        san = '$san$dropSq';
       }
     }
     makeMove(move);
@@ -1014,7 +1026,7 @@ class Game {
     moves ??= generateLegalMoves();
 
     int piece = board[move.from].type;
-    int _file = file(move.from, size);
+    int fromFile = file(move.from, size);
     bool ambiguity = false;
     bool needRank = false;
     bool needFile = false;
@@ -1025,7 +1037,7 @@ class Game {
       if (m.to != move.to) continue;
       if (piece != board[m.from].type) continue;
       ambiguity = true;
-      if (file(m.from, size) == _file) {
+      if (file(m.from, size) == fromFile) {
         needRank = true;
       } else {
         needFile = true;
@@ -1035,9 +1047,9 @@ class Game {
 
     String disambiguator = '';
     if (ambiguity) {
-      String _squareName = squareName(move.from, size);
-      if (needFile) disambiguator = _squareName[0];
-      if (needRank) disambiguator = '$disambiguator${_squareName[1]}';
+      String sqName = squareName(move.from, size);
+      if (needFile) disambiguator = sqName[0];
+      if (needRank) disambiguator = '$disambiguator${sqName[1]}';
     }
     return disambiguator;
   }
@@ -1064,24 +1076,24 @@ class Game {
     int firstMove = state.fullMoves - (moves.length ~/ 2);
     int firstTurn = history.first.turn;
     int turn = firstTurn;
-    String _pgn = '';
+    String pgn = '';
     for (int i = 0; i < moves.length; i++) {
-      if (i == 0 || turn == WHITE) _pgn = '$_pgn${firstMove + i ~/ 2}. ';
-      if (i == 0 && turn == BLACK) _pgn = '$_pgn..';
-      _pgn = '$_pgn${moves[i]} ';
+      if (i == 0 || turn == Bishop.white) pgn = '$pgn${firstMove + i ~/ 2}. ';
+      if (i == 0 && turn == Bishop.black) pgn = '$pgn..';
+      pgn = '$pgn${moves[i]} ';
       turn = turn.opponent;
     }
-    return _pgn;
+    return pgn;
   }
 
   String get fen {
     assert(board.length == variant.boardSize.numIndices);
-    String _fen = '';
+    String fen = '';
     int empty = 0;
 
     void addEmptySquares() {
       if (empty > 0) {
-        _fen = '$_fen$empty';
+        fen = '$fen$empty';
         empty = 0;
       }
     }
@@ -1096,31 +1108,31 @@ class Game {
           if (empty > 0) addEmptySquares();
           String char = variant.pieces[sq.type].char(sq.colour);
           if (variant.outputOptions.showPromoted && sq.hasFlag(promoFlag)) char += '~';
-          _fen = '$_fen$char';
+          fen = '$fen$char';
         }
       }
       if (empty > 0) addEmptySquares();
-      if (i < variant.boardSize.v - 1) _fen = '$_fen/';
+      if (i < variant.boardSize.v - 1) fen = '$fen/';
     }
     if (variant.hands) {
       String whiteHand =
-          state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
+          state.hands![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
       String blackHand =
-          state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
-      _fen = '$_fen[$whiteHand$blackHand]';
+          state.hands![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      fen = '$fen[$whiteHand$blackHand]';
     }
     if (variant.gatingMode == GatingMode.flex) {
       String whiteGate =
-          state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
+          state.gates![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
       String blackGate =
-          state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
-      _fen = '$_fen[$whiteGate$blackGate]';
+          state.gates![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      fen = '$fen[$whiteGate$blackGate]';
     }
     if (variant.gatingMode == GatingMode.fixed) {
       String whiteGate =
-          state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
+          state.gates![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
       String blackGate =
-          state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+          state.gates![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
       // replaces dots with numbers
       String processGate(String g) {
         String o = '';
@@ -1145,26 +1157,26 @@ class Game {
       whiteGate = processGate(whiteGate);
       blackGate = processGate(blackGate);
 
-      _fen = '$whiteGate/$_fen/$blackGate';
+      fen = '$whiteGate/$fen/$blackGate';
     }
-    String _turn = state.turn == WHITE ? 'w' : 'b';
-    String _castling = state.castlingRights.formatted;
+    String turnStr = state.turn == Bishop.white ? 'w' : 'b';
+    String castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.shredder) {
-      _castling = replaceMultiple(_castling, Castling.symbols.keys.toList(), castlingFileSymbols);
+      castling = replaceMultiple(castling, Castling.symbols.keys.toList(), castlingFileSymbols);
     }
     if (variant.outputOptions.virginFiles) {
-      String _whiteVfiles =
-          state.virginFiles[WHITE].map((e) => fileSymbol(e).toUpperCase()).join('');
-      String _blackVfiles = state.virginFiles[BLACK].map((e) => fileSymbol(e)).join('');
-      _castling = '$_castling$_whiteVfiles$_blackVfiles';
+      String whiteVFiles =
+          state.virginFiles[Bishop.white].map((e) => fileSymbol(e).toUpperCase()).join('');
+      String blackVFiles = state.virginFiles[Bishop.black].map((e) => fileSymbol(e)).join('');
+      castling = '$castling$whiteVFiles$blackVFiles';
     }
-    String _ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
-    String _aux = '';
+    String ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
+    String aux = '';
     if (variant.gameEndConditions.checkLimit != null) {
-      _aux = ' +${state.checks[WHITE]}+${state.checks[BLACK]}';
+      aux = ' +${state.checks[Bishop.white]}+${state.checks[Bishop.black]}';
     }
-    _fen = '$_fen $_turn $_castling $_ep ${state.halfMoves} ${state.fullMoves}$_aux';
-    return _fen;
+    fen = '$fen $turnStr $castling $ep ${state.halfMoves} ${state.fullMoves}$aux';
+    return fen;
   }
 
   /// Generates an ASCII representation of the board.
@@ -1173,12 +1185,14 @@ class Game {
     String output = '$border\n';
     for (int i in Iterable<int>.generate(variant.boardSize.v).toList()) {
       int rank = variant.boardSize.v - i;
-      String _rank = rank > 9 ? '$rank |' : ' $rank |';
-      output = '$output$_rank';
+      String rankStr = rank > 9 ? '$rank |' : ' $rank |';
+      output = '$output$rankStr';
       for (int j in Iterable<int>.generate(variant.boardSize.h).toList()) {
         Square sq = board[i * variant.boardSize.h * 2 + j];
         String char = variant.pieces[sq.type].char(sq.colour);
-        if (unicode && UNICODE_PIECES.containsKey(char)) char = UNICODE_PIECES[char]!;
+        if (unicode && Bishop.unicodePieces.containsKey(char)) {
+          char = Bishop.unicodePieces[char]!;
+        }
         output = '$output $char ';
       }
       output = '$output|\n';
@@ -1198,9 +1212,9 @@ class Game {
     List<String> symbols = [];
     for (int i = 0; i < board.length; i++) {
       if (full || onBoard(i, size)) {
-        int _piece = board[i];
-        String symbol = _piece == empty ? '' : variant.pieces[_piece.type].symbol;
-        symbols.add(_piece.colour == WHITE ? symbol.toUpperCase() : symbol.toLowerCase());
+        int piece = board[i];
+        String symbol = piece == empty ? '' : variant.pieces[piece.type].symbol;
+        symbols.add(piece.colour == Bishop.white ? symbol.toUpperCase() : symbol.toLowerCase());
       }
     }
     return symbols;
@@ -1211,9 +1225,9 @@ class Game {
   List<List<String>> handSymbols() {
     if (!variant.hands) return [[], []];
     List<String> whiteHand =
-        state.hands![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
+        state.hands![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
     List<String> blackHand =
-        state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
+        state.hands![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
     return [whiteHand, blackHand];
   }
 
@@ -1222,16 +1236,16 @@ class Game {
   List<List<String>> gateSymbols() {
     if (!variant.gating) return [[], []];
     List<String> whiteGate =
-        state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
+        state.gates![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
     List<String> blackGate =
-        state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
+        state.gates![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
     return [whiteGate, blackGate];
   }
 
   GameInfo get info => GameInfo(
         lastMove: state.move,
         lastFrom: state.move != null
-            ? (state.move!.from == HAND ? 'hand' : squareName(state.move!.from, size))
+            ? (state.move!.from == Bishop.hand ? 'hand' : squareName(state.move!.from, size))
             : null,
         lastTo: state.move != null ? squareName(state.move!.to, size) : null,
         checkSq: inCheck ? squareName(state.royalSquares[state.turn], size) : null,

@@ -11,7 +11,7 @@ void main(List<String> args) async {
   }
 
   while (!game.gameOver) {
-    String playerName = game.turn == WHITE ? 'White' : 'Black';
+    String playerName = game.turn == Bishop.white ? 'White' : 'Black';
     print('~~ $playerName is thinking..');
     EngineResult res = await engine.search();
     print('Best Move: ${formatResult(res)}');

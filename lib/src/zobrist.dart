@@ -2,12 +2,12 @@ import 'dart:math';
 import 'package:bishop/bishop.dart';
 
 class Zobrist {
-  static const int META = 0;
+  static const int meta = 0;
   late List<List<int>> table;
   Map<int, int> hashes = {};
 
-  late int CASTLING;
-  late int TURN;
+  late int castling;
+  late int turn;
 
   Zobrist(Variant variant, int seed) {
     init(variant, seed);
@@ -19,8 +19,8 @@ class Zobrist {
     Random r = Random(seed);
     int dimX = variant.boardSize.numIndices + numAux;
     int dimY = max(variant.pieces.length * 2, Castling.mask + 1);
-    CASTLING = dimY + 1;
-    TURN = dimY + 2;
+    castling = dimY + 1;
+    turn = dimY + 2;
     table = List<List<int>>.generate(dimX, (i) => List<int>.generate(dimY, (j) => 0));
     for (int i = 0; i < dimX; i++) {
       for (int j = 0; j < dimY; j++) {
@@ -41,9 +41,9 @@ class Zobrist {
     for (int i = 0; i < board.length; i++) {
       if (board[i] != empty) hash ^= table[i][board[i]];
     }
-    if (state.epSquare != null) hash ^= table[state.epSquare!][META];
-    hash ^= table[CASTLING][state.castlingRights];
-    if (state.turn == BLACK) hash ^= table[TURN][META];
+    if (state.epSquare != null) hash ^= table[state.epSquare!][meta];
+    hash ^= table[castling][state.castlingRights];
+    if (state.turn == Bishop.black) hash ^= table[turn][meta];
 
     return hash;
   }

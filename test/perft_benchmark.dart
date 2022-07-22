@@ -17,7 +17,7 @@ class PerftBenchmark extends BenchmarkBase {
   void setup() {
     Map<int, Variant> variants = {
       standard: Variant.standard(),
-      CHESS960: Variant.chess960(),
+      chess960: Variant.chess960(),
     };
     game = Game(variant: variants[variant]!, fen: fen);
   }
@@ -38,12 +38,12 @@ class PerftBenchmark extends BenchmarkBase {
 
 void main() {
   List<PerftBenchmark> perfts = [
-    PerftBenchmark(Positions.STANDARD_DEFAULT, standard, 3, 8902),
-    PerftBenchmark(Positions.KIWIPETE, standard, 2, 2039),
-    PerftBenchmark(Positions.ROOK_PIN, standard, 4, 43238),
-    PerftBenchmark(Positions.POSITION_4, standard, 3, 9467),
-    PerftBenchmark(Positions.POSITION_5, standard, 3, 62379),
-    PerftBenchmark(Positions.POSITION_6, standard, 3, 89890),
+    PerftBenchmark(Positions.standardDefault, standard, 3, 8902),
+    PerftBenchmark(Positions.kiwiPete, standard, 2, 2039),
+    PerftBenchmark(Positions.rookPin, standard, 4, 43238),
+    PerftBenchmark(Positions.position4, standard, 3, 9467),
+    PerftBenchmark(Positions.position5, standard, 3, 62379),
+    PerftBenchmark(Positions.position6, standard, 3, 89890),
     // PerftBenchmark('bqnb1rkr/pp3ppp/3ppn2/2p5/5P2/P2P4/NPP1P1PP/BQ1BNRKR w HFhf - 2 9', CHESS960, 3, 12189), // fails
     //PerftBenchmark('2nnrbkr/p1qppppp/8/1ppb4/6PP/3PP3/PPP2P2/BQNNRBKR w HEhe - 1 9', CHESS960, 3, 18002),
   ];

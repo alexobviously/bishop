@@ -18,8 +18,7 @@ class Engine {
       print(game.inDraw ? 'Draw' : 'Checkmate');
       return EngineResult();
     }
-    int now = DateTime.now().millisecondsSinceEpoch;
-    int endTime = now + timeLimit;
+    int endTime = DateTime.now().millisecondsSinceEpoch + timeLimit;
     int endBuffer = endTime + timeBuffer;
     int depthSearched = 0;
     List<Move> moves = game.generateLegalMoves();
@@ -33,20 +32,20 @@ class Engine {
         game.makeMove(m);
         int eval = -negamax(
           depth,
-          -MATE_UPPER,
-          MATE_UPPER,
+          -Bishop.mateUpper,
+          Bishop.mateUpper,
           game.turn.opponent,
           debug,
         );
         game.undo();
         evals[m] = eval;
-        int _now = DateTime.now().millisecondsSinceEpoch;
-        if (_now >= endBuffer) break;
+        int now = DateTime.now().millisecondsSinceEpoch;
+        if (now >= endBuffer) break;
       }
       moves.sort((a, b) => evals[b]!.compareTo(evals[a]!));
       depthSearched = depth;
-      int _now = DateTime.now().millisecondsSinceEpoch;
-      if (_now >= endTime) break;
+      int now = DateTime.now().millisecondsSinceEpoch;
+      if (now >= endTime) break;
     }
     if (printBest > 0) {
       print('-- Best Moves --');
@@ -59,15 +58,15 @@ class Engine {
   }
 
   int negamax(int depth, int alpha, int beta, Colour player, [int debug = 0]) {
-    int value = -MATE_UPPER;
+    int value = -Bishop.mateUpper;
     List<Move> moves = game.generateLegalMoves();
     if (moves.isEmpty) {
       if (game.inDraw) {
         return 0;
       } else if (game.turn == player) {
-        return MATE_UPPER;
+        return Bishop.mateUpper;
       } else {
-        return -MATE_UPPER;
+        return -Bishop.mateUpper;
       }
     }
     // -evaluate because we are currently looking at this asthe other player

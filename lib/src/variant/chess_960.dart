@@ -28,9 +28,8 @@ String build960Position() {
   placePiece(randomSquare(), queen);
 
   // Place knights
-  for (int _ in [0, 0]) {
-    placePiece(randomSquare(), knight);
-  }
+  placePiece(randomSquare(), knight);
+  placePiece(randomSquare(), knight);
 
   // Place rooks and king
   placePiece(squares.first, rook);

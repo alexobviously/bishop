@@ -18,19 +18,19 @@ extension SquareLogic on Square {
 }
 
 Square makePiece(int piece, Colour colour, [int flags = 0]) {
-  assert(colour <= BLACK);
+  assert(colour <= Bishop.black);
   return (flags << 8) + (piece << 1) + colour;
 }
 
 String squareName(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
   int rank = boardSize.v - (square ~/ (boardSize.h * 2));
   int file = square % (boardSize.h * 2);
-  String fileName = String.fromCharCode(ASCII_a + file);
+  String fileName = String.fromCharCode(Bishop.asciiA + file);
   return '$fileName$rank';
 }
 
-String fileSymbol(int file) => String.fromCharCode(ASCII_a + file);
-int fileFromSymbol(String symbol) => symbol.toLowerCase().codeUnits[0] - ASCII_a;
+String fileSymbol(int file) => String.fromCharCode(Bishop.asciiA + file);
+int fileFromSymbol(String symbol) => symbol.toLowerCase().codeUnits[0] - Bishop.asciiA;
 
 int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   name = name.toLowerCase();
@@ -40,7 +40,7 @@ int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   assert(match!.groupCount == 2, 'Invalid square name: $name');
   String file = match!.group(1)!;
   String rank = match.group(2)!;
-  int fileNum = file.codeUnits[0] - ASCII_a;
+  int fileNum = file.codeUnits[0] - Bishop.asciiA;
   int rankNum = boardSize.v - int.parse(rank);
   int square = rankNum * boardSize.h * 2 + fileNum;
   return square;

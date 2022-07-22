@@ -14,7 +14,7 @@ extension CastlingExtension on CastlingRights {
 
   CastlingRights flip(int right) => this ^ right;
   CastlingRights remove(Colour colour) =>
-      this & (colour == WHITE ? Castling.whiteMask : Castling.blackMask);
+      this & (colour == Bishop.white ? Castling.whiteMask : Castling.blackMask);
   bool hasRight(int right) => this & right != 0;
 }
 

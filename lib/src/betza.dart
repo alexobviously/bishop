@@ -3,7 +3,7 @@ import 'move_definition.dart';
 import 'utils.dart';
 
 class Betza {
-  static const Map<String, Direction> ATOMS = {
+  static const Map<String, Direction> atomMap = {
     'W': Direction(1, 0),
     'F': Direction(1, 1),
     'D': Direction(2, 0),
@@ -14,15 +14,15 @@ class Betza {
     'H': Direction(3, 0),
     'G': Direction(3, 3),
   };
-  static const List<String> SHORTHANDS = ['B', 'R', 'Q', 'K'];
-  static const List<String> DIR_MODIFIERS = ['f', 'b', 'r', 'l', 'v', 's', 'h'];
-  static const List<String> FUNC_MODIFIERS = [
+  static const List<String> shorthands = ['B', 'R', 'Q', 'K'];
+  static const List<String> dirModifiers = ['f', 'b', 'r', 'l', 'v', 's', 'h'];
+  static const List<String> funcModifiers = [
     'n', // 'lame'/blockable move, e.g. xiangqi knight
     'j',
     'i', // only allowed for first move of the piece, e.g. pawn double move
     'e', // en-passant
   ];
-  static const Map<String, int> MODALITIES = {
+  static const Map<String, int> modalities = {
     'm': Modality.quiet,
     'c': Modality.capture,
   };
@@ -31,26 +31,26 @@ class Betza {
     List<Atom> atoms = [];
 
     List<String> chars = string.split('');
-    List<String> _atoms = [];
-    List<String> _dirs = [];
-    List<String> _funcs = [];
+    List<String> atomsStr = [];
+    List<String> dirs = [];
+    List<String> funcs = [];
     int range = 1;
     int modality = Modality.both;
 
     void add() {
-      for (String a in _atoms) {
+      for (String a in atomsStr) {
         Atom atom = Atom(
           base: a,
-          dirMods: _dirs,
-          funcMods: _funcs,
+          dirMods: dirs,
+          funcMods: funcs,
           range: range,
           modality: modality,
         );
         atoms.add(atom);
       }
-      _atoms = [];
-      _dirs = [];
-      _funcs = [];
+      atomsStr = [];
+      dirs = [];
+      funcs = [];
       range = 1;
       modality = Modality.both;
     }
@@ -59,22 +59,22 @@ class Betza {
       if (isNumeric(c)) {
         range = int.parse(c);
       }
-      if (_atoms.isNotEmpty) {
+      if (atomsStr.isNotEmpty) {
         add();
       }
 
-      if (DIR_MODIFIERS.contains(c)) _dirs.add(c);
-      if (FUNC_MODIFIERS.contains(c)) _funcs.add(c);
-      if (MODALITIES.containsKey(c)) modality = MODALITIES[c]!;
-      if (ATOMS.containsKey(c)) _atoms.add(c);
-      if (SHORTHANDS.contains(c)) {
+      if (dirModifiers.contains(c)) dirs.add(c);
+      if (funcModifiers.contains(c)) funcs.add(c);
+      if (modalities.containsKey(c)) modality = modalities[c]!;
+      if (atomMap.containsKey(c)) atomsStr.add(c);
+      if (shorthands.contains(c)) {
         if (c != 'K') range = 0;
-        if (c != 'R') _atoms.add('F');
-        if (c != 'B') _atoms.add('W');
+        if (c != 'R') atomsStr.add('F');
+        if (c != 'B') atomsStr.add('W');
       }
     }
 
-    if (_atoms.isNotEmpty) add();
+    if (atomsStr.isNotEmpty) add();
 
     return atoms;
   }
@@ -102,7 +102,7 @@ class Atom {
   bool get capture => modality == Modality.both || modality == Modality.capture;
 
   List<Direction> get directions {
-    Direction baseDir = Betza.ATOMS[base]!;
+    Direction baseDir = Betza.atomMap[base]!;
     int h = baseDir.h;
     int v = baseDir.v;
     bool allDirs = dirMods.isEmpty;

@@ -5,7 +5,7 @@ import 'constants.dart';
 
 void main() {
   List<DrawTest> tests = [
-    DrawTest(variant: Variant.standard(), fen: Positions.STANDARD_DEFAULT, draw: false),
+    DrawTest(variant: Variant.standard(), fen: Positions.standardDefault, draw: false),
     DrawTest(variant: Variant.standard(), fen: '8/8/8/8/8/1k6/2q5/K7 w - - 0 1', draw: true),
     DrawTest(variant: Variant.standard(), fen: '6r1/8/8/8/8/1k6/8/K7 w - - 0 1', draw: false),
     DrawTest(variant: Variant.standard(), fen: '6n1/8/8/8/8/1k6/8/K7 w - - 0 1', draw: true),
