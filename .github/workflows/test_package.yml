@@ -23,16 +23,16 @@ jobs:
         run: dart pub get
       
       - name: Run Perft tests
-        run: dart test test/test_perft.dart
+        run: dart test test/perft_test.dart
 
       - name: Run Validation tests
-        run: dart test test/test_validation.dart
+        run: dart test test/validation_test.dart
         
       - name: Run Comparison tests
-        run: dart test test/test_comparison.dart
+        run: dart test test/comparison_test.dart
 
       - name: Run Draw tests
-        run: dart test test/test_draw.dart
+        run: dart test test/draw_test.dart
       
       - name: Run Piece tests
-        run: dart test test/test_pieces.dart
+        run: dart test test/pieces_test.dart
