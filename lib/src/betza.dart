@@ -178,6 +178,8 @@ class Atom {
       : modality == Modality.CAPTURE
           ? 'c'
           : '';
+
+  @override
   String toString() =>
       '$modalityString${dirMods.join('')}${funcMods.join('')}$base${range == 1 ? '' : range}';
 }

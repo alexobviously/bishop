@@ -53,17 +53,17 @@ class Game {
       // there is probably a better way to do all of this
       bool white = c == c.toUpperCase();
       royalFile = file(royalSquares[white ? 0 : 1], size);
-      if (CASTLING_SYMBOLS.containsKey(c)) {
-        cr += CASTLING_SYMBOLS[c]!;
+      if (Castling.symbols.containsKey(c)) {
+        cr += Castling.symbols[c]!;
       } else {
         int _file = fileFromSymbol(c);
         bool kingside = _file > file(royalSquares[white ? 0 : 1], size);
         if (kingside) {
           castlingTargetK = _file;
-          cr += white ? CASTLING_K : CASTLING_BK;
+          cr += white ? Castling.k : Castling.bk;
         } else {
           castlingTargetQ = _file;
-          cr += white ? CASTLING_Q : CASTLING_BQ;
+          cr += white ? Castling.q : Castling.bq;
         }
       }
     }
@@ -77,9 +77,9 @@ class Game {
         bool kingside = false;
         for (int j = 0; j < size.h; j++) {
           int _piece = board[r + j].type;
-          if (_piece == variant.royalPiece)
+          if (_piece == variant.royalPiece) {
             kingside = true;
-          else if (_piece == variant.castlingPiece) {
+          } else if (_piece == variant.castlingPiece) {
             if (kingside) {
               castlingTargetK = j;
             } else {
@@ -496,7 +496,7 @@ class Game {
           }
         }
         if (_valid) {
-          int castlingDir = i == 0 ? CASTLING_K : CASTLING_Q;
+          int castlingDir = i == 0 ? Castling.k : Castling.q;
           Move m = Move(
             from: from,
             to: targetSq,
@@ -699,7 +699,7 @@ class Game {
     }
 
     if (move.castling) {
-      bool kingside = move.castlingDir == CASTLING_K;
+      bool kingside = move.castlingDir == Castling.k;
       int castlingFile =
           kingside ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;

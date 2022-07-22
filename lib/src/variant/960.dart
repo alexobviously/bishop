@@ -77,12 +77,12 @@ String buildRandomPosition({required BoardSize size, int? numRooks}) {
   CastlingRights castlingRights = 0;
   if (_numRooks == 0) placePiece(squares.first, KING);
   if (_numRooks == 1) {
-    castlingRights = qsFirst ? CASTLING_BOTH_Q : CASTLING_BOTH_K;
+    castlingRights = qsFirst ? Castling.bothQ : Castling.bothK;
     placePiece(squares.first, qsFirst ? ROOK : KING);
     placePiece(squares.first, qsFirst ? KING : ROOK);
   }
   if (_numRooks == 2) {
-    castlingRights = CASTLING_MASK;
+    castlingRights = Castling.mask;
     placePiece(squares.first, ROOK);
     placePiece(squares.first, KING);
     placePiece(squares.first, ROOK);

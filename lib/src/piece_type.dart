@@ -136,8 +136,14 @@ class PieceDefinition {
   @override
   String toString() => 'PieceDefinition($symbol)';
 
-  PieceDefinition({required this.type, required this.symbol, required this.value});
-  factory PieceDefinition.empty() => PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
+  const PieceDefinition({
+    required this.type,
+    required this.symbol,
+    required this.value,
+  });
+
+  factory PieceDefinition.empty() =>
+      PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
 
   String char(Colour colour) => colour == WHITE ? symbol.toUpperCase() : symbol.toLowerCase();
 }
