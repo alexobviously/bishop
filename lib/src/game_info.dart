@@ -7,7 +7,7 @@ class GameInfo {
   final String? lastTo;
   final String? checkSq;
 
-  GameInfo({
+  const GameInfo({
     this.lastMove,
     this.lastFrom,
     this.lastTo,

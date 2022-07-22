@@ -7,8 +7,13 @@ class Engine {
 
   Engine({required this.game});
 
-  Future<EngineResult> search(
-      {int maxDepth = 50, int timeLimit = 5000, int timeBuffer = 2000, int debug = 0, int printBest = 0}) async {
+  Future<EngineResult> search({
+    int maxDepth = 50,
+    int timeLimit = 5000,
+    int timeBuffer = 2000,
+    int debug = 0,
+    int printBest = 0,
+  }) async {
     if (game.gameOver) {
       print(game.inDraw ? 'Draw' : 'Checkmate');
       return EngineResult();
@@ -19,7 +24,9 @@ class Engine {
     int depthSearched = 0;
     List<Move> moves = game.generateLegalMoves();
     Map<Move, int> evals = {};
-    moves.forEach((m) => evals[m] = 0);
+    for (Move m in moves) {
+      evals[m] = 0;
+    }
     for (int depth = 1; depth < maxDepth; depth++) {
       if (debug > 0) print('----- DEPTH $depth -----');
       for (Move m in moves) {
@@ -68,9 +75,8 @@ class Engine {
     if (moves.isNotEmpty) {
       int a = alpha;
       for (Move m in moves) {
-        int _debug = debug - 1;
         game.makeMove(m);
-        int v = -negamax(depth - 1, -beta, -a, player.opponent, _debug);
+        int v = -negamax(depth - 1, -beta, -a, player.opponent, debug - 1);
         game.undo();
         value = max(v, value);
         a = max(a, value);

@@ -18,30 +18,30 @@ class MoveGenOptions {
     this.pieceType,
     this.onlySquare,
   });
-  factory MoveGenOptions.normal() => MoveGenOptions(
-        captures: true,
-        quiet: true,
-        castling: true,
-        legal: true,
-      );
-  factory MoveGenOptions.onlyQuiet() => MoveGenOptions(
-        captures: false,
-        quiet: true,
-        castling: true,
-        legal: true,
-      );
-  factory MoveGenOptions.onlyCaptures() => MoveGenOptions(
-        captures: true,
-        quiet: false,
-        castling: false,
-        legal: true,
-      );
-  factory MoveGenOptions.attacks() => MoveGenOptions(
-        captures: true,
-        quiet: false,
-        castling: false,
-        legal: false,
-      );
+  static const normal = MoveGenOptions(
+    captures: true,
+    quiet: true,
+    castling: true,
+    legal: true,
+  );
+  static const onlyQuiet = MoveGenOptions(
+    captures: false,
+    quiet: true,
+    castling: true,
+    legal: true,
+  );
+  static const onlyCaptures = MoveGenOptions(
+    captures: true,
+    quiet: false,
+    castling: false,
+    legal: true,
+  );
+  static const attacks = MoveGenOptions(
+    captures: true,
+    quiet: false,
+    castling: false,
+    legal: false,
+  );
   factory MoveGenOptions.pieceCaptures(int pieceType) => MoveGenOptions(
         captures: true,
         quiet: false,
@@ -56,11 +56,11 @@ class MoveGenOptions {
         legal: false,
         onlySquare: square,
       );
-  factory MoveGenOptions.premoves() => MoveGenOptions(
-        captures: true,
-        quiet: true,
-        castling: true,
-        legal: false,
-        ignorePieces: true,
-      );
+  static const premoves = MoveGenOptions(
+    captures: true,
+    quiet: true,
+    castling: true,
+    legal: false,
+    ignorePieces: true,
+  );
 }

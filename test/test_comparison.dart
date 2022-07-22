@@ -6,7 +6,11 @@ import 'constants.dart';
 
 void main() {
   final List<CompareTest> tests = [
-    CompareTest(variant: Variant.standard(), pos1: Positions.STANDARD_DEFAULT, pos2: Positions.STANDARD_DEFAULT),
+    CompareTest(
+      variant: Variant.standard(),
+      pos1: Positions.STANDARD_DEFAULT,
+      pos2: Positions.STANDARD_DEFAULT,
+    ),
     CompareTest(
       variant: Variant.standard(),
       pos1: 'rnbqkbnr/pp1ppppp/8/2p5/4P3/8/PPPP1PPP/RNBQKBNR w KQkq c6 0 2',
@@ -34,10 +38,11 @@ void main() {
         Game g2 = Game(variant: t.variant, fen: t.pos2);
         for (String m in t.moves) {
           Move? move = g2.getMove(m);
-          if (move != null)
+          if (move != null) {
             g2.makeMove(move);
-          else
+          } else {
             fail('Move $m not found');
+          }
         }
         int h2 = g2.state.hash;
         if (h1 != h2) {
@@ -60,10 +65,11 @@ void main() {
         Game g2 = Game(variant: t.variant, fen: t.pos2);
         for (String m in t.moves) {
           Move? move = g2.getMove(m);
-          if (move != null)
+          if (move != null) {
             g2.makeMove(move);
-          else
+          } else {
             fail('Move $m not found');
+          }
         }
         List<int> p2 = g2.state.pieces;
         if (!ListEquality().equals(p1, p2)) {
@@ -86,5 +92,10 @@ class CompareTest {
   final String pos2;
   final List<String> moves;
 
-  CompareTest({required this.variant, required this.pos1, required this.pos2, this.moves = const []});
+  const CompareTest({
+    required this.variant,
+    required this.pos1,
+    required this.pos2,
+    this.moves = const [],
+  });
 }

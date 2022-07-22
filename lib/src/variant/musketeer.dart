@@ -1,7 +1,7 @@
 import 'package:bishop/bishop.dart';
 
 class Musketeer {
-  static const String DEFAULT_FEN = '8/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1';
+  static const String defaultFen = '8/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1';
   static PieceType leopard() => PieceType.fromBetza('F2N');
   static PieceType hawk() => PieceType.fromBetza('ADGH');
   static PieceType unicorn() => PieceType.fromBetza('NC');
@@ -14,7 +14,7 @@ class Musketeer {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Musketeer Chess',
-      startPosition: DEFAULT_FEN,
+      startPosition: defaultFen,
       gatingMode: GatingMode.FIXED,
       pieceTypes: standard.pieceTypes
         ..addAll(

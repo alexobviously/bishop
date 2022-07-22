@@ -136,38 +136,38 @@ class Atom {
         dirs.addAll(baseDir.permutations);
       } else {
         // this is extremely cursed but thinking of a better way hurts my brain
-        String _dirString = dirMods.join('');
+        String dirString = dirMods.join('');
         bool hasDir(String d) {
-          bool _contains = _dirString.contains(d);
-          if (!_contains) return false;
-          _dirString = _dirString.replaceFirst(d, '');
+          bool contains = dirString.contains(d);
+          if (!contains) return false;
+          dirString = dirString.replaceFirst(d, '');
           return true;
         }
 
-        bool _fh = hasDir('fh');
-        bool _bh = hasDir('bh');
-        bool _lv = hasDir('lv');
-        bool _rv = hasDir('rv');
-        bool _ll = hasDir('ll');
-        bool _rr = hasDir('rr');
-        bool _ff = hasDir('ff');
-        bool _bb = hasDir('bb');
-        bool _fs = hasDir('fs');
-        bool _bs = hasDir('bs');
-        bool _hl = hasDir('hl');
-        bool _hr = hasDir('hr');
-        bool _lh = hasDir('lh');
-        bool _rh = hasDir('rh');
-        bool _v = hasDir('v');
-        bool _s = hasDir('s');
-        if (hasDir('fr') || _fh || _rr || _hl || _rh || _fs || _s) dirs.add(Direction(h, v)); // fr
-        if (hasDir('fl') || _fh || _ll || _hr || _lh || _fs || _s) dirs.add(Direction(-h, v)); // fl
-        if (hasDir('br') || _bh || _rr || _hr || _rh || _bs || _s) dirs.add(Direction(h, -v)); // br
-        if (hasDir('bl') || _bh || _ll || _hl || _lh || _bs || _s) dirs.add(Direction(-h, -v)); // bl
-        if (hasDir('rf') || _fh || _rv || _hr || _rh || _ff || _v) dirs.add(Direction(v, h)); // rf
-        if (hasDir('rb') || _bh || _rv || _hl || _rh || _bb || _v) dirs.add(Direction(v, -h)); // rb
-        if (hasDir('lf') || _fh || _lv || _hl || _lh || _ff || _v) dirs.add(Direction(-v, h)); // lf
-        if (hasDir('lb') || _bh || _lv || _hr || _lh || _bb || _v) dirs.add(Direction(-v, -h)); // lb
+        bool fh = hasDir('fh');
+        bool bh = hasDir('bh');
+        bool lv = hasDir('lv');
+        bool rv = hasDir('rv');
+        bool ll = hasDir('ll');
+        bool rr = hasDir('rr');
+        bool ff = hasDir('ff');
+        bool bb = hasDir('bb');
+        bool fs = hasDir('fs');
+        bool bs = hasDir('bs');
+        bool hl = hasDir('hl');
+        bool hr = hasDir('hr');
+        bool lh = hasDir('lh');
+        bool rh = hasDir('rh');
+        bool vv = hasDir('v');
+        bool s = hasDir('s');
+        if (hasDir('fr') || fh || rr || hl || rh || fs || s) dirs.add(Direction(h, v)); // fr
+        if (hasDir('fl') || fh || ll || hr || lh || fs || s) dirs.add(Direction(-h, v)); // fl
+        if (hasDir('br') || bh || rr || hr || rh || bs || s) dirs.add(Direction(h, -v)); // br
+        if (hasDir('bl') || bh || ll || hl || lh || bs || s) dirs.add(Direction(-h, -v)); // bl
+        if (hasDir('rf') || fh || rv || hr || rh || ff || vv) dirs.add(Direction(v, h)); // rf
+        if (hasDir('rb') || bh || rv || hl || rh || bb || vv) dirs.add(Direction(v, -h)); // rb
+        if (hasDir('lf') || fh || lv || hl || lh || ff || vv) dirs.add(Direction(-v, h)); // lf
+        if (hasDir('lb') || bh || lv || hr || lh || bb || vv) dirs.add(Direction(-v, -h)); // lb
       }
     }
     return dirs;
@@ -178,5 +178,6 @@ class Atom {
       : modality == Modality.CAPTURE
           ? 'c'
           : '';
-  String toString() => '$modalityString${dirMods.join('')}${funcMods.join('')}$base${range == 1 ? '' : range}';
+  String toString() =>
+      '$modalityString${dirMods.join('')}${funcMods.join('')}$base${range == 1 ? '' : range}';
 }

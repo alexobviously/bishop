@@ -14,10 +14,10 @@ class Zobrist {
   }
 
   void init(Variant variant, int seed) {
-    const int NUM_AUX = 16; // we need some extra entries for castling rights, ep, etc
-    const int PARTS = 4;
+    const int numAux = 16; // we need some extra entries for castling rights, ep, etc
+    const int numParts = 4;
     Random r = Random(seed);
-    int dimX = variant.boardSize.numIndices + NUM_AUX;
+    int dimX = variant.boardSize.numIndices + numAux;
     int dimY = max(variant.pieces.length * 2, CASTLING_MASK + 1);
     CASTLING = dimY + 1;
     TURN = dimY + 2;
@@ -25,7 +25,7 @@ class Zobrist {
     for (int i = 0; i < dimX; i++) {
       for (int j = 0; j < dimY; j++) {
         int value = 0;
-        for (int k = 0; k < PARTS; k++) {
+        for (int k = 0; k < numParts; k++) {
           // compute a random 64 bit int
           int part = r.nextInt(1 << 16); // 16 bit because max value is 2^32-1
           value <<= 16;

@@ -1,6 +1,6 @@
 import 'package:bishop/bishop.dart';
 
-main(List<String> args) async {
+void main(List<String> args) async {
   Game game = Game(variant: Variant.mini());
   Engine engine = Engine(game: game);
 

@@ -32,10 +32,10 @@ class BoardSize {
   const BoardSize(this.h, this.v);
 
   /// A standard 8x8 board.
-  static const STANDARD = const BoardSize(8, 8);
+  static const standard = BoardSize(8, 8);
 
   /// A mini 6x6 board.
-  static const MINI = const BoardSize(6, 6);
+  static const mini = BoardSize(6, 6);
 
   @override
   String toString() => 'BoardSize($h, $v)';

@@ -13,7 +13,7 @@ class CastlingOptions {
   bool get kingside => kTarget != null;
   bool get queenside => qTarget != null;
 
-  CastlingOptions({
+  const CastlingOptions({
     required this.enabled,
     this.kTarget,
     this.qTarget,
@@ -34,7 +34,7 @@ class CastlingOptions {
   //   }
   // }
 
-  factory CastlingOptions.none() => CastlingOptions(enabled: false);
+  static const none = CastlingOptions(enabled: false);
 
   factory CastlingOptions.standard([String rookPiece = 'R']) => CastlingOptions(
         enabled: true,

@@ -14,16 +14,22 @@ class OutputOptions {
   /// For example, to be used with Seirawan gates.
   final bool virginFiles;
 
-  OutputOptions({
+  const OutputOptions({
     required this.castlingFormat,
     this.showPromoted = false,
     this.virginFiles = false,
   });
 
-  factory OutputOptions.standard() => OutputOptions(castlingFormat: CastlingFormat.Standard);
-  factory OutputOptions.chess960() => OutputOptions(castlingFormat: CastlingFormat.Shredder);
-  factory OutputOptions.crazyhouse() => OutputOptions(castlingFormat: CastlingFormat.Standard, showPromoted: true);
-  factory OutputOptions.seirawan() => OutputOptions(castlingFormat: CastlingFormat.Standard, virginFiles: true);
+  static const standard = OutputOptions(castlingFormat: CastlingFormat.standard);
+  static const chess960 = OutputOptions(castlingFormat: CastlingFormat.shredder);
+  static const crazyhouse = OutputOptions(
+    castlingFormat: CastlingFormat.standard,
+    showPromoted: true,
+  );
+  static const seirawan = OutputOptions(
+    castlingFormat: CastlingFormat.standard,
+    virginFiles: true,
+  );
 }
 
 /// Determines how castling rights are represented in FEN strings.
@@ -34,16 +40,16 @@ class OutputOptions {
 enum CastlingFormat {
   /// The standard castling format labels rights as 'KQkq', regardless of the
   /// position of the rooks.
-  Standard,
+  standard,
 
   /// Uses the letters for the files that the rooks start on to represent
   /// castling rights. For example, the default chess position's castling rights
   /// would be rendered as 'HAha'.
-  Shredder,
+  shredder,
 
   /// Currently unsupported for output. Coming soon!
   /// A middle ground between Standard and Shredder notation.
   /// Uses the standard format ('KQkq') unless there is an ambiguity, in which
   /// case the ambiguous rook's file will be used.
-  Xfen,
+  xfen,
 }

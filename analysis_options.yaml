@@ -1,0 +1,10 @@
+include: package:lints/recommended.yaml
+
+linter:
+  rules:
+    - camel_case_types
+    - prefer_single_quotes
+    - unawaited_futures
+    - cancel_subscriptions
+    - require_trailing_commas
+    - always_declare_return_types

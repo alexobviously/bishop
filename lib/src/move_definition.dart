@@ -42,6 +42,7 @@ class MoveDefinition {
     this.lame = false,
   });
 
+  @override
   String toString() {
     String string = direction.toString();
     List<String> mods = [];
@@ -74,18 +75,19 @@ class Direction {
 
   /// A list of directions that occur from mirroring this `Direction` in both axes.
   List<Direction> get permutations {
-    List<Direction> _permutations = [];
+    List<Direction> perms = [];
     List<int> hs = h == 0 ? [0] : [h, -h];
     List<int> vs = v == 0 ? [0] : [v, -v];
 
-    for (int _h in hs) {
-      for (int _v in vs) {
-        _permutations.add(Direction(_h, _v));
-        _permutations.add(Direction(_v, _h));
+    for (int h in hs) {
+      for (int v in vs) {
+        perms.add(Direction(h, v));
+        perms.add(Direction(v, h));
       }
     }
-    return _permutations;
+    return perms;
   }
 
+  @override
   String toString() => '($h,$v)';
 }

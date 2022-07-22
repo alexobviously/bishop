@@ -107,7 +107,8 @@ class Variant {
     this.gatingMode = GatingMode.NONE,
     this.pieceValues,
   }) {
-    assert(startPosition != null || startPosBuilder != null, 'Variant needs either a startPosition or startPosBuilder');
+    assert(startPosition != null || startPosBuilder != null,
+        'Variant needs either a startPosition or startPosBuilder');
     init();
   }
 
@@ -169,7 +170,8 @@ class Variant {
   }
 
   int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
-  List<int> pieceIndices(List<String> symbols) => symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
+  List<int> pieceIndices(List<String> symbols) =>
+      symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
 
   void initPieces() {
     pieceTypes.forEach((_, p) => p.init(boardSize));
@@ -211,11 +213,11 @@ class Variant {
   factory Variant.standard() {
     return Variant(
       name: 'Chess',
-      boardSize: BoardSize.STANDARD,
+      boardSize: BoardSize.standard,
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.standard(),
       materialConditions: MaterialConditions.STANDARD,
-      outputOptions: OutputOptions.standard(),
+      outputOptions: OutputOptions.standard,
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
       enPassant: true,
@@ -241,7 +243,7 @@ class Variant {
       name: 'Chess960',
       startPosBuilder: build960Position,
       castlingOptions: CastlingOptions.chess960(),
-      outputOptions: OutputOptions.chess960(),
+      outputOptions: OutputOptions.chess960,
     );
   }
 
@@ -273,7 +275,7 @@ class Variant {
       name: 'Grand Chess',
       boardSize: BoardSize(10, 10),
       startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
-      castlingOptions: CastlingOptions.none(),
+      castlingOptions: CastlingOptions.none,
       promotionRanks: [RANK_3, RANK_8],
       firstMoveRanks: [
         [RANK_3],
@@ -291,7 +293,7 @@ class Variant {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Mini Chess',
-      boardSize: BoardSize.MINI,
+      boardSize: BoardSize.mini,
       startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
       pieceTypes: standard.pieceTypes..['P'] = PieceType.simplePawn(),
       castlingOptions: CastlingOptions.mini(),
@@ -304,9 +306,9 @@ class Variant {
     Variant mini = Variant.mini();
     return mini.copyWith(
       name: 'Mini Random',
-      startPosBuilder: () => buildRandomPosition(size: BoardSize.MINI),
+      startPosBuilder: () => buildRandomPosition(size: BoardSize.mini),
       castlingOptions: CastlingOptions.miniRandom(),
-      outputOptions: OutputOptions.chess960(),
+      outputOptions: OutputOptions.chess960,
     );
   }
 
@@ -344,9 +346,10 @@ class Variant {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Seirawan Chess',
-      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
+      startPosition:
+          'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
       gatingMode: GatingMode.FLEX,
-      outputOptions: OutputOptions.seirawan(),
+      outputOptions: OutputOptions.seirawan,
       pieceTypes: standard.pieceTypes
         ..addAll({
           'H': PieceType.archbishop(),
@@ -355,5 +358,6 @@ class Variant {
     );
   }
 
-  factory Variant.threeCheck() => Variant.standard().copyWith(gameEndConditions: GameEndConditions.threeCheck);
+  factory Variant.threeCheck() =>
+      Variant.standard().copyWith(gameEndConditions: GameEndConditions.threeCheck);
 }
