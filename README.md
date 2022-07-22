@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://raw.githubusercontent.com/alexobviously/bishop/main/images/banner.png" height="100" alt="Bishop" />
+<img src="https://raw.githubusercontent.com/alexobviously/bishop/master/images/banner.png" height="100" alt="Bishop" />
 </p>
 
 #### A chess logic package with flexible variant support.
