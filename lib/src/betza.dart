@@ -23,8 +23,8 @@ class Betza {
     'e', // en-passant
   ];
   static const Map<String, int> MODALITIES = {
-    'm': Modality.QUIET,
-    'c': Modality.CAPTURE,
+    'm': Modality.quiet,
+    'c': Modality.capture,
   };
 
   static List<Atom> parse(String string) {
@@ -35,7 +35,7 @@ class Betza {
     List<String> _dirs = [];
     List<String> _funcs = [];
     int range = 1;
-    int modality = Modality.BOTH;
+    int modality = Modality.both;
 
     void add() {
       for (String a in _atoms) {
@@ -52,7 +52,7 @@ class Betza {
       _dirs = [];
       _funcs = [];
       range = 1;
-      modality = Modality.BOTH;
+      modality = Modality.both;
     }
 
     for (String c in chars) {
@@ -92,14 +92,14 @@ class Atom {
     this.dirMods = const [],
     this.funcMods = const [],
     this.range = 1,
-    this.modality = Modality.BOTH,
+    this.modality = Modality.both,
   });
 
   bool get firstOnly => funcMods.contains('i');
   bool get enPassant => funcMods.contains('e');
   bool get lame => funcMods.contains('n');
-  bool get quiet => modality == Modality.BOTH || modality == Modality.QUIET;
-  bool get capture => modality == Modality.BOTH || modality == Modality.CAPTURE;
+  bool get quiet => modality == Modality.both || modality == Modality.quiet;
+  bool get capture => modality == Modality.both || modality == Modality.capture;
 
   List<Direction> get directions {
     Direction baseDir = Betza.ATOMS[base]!;
@@ -173,9 +173,9 @@ class Atom {
     return dirs;
   }
 
-  String get modalityString => modality == Modality.QUIET
+  String get modalityString => modality == Modality.quiet
       ? 'm'
-      : modality == Modality.CAPTURE
+      : modality == Modality.capture
           ? 'c'
           : '';
 

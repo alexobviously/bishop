@@ -57,13 +57,13 @@ class Move {
 
   @override
   String toString() {
-    List<String> _params = ['from: $from', 'to: $to'];
-    if (promotion) _params.add('promo: $promoPiece');
-    if (castling) _params.add('castling: $castlingDir');
-    if (drop) _params.add('drop: $dropPiece');
-    if (enPassant) _params.add('enPassant');
-    if (setEnPassant) _params.add('setEnPassant');
-    return 'Move(${_params.join(', ')})';
+    List<String> params = ['from: $from', 'to: $to'];
+    if (promotion) params.add('promo: $promoPiece');
+    if (castling) params.add('castling: $castlingDir');
+    if (drop) params.add('drop: $dropPiece');
+    if (enPassant) params.add('enPassant');
+    if (setEnPassant) params.add('setEnPassant');
+    return 'Move(${params.join(', ')})';
   }
 
   const Move({
@@ -108,15 +108,19 @@ class Move {
     );
   }
 
-  factory Move.drop({required int to, required int dropPiece}) => Move(from: HAND, to: to, dropPiece: dropPiece);
+  factory Move.drop({required int to, required int dropPiece}) =>
+      Move(from: HAND, to: to, dropPiece: dropPiece);
 
   /// Provides the most basic algebraic form of the move.
   /// This is not entirely descriptive, and doesn't provide information on promo
   /// or gated pieces, for example.
   /// Use `Game.toAlgebraic` in almost every situation.
-  String algebraic({BoardSize size = const BoardSize(8, 8), bool useRookForCastling = false}) {
-    String _from = from == HAND ? '@' : squareName(from, size);
-    String _to = squareName((castling && useRookForCastling) ? castlingPieceSquare! : to, size);
-    return '$_from$_to';
+  String algebraic({
+    BoardSize size = BoardSize.standard,
+    bool useRookForCastling = false,
+  }) {
+    String fromStr = from == HAND ? '@' : squareName(from, size);
+    String toStr = squareName((castling && useRookForCastling) ? castlingPieceSquare! : to, size);
+    return '$fromStr$toStr';
   }
 }

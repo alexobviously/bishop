@@ -117,7 +117,7 @@ class Game {
     List<List<int>>? _gates;
     List<int> _pieces = List.filled((variant.pieces.length + 1) * 2, 0);
     List<int> _checks = [0, 0];
-    if (variant.hands || variant.gatingMode == GatingMode.FLEX) {
+    if (variant.hands || variant.gatingMode == GatingMode.flex) {
       List<List<int>> _temp = [[], []];
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
       RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
@@ -135,14 +135,16 @@ class Game {
           }
         }
       }
-      if (variant.hands)
+      if (variant.hands) {
         _hands = _temp;
-      else if (variant.gatingMode == GatingMode.FLEX) _gates = _temp;
+      } else if (variant.gatingMode == GatingMode.flex) {
+        _gates = _temp;
+      }
     }
 
     List<String> _board = sections[0].split('');
     if (_board.where((e) => e == '/').length !=
-        (variant.boardSize.v - 1 + (variant.gatingMode == GatingMode.FIXED ? 2 : 0))) {
+        (variant.boardSize.v - 1 + (variant.gatingMode == GatingMode.fixed ? 2 : 0))) {
       throw ('Invalid FEN: wrong number of ranks');
     }
     String _turn = (strict || sections.length > 1) ? sections[1] : 'w';
@@ -157,7 +159,7 @@ class Game {
 
     // Process fixed gates, for variants like musketeer.
     // gate/rbn...BNR/GATE
-    if (variant.gatingMode == GatingMode.FIXED) {
+    if (variant.gatingMode == GatingMode.fixed) {
       _gates = [List.filled(size.h, 0), List.filled(size.h, 0)];
       // extract the first and last segments
       List<String> _fileStrings = sections[0].split('/');
@@ -199,14 +201,15 @@ class Game {
 
     for (String c in _board) {
       if (c == '~') {
-        board[sq - 1] = board[sq - 1] + FLAG_PROMO;
+        board[sq - 1] = board[sq - 1] + promoFlag;
         continue;
       }
       String symbol = c.toUpperCase();
       if (isNumeric(c)) {
         emptySquares = (emptySquares * 10) + int.parse(c);
-        if (!onBoard(sq + emptySquares - 1, size))
+        if (!onBoard(sq + emptySquares - 1, size)) {
           throw ('Invalid FEN: rank overflow [$c, ${sq + emptySquares - 1}]');
+        }
       } else {
         sq += emptySquares;
         emptySquares = 0;
@@ -312,7 +315,7 @@ class Game {
         if (onPromoRank && variant.pieces[p].type.promotable) continue;
         int dropPiece = p;
         // TODO: support more than one promo piece in this case
-        if (p.hasFlag(FLAG_PROMO)) dropPiece = variant.promotionPieces[0];
+        if (p.hasFlag(promoFlag)) dropPiece = variant.promotionPieces[0];
         Move m = Move.drop(to: i, dropPiece: dropPiece);
         drops.add(m);
       }
@@ -384,7 +387,7 @@ class Game {
                 (_rank == size.maxRank && colour == BLACK)) {
               final _gatingMoves = generateGatingMoves(m);
               moves.addAll(_gatingMoves);
-              if (_gatingMoves.isNotEmpty && variant.gatingMode == GatingMode.FIXED) {
+              if (_gatingMoves.isNotEmpty && variant.gatingMode == GatingMode.fixed) {
                 addBase = false;
               }
             }
@@ -468,8 +471,9 @@ class Game {
         int rookTargetFile = i == 0 ? targetFile - 1 : targetFile + 1;
         int rookTargetSq = getSquare(rookTargetFile, royalRank, size); // where the rook lands
         // Check rook target square is empty (or occupied by the rook/king already)
-        if (board[rookTargetSq].isNotEmpty && rookTargetSq != rookSq && rookTargetSq != from)
+        if (board[rookTargetSq].isNotEmpty && rookTargetSq != rookSq && rookTargetSq != from) {
           continue;
+        }
         // Check king target square is empty (or occupied by the castling rook)
         if (board[targetSq].isNotEmpty && targetSq != rookSq) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
@@ -485,8 +489,9 @@ class Game {
               break;
             }
             if (midFile == rookFile) continue; // for some chess960 positions
-            if (midFile == targetFile && targetFile == royalFile)
-              continue; // king starting on target
+            if (midFile == targetFile && targetFile == royalFile) {
+              continue;
+            } // king starting on target
 
             if (j != numMidSqs && board[midSq].isNotEmpty) {
               // squares between to and from must be empty
@@ -503,7 +508,7 @@ class Game {
             castlingDir: castlingDir,
             castlingPieceSquare: rookSq,
           );
-          if (variant.gatingMode != GatingMode.FIXED) moves.add(m);
+          if (variant.gatingMode != GatingMode.fixed) moves.add(m);
           if (variant.gating) {
             int _rank = rank(m.from, size);
             if ((_rank == RANK_1 && colour == WHITE) ||
@@ -566,11 +571,11 @@ class Game {
       }
     }
 
-    if (variant.gatingMode == GatingMode.FLEX) {
+    if (variant.gatingMode == GatingMode.flex) {
       for (int p in state.gates![colour]) {
         addGatingMove(p);
       }
-    } else if (variant.gatingMode == GatingMode.FIXED) {
+    } else if (variant.gatingMode == GatingMode.fixed) {
       int p = state.gates![colour][_file];
       if (p != 0) {
         addGatingMove(p);
@@ -595,12 +600,12 @@ class Game {
     List<int> _pieces = List.from(state.pieces);
 
     // TODO: more validation?
-    Square fromSq = move.from >= BOARD_START ? board[move.from] : EMPTY;
+    Square fromSq = move.from >= BOARD_START ? board[move.from] : empty;
     Square toSq = board[move.to];
     int fromRank = rank(move.from, size);
     int fromFile = file(move.from, size);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
-    if (fromSq != EMPTY && fromSq.colour != state.turn) return false;
+    if (fromSq != empty && fromSq.colour != state.turn) return false;
     int colour = turn;
     // Remove the moved piece, if this piece came from on the board.
     if (move.from >= BOARD_START) {
@@ -611,19 +616,19 @@ class Game {
       if (move.gate) {
         if (!(move.castling && move.dropOnRookSquare)) {
           // Move piece from gate to board.
-          if (variant.gatingMode == GatingMode.FLEX) {
+          if (variant.gatingMode == GatingMode.flex) {
             _gates![colour].remove(move.dropPiece!);
-          } else if (variant.gatingMode == GatingMode.FIXED) {
-            _gates![colour][fromFile] = EMPTY;
+          } else if (variant.gatingMode == GatingMode.fixed) {
+            _gates![colour][fromFile] = empty;
           }
           int dropPiece = move.dropPiece!;
           hash ^= zobrist.table[move.from][dropPiece.piece];
           board[move.from] = makePiece(dropPiece, colour);
         } else {
-          board[move.from] = EMPTY;
+          board[move.from] = empty;
         }
       } else {
-        board[move.from] = EMPTY;
+        board[move.from] = empty;
       }
       // Mark the file as touched.
       if ((fromRank == 0 && colour == WHITE) || (fromRank == size.v - 1 && colour == BLACK)) {
@@ -633,7 +638,7 @@ class Game {
 
     // Add captured piece to hand
     if (variant.hands && move.capture) {
-      int _piece = move.capturedPiece!.hasFlag(FLAG_PROMO)
+      int _piece = move.capturedPiece!.hasFlag(promoFlag)
           ? variant.promotionPieces[0]
           : move.capturedPiece!.type;
       _hands![colour].add(_piece);
@@ -661,7 +666,7 @@ class Game {
       if (move.from == HAND) _hands![colour].remove(move.dropPiece!);
     } else if (move.promotion) {
       // Place the promoted piece
-      board[move.to] = makePiece(move.promoPiece!, state.turn, FLAG_PROMO);
+      board[move.to] = makePiece(move.promoPiece!, state.turn, promoFlag);
       hash ^= zobrist.table[move.to][board[move.to].piece];
       _pieces[board[move.to].piece]++;
     }
@@ -680,7 +685,7 @@ class Game {
       // Remove the captured ep piece
       int captureSq = move.to + PLAYER_DIRECTION[colour.opponent] * size.north;
       hash ^= zobrist.table[captureSq][board[captureSq].piece];
-      board[captureSq] = EMPTY;
+      board[captureSq] = empty;
       _pieces[board[captureSq].piece]--;
     }
 
@@ -711,7 +716,7 @@ class Game {
       hash ^= zobrist.table[kingSq][fromSq.piece];
       if (board[rookSq].isNotEmpty) hash ^= zobrist.table[rookSq][board[rookSq].piece];
       hash ^= zobrist.table[rookSq][rook.piece];
-      board[move.castlingPieceSquare!] = EMPTY;
+      board[move.castlingPieceSquare!] = empty;
       board[kingSq] = fromSq;
       board[rookSq] = rook;
       _castlingRights = _castlingRights.remove(colour);
@@ -734,8 +739,8 @@ class Game {
     } else if (fromSq.type == variant.castlingPiece) {
       // rook moved
       int fromFile = file(move.from, size);
-      int ks = colour == WHITE ? CASTLING_K : CASTLING_BK;
-      int qs = colour == WHITE ? CASTLING_Q : CASTLING_BQ;
+      int ks = colour == WHITE ? Castling.k : Castling.bk;
+      int qs = colour == WHITE ? Castling.q : Castling.bq;
       if (fromFile == castlingTargetK && _castlingRights.hasRight(ks)) {
         _castlingRights = _castlingRights.flip(ks);
         hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
@@ -749,8 +754,8 @@ class Game {
       // rook captured
       int toFile = file(move.to, size);
       int opponent = colour.opponent;
-      int ks = opponent == WHITE ? CASTLING_K : CASTLING_BK;
-      int qs = opponent == WHITE ? CASTLING_Q : CASTLING_BQ;
+      int ks = opponent == WHITE ? Castling.k : Castling.bk;
+      int qs = opponent == WHITE ? Castling.q : Castling.bq;
       if (toFile == castlingTargetK && _castlingRights.hasRight(ks)) {
         _castlingRights = _castlingRights.flip(ks);
         hash ^= zobrist.table[zobrist.CASTLING][state.castlingRights];
@@ -803,7 +808,7 @@ class Game {
     int toSq = board[move.to];
 
     if (move.castling) {
-      bool kingside = move.castlingDir == CASTLING_K;
+      bool kingside = move.castlingDir == Castling.k;
       int royalRank = rank(move.from, size);
       int castlingFile =
           kingside ? variant.castlingOptions.kTarget! : variant.castlingOptions.qTarget!;
@@ -811,8 +816,8 @@ class Game {
       int rookSq = getSquare(rookFile, royalRank, size);
       int _rook = board[rookSq];
       int _king = board[move.to];
-      board[move.to] = EMPTY;
-      board[rookSq] = EMPTY;
+      board[move.to] = empty;
+      board[rookSq] = empty;
       board[move.from] = _king;
       board[move.castlingPieceSquare!] = _rook;
     } else {
@@ -828,7 +833,7 @@ class Game {
       if (move.capture && !move.enPassant) {
         board[move.to] = move.capturedPiece!;
       } else {
-        board[move.to] = EMPTY;
+        board[move.to] = empty;
       }
     }
 
@@ -939,7 +944,7 @@ class Game {
         move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
     if (move.promotion) alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
     if (move.from == HAND) alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
-    if (move.gate && !(variant.gatingMode == GatingMode.FIXED && simplifyFixedGating)) {
+    if (move.gate && !(variant.gatingMode == GatingMode.fixed && simplifyFixedGating)) {
       alg = '$alg/${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
       if (move.castling) {
         String _dropSq = move.dropOnRookSquare
@@ -961,7 +966,7 @@ class Game {
       // if queenside is the only castling option, render it as 'O-O'
       String kingside = 'O-O';
       String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
-      san = ([CASTLING_K, CASTLING_BK].contains(move.castlingDir)) ? kingside : queenside;
+      san = ([Castling.k, Castling.bk].contains(move.castlingDir)) ? kingside : queenside;
     } else {
       if (move.from == HAND) {
         PieceDefinition _pieceDef = variant.pieces[move.dropPiece!];
@@ -1090,7 +1095,7 @@ class Game {
         } else {
           if (empty > 0) addEmptySquares();
           String char = variant.pieces[sq.type].char(sq.colour);
-          if (variant.outputOptions.showPromoted && sq.hasFlag(FLAG_PROMO)) char += '~';
+          if (variant.outputOptions.showPromoted && sq.hasFlag(promoFlag)) char += '~';
           _fen = '$_fen$char';
         }
       }
@@ -1104,14 +1109,14 @@ class Game {
           state.hands![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
       _fen = '$_fen[$whiteHand$blackHand]';
     }
-    if (variant.gatingMode == GatingMode.FLEX) {
+    if (variant.gatingMode == GatingMode.flex) {
       String whiteGate =
           state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
       String blackGate =
           state.gates![BLACK].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
       _fen = '$_fen[$whiteGate$blackGate]';
     }
-    if (variant.gatingMode == GatingMode.FIXED) {
+    if (variant.gatingMode == GatingMode.fixed) {
       String whiteGate =
           state.gates![WHITE].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
       String blackGate =
@@ -1145,7 +1150,7 @@ class Game {
     String _turn = state.turn == WHITE ? 'w' : 'b';
     String _castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.shredder) {
-      _castling = replaceMultiple(_castling, CASTLING_SYMBOLS.keys.toList(), castlingFileSymbols);
+      _castling = replaceMultiple(_castling, Castling.symbols.keys.toList(), castlingFileSymbols);
     }
     if (variant.outputOptions.virginFiles) {
       String _whiteVfiles =
@@ -1194,7 +1199,7 @@ class Game {
     for (int i = 0; i < board.length; i++) {
       if (full || onBoard(i, size)) {
         int _piece = board[i];
-        String symbol = _piece == EMPTY ? '' : variant.pieces[_piece.type].symbol;
+        String symbol = _piece == empty ? '' : variant.pieces[_piece.type].symbol;
         symbols.add(_piece.colour == WHITE ? symbol.toUpperCase() : symbol.toLowerCase());
       }
     }
@@ -1274,10 +1279,11 @@ class Game {
         Colour colour = square.colour;
         int type = square.type;
         int value = variant.pieces[type].value;
-        if (colour == player)
+        if (colour == player) {
           eval += value;
-        else
+        } else {
           eval -= value;
+        }
       }
     }
     return eval;

@@ -30,13 +30,13 @@ class MoveDefinition {
   int? lameNormalised;
 
   bool get slider => range != 1;
-  bool get quiet => modality == Modality.BOTH || modality == Modality.QUIET;
-  bool get capture => modality == Modality.BOTH || modality == Modality.CAPTURE;
+  bool get quiet => modality == Modality.both || modality == Modality.quiet;
+  bool get capture => modality == Modality.both || modality == Modality.capture;
 
   MoveDefinition({
     required this.direction,
     this.range = 1,
-    this.modality = Modality.BOTH,
+    this.modality = Modality.both,
     this.enPassant = false,
     this.firstOnly = false,
     this.lame = false,

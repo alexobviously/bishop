@@ -33,7 +33,7 @@ class MaterialConditions<T> {
 
   /// Material conditions for standard chess, as well as simple expanded variants
   /// with chancellor and archbishop only (e.g. Capablanca).
-  static const STANDARD = MaterialConditions(
+  static const standard = MaterialConditions(
     enabled: true,
     soloMaters: ['P', 'Q', 'R', 'A', 'C'],
     pairMaters: ['N'], // although a knight cannot force mate, it can happen if the opponent helps
@@ -44,5 +44,5 @@ class MaterialConditions<T> {
   );
 
   /// Disable insufficient material draws.
-  static const NONE = MaterialConditions<String>(enabled: false);
+  static const none = MaterialConditions<String>(enabled: false);
 }

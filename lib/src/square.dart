@@ -3,8 +3,8 @@ import 'variant/variant.dart';
 
 typedef Square = int;
 
-const Square EMPTY = 0;
-const int FLAG_PROMO = 1;
+const Square empty = 0;
+const int promoFlag = 1;
 
 extension SquareLogic on Square {
   Colour get colour => this & 1; // colour only
@@ -40,9 +40,9 @@ int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   assert(match!.groupCount == 2, 'Invalid square name: $name');
   String file = match!.group(1)!;
   String rank = match.group(2)!;
-  int _file = file.codeUnits[0] - ASCII_a;
-  int _rank = boardSize.v - int.parse(rank);
-  int square = _rank * boardSize.h * 2 + _file;
+  int fileNum = file.codeUnits[0] - ASCII_a;
+  int rankNum = boardSize.v - int.parse(rank);
+  int square = rankNum * boardSize.h * 2 + fileNum;
   return square;
 }
 
@@ -55,6 +55,7 @@ bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
 }
 
 int file(int square, [BoardSize boardSize = const BoardSize(8, 8)]) => square % (boardSize.h * 2);
-int rank(int square, [BoardSize boardSize = const BoardSize(8, 8)]) => boardSize.v - (square ~/ (boardSize.h * 2)) - 1;
+int rank(int square, [BoardSize boardSize = const BoardSize(8, 8)]) =>
+    boardSize.v - (square ~/ (boardSize.h * 2)) - 1;
 int getSquare(int file, int rank, [BoardSize boardSize = const BoardSize(8, 8)]) =>
     (boardSize.v - rank - 1) * (boardSize.h * 2) + file;

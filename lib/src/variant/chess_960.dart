@@ -2,11 +2,11 @@ part of 'variant.dart';
 
 /// Generates a valid Chess960 FEN string.
 String build960Position() {
-  const KNIGHT = 'N';
-  const BISHOP = 'B';
-  const ROOK = 'R';
-  const QUEEN = 'Q';
-  const KING = 'K';
+  const knight = 'N';
+  const bishop = 'B';
+  const rook = 'R';
+  const queen = 'Q';
+  const king = 'K';
   List<int> squares = Iterable<int>.generate(8).toList();
   List<String> pieces = List.filled(8, '');
   Random r = Random();
@@ -20,18 +20,22 @@ String build960Position() {
 
   // Place bishops
   List<int> bishops = [r.nextInt(4) * 2, r.nextInt(4) * 2 + 1];
-  for (int x in bishops) placePiece(x, BISHOP);
+  for (int x in bishops) {
+    placePiece(x, bishop);
+  }
 
   // Place queen
-  placePiece(randomSquare(), QUEEN);
+  placePiece(randomSquare(), queen);
 
   // Place knights
-  for (int _ in [0, 0]) placePiece(randomSquare(), KNIGHT);
+  for (int _ in [0, 0]) {
+    placePiece(randomSquare(), knight);
+  }
 
   // Place rooks and king
-  placePiece(squares.first, ROOK);
-  placePiece(squares.first, KING);
-  placePiece(squares.first, ROOK);
+  placePiece(squares.first, rook);
+  placePiece(squares.first, king);
+  placePiece(squares.first, rook);
   String blackPieces = pieces.map((p) => p.toLowerCase()).join('');
   String whitePieces = pieces.map((p) => p.toUpperCase()).join('');
   String pawns = 'p' * 8;
@@ -42,12 +46,12 @@ String build960Position() {
 /// Builds an arbitrary random position. Currently of limited use, but will
 /// be generalised more at some point.
 String buildRandomPosition({required BoardSize size, int? numRooks}) {
-  const KNIGHT = 'N';
-  const BISHOP = 'B';
-  const ROOK = 'R';
-  const QUEEN = 'Q';
-  const KING = 'K';
-  const NORMAL_PIECES = [KNIGHT, BISHOP, QUEEN];
+  const knight = 'N';
+  const bishop = 'B';
+  const rook = 'R';
+  const queen = 'Q';
+  const king = 'K';
+  const normalPieces = [knight, bishop, queen];
   int h = size.h;
   int v = size.v;
   List<int> squares = Iterable<int>.generate(h).toList();
@@ -61,31 +65,31 @@ String buildRandomPosition({required BoardSize size, int? numRooks}) {
 
   int randomSquare() => squares[r.nextInt(squares.length)];
 
-  int _numRooks = numRooks ?? r.nextInt(3);
+  numRooks ??= r.nextInt(3);
   bool qsFirst = r.nextBool();
   bool hasQueen = false;
 
   // Place normal pieces (knights/bishops/queens)
-  for (int i = 0; i < (h - 1 - _numRooks); i++) {
-    String piece = NORMAL_PIECES[r.nextInt(3)];
-    if (piece == QUEEN && hasQueen) piece = NORMAL_PIECES[i % 2];
-    if (piece == QUEEN) hasQueen = true;
+  for (int i = 0; i < (h - 1 - numRooks); i++) {
+    String piece = normalPieces[r.nextInt(3)];
+    if (piece == queen && hasQueen) piece = normalPieces[i % 2];
+    if (piece == queen) hasQueen = true;
     placePiece(randomSquare(), piece);
   }
 
   // Place rooks and king
   CastlingRights castlingRights = 0;
-  if (_numRooks == 0) placePiece(squares.first, KING);
-  if (_numRooks == 1) {
+  if (numRooks == 0) placePiece(squares.first, king);
+  if (numRooks == 1) {
     castlingRights = qsFirst ? Castling.bothQ : Castling.bothK;
-    placePiece(squares.first, qsFirst ? ROOK : KING);
-    placePiece(squares.first, qsFirst ? KING : ROOK);
+    placePiece(squares.first, qsFirst ? rook : king);
+    placePiece(squares.first, qsFirst ? king : rook);
   }
-  if (_numRooks == 2) {
+  if (numRooks == 2) {
     castlingRights = Castling.mask;
-    placePiece(squares.first, ROOK);
-    placePiece(squares.first, KING);
-    placePiece(squares.first, ROOK);
+    placePiece(squares.first, rook);
+    placePiece(squares.first, king);
+    placePiece(squares.first, rook);
   }
 
   String blackPieces = pieces.map((p) => p.toLowerCase()).join('');

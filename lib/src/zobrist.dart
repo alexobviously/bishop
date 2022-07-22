@@ -39,7 +39,7 @@ class Zobrist {
   int compute(State state, List<int> board) {
     int hash = 0;
     for (int i = 0; i < board.length; i++) {
-      if (board[i] != EMPTY) hash ^= table[i][board[i]];
+      if (board[i] != empty) hash ^= table[i][board[i]];
     }
     if (state.epSquare != null) hash ^= table[state.epSquare!][META];
     hash ^= table[CASTLING][state.castlingRights];

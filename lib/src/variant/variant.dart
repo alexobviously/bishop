@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:bishop/bishop.dart';
 
-part '960.dart';
+part 'chess_960.dart';
 part 'board_size.dart';
 part 'castling_options.dart';
 part 'game_end_conditions.dart';
@@ -82,7 +82,7 @@ class Variant {
   late MaterialConditions<int> materialConditionsInt;
 
   bool get castling => castlingOptions.enabled;
-  bool get gating => gatingMode > GatingMode.NONE;
+  bool get gating => gatingMode > GatingMode.none;
 
   @override
   String toString() => name;
@@ -92,7 +92,7 @@ class Variant {
     required this.boardSize,
     required this.pieceTypes,
     required this.castlingOptions,
-    this.materialConditions = MaterialConditions.NONE,
+    this.materialConditions = MaterialConditions.none,
     this.gameEndConditions = GameEndConditions.standard,
     required this.outputOptions,
     this.startPosition,
@@ -104,7 +104,7 @@ class Variant {
     this.halfMoveDraw,
     this.repetitionDraw,
     this.hands = false,
-    this.gatingMode = GatingMode.NONE,
+    this.gatingMode = GatingMode.none,
     this.pieceValues,
   }) {
     assert(startPosition != null || startPosBuilder != null,
@@ -159,14 +159,16 @@ class Variant {
     buildPieceDefinitions();
     convertMaterialConditions();
     royalPiece = pieces.indexWhere((p) => p.type.royal);
-    if (enPassant)
+    if (enPassant) {
       epPiece = pieces.indexWhere((p) => p.type.enPassantable);
-    else
+    } else {
       epPiece = INVALID;
-    if (castling)
+    }
+    if (castling) {
       castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
-    else
+    } else {
       castlingPiece = INVALID;
+    }
   }
 
   int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
@@ -197,9 +199,9 @@ class Variant {
   }
 
   void convertMaterialConditions() {
-    if (!materialConditions.enabled)
+    if (!materialConditions.enabled) {
       materialConditionsInt = MaterialConditions(enabled: false);
-    else {
+    } else {
       materialConditionsInt = MaterialConditions(
         enabled: true,
         soloMaters: pieceIndices(materialConditions.soloMaters),
@@ -216,7 +218,7 @@ class Variant {
       boardSize: BoardSize.standard,
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.standard(),
-      materialConditions: MaterialConditions.STANDARD,
+      materialConditions: MaterialConditions.standard,
       outputOptions: OutputOptions.standard,
       promotion: true,
       promotionRanks: [RANK_1, RANK_8],
@@ -348,7 +350,7 @@ class Variant {
       name: 'Seirawan Chess',
       startPosition:
           'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
-      gatingMode: GatingMode.FLEX,
+      gatingMode: GatingMode.flex,
       outputOptions: OutputOptions.seirawan,
       pieceTypes: standard.pieceTypes
         ..addAll({

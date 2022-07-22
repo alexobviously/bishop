@@ -15,7 +15,7 @@ class Musketeer {
     return standard.copyWith(
       name: 'Musketeer Chess',
       startPosition: defaultFen,
-      gatingMode: GatingMode.FIXED,
+      gatingMode: GatingMode.fixed,
       pieceTypes: standard.pieceTypes
         ..addAll(
           {

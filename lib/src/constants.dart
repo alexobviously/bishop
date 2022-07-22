@@ -38,17 +38,17 @@ const Map<String, String> UNICODE_PIECES = {
 };
 
 class Modality {
-  static const int QUIET = 0;
-  static const int CAPTURE = 1;
-  static const int BOTH = 2;
+  static const int quiet = 0;
+  static const int capture = 1;
+  static const int both = 2;
 
-  static const List<int> ALL = [QUIET, CAPTURE, BOTH];
+  static const List<int> all = [quiet, capture, both];
 }
 
 class GatingMode {
-  static const int NONE = 0;
-  static const int FLEX = 1; // e.g. Seirawan Chess
-  static const int FIXED = 2; // e.g. Musketeer Chess
+  static const int none = 0;
+  static const int flex = 1; // e.g. Seirawan Chess
+  static const int fixed = 2; // e.g. Musketeer Chess
 }
 
 // Just shorthands for building variants
