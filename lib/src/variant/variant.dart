@@ -160,7 +160,7 @@ class Variant {
       name: 'Chess',
       boardSize: BoardSize.standard,
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      castlingOptions: CastlingOptions.standardWithRook(),
+      castlingOptions: CastlingOptions.standard,
       materialConditions: MaterialConditions.standard,
       outputOptions: OutputOptions.standard,
       promotion: true,
@@ -187,7 +187,7 @@ class Variant {
     return Variant.standard().copyWith(
       name: 'Chess960',
       startPosBuilder: build960Position,
-      castlingOptions: CastlingOptions.chess960WithRook(),
+      castlingOptions: CastlingOptions.chess960,
       outputOptions: OutputOptions.chess960,
     );
   }
@@ -206,7 +206,7 @@ class Variant {
       boardSize: BoardSize(10, 8),
       startPosition:
           'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
-      castlingOptions: CastlingOptions.capablancaWithRook(),
+      castlingOptions: CastlingOptions.capablanca,
       pieceTypes: standard.pieceTypes
         ..addAll({
           'A': PieceType.archbishop(),
@@ -243,7 +243,7 @@ class Variant {
       boardSize: BoardSize.mini,
       startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
       pieceTypes: standard.pieceTypes..['P'] = PieceType.simplePawn(),
-      castlingOptions: CastlingOptions.mini(),
+      castlingOptions: CastlingOptions.mini,
       enPassant: false,
       promotionRanks: [Bishop.rank1, Bishop.rank6],
     );
@@ -254,7 +254,7 @@ class Variant {
     return mini.copyWith(
       name: 'Mini Random',
       startPosBuilder: () => buildRandomPosition(size: BoardSize.mini),
-      castlingOptions: CastlingOptions.miniRandom(),
+      castlingOptions: CastlingOptions.miniRandom,
       outputOptions: OutputOptions.chess960,
     );
   }
@@ -266,7 +266,7 @@ class Variant {
       boardSize: BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
       promotionRanks: [Bishop.rank1, Bishop.rank5],
-      castlingOptions: CastlingOptions.micro(),
+      castlingOptions: CastlingOptions.micro,
       firstMoveRanks: [
         [Bishop.rank2],
         [Bishop.rank4],
@@ -281,7 +281,7 @@ class Variant {
       boardSize: BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
       promotionRanks: [Bishop.rank1, Bishop.rank5],
-      castlingOptions: CastlingOptions.nano(),
+      castlingOptions: CastlingOptions.nano,
       firstMoveRanks: [
         [Bishop.rank2],
         [Bishop.rank4],
