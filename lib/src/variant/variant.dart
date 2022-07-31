@@ -77,6 +77,15 @@ class Variant {
   bool get castling => castlingOptions.enabled;
   bool get gating => gatingMode > GatingMode.none;
 
+  /// All piece symbols in use by this variant.
+  List<String> get pieceSymbols => pieceTypes.keys.toList();
+
+  /// All piece symbols, except for royal pieces (i.e. kings).
+  List<String> get commonPieceSymbols => pieceTypes.entries
+      .where((e) => !e.value.royal)
+      .map((e) => e.key)
+      .toList();
+
   @override
   String toString() => name;
 
@@ -151,7 +160,7 @@ class Variant {
       name: 'Chess',
       boardSize: BoardSize.standard,
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      castlingOptions: CastlingOptions.standard(),
+      castlingOptions: CastlingOptions.standardWithRook(),
       materialConditions: MaterialConditions.standard,
       outputOptions: OutputOptions.standard,
       promotion: true,
@@ -178,7 +187,7 @@ class Variant {
     return Variant.standard().copyWith(
       name: 'Chess960',
       startPosBuilder: build960Position,
-      castlingOptions: CastlingOptions.chess960(),
+      castlingOptions: CastlingOptions.chess960WithRook(),
       outputOptions: OutputOptions.chess960,
     );
   }
@@ -197,7 +206,7 @@ class Variant {
       boardSize: BoardSize(10, 8),
       startPosition:
           'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
-      castlingOptions: CastlingOptions.capablanca(),
+      castlingOptions: CastlingOptions.capablancaWithRook(),
       pieceTypes: standard.pieceTypes
         ..addAll({
           'A': PieceType.archbishop(),
@@ -219,11 +228,11 @@ class Variant {
         [Bishop.rank3],
         [Bishop.rank8],
       ],
-      pieceTypes: standard.pieceTypes
-        ..addAll({
-          'C': PieceType.chancellor(), // marshal
-          'A': PieceType.archbishop(), // cardinal
-        }),
+      pieceTypes: {
+        ...standard.pieceTypes,
+        'C': PieceType.chancellor(), // marshal
+        'A': PieceType.archbishop(), // cardinal
+      },
     );
   }
 
@@ -288,11 +297,11 @@ class Variant {
           'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
       gatingMode: GatingMode.flex,
       outputOptions: OutputOptions.seirawan,
-      pieceTypes: standard.pieceTypes
-        ..addAll({
-          'H': PieceType.archbishop(),
-          'E': PieceType.chancellor(),
-        }),
+      pieceTypes: {
+        ...standard.pieceTypes,
+        'H': PieceType.archbishop(), // hawk
+        'E': PieceType.chancellor(), // elephant
+      },
     );
   }
 

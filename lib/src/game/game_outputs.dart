@@ -6,22 +6,25 @@ extension GameOutputs on Game {
   Move? getMove(String algebraic, {bool simplifyFixedGating = true}) {
     List<Move> moves = generateLegalMoves();
     Move? match = moves.firstWhereOrNull(
-      (m) => toAlgebraic(m, simplifyFixedGating: simplifyFixedGating) == algebraic,
+      (m) =>
+          toAlgebraic(m, simplifyFixedGating: simplifyFixedGating) == algebraic,
     );
     return match;
   }
 
   /// Returns the algebraic representation of [move], with respect to the board size.
   String toAlgebraic(Move move, {bool simplifyFixedGating = true}) {
-    String alg =
-        move.algebraic(size: size, useRookForCastling: variant.castlingOptions.useRookAsTarget);
+    String alg = move.algebraic(
+        size: size,
+        useRookForCastling: variant.castlingOptions.useRookAsTarget);
     if (move.promotion) {
       alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
     }
     if (move.from == Bishop.hand) {
       alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
     }
-    if (move.gate && !(variant.gatingMode == GatingMode.fixed && simplifyFixedGating)) {
+    if (move.gate &&
+        !(variant.gatingMode == GatingMode.fixed && simplifyFixedGating)) {
       alg = '$alg/${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
       if (move.castling) {
         String dropSq = move.dropOnRookSquare
@@ -43,12 +46,15 @@ extension GameOutputs on Game {
       // if queenside is the only castling option, render it as 'O-O'
       String kingside = 'O-O';
       String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
-      san = ([Castling.k, Castling.bk].contains(move.castlingDir)) ? kingside : queenside;
+      san = ([Castling.k, Castling.bk].contains(move.castlingDir))
+          ? kingside
+          : queenside;
     } else {
       if (move.from == Bishop.hand) {
         PieceDefinition pieceDef = variant.pieces[move.dropPiece!];
         san = move.algebraic(size: size);
-        if (!pieceDef.type.noSanSymbol) san = '${pieceDef.symbol.toUpperCase()}$san';
+        if (!pieceDef.type.noSanSymbol)
+          san = '${pieceDef.symbol.toUpperCase()}$san';
       } else {
         int piece = board[move.from].type;
         PieceDefinition pieceDef = variant.pieces[piece];
@@ -62,7 +68,8 @@ extension GameOutputs on Game {
         if (move.capture) san = '${san}x';
         san = '$san${squareName(move.to, size)}';
 
-        if (move.promotion) san = '$san=${variant.pieces[move.promoPiece!].symbol}';
+        if (move.promotion)
+          san = '$san=${variant.pieces[move.promoPiece!].symbol}';
       }
     }
     if (move.gate) {
@@ -190,7 +197,9 @@ extension GameOutputs on Game {
         } else {
           if (empty > 0) addEmptySquares();
           String char = variant.pieces[sq.type].char(sq.colour);
-          if (variant.outputOptions.showPromoted && sq.hasFlag(promoFlag)) char += '~';
+          if (variant.outputOptions.showPromoted && sq.hasFlag(promoFlag)) {
+            char += '~';
+          }
           fen = '$fen$char';
         }
       }
@@ -198,24 +207,30 @@ extension GameOutputs on Game {
       if (i < variant.boardSize.v - 1) fen = '$fen/';
     }
     if (variant.hands) {
-      String whiteHand =
-          state.hands![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
-      String blackHand =
-          state.hands![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      String whiteHand = state.hands![Bishop.white]
+          .map((p) => variant.pieces[p].symbol.toUpperCase())
+          .join('');
+      String blackHand = state.hands![Bishop.black]
+          .map((p) => variant.pieces[p].symbol.toLowerCase())
+          .join('');
       fen = '$fen[$whiteHand$blackHand]';
     }
     if (variant.gatingMode == GatingMode.flex) {
-      String whiteGate =
-          state.gates![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
-      String blackGate =
-          state.gates![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      String whiteGate = state.gates![Bishop.white]
+          .map((p) => variant.pieces[p].symbol.toUpperCase())
+          .join('');
+      String blackGate = state.gates![Bishop.black]
+          .map((p) => variant.pieces[p].symbol.toLowerCase())
+          .join('');
       fen = '$fen[$whiteGate$blackGate]';
     }
     if (variant.gatingMode == GatingMode.fixed) {
-      String whiteGate =
-          state.gates![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).join('');
-      String blackGate =
-          state.gates![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).join('');
+      String whiteGate = state.gates![Bishop.white]
+          .map((p) => variant.pieces[p].symbol.toUpperCase())
+          .join('');
+      String blackGate = state.gates![Bishop.black]
+          .map((p) => variant.pieces[p].symbol.toLowerCase())
+          .join('');
       // replaces dots with numbers
       String processGate(String g) {
         String o = '';
@@ -245,20 +260,26 @@ extension GameOutputs on Game {
     String turnStr = state.turn == Bishop.white ? 'w' : 'b';
     String castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.shredder) {
-      castling = replaceMultiple(castling, Castling.symbols.keys.toList(), castlingFileSymbols);
+      castling = replaceMultiple(
+          castling, Castling.symbols.keys.toList(), castlingFileSymbols);
     }
     if (variant.outputOptions.virginFiles) {
-      String whiteVFiles =
-          state.virginFiles[Bishop.white].map((e) => fileSymbol(e).toUpperCase()).join('');
-      String blackVFiles = state.virginFiles[Bishop.black].map((e) => fileSymbol(e)).join('');
+      String whiteVFiles = state.virginFiles[Bishop.white]
+          .map((e) => fileSymbol(e).toUpperCase())
+          .join('');
+      String blackVFiles =
+          state.virginFiles[Bishop.black].map((e) => fileSymbol(e)).join('');
       castling = '$castling$whiteVFiles$blackVFiles';
     }
-    String ep = state.epSquare != null ? squareName(state.epSquare!, variant.boardSize) : '-';
+    String ep = state.epSquare != null
+        ? squareName(state.epSquare!, variant.boardSize)
+        : '-';
     String aux = '';
     if (variant.gameEndConditions.checkLimit != null) {
       aux = ' +${state.checks[Bishop.white]}+${state.checks[Bishop.black]}';
     }
-    fen = '$fen $turnStr $castling $ep ${state.halfMoves} ${state.fullMoves}$aux';
+    fen =
+        '$fen $turnStr $castling $ep ${state.halfMoves} ${state.fullMoves}$aux';
     return fen;
   }
 
@@ -297,7 +318,9 @@ extension GameOutputs on Game {
       if (full || onBoard(i, size)) {
         int piece = board[i];
         String symbol = piece == empty ? '' : variant.pieces[piece.type].symbol;
-        symbols.add(piece.colour == Bishop.white ? symbol.toUpperCase() : symbol.toLowerCase());
+        symbols.add(piece.colour == Bishop.white
+            ? symbol.toUpperCase()
+            : symbol.toLowerCase());
       }
     }
     return symbols;
@@ -307,10 +330,12 @@ extension GameOutputs on Game {
   /// You probably need this for interopability with other applications (such as the Squares package).
   List<List<String>> handSymbols() {
     if (!variant.hands) return [[], []];
-    List<String> whiteHand =
-        state.hands![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
-    List<String> blackHand =
-        state.hands![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
+    List<String> whiteHand = state.hands![Bishop.white]
+        .map((p) => variant.pieces[p].symbol.toUpperCase())
+        .toList();
+    List<String> blackHand = state.hands![Bishop.black]
+        .map((p) => variant.pieces[p].symbol.toLowerCase())
+        .toList();
     return [whiteHand, blackHand];
   }
 
@@ -318,19 +343,24 @@ extension GameOutputs on Game {
   /// You probably need this for interopability with other applications (such as the Squares package).
   List<List<String>> gateSymbols() {
     if (!variant.gating) return [[], []];
-    List<String> whiteGate =
-        state.gates![Bishop.white].map((p) => variant.pieces[p].symbol.toUpperCase()).toList();
-    List<String> blackGate =
-        state.gates![Bishop.black].map((p) => variant.pieces[p].symbol.toLowerCase()).toList();
+    List<String> whiteGate = state.gates![Bishop.white]
+        .map((p) => variant.pieces[p].symbol.toUpperCase())
+        .toList();
+    List<String> blackGate = state.gates![Bishop.black]
+        .map((p) => variant.pieces[p].symbol.toLowerCase())
+        .toList();
     return [whiteGate, blackGate];
   }
 
   GameInfo get info => GameInfo(
         lastMove: state.move,
         lastFrom: state.move != null
-            ? (state.move!.from == Bishop.hand ? 'hand' : squareName(state.move!.from, size))
+            ? (state.move!.from == Bishop.hand
+                ? 'hand'
+                : squareName(state.move!.from, size))
             : null,
         lastTo: state.move != null ? squareName(state.move!.to, size) : null,
-        checkSq: inCheck ? squareName(state.royalSquares[state.turn], size) : null,
+        checkSq:
+            inCheck ? squareName(state.royalSquares[state.turn], size) : null,
       );
 }
