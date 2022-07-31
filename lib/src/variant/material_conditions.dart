@@ -31,6 +31,21 @@ class MaterialConditions<T> {
     this.specialCases = const [],
   });
 
+  MaterialConditions copyWith({
+    bool? enabled,
+    List<T>? soloMaters,
+    List<T>? pairMaters,
+    List<T>? combinedPairMaters,
+    List<List<T>>? specialCases,
+  }) =>
+      MaterialConditions(
+        enabled: enabled ?? this.enabled,
+        soloMaters: soloMaters ?? this.soloMaters,
+        pairMaters: pairMaters ?? this.pairMaters,
+        combinedPairMaters: combinedPairMaters ?? this.combinedPairMaters,
+        specialCases: specialCases ?? this.specialCases,
+      );
+
   /// Material conditions for standard chess, as well as simple expanded variants
   /// with chancellor and archbishop only (e.g. Capablanca).
   static const standard = MaterialConditions(
