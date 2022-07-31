@@ -36,6 +36,7 @@ bool validateFen({
   return true;
 }
 
+/// Looks up a built in variant by name.
 Variant? variantFromString(String name) => Variants.values
     .firstWhereOrNull((e) => e.name.toLowerCase() == name.toLowerCase())
     ?.build();

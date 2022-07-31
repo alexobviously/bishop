@@ -1,6 +1,8 @@
 ### 0.5.0
 - `Variant` is now an immutable data type, which is converted to `BuiltVariant` when it's used in `Game`.
 - `fenBuilder` parameter in `Game` constructor, overrides `variant.startPosBuilder`.
+- `Game.makeMoveString()` and `Game.makeMultipleMoves()`.
+- `variantFromString()` utility function.
 
 ### 0.4.0
 - Improved structure and formatting of codebase.

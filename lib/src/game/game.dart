@@ -6,7 +6,8 @@ part 'game_info.dart';
 part 'game_outputs.dart';
 part 'game_utils.dart';
 
-/// Tracks the state of the game, handles move generation and validation, and generates output.
+/// Tracks the state of the game, handles move generation and validation,
+/// and generates output.
 class Game {
   /// The variant that specifies the gameplay rules for this game.
   late final BuiltVariant variant;
@@ -44,7 +45,8 @@ class Game {
   }
 
   void setup({String? fen, FenBuilder? fenBuilder}) {
-    // Order of precedence: fen, fenBuilder, variant.startPosBuilder, variant.startPosition.
+    // Order of precedence: fen, fenBuilder, variant.startPosBuilder,
+    // variant.startPosition.
     fenBuilder ??= variant.startPosBuilder;
     startPosition =
         fen ?? (fenBuilder != null ? fenBuilder() : variant.startPosition!);
@@ -112,7 +114,8 @@ class Game {
   }
 
   /// Load a position from a FEN string.
-  /// If [strict] is enabled, a full string must be provided, including turn, ep square, etc.
+  /// If [strict] is enabled, a full string must be provided, including turn,
+  /// ep square, etc.
   void loadFen(String fen, [bool strict = false]) {
     zobrist = Zobrist(variant, seed);
     Map<String, int> pieceLookup =
@@ -495,8 +498,10 @@ class Game {
             : (queenside && variant.castlingOptions.queenside);
         if (!sideCondition) continue;
         // Conditions for castling:
-        // * All squares between the king's start and end (inclusive) must be free and not attacked
-        // * Obviously the king's start is occupied by the king, but it can't be in check
+        // * All squares between the king's start and end (inclusive) must be
+        // free and not attacked
+        // * Obviously the king's start is occupied by the king, but it can't
+        // be in check
         // * The square the rook lands on must be free (but can be attacked)
         int targetFile = i == 0
             ? variant.castlingOptions.kTarget!
@@ -629,7 +634,8 @@ class Game {
     return moves;
   }
 
-  /// Make a move and modify the game state. Returns true if the move was valid and made successfully.
+  /// Make a move and modify the game state. Returns true if the move was valid
+  /// and made successfully.
   bool makeMove(Move move) {
     if ((move.from != Bishop.hand && !onBoard(move.from, size)) ||
         !onBoard(move.to, size)) {
@@ -970,15 +976,16 @@ class Game {
   /// Is this stalemate?
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
 
-  /// Check if there is currently sufficient material on the board for one player to mate the other.
+  /// Check if there is currently sufficient material on the board for one player
+  /// to mate the other.
   /// Returns true if there *isn't* sufficient material (and therefore it's a draw).
   bool get insufficientMaterial {
     if (hasSufficientMaterial(Bishop.white)) return false;
     return !hasSufficientMaterial(Bishop.black);
   }
 
-  /// Determines whether there is sufficient material for [player] to deliver mate in the board
-  /// position specified in [state].
+  /// Determines whether there is sufficient material for [player] to deliver
+  /// mate in the board position specified in [state].
   /// [state] defaults to the current board state if unspecified.
   bool hasSufficientMaterial(Colour player, {State? state}) {
     State newState = state ?? this.state;
@@ -1006,13 +1013,15 @@ class Game {
     return false;
   }
 
-  /// Check if we have reached the repetition draw limit (threefold repetition in standard chess).
+  /// Check if we have reached the repetition draw limit (threefold repetition
+  /// in standard chess).
   /// Configurable in [Variant.repetitionDraw].
   bool get repetition => variant.repetitionDraw != null
       ? hashHits >= variant.repetitionDraw!
       : false;
 
-  /// Check if we have reached the half move rule (aka the 50 move rule in standard chess).
+  /// Check if we have reached the half move rule (aka the 50 move rule in
+  /// standard chess).
   /// Configurable in [variant.halfMoveDraw].
   bool get halfMoveRule =>
       variant.halfMoveDraw != null && state.halfMoves >= variant.halfMoveDraw!;
