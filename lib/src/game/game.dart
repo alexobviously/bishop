@@ -912,6 +912,33 @@ class Game {
     return moves[i];
   }
 
+  /// Makes a move from an algebraic move string (e.g. e2e4, f7f8q).
+  /// Return value indicates whether the move was valid.
+  bool makeMoveString(String move) {
+    Move? m = getMove(move);
+    if (m == null) return false;
+    return makeMove(m);
+  }
+
+  /// Makes multiple [moves] in order, in algebraic format (e.g. e2e4, f7f8q).
+  /// Returns the number of moves that were successfully made. If everything
+  /// went fine, this should be equal to [moves.length].
+  /// If [undoOnError] is true, all moves made before the error will be undone.
+  int makeMultipleMoves(List<String> moves, [bool undoOnError = true]) {
+    int movesMade = 0;
+    for (String move in moves) {
+      bool ok = makeMoveString(move);
+      if (!ok) break;
+      movesMade++;
+    }
+    if (movesMade < moves.length && undoOnError) {
+      for (int i = 0; i < movesMade; i++) {
+        undo();
+      }
+    }
+    return movesMade;
+  }
+
   /// Checks if [square] is attacked by [colour].
   /// Works by generating all legal moves for the other player, and therefore is slow.
   bool isAttacked(int square, Colour colour) {
