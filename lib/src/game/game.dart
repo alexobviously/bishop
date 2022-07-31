@@ -165,8 +165,9 @@ class Game {
       throw ('Invalid FEN: wrong number of ranks');
     }
     String turnStr = (strict || sections.length > 1) ? sections[1] : 'w';
-    if (!(['w', 'b'].contains(turnStr)))
+    if (!(['w', 'b'].contains(turnStr))) {
       throw ("Invalid FEN: colour should be 'w' or 'b'");
+    }
     String castlingStr = (strict || sections.length > 2)
         ? sections[2]
         : 'KQkq'; // TODO: get default castling for variant

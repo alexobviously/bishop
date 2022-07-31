@@ -109,14 +109,18 @@ class Atom {
     List<Direction> dirs = [];
     if (baseDir.orthogonal) {
       int m = h == 0 ? v : h;
-      if (allDirs || dirMods.contains('f') || dirMods.contains('v'))
+      if (allDirs || dirMods.contains('f') || dirMods.contains('v')) {
         dirs.add(Direction(0, m));
-      if (allDirs || dirMods.contains('b') || dirMods.contains('v'))
+      }
+      if (allDirs || dirMods.contains('b') || dirMods.contains('v')) {
         dirs.add(Direction(0, -m));
-      if (allDirs || dirMods.contains('r') || dirMods.contains('s'))
+      }
+      if (allDirs || dirMods.contains('r') || dirMods.contains('s')) {
         dirs.add(Direction(m, 0));
-      if (allDirs || dirMods.contains('l') || dirMods.contains('s'))
+      }
+      if (allDirs || dirMods.contains('l') || dirMods.contains('s')) {
         dirs.add(Direction(-m, 0));
+      }
     }
     if (baseDir.diagonal) {
       bool vert = allDirs || dirMods.contains('v');
@@ -164,22 +168,30 @@ class Atom {
         bool rh = hasDir('rh');
         bool vv = hasDir('v');
         bool s = hasDir('s');
-        if (hasDir('fr') || fh || rr || hl || rh || fs || s)
+        if (hasDir('fr') || fh || rr || hl || rh || fs || s) {
           dirs.add(Direction(h, v)); // fr
-        if (hasDir('fl') || fh || ll || hr || lh || fs || s)
+        }
+        if (hasDir('fl') || fh || ll || hr || lh || fs || s) {
           dirs.add(Direction(-h, v)); // fl
-        if (hasDir('br') || bh || rr || hr || rh || bs || s)
+        }
+        if (hasDir('br') || bh || rr || hr || rh || bs || s) {
           dirs.add(Direction(h, -v)); // br
-        if (hasDir('bl') || bh || ll || hl || lh || bs || s)
+        }
+        if (hasDir('bl') || bh || ll || hl || lh || bs || s) {
           dirs.add(Direction(-h, -v)); // bl
-        if (hasDir('rf') || fh || rv || hr || rh || ff || vv)
+        }
+        if (hasDir('rf') || fh || rv || hr || rh || ff || vv) {
           dirs.add(Direction(v, h)); // rf
-        if (hasDir('rb') || bh || rv || hl || rh || bb || vv)
+        }
+        if (hasDir('rb') || bh || rv || hl || rh || bb || vv) {
           dirs.add(Direction(v, -h)); // rb
-        if (hasDir('lf') || fh || lv || hl || lh || ff || vv)
+        }
+        if (hasDir('lf') || fh || lv || hl || lh || ff || vv) {
           dirs.add(Direction(-v, h)); // lf
-        if (hasDir('lb') || bh || lv || hr || lh || bb || vv)
+        }
+        if (hasDir('lb') || bh || lv || hr || lh || bb || vv) {
           dirs.add(Direction(-v, -h)); // lb
+        }
       }
     }
     return dirs;
