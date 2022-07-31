@@ -1,3 +1,8 @@
+### 0.5.1
+- Some convenience methods on `Variant`: `pieceSymbols` and `commonPieceSymbols`.
+- Built in `CastlingOptions` are now `static const`.
+- `CastlingOptions.copyWith()` and `MaterialConditions.copyWith()`;
+
 ### 0.5.0
 - `Variant` is now an immutable data type, which is converted to `BuiltVariant` when it's used in `Game`.
 - `fenBuilder` parameter in `Game` constructor, overrides `variant.startPosBuilder`.

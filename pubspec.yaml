@@ -1,5 +1,5 @@
 name: bishop
-version: 0.5.0
+version: 0.5.1
 description: Bishop is a chess logic package with flexible variant support
 repository: https://github.com/alexobviously/bishop
 issue_tracker: https://github.com/alexobviously/bishop/issues
