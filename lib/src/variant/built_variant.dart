@@ -116,7 +116,7 @@ class BuiltVariant {
   bool get hands => data.hands;
 
   /// What type of gating, if any, is used in this variant?
-  int get gatingMode => data.gatingMode;
+  GatingMode get gatingMode => data.gatingMode;
 
   /// The relative values of pieces. These are usually already set in the [PieceType]
   /// definitions, so only use this if you want to override those.

@@ -22,7 +22,7 @@ class Betza {
     'i', // only allowed for first move of the piece, e.g. pawn double move
     'e', // en-passant
   ];
-  static const Map<String, int> modalities = {
+  static const Map<String, Modality> modalities = {
     'm': Modality.quiet,
     'c': Modality.capture,
   };
@@ -35,7 +35,7 @@ class Betza {
     List<String> dirs = [];
     List<String> funcs = [];
     int range = 1;
-    int modality = Modality.both;
+    Modality modality = Modality.both;
 
     void add() {
       for (String a in atomsStr) {
@@ -85,7 +85,7 @@ class Atom {
   final List<String> dirMods;
   final List<String> funcMods;
   final int range;
-  final int modality;
+  final Modality modality;
 
   Atom({
     required this.base,
@@ -109,10 +109,14 @@ class Atom {
     List<Direction> dirs = [];
     if (baseDir.orthogonal) {
       int m = h == 0 ? v : h;
-      if (allDirs || dirMods.contains('f') || dirMods.contains('v')) dirs.add(Direction(0, m));
-      if (allDirs || dirMods.contains('b') || dirMods.contains('v')) dirs.add(Direction(0, -m));
-      if (allDirs || dirMods.contains('r') || dirMods.contains('s')) dirs.add(Direction(m, 0));
-      if (allDirs || dirMods.contains('l') || dirMods.contains('s')) dirs.add(Direction(-m, 0));
+      if (allDirs || dirMods.contains('f') || dirMods.contains('v'))
+        dirs.add(Direction(0, m));
+      if (allDirs || dirMods.contains('b') || dirMods.contains('v'))
+        dirs.add(Direction(0, -m));
+      if (allDirs || dirMods.contains('r') || dirMods.contains('s'))
+        dirs.add(Direction(m, 0));
+      if (allDirs || dirMods.contains('l') || dirMods.contains('s'))
+        dirs.add(Direction(-m, 0));
     }
     if (baseDir.diagonal) {
       bool vert = allDirs || dirMods.contains('v');
@@ -160,14 +164,22 @@ class Atom {
         bool rh = hasDir('rh');
         bool vv = hasDir('v');
         bool s = hasDir('s');
-        if (hasDir('fr') || fh || rr || hl || rh || fs || s) dirs.add(Direction(h, v)); // fr
-        if (hasDir('fl') || fh || ll || hr || lh || fs || s) dirs.add(Direction(-h, v)); // fl
-        if (hasDir('br') || bh || rr || hr || rh || bs || s) dirs.add(Direction(h, -v)); // br
-        if (hasDir('bl') || bh || ll || hl || lh || bs || s) dirs.add(Direction(-h, -v)); // bl
-        if (hasDir('rf') || fh || rv || hr || rh || ff || vv) dirs.add(Direction(v, h)); // rf
-        if (hasDir('rb') || bh || rv || hl || rh || bb || vv) dirs.add(Direction(v, -h)); // rb
-        if (hasDir('lf') || fh || lv || hl || lh || ff || vv) dirs.add(Direction(-v, h)); // lf
-        if (hasDir('lb') || bh || lv || hr || lh || bb || vv) dirs.add(Direction(-v, -h)); // lb
+        if (hasDir('fr') || fh || rr || hl || rh || fs || s)
+          dirs.add(Direction(h, v)); // fr
+        if (hasDir('fl') || fh || ll || hr || lh || fs || s)
+          dirs.add(Direction(-h, v)); // fl
+        if (hasDir('br') || bh || rr || hr || rh || bs || s)
+          dirs.add(Direction(h, -v)); // br
+        if (hasDir('bl') || bh || ll || hl || lh || bs || s)
+          dirs.add(Direction(-h, -v)); // bl
+        if (hasDir('rf') || fh || rv || hr || rh || ff || vv)
+          dirs.add(Direction(v, h)); // rf
+        if (hasDir('rb') || bh || rv || hl || rh || bb || vv)
+          dirs.add(Direction(v, -h)); // rb
+        if (hasDir('lf') || fh || lv || hl || lh || ff || vv)
+          dirs.add(Direction(-v, h)); // lf
+        if (hasDir('lb') || bh || lv || hr || lh || bb || vv)
+          dirs.add(Direction(-v, -h)); // lb
       }
     }
     return dirs;

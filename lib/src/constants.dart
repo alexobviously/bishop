@@ -77,34 +77,35 @@ class Bishop {
     'p': '♙',
     '.': '·'
   };
-
-  static const Map<Variants, Variant> _variantMap = {};
 }
 
 @Deprecated('Use Bishop.white')
-const Colour WHITE = 0;
+const Colour WHITE = Bishop.white;
 @Deprecated('Use Bishop.black')
-const Colour BLACK = 1;
+const Colour BLACK = Bishop.black;
 
 @Deprecated('Use Bishop.boardStart')
-const int BOARD_START = 0;
+const int BOARD_START = Bishop.boardStart;
 @Deprecated('Use Bishop.invalid')
-const int INVALID = -1;
+const int INVALID = Bishop.invalid;
 @Deprecated('Use Bishop.hand')
-const int HAND = -2;
+const int HAND = Bishop.hand;
 
-class Modality {
-  static const int quiet = 0;
-  static const int capture = 1;
-  static const int both = 2;
-
-  static const List<int> all = [quiet, capture, both];
+enum Modality {
+  quiet,
+  capture,
+  both;
 }
 
-class GatingMode {
-  static const int none = 0;
-  static const int flex = 1; // e.g. Seirawan Chess
-  static const int fixed = 2; // e.g. Musketeer Chess
+enum GatingMode {
+  none,
+  flex,
+  fixed;
+
+  bool operator >(GatingMode other) => index > other.index;
+  bool operator <(GatingMode other) => index < other.index;
+  bool operator >=(GatingMode other) => index >= other.index;
+  bool operator <=(GatingMode other) => index <= other.index;
 }
 
 const defaultSeed = 7363661891;
