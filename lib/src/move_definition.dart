@@ -11,7 +11,7 @@ class MoveDefinition {
   final int range;
 
   /// Modality indicates whether the move is quiet move, capture, or both.
-  final int modality;
+  final Modality modality;
 
   /// Whether this move an enact en passant.
   final bool enPassant;

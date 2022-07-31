@@ -8,7 +8,11 @@ bool isAlpha(String str) {
   return RegExp(r'^[a-zA-Z]+$').hasMatch(str);
 }
 
-String replaceMultiple(String source, List<String> originals, List<String> replacements) {
+String replaceMultiple(
+  String source,
+  List<String> originals,
+  List<String> replacements,
+) {
   assert(originals.length == replacements.length);
   String output = source;
   for (int i = 0; i < originals.length; i++) {
@@ -17,7 +21,11 @@ String replaceMultiple(String source, List<String> originals, List<String> repla
   return output;
 }
 
-bool validateFen({required Variant variant, required String fen, bool strict = false}) {
+bool validateFen({
+  required Variant variant,
+  required String fen,
+  bool strict = false,
+}) {
   try {
     Game g = Game(variant: variant);
     g.loadFen(fen, strict);

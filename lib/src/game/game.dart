@@ -9,8 +9,6 @@ part 'game_utils.dart';
 /// Tracks the state of the game, handles move generation and validation, and generates output.
 class Game {
   /// The variant that specifies the gameplay rules for this game.
-  late final Variant variantData;
-
   late final BuiltVariant variant;
 
   /// A random number generator seed.
@@ -41,8 +39,7 @@ class Game {
     FenBuilder? fenBuilder,
     this.seed = defaultSeed,
   }) {
-    variantData = variant;
-    this.variant = BuiltVariant.fromData(variantData);
+    this.variant = BuiltVariant.fromData(variant);
     setup(fen: fen, fenBuilder: fenBuilder);
   }
 

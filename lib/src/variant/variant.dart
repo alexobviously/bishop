@@ -66,7 +66,7 @@ class Variant {
   final bool hands;
 
   /// What type of gating, if any, is used in this variant?
-  final int gatingMode;
+  final GatingMode gatingMode;
 
   /// The relative values of pieces. These are usually already set in the [PieceType]
   /// definitions, so only use this if you want to override those.
@@ -121,7 +121,7 @@ class Variant {
     int? halfMoveDraw,
     int? repetitionDraw,
     bool? hands,
-    int? gatingMode,
+    GatingMode? gatingMode,
     Map<String, int>? pieceValues,
   }) {
     return Variant(
