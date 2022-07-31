@@ -23,7 +23,9 @@ class Zobrist {
     castling = dimY + 1;
     turn = dimY + 2;
     table = List<List<int>>.generate(
-        dimX, (i) => List<int>.generate(dimY, (j) => 0));
+      dimX,
+      (i) => List<int>.generate(dimY, (j) => 0),
+    );
     for (int i = 0; i < dimX; i++) {
       for (int j = 0; j < dimY; j++) {
         int value = 0;

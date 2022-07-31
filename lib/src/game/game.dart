@@ -234,8 +234,9 @@ class Game {
       }
       if (c == '/') sq += variant.boardSize.h;
       if (pieceLookup.containsKey(symbol)) {
-        if (!onBoard(sq, size))
+        if (!onBoard(sq, size)) {
           throw ('Invalid FEN: rank overflow [$symbol, $sq]');
+        }
         // it's a piece
         int pieceIndex = pieceLookup[symbol]!;
         Colour colour = c == symbol ? Bishop.white : Bishop.black;
@@ -378,8 +379,9 @@ class Game {
       if (exit) break;
       if (!md.capture && !options.quiet) continue;
       if (!md.quiet && !options.captures) continue;
-      if (md.firstOnly && !variant.firstMoveRanks[colour].contains(fromRank))
+      if (md.firstOnly && !variant.firstMoveRanks[colour].contains(fromRank)) {
         continue;
+      }
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       for (int i = 0; i < range; i++) {
         if (exit) break;
