@@ -49,7 +49,8 @@ class PieceType {
       m.normalised = m.direction.v * boardSize.h * 2 + m.direction.h;
       if (m.lame) {
         m.lameDirection = Direction(m.direction.h ~/ 2, m.direction.v ~/ 2);
-        m.lameNormalised = m.lameDirection!.v * boardSize.north + m.lameDirection!.h;
+        m.lameNormalised =
+            m.lameDirection!.v * boardSize.north + m.lameDirection!.h;
       }
     }
   }
@@ -97,7 +98,8 @@ class PieceType {
   factory PieceType.bishop() => PieceType.fromBetza('B', value: 300);
   factory PieceType.rook() => PieceType.fromBetza('R', value: 500);
   factory PieceType.queen() => PieceType.fromBetza('Q', value: 900);
-  factory PieceType.king() => PieceType.fromBetza('K', royal: true, canPromoteTo: false);
+  factory PieceType.king() =>
+      PieceType.fromBetza('K', royal: true, canPromoteTo: false);
   factory PieceType.pawn() => PieceType.fromBetza(
         'fmWfceFifmnD',
         promotable: true,

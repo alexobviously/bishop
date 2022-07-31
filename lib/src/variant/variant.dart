@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:bishop/bishop.dart';
 
-part 'chess_960.dart';
 part 'board_size.dart';
+part 'built_variant.dart';
 part 'castling_options.dart';
+part 'chess_960.dart';
 part 'game_end_conditions.dart';
 part 'output_options.dart';
 part 'material_conditions.dart';
+part 'musketeer.dart';
 
 /// Specifies the rules and pieces to be used, size of the board,
 /// information on how FENs are outputted, and so on and so on.
@@ -22,7 +24,7 @@ class Variant {
   /// Symbols are single uppercase letters, such as 'P' (pawn) or 'N' (knight).
   final Map<String, PieceType> pieceTypes;
 
-  /// The castling rules for this variant.
+  /// The castling rules for this VariantData.
   final CastlingOptions castlingOptions;
 
   /// Material conditions that define how insufficient material draws should be decided.
@@ -36,8 +38,8 @@ class Variant {
   final String? startPosition;
 
   /// If this variant can start in a number of different positions, such as Chess960,
-  /// provide a function that does this. See [Variant.chess960()] for an example.
-  final Function()? startPosBuilder;
+  /// provide a function that does this. See [VariantData.chess960()] for an example.
+  final FenBuilder? startPosBuilder;
 
   /// Is promotion enabled?
   final bool promotion;
@@ -72,22 +74,13 @@ class Variant {
   /// but you still want to use the normal pawn definition.
   final Map<String, int>? pieceValues;
 
-  late List<PieceDefinition> pieces;
-  late Map<String, PieceDefinition> pieceLookup;
-  late Map<String, int> pieceIndexLookup;
-  late List<int> promotionPieces;
-  late int epPiece;
-  late int castlingPiece;
-  late int royalPiece;
-  late MaterialConditions<int> materialConditionsInt;
-
   bool get castling => castlingOptions.enabled;
   bool get gating => gatingMode > GatingMode.none;
 
   @override
   String toString() => name;
 
-  Variant({
+  const Variant({
     required this.name,
     required this.boardSize,
     required this.pieceTypes,
@@ -106,13 +99,10 @@ class Variant {
     this.hands = false,
     this.gatingMode = GatingMode.none,
     this.pieceValues,
-  }) {
-    assert(
-      startPosition != null || startPosBuilder != null,
-      'Variant needs either a startPosition or startPosBuilder',
-    );
-    init();
-  }
+  }) : assert(
+          startPosition != null || startPosBuilder != null,
+          'Variant needs either a startPosition or startPosBuilder',
+        );
 
   Variant copyWith({
     String? name,
@@ -123,7 +113,7 @@ class Variant {
     GameEndConditions? gameEndConditions,
     OutputOptions? outputOptions,
     String? startPosition,
-    Function()? startPosBuilder,
+    FenBuilder? startPosBuilder,
     bool? promotion,
     List<int>? promotionRanks,
     bool? enPassant,
@@ -154,64 +144,6 @@ class Variant {
       gatingMode: gatingMode ?? this.gatingMode,
       pieceValues: pieceValues ?? this.pieceValues,
     );
-  }
-
-  void init() {
-    initPieces();
-    buildPieceDefinitions();
-    convertMaterialConditions();
-    royalPiece = pieces.indexWhere((p) => p.type.royal);
-    if (enPassant) {
-      epPiece = pieces.indexWhere((p) => p.type.enPassantable);
-    } else {
-      epPiece = Bishop.invalid;
-    }
-    if (castling) {
-      castlingPiece = pieces.indexWhere((p) => p.symbol == castlingOptions.rookPiece);
-    } else {
-      castlingPiece = Bishop.invalid;
-    }
-  }
-
-  int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
-  List<int> pieceIndices(List<String> symbols) =>
-      symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
-
-  void initPieces() {
-    pieceTypes.forEach((_, p) => p.init(boardSize));
-  }
-
-  void buildPieceDefinitions() {
-    pieces = [PieceDefinition.empty()];
-    pieceLookup = {};
-    pieceIndexLookup = {};
-    pieceTypes.forEach((s, p) {
-      int value = p.royal ? Bishop.mateUpper : p.value;
-      if (pieceValues?.containsKey(s) ?? false) value = pieceValues![s]!;
-      PieceDefinition piece = PieceDefinition(type: p, symbol: s, value: value);
-      pieces.add(piece);
-      pieceLookup[s] = piece;
-      pieceIndexLookup[s] = pieces.length - 1;
-    });
-    promotionPieces = [];
-    for (int i = 0; i < pieces.length; i++) {
-      // && !pieces[i].type.royal) ?
-      if (pieces[i].type.canPromoteTo) promotionPieces.add(i);
-    }
-  }
-
-  void convertMaterialConditions() {
-    if (!materialConditions.enabled) {
-      materialConditionsInt = MaterialConditions(enabled: false);
-    } else {
-      materialConditionsInt = MaterialConditions(
-        enabled: true,
-        soloMaters: pieceIndices(materialConditions.soloMaters),
-        pairMaters: pieceIndices(materialConditions.pairMaters),
-        combinedPairMaters: pieceIndices(materialConditions.combinedPairMaters),
-        specialCases: materialConditions.specialCases.map((e) => pieceIndices(e)).toList(),
-      );
-    }
   }
 
   factory Variant.standard() {
@@ -263,7 +195,8 @@ class Variant {
     return standard.copyWith(
       name: 'Capablanca Chess',
       boardSize: BoardSize(10, 8),
-      startPosition: 'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
+      startPosition:
+          'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.capablanca(),
       pieceTypes: standard.pieceTypes
         ..addAll({
@@ -278,7 +211,8 @@ class Variant {
     return standard.copyWith(
       name: 'Grand Chess',
       boardSize: BoardSize(10, 10),
-      startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
+      startPosition:
+          'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
       castlingOptions: CastlingOptions.none,
       promotionRanks: [Bishop.rank3, Bishop.rank8],
       firstMoveRanks: [
@@ -362,6 +296,6 @@ class Variant {
     );
   }
 
-  factory Variant.threeCheck() =>
-      Variant.standard().copyWith(gameEndConditions: GameEndConditions.threeCheck);
+  factory Variant.threeCheck() => Variant.standard()
+      .copyWith(gameEndConditions: GameEndConditions.threeCheck);
 }

@@ -9,19 +9,21 @@ class Zobrist {
   late int castling;
   late int turn;
 
-  Zobrist(Variant variant, int seed) {
+  Zobrist(BuiltVariant variant, int seed) {
     init(variant, seed);
   }
 
-  void init(Variant variant, int seed) {
-    const int numAux = 16; // we need some extra entries for castling rights, ep, etc
+  void init(BuiltVariant variant, int seed) {
+    const int numAux =
+        16; // we need some extra entries for castling rights, ep, etc
     const int numParts = 4;
     Random r = Random(seed);
     int dimX = variant.boardSize.numIndices + numAux;
     int dimY = max(variant.pieces.length * 2, Castling.mask + 1);
     castling = dimY + 1;
     turn = dimY + 2;
-    table = List<List<int>>.generate(dimX, (i) => List<int>.generate(dimY, (j) => 0));
+    table = List<List<int>>.generate(
+        dimX, (i) => List<int>.generate(dimY, (j) => 0));
     for (int i = 0; i < dimX; i++) {
       for (int j = 0; j < dimY; j++) {
         int value = 0;

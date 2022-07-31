@@ -55,7 +55,8 @@ class CastlingOptions {
         useRookAsTarget: true,
       );
 
-  factory CastlingOptions.capablanca([String rookPiece = 'R']) => CastlingOptions(
+  factory CastlingOptions.capablanca([String rookPiece = 'R']) =>
+      CastlingOptions(
         enabled: true,
         kTarget: Bishop.fileI,
         qTarget: Bishop.fileC,
@@ -75,7 +76,8 @@ class CastlingOptions {
         useRookAsTarget: true,
       );
 
-  factory CastlingOptions.miniRandom([String rookPiece = 'R']) => CastlingOptions(
+  factory CastlingOptions.miniRandom([String rookPiece = 'R']) =>
+      CastlingOptions(
         enabled: true,
         kTarget: Bishop.fileE,
         qTarget: Bishop.fileB,

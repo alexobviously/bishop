@@ -20,8 +20,10 @@ class OutputOptions {
     this.virginFiles = false,
   });
 
-  static const standard = OutputOptions(castlingFormat: CastlingFormat.standard);
-  static const chess960 = OutputOptions(castlingFormat: CastlingFormat.shredder);
+  static const standard =
+      OutputOptions(castlingFormat: CastlingFormat.standard);
+  static const chess960 =
+      OutputOptions(castlingFormat: CastlingFormat.shredder);
   static const crazyhouse = OutputOptions(
     castlingFormat: CastlingFormat.standard,
     showPromoted: true,

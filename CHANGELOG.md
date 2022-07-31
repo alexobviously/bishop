@@ -1,3 +1,7 @@
+### 0.5.0
+- `Variant` is now an immutable data type, which is converted to `BuiltVariant` when it's used in `Game`.
+- `fenBuilder` parameter in `Game` constructor, overrides `variant.startPosBuilder`.
+
 ### 0.4.0
 - Improved structure and formatting of codebase.
 - There are some minor breaking changes, mostly related to CONSTANT_NAMES being changed to camelCase, and otherwise being more logically grouped. Some factory constructors were also changed to static constants, e.g. `MaterialConditions.standard()` is now `MaterialConditions.standard`.

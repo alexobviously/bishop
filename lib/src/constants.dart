@@ -1,5 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
+import 'package:bishop/bishop.dart';
+
 typedef Colour = int;
 
 extension Opponent on Colour {
@@ -7,6 +9,7 @@ extension Opponent on Colour {
 }
 
 typedef Hand = List<int>;
+typedef FenBuilder = String Function();
 
 class Bishop {
   static const Colour white = 0;
@@ -74,6 +77,8 @@ class Bishop {
     'p': '♙',
     '.': '·'
   };
+
+  static const Map<Variants, Variant> _variantMap = {};
 }
 
 @Deprecated('Use Bishop.white')
@@ -103,3 +108,25 @@ class GatingMode {
 }
 
 const defaultSeed = 7363661891;
+
+/// All built in variants.
+enum Variants {
+  standard(Variant.standard),
+  chess960(Variant.chess960),
+  crazyhouse(Variant.crazyhouse),
+  capablanca(Variant.capablanca),
+  grand(Variant.grand),
+  mini(Variant.mini),
+  miniRandom(Variant.miniRandom),
+  micro(Variant.micro),
+  nano(Variant.nano),
+  seirawan(Variant.seirawan),
+  threeCheck(Variant.threeCheck),
+  musketeer(Musketeer.variant);
+
+  final Variant Function() builder;
+  const Variants(this.builder);
+
+  /// Builds a `Variant` for use with `Game`.
+  Variant build() => builder();
+}

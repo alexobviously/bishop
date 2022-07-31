@@ -38,7 +38,8 @@ String build960Position() {
   String blackPieces = pieces.map((p) => p.toLowerCase()).join('');
   String whitePieces = pieces.map((p) => p.toUpperCase()).join('');
   String pawns = 'p' * 8;
-  String pos = '$blackPieces/$pawns/8/8/8/8/${pawns.toUpperCase()}/$whitePieces w KQkq - 0 1';
+  String pos =
+      '$blackPieces/$pawns/8/8/8/8/${pawns.toUpperCase()}/$whitePieces w KQkq - 0 1';
   return pos;
 }
 

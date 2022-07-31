@@ -36,7 +36,9 @@ class MaterialConditions<T> {
   static const standard = MaterialConditions(
     enabled: true,
     soloMaters: ['P', 'Q', 'R', 'A', 'C'],
-    pairMaters: ['N'], // although a knight cannot force mate, it can happen if the opponent helps
+    pairMaters: [
+      'N'
+    ], // although a knight cannot force mate, it can happen if the opponent helps
     combinedPairMaters: ['B'],
     specialCases: [
       ['B', 'N']
@@ -45,4 +47,25 @@ class MaterialConditions<T> {
 
   /// Disable insufficient material draws.
   static const none = MaterialConditions<String>(enabled: false);
+}
+
+extension ConvertMaterialConditions on MaterialConditions<String> {
+  /// Converts String-form `MaterialConditions` into int-form, based on [pieces].
+  MaterialConditions<int> convert(List<PieceDefinition> pieces) {
+    int pieceIndex(String symbol) =>
+        pieces.indexWhere((p) => p.symbol == symbol);
+    List<int> pieceIndices(List<String> symbols) =>
+        symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
+    if (!enabled) {
+      return MaterialConditions(enabled: false);
+    } else {
+      return MaterialConditions(
+        enabled: true,
+        soloMaters: pieceIndices(soloMaters),
+        pairMaters: pieceIndices(pairMaters),
+        combinedPairMaters: pieceIndices(combinedPairMaters),
+        specialCases: specialCases.map((e) => pieceIndices(e)).toList(),
+      );
+    }
+  }
 }
