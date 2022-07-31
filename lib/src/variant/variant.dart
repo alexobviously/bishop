@@ -296,6 +296,8 @@ class Variant {
     );
   }
 
-  factory Variant.threeCheck() => Variant.standard()
-      .copyWith(gameEndConditions: GameEndConditions.threeCheck);
+  factory Variant.threeCheck() => Variant.standard().copyWith(
+        name: 'Three Check',
+        gameEndConditions: GameEndConditions.threeCheck,
+      );
 }

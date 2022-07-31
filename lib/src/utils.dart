@@ -35,3 +35,7 @@ bool validateFen({
   }
   return true;
 }
+
+Variant? variantFromString(String name) => Variants.values
+    .firstWhereOrNull((e) => e.name.toLowerCase() == name.toLowerCase())
+    ?.build();
