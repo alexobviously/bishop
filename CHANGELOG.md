@@ -1,3 +1,7 @@
+### 0.5.2
+- Fixed a bug in premove generation where quiet moves to opponent occupied squares weren't generating (e.g. pawn step forward onto opponent's piece).
+- Added some extension functions for `List<Move>`, for filtering moves more fluently.
+
 ### 0.5.1
 - Some convenience methods on `Variant`: `pieceSymbols` and `commonPieceSymbols`.
 - Built in `CastlingOptions` are now `static const`.

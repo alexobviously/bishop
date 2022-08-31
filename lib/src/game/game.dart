@@ -384,6 +384,7 @@ class Game {
         continue;
       }
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
+
       for (int i = 0; i < range; i++) {
         if (exit) break;
         int to = square + md.normalised * (i + 1) * dirMult;
@@ -473,6 +474,13 @@ class Game {
               to: to,
               from: from,
               capturedPiece: target,
+              setEnPassant: setEnPassant,
+            );
+            addMove(m);
+          } else if (options.ignorePieces) {
+            Move m = Move(
+              to: to,
+              from: from,
               setEnPassant: setEnPassant,
             );
             addMove(m);

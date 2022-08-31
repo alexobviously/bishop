@@ -44,7 +44,7 @@ class MoveDefinition {
 
   @override
   String toString() {
-    String string = direction.toString();
+    String string = '$direction [${modality.name}]';
     List<String> mods = [];
     if (slider) mods.add(range.toString());
     if (enPassant) mods.add('ep');
@@ -90,4 +90,11 @@ class Direction {
 
   @override
   String toString() => '($h,$v)';
+
+  @override
+  bool operator ==(Object other) =>
+      other is Direction && h == other.h && v == other.v;
+
+  @override
+  int get hashCode => (h << 8) + v;
 }

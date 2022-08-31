@@ -36,3 +36,6 @@ jobs:
       
       - name: Run Piece tests
         run: dart test test/pieces_test.dart
+
+      - name: Run Misc tests
+        run: dart test test/misc_test.dart

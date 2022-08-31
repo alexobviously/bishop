@@ -8,6 +8,7 @@ export 'src/engine.dart';
 export 'src/first_where_extension.dart';
 export 'src/game/game.dart';
 export 'src/move_definition.dart';
+export 'src/move_list_extension.dart';
 export 'src/move_gen_options.dart';
 export 'src/move.dart';
 export 'src/piece_type.dart';

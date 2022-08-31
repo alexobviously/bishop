@@ -15,8 +15,10 @@ class Move {
 
   /// The piece that exists before the promotion.
   final int? promoSource; // the piece type that got promoted
+
   /// The piece (type only) that is being promoted to.
   final int? promoPiece; // this piece type that was promoted to
+
   /// If this is a castling move, in which direction is castling happening?
   final CastlingRights? castlingDir;
 
@@ -120,7 +122,8 @@ class Move {
     bool useRookForCastling = false,
   }) {
     String fromStr = from == Bishop.hand ? '@' : squareName(from, size);
-    String toStr = squareName((castling && useRookForCastling) ? castlingPieceSquare! : to, size);
+    String toStr = squareName(
+        (castling && useRookForCastling) ? castlingPieceSquare! : to, size);
     return '$fromStr$toStr';
   }
 }
