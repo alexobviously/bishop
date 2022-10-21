@@ -19,9 +19,9 @@ designed to be interoperable with Bishop.
 * FEN & PGN input and output
 * Easy and flexible variant definition
 * Fairy pieces
-* * Arbitrary move configuration
-* * Betza parsing
-* * Hoppers like the Xiangqi Cannon
+  * Arbitrary move configuration
+  * Betza parsing
+  * Hoppers like the Xiangqi Cannon
 * Hands & dropping
 * Flex gating (e.g. Seirawan)
 * Fixed gating (e.g. Musketeer)
