@@ -19,6 +19,9 @@ designed to be interoperable with Bishop.
 * FEN & PGN input and output
 * Easy and flexible variant definition
 * Fairy pieces
+* * Arbitrary move configuration
+* * Betza parsing
+* * Hoppers like the Xiangqi Cannon
 * Hands & dropping
 * Flex gating (e.g. Seirawan)
 * Fixed gating (e.g. Musketeer)
@@ -26,7 +29,6 @@ designed to be interoperable with Bishop.
 * An engine (not strong but fine for testing)
 
 ### Upcoming Features
-* Hopper pieces (e.g. Xiangqi cannon)
 * X-FEN output (input works)
 * Atomic chess exploding pieces (and more generally, flexible capture behaviour)
 

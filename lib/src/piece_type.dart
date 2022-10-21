@@ -78,6 +78,11 @@ class PieceType {
           enPassant: atom.enPassant,
           firstOnly: atom.firstOnly,
           lame: atom.lame,
+          hopDistance: atom.unlimitedHopper
+              ? 0
+              : atom.limitedHopper
+                  ? 1
+                  : -1,
         );
         moves.add(md);
       }
@@ -100,6 +105,8 @@ class PieceType {
   factory PieceType.queen() => PieceType.fromBetza('Q', value: 900);
   factory PieceType.king() =>
       PieceType.fromBetza('K', royal: true, canPromoteTo: false);
+  factory PieceType.staticKing() =>
+      PieceType.fromBetza('', royal: true, canPromoteTo: false);
   factory PieceType.pawn() => PieceType.fromBetza(
         'fmWfceFifmnD',
         promotable: true,
@@ -126,6 +133,7 @@ class PieceType {
   factory PieceType.archbishop() => PieceType.fromBetza('BN', value: 900);
   factory PieceType.chancellor() => PieceType.fromBetza('RN', value: 900);
   factory PieceType.amazon() => PieceType.fromBetza('QN', value: 1200);
+  factory PieceType.grasshopper() => PieceType.fromBetza('gQ');
 }
 
 /// A definition of a `PieceType`, specific to a `Variant`.

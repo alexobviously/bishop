@@ -1,3 +1,6 @@
+### 0.6.0
+- Support for hopper pieces, such as the Grasshopper and Xiangqi Cannon, and Betza modifiers 'p' and 'g'.
+
 ### 0.5.2
 - Fixed a bug in premove generation where quiet moves to opponent occupied squares weren't generating (e.g. pawn step forward onto opponent's piece).
 - Added some extension functions for `List<Move>`, for filtering moves more fluently.

@@ -364,8 +364,10 @@ class Game {
   }
 
   /// Generates all moves for the piece on [square] in accordance with [options].
-  List<Move> generatePieceMoves(int square, [MoveGenOptions? options]) {
-    options ??= MoveGenOptions.normal;
+  List<Move> generatePieceMoves(
+    int square, [
+    MoveGenOptions options = MoveGenOptions.normal,
+  ]) {
     Square piece = board[square];
     if (piece.isEmpty) return [];
     Colour colour = piece.colour;
@@ -384,6 +386,7 @@ class Game {
         continue;
       }
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
+      int squaresSinceHop = -1;
 
       for (int i = 0; i < range; i++) {
         if (exit) break;
@@ -412,6 +415,27 @@ class Game {
         bool setEnPassant =
             variant.enPassant && md.firstOnly && pieceType.enPassantable;
 
+        if (md.hopper) {
+          if (target.isEmpty) {
+            if (squaresSinceHop == -1) continue;
+            squaresSinceHop++;
+            if (md.limitedHopper) {
+              if (squaresSinceHop > md.hopDistance) {
+                break;
+              }
+              if (squaresSinceHop != md.hopDistance) {
+                continue;
+              }
+            }
+          } else {
+            squaresSinceHop++;
+            if (squaresSinceHop == 0) continue;
+            if (md.limitedHopper && squaresSinceHop != md.hopDistance) {
+              break;
+            }
+          }
+        }
+
         void addMove(Move m) {
           if (optPromo) moves.addAll(generatePromotionMoves(m));
           bool addBase = !forcedPromo;
@@ -428,7 +452,7 @@ class Game {
             }
           }
           if (addBase) moves.add(m);
-          if (options!.onlySquare != null && m.to == options.onlySquare) {
+          if (options.onlySquare != null && m.to == options.onlySquare) {
             exit = true;
           }
         }
@@ -443,6 +467,7 @@ class Game {
               md.enPassant &&
               (state.epSquare == to || options.ignorePieces) &&
               options.captures) {
+            // en passant
             Move m = Move(
               to: to,
               from: from,
@@ -458,7 +483,13 @@ class Game {
             );
             addMove(m);
           } else {
-            if (!options.ignorePieces) break;
+            if (!options.ignorePieces) {
+              if (md.slider) {
+                continue;
+              } else {
+                break;
+              }
+            }
             Move m = Move(from: from, to: to);
             addMove(m);
           }

@@ -21,6 +21,8 @@ class Betza {
     'j',
     'i', // only allowed for first move of the piece, e.g. pawn double move
     'e', // en-passant
+    'p', // unlimited hopper (Xiangqi cannon)
+    'g', // limited hopper
   ];
   static const Map<String, Modality> modalities = {
     'm': Modality.quiet,
@@ -98,6 +100,8 @@ class Atom {
   bool get firstOnly => funcMods.contains('i');
   bool get enPassant => funcMods.contains('e');
   bool get lame => funcMods.contains('n');
+  bool get unlimitedHopper => funcMods.contains('p');
+  bool get limitedHopper => funcMods.contains('g');
   bool get quiet => modality == Modality.both || modality == Modality.quiet;
   bool get capture => modality == Modality.both || modality == Modality.capture;
 
@@ -139,7 +143,6 @@ class Atom {
       if (backward && left) dirs.add(Direction(-h, -v));
     }
     if (baseDir.oblique) {
-      // TODO: parse directional modifiers for oblique moves
       if (allDirs) {
         dirs.addAll(baseDir.permutations);
       } else {

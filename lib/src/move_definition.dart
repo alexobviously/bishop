@@ -25,11 +25,19 @@ class MoveDefinition {
   /// For example, a Xiangqi horse's move or a standard pawn's double move.
   final bool lame;
 
+  /// The distance after hopping that the piece can land at.
+  /// -1 means this is not a hop move.
+  /// 0 means any distance is acceptable (e.g. Xiangqi cannon).
+  /// Currently only -1, 0 and 1 are supported by Betza notation ('p' and 'g').
+  final int hopDistance;
+
   late int normalised;
   Direction? lameDirection;
   int? lameNormalised;
 
   bool get slider => range != 1;
+  bool get hopper => slider && hopDistance > -1;
+  bool get limitedHopper => slider && hopDistance > 0;
   bool get quiet => modality == Modality.both || modality == Modality.quiet;
   bool get capture => modality == Modality.both || modality == Modality.capture;
 
@@ -40,6 +48,7 @@ class MoveDefinition {
     this.enPassant = false,
     this.firstOnly = false,
     this.lame = false,
+    this.hopDistance = -1,
   });
 
   @override
@@ -50,6 +59,7 @@ class MoveDefinition {
     if (enPassant) mods.add('ep');
     if (firstOnly) mods.add('fo');
     if (lame) mods.add('lame');
+    if (hopper) mods.add('hop: $hopDistance');
     if (mods.isNotEmpty) string = '$string {${mods.join(', ')}}';
     return string;
   }

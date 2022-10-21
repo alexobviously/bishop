@@ -10,6 +10,7 @@ part 'game_end_conditions.dart';
 part 'output_options.dart';
 part 'material_conditions.dart';
 part 'musketeer.dart';
+part 'xiangqi.dart';
 
 /// Specifies the rules and pieces to be used, size of the board,
 /// information on how FENs are outputted, and so on and so on.
@@ -91,12 +92,12 @@ class Variant {
 
   const Variant({
     required this.name,
-    required this.boardSize,
+    this.boardSize = BoardSize.standard,
     required this.pieceTypes,
-    required this.castlingOptions,
+    this.castlingOptions = CastlingOptions.standard,
     this.materialConditions = MaterialConditions.none,
     this.gameEndConditions = GameEndConditions.standard,
-    required this.outputOptions,
+    this.outputOptions = OutputOptions.standard,
     this.startPosition,
     this.startPosBuilder,
     this.promotion = false,
@@ -207,11 +208,11 @@ class Variant {
       startPosition:
           'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.capablanca,
-      pieceTypes: standard.pieceTypes
-        ..addAll({
-          'A': PieceType.archbishop(),
-          'C': PieceType.chancellor(),
-        }),
+      pieceTypes: {
+        ...standard.pieceTypes,
+        'A': PieceType.archbishop(),
+        'C': PieceType.chancellor(),
+      },
     );
   }
 

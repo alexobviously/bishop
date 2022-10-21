@@ -123,7 +123,9 @@ class Move {
   }) {
     String fromStr = from == Bishop.hand ? '@' : squareName(from, size);
     String toStr = squareName(
-        (castling && useRookForCastling) ? castlingPieceSquare! : to, size);
+      (castling && useRookForCastling) ? castlingPieceSquare! : to,
+      size,
+    );
     return '$fromStr$toStr';
   }
 }
