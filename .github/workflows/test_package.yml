@@ -39,3 +39,6 @@ jobs:
 
       - name: Run Misc tests
         run: dart test test/misc_test.dart
+
+      - name: Run Hopper tests
+        run: dart test test/hopper_test.dart
