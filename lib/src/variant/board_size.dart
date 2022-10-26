@@ -37,6 +37,9 @@ class BoardSize {
   /// A mini 6x6 board.
   static const mini = BoardSize(6, 6);
 
+  /// A Xiangqi board.
+  static const xiangqi = BoardSize(9, 10);
+
   @override
   String toString() => 'BoardSize($h, $v)';
 }

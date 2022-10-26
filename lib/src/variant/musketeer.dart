@@ -17,21 +17,19 @@ class Musketeer {
       name: 'Musketeer Chess',
       startPosition: defaultFen,
       gatingMode: GatingMode.fixed,
-      pieceTypes: standard.pieceTypes
-        ..addAll(
-          {
-            'A': PieceType.archbishop(),
-            'C': PieceType.chancellor(),
-            'D': PieceType.amazon(), // dragon
-            'L': leopard(),
-            'H': hawk(),
-            'U': unicorn(),
-            'S': spider(),
-            'F': fortress(),
-            'E': elephant(),
-            'O': cannon(),
-          },
-        ),
+      pieceTypes: {
+        ...standard.pieceTypes,
+        'A': PieceType.archbishop(),
+        'C': PieceType.chancellor(),
+        'D': PieceType.amazon(), // dragon
+        'L': leopard(),
+        'H': hawk(),
+        'U': unicorn(),
+        'S': spider(),
+        'F': fortress(),
+        'E': elephant(),
+        'O': cannon(),
+      },
     );
   }
 }
