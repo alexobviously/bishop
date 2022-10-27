@@ -40,6 +40,15 @@ class BoardSize {
   /// A Xiangqi board.
   static const xiangqi = BoardSize(9, 10);
 
+  /// Returns the rank that [square] is on.
+  int file(int square) => square % (h * 2);
+
+  /// Returns that file that [square] is on.
+  int rank(int square) => v - (square ~/ (h * 2)) - 1;
+
+  /// Gets the square index at [file] and [rank].
+  int square(int file, int rank) => (v - rank - 1) * (h * 2) + file;
+
   @override
   String toString() => 'BoardSize($h, $v)';
 }

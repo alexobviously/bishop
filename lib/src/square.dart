@@ -30,7 +30,8 @@ String squareName(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
 }
 
 String fileSymbol(int file) => String.fromCharCode(Bishop.asciiA + file);
-int fileFromSymbol(String symbol) => symbol.toLowerCase().codeUnits[0] - Bishop.asciiA;
+int fileFromSymbol(String symbol) =>
+    symbol.toLowerCase().codeUnits[0] - Bishop.asciiA;
 
 int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   name = name.toLowerCase();
@@ -54,8 +55,12 @@ bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
   return x < boardSize.h;
 }
 
-int file(int square, [BoardSize boardSize = const BoardSize(8, 8)]) => square % (boardSize.h * 2);
-int rank(int square, [BoardSize boardSize = const BoardSize(8, 8)]) =>
-    boardSize.v - (square ~/ (boardSize.h * 2)) - 1;
-int getSquare(int file, int rank, [BoardSize boardSize = const BoardSize(8, 8)]) =>
-    (boardSize.v - rank - 1) * (boardSize.h * 2) + file;
+@Deprecated('Use BoardSize.file or Bishop.file')
+int file(int square, [BoardSize size = BoardSize.standard]) =>
+    size.file(square);
+@Deprecated('Use BoardSize.rank or Bishop.rank')
+int rank(int square, [BoardSize size = BoardSize.standard]) =>
+    size.rank(square);
+@Deprecated('Use BoardSize.square or Bishop.square')
+int getSquare(int file, int rank, [BoardSize size = BoardSize.standard]) =>
+    size.square(file, rank);

@@ -77,6 +77,18 @@ class Bishop {
     'p': '♙',
     '.': '·'
   };
+
+  /// Gets the file for [square], according to [size].
+  int file(int square, [BoardSize size = BoardSize.standard]) =>
+      size.file(square);
+
+  /// Gets the rank for [square], according to [size].
+  int rank(int square, [BoardSize size = BoardSize.standard]) =>
+      size.rank(square);
+
+  /// Returns the square index at [file] and [rank], according to [size].
+  int square(int file, int rank, [BoardSize size = BoardSize.standard]) =>
+      size.square(file, rank);
 }
 
 @Deprecated('Use Bishop.white')

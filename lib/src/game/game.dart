@@ -66,12 +66,12 @@ class Game {
     for (String c in castlingString.split('')) {
       // there is probably a better way to do all of this
       bool white = c == c.toUpperCase();
-      royalFile = file(royalSquares[white ? 0 : 1], size);
+      royalFile = size.file(royalSquares[white ? 0 : 1]);
       if (Castling.symbols.containsKey(c)) {
         cr += Castling.symbols[c]!;
       } else {
         int cFile = fileFromSymbol(c);
-        bool kingside = cFile > file(royalSquares[white ? 0 : 1], size);
+        bool kingside = cFile > size.file(royalSquares[white ? 0 : 1]);
         if (kingside) {
           castlingTargetK = cFile;
           cr += white ? Castling.k : Castling.bk;
@@ -336,7 +336,7 @@ class Game {
       if (!onBoard(i, size)) continue;
       if (board[i].isNotEmpty) continue;
       for (int p in hand) {
-        int hRank = rank(i, size);
+        int hRank = size.rank(i);
         bool onPromoRank = colour == Bishop.white
             ? hRank == size.maxRank
             : hRank == Bishop.rank1;
@@ -375,7 +375,7 @@ class Game {
     List<Move> moves = [];
     PieceType pieceType = variant.pieces[piece.type].type;
     int from = square;
-    int fromRank = rank(from, size);
+    int fromRank = size.rank(from);
     bool exit = false;
     // Generate normal moves
     for (MoveDefinition md in pieceType.moves) {
@@ -400,7 +400,7 @@ class Game {
         bool optPromo = false;
         bool forcedPromo = false;
         if (pieceType.promotable && variant.promotion) {
-          int toRank = rank(to, size);
+          int toRank = size.rank(to);
           optPromo = colour == Bishop.white
               ? toRank >= variant.promotionRanks[Bishop.black]
               : toRank <= variant.promotionRanks[Bishop.white];
@@ -440,7 +440,7 @@ class Game {
           if (optPromo) moves.addAll(generatePromotionMoves(m));
           bool addBase = !forcedPromo;
           if (variant.gating) {
-            int gRank = rank(m.from, size);
+            int gRank = size.rank(m.from);
             if ((gRank == Bishop.rank1 && colour == Bishop.white) ||
                 (gRank == size.maxRank && colour == Bishop.black)) {
               final gatingMoves = generateGatingMoves(m);
@@ -529,7 +529,7 @@ class Game {
       bool queenside = colour == Bishop.white
           ? state.castlingRights.wq
           : state.castlingRights.bq;
-      int royalRank = rank(from, variant.boardSize);
+      int royalRank = size.rank(from);
 
       for (int i = 0; i < 2; i++) {
         bool sideCondition = i == 0
@@ -546,13 +546,12 @@ class Game {
             ? variant.castlingOptions.kTarget!
             : variant.castlingOptions.qTarget!;
         int targetSq =
-            getSquare(targetFile, royalRank, size); // where the king lands
+            size.square(targetFile, royalRank); // where the king lands
         int rookFile = i == 0 ? castlingTargetK! : castlingTargetQ!;
-        int rookSq =
-            getSquare(rookFile, royalRank, size); // where the rook starts
+        int rookSq = size.square(rookFile, royalRank); // where the rook starts
         int rookTargetFile = i == 0 ? targetFile - 1 : targetFile + 1;
         int rookTargetSq =
-            getSquare(rookTargetFile, royalRank, size); // where the rook lands
+            size.square(rookTargetFile, royalRank); // where the rook lands
         // Check rook target square is empty (or occupied by the rook/king already)
         if (board[rookTargetSq].isNotEmpty &&
             rookTargetSq != rookSq &&
@@ -566,7 +565,7 @@ class Game {
         if (!options.ignorePieces) {
           for (int j = 1; j <= numMidSqs; j++) {
             int midFile = royalFile! + (i == 0 ? j : -j);
-            int midSq = getSquare(midFile, royalRank, variant.boardSize);
+            int midSq = size.square(midFile, royalRank);
             // None of these squares can be attacked
             if (isAttacked(midSq, colour.opponent)) {
               // squares between & dest square must not be attacked
@@ -595,7 +594,7 @@ class Game {
           );
           if (variant.gatingMode != GatingMode.fixed) moves.add(m);
           if (variant.gating) {
-            int gRank = rank(m.from, size);
+            int gRank = size.rank(m.from);
             if ((gRank == Bishop.rank1 && colour == Bishop.white) ||
                 (gRank == size.maxRank && colour == Bishop.black)) {
               moves.addAll(generateGatingMoves(m));
@@ -645,7 +644,7 @@ class Game {
   /// Doesn't include the option where a piece is not gated.
   List<Move> generateGatingMoves(Move base) {
     if (state.gates == null || state.gates!.isEmpty) return [];
-    int gFile = file(base.from);
+    int gFile = size.file(base.from);
     Square piece = board[base.from];
     Colour colour = piece.colour;
     if (piece.isEmpty) return [];
@@ -697,8 +696,8 @@ class Game {
     // TODO: more validation?
     Square fromSq = move.from >= Bishop.boardStart ? board[move.from] : empty;
     // Square toSq = board[move.to];
-    int fromRank = rank(move.from, size);
-    int fromFile = file(move.from, size);
+    int fromRank = size.rank(move.from);
+    int fromFile = size.file(move.from);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq != empty && fromSq.colour != state.turn) return false;
     int colour = turn;
@@ -728,7 +727,7 @@ class Game {
       // Mark the file as touched.
       if ((fromRank == 0 && colour == Bishop.white) ||
           (fromRank == size.v - 1 && colour == Bishop.black)) {
-        virginFiles[colour].remove(file(move.from, size));
+        virginFiles[colour].remove(size.file(move.from));
       }
     }
 
@@ -808,8 +807,8 @@ class Game {
           ? variant.castlingOptions.kTarget!
           : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
-      int rookSq = getSquare(rookFile, fromRank, size);
-      int kingSq = getSquare(castlingFile, fromRank, size);
+      int rookSq = size.square(rookFile, fromRank);
+      int kingSq = size.square(castlingFile, fromRank);
       int rook = board[move.castlingPieceSquare!];
       hash ^= zobrist.table[move.castlingPieceSquare!][rook.piece];
       if (board[kingSq].isNotEmpty) {
@@ -842,7 +841,7 @@ class Game {
       royalSquares[colour] = move.to;
     } else if (fromSq.type == variant.castlingPiece) {
       // rook moved
-      int fromFile = file(move.from, size);
+      int fromFile = size.file(move.from);
       int ks = colour == Bishop.white ? Castling.k : Castling.bk;
       int qs = colour == Bishop.white ? Castling.q : Castling.bq;
       if (fromFile == castlingTargetK && castlingRights.hasRight(ks)) {
@@ -857,7 +856,7 @@ class Game {
     } else if (move.capture &&
         move.capturedPiece!.type == variant.castlingPiece) {
       // rook captured
-      int toFile = file(move.to, size);
+      int toFile = size.file(move.to);
       int opponent = colour.opponent;
       int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
       int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
@@ -915,12 +914,12 @@ class Game {
 
     if (move.castling) {
       bool kingside = move.castlingDir == Castling.k;
-      int royalRank = rank(move.from, size);
+      int royalRank = size.rank(move.from);
       int castlingFile = kingside
           ? variant.castlingOptions.kTarget!
           : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
-      int rookSq = getSquare(rookFile, royalRank, size);
+      int rookSq = size.square(rookFile, royalRank);
       int rook = board[rookSq];
       int king = board[move.to];
       board[move.to] = empty;

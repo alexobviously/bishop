@@ -98,7 +98,7 @@ extension GameOutputs on Game {
     moves ??= generateLegalMoves();
 
     int piece = board[move.from].type;
-    int fromFile = file(move.from, size);
+    int fromFile = size.file(move.from);
     bool ambiguity = false;
     bool needRank = false;
     bool needFile = false;
@@ -109,7 +109,7 @@ extension GameOutputs on Game {
       if (m.to != move.to) continue;
       if (piece != board[m.from].type) continue;
       ambiguity = true;
-      if (file(m.from, size) == fromFile) {
+      if (size.file(m.from) == fromFile) {
         needRank = true;
       } else {
         needFile = true;
