@@ -75,6 +75,8 @@ class Variant {
   /// but you still want to use the normal pawn definition.
   final Map<String, int>? pieceValues;
 
+  final bool flyingGenerals;
+
   bool get castling => castlingOptions.enabled;
   bool get gating => gatingMode > GatingMode.none;
 
@@ -109,6 +111,7 @@ class Variant {
     this.hands = false,
     this.gatingMode = GatingMode.none,
     this.pieceValues,
+    this.flyingGenerals = false,
   }) : assert(
           startPosition != null || startPosBuilder != null,
           'Variant needs either a startPosition or startPosBuilder',
@@ -133,6 +136,7 @@ class Variant {
     bool? hands,
     GatingMode? gatingMode,
     Map<String, int>? pieceValues,
+    bool? flyingGenerals,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -153,6 +157,7 @@ class Variant {
       hands: hands ?? this.hands,
       gatingMode: gatingMode ?? this.gatingMode,
       pieceValues: pieceValues ?? this.pieceValues,
+      flyingGenerals: flyingGenerals ?? this.flyingGenerals,
     );
   }
 

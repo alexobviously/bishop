@@ -621,6 +621,9 @@ class Game {
       for (Move m in moves) {
         makeMove(m);
         if (kingAttacked(colour)) remove.add(m);
+        if (variant.data.flyingGenerals && royalsFacing) {
+          remove.add(m);
+        }
         undo();
       }
       for (Move m in remove) {
@@ -1010,6 +1013,11 @@ class Game {
     }
     return inCheck && generateLegalMoves().isEmpty;
   }
+
+  /// Returns true if the royal pieces for each player are on the same file,
+  /// e.g. Xiangqi's flying generals rule.
+  bool get royalsFacing => size.squaresOnSameFile(
+      state.royalSquares[Bishop.white], state.royalSquares[Bishop.black]);
 
   /// Is this stalemate?
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;

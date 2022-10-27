@@ -27,5 +27,6 @@ class Xiangqi {
         },
         castlingOptions: CastlingOptions.none,
         startPosition: defaultFen,
+        flyingGenerals: true,
       );
 }

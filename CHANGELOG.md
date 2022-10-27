@@ -1,5 +1,6 @@
 ### 0.6.1
 - Fixed a bug in gating move generation on non standard sized boards.
+- Xiangqi support: variant and piece definitions, flying generals rule.
 
 ### 0.6.0
 - Support for hopper pieces, such as the Grasshopper and Xiangqi Cannon, and Betza modifiers 'p' and 'g'.

@@ -49,6 +49,13 @@ class BoardSize {
   /// Gets the square index at [file] and [rank].
   int square(int file, int rank) => (v - rank - 1) * (h * 2) + file;
 
+  /// Returns true if [a] and [b] are facing.
+  /// Useful for Xiangqi's flying generals rule.
+  bool squaresOnSameFile(int a, int b) => file(a) == file(b);
+
+  /// Returns true if [a] and [b] are on the same rank.
+  bool squaresOnSameRank(int a, int b) => rank(a) == rank(b);
+
   @override
   String toString() => 'BoardSize($h, $v)';
 }
