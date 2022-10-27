@@ -3,15 +3,30 @@ part of 'variant.dart';
 class Xiangqi {
   static const String defaultFen =
       'rheakaehr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RHEAKAEHR w - - 0 1';
-  static PieceType general() =>
-      PieceType.fromBetza('W', royal: true, canPromoteTo: false);
-  static PieceType advisor() => PieceType.fromBetza('F');
-  static PieceType elephant() => PieceType.fromBetza('nA');
+  static PieceType general() => PieceType.fromBetza(
+        'W',
+        royal: true,
+        canPromoteTo: false,
+        regionEffects: [palaceMovement()],
+      );
+  static PieceType advisor() =>
+      PieceType.fromBetza('F', regionEffects: [palaceMovement()]);
+  static PieceType elephant() =>
+      PieceType.fromBetza('nA', regionEffects: [sideMovement()]);
   static PieceType horse() => PieceType.fromBetza('nN');
   static PieceType chariot() => PieceType.fromBetza('R');
   static PieceType cannon() => PieceType.fromBetza('mRcpR');
-  // TODO: implement 'promotion' on crossing river - fsW
-  static PieceType soldier() => PieceType.fromBetza('fW');
+  static PieceType soldier() => PieceType.fromBetza(
+        'fsW',
+        regionEffects: [
+          RegionEffect.changePiece(
+            whiteRegion: 'redSide',
+            blackRegion: 'blackSide',
+            pieceType: weakSoldier(),
+          ),
+        ],
+      );
+  static PieceType weakSoldier() => PieceType.fromBetza('fW');
 
   static Variant variant() => Variant(
         name: 'Xiangqi',
@@ -28,5 +43,35 @@ class Xiangqi {
         castlingOptions: CastlingOptions.none,
         startPosition: defaultFen,
         flyingGenerals: true,
+        regions: [
+          const BoardRegion(
+            id: 'redSide',
+            startRank: Bishop.rank1,
+            endRank: Bishop.rank5,
+          ),
+          const BoardRegion(
+            id: 'blackSide',
+            startRank: Bishop.rank6,
+            endRank: Bishop.rank10,
+          ),
+          const BoardRegion(
+            id: 'redPalace',
+            startRank: Bishop.rank1,
+            endRank: Bishop.rank3,
+            startFile: Bishop.fileD,
+            endFile: Bishop.fileF,
+          ),
+          const BoardRegion(
+            id: 'blackPalace',
+            startRank: Bishop.rank8,
+            endRank: Bishop.rank10,
+            startFile: Bishop.fileD,
+            endFile: Bishop.fileF,
+          ),
+        ],
       );
+  static RegionEffect palaceMovement() =>
+      RegionEffect.movement(white: 'redPalace', black: 'blackPalace');
+  static RegionEffect sideMovement() =>
+      RegionEffect.movement(white: 'redSide', black: 'blackSide');
 }

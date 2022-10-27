@@ -76,6 +76,7 @@ class Variant {
   final Map<String, int>? pieceValues;
 
   final bool flyingGenerals;
+  final List<BoardRegion> regions;
 
   bool get castling => castlingOptions.enabled;
   bool get gating => gatingMode > GatingMode.none;
@@ -112,6 +113,7 @@ class Variant {
     this.gatingMode = GatingMode.none,
     this.pieceValues,
     this.flyingGenerals = false,
+    this.regions = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
           'Variant needs either a startPosition or startPosBuilder',
@@ -137,6 +139,7 @@ class Variant {
     GatingMode? gatingMode,
     Map<String, int>? pieceValues,
     bool? flyingGenerals,
+    List<BoardRegion>? regions,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -158,6 +161,7 @@ class Variant {
       gatingMode: gatingMode ?? this.gatingMode,
       pieceValues: pieceValues ?? this.pieceValues,
       flyingGenerals: flyingGenerals ?? this.flyingGenerals,
+      regions: regions ?? this.regions,
     );
   }
 

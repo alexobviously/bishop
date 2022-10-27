@@ -1017,7 +1017,9 @@ class Game {
   /// Returns true if the royal pieces for each player are on the same file,
   /// e.g. Xiangqi's flying generals rule.
   bool get royalsFacing => size.squaresOnSameFile(
-      state.royalSquares[Bishop.white], state.royalSquares[Bishop.black]);
+        state.royalSquares[Bishop.white],
+        state.royalSquares[Bishop.black],
+      );
 
   /// Is this stalemate?
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;

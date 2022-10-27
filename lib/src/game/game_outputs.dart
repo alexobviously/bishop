@@ -15,8 +15,9 @@ extension GameOutputs on Game {
   /// Returns the algebraic representation of [move], with respect to the board size.
   String toAlgebraic(Move move, {bool simplifyFixedGating = true}) {
     String alg = move.algebraic(
-        size: size,
-        useRookForCastling: variant.castlingOptions.useRookAsTarget);
+      size: size,
+      useRookForCastling: variant.castlingOptions.useRookAsTarget,
+    );
     if (move.promotion) {
       alg = '$alg${variant.pieces[move.promoPiece!].symbol.toLowerCase()}';
     }
@@ -53,8 +54,9 @@ extension GameOutputs on Game {
       if (move.from == Bishop.hand) {
         PieceDefinition pieceDef = variant.pieces[move.dropPiece!];
         san = move.algebraic(size: size);
-        if (!pieceDef.type.noSanSymbol)
+        if (!pieceDef.type.noSanSymbol) {
           san = '${pieceDef.symbol.toUpperCase()}$san';
+        }
       } else {
         int piece = board[move.from].type;
         PieceDefinition pieceDef = variant.pieces[piece];
@@ -68,8 +70,9 @@ extension GameOutputs on Game {
         if (move.capture) san = '${san}x';
         san = '$san${squareName(move.to, size)}';
 
-        if (move.promotion)
+        if (move.promotion) {
           san = '$san=${variant.pieces[move.promoPiece!].symbol}';
+        }
       }
     }
     if (move.gate) {
@@ -261,7 +264,10 @@ extension GameOutputs on Game {
     String castling = state.castlingRights.formatted;
     if (variant.outputOptions.castlingFormat == CastlingFormat.shredder) {
       castling = replaceMultiple(
-          castling, Castling.symbols.keys.toList(), castlingFileSymbols);
+        castling,
+        Castling.symbols.keys.toList(),
+        castlingFileSymbols,
+      );
     }
     if (variant.outputOptions.virginFiles) {
       String whiteVFiles = state.virginFiles[Bishop.white]
@@ -318,9 +324,11 @@ extension GameOutputs on Game {
       if (full || onBoard(i, size)) {
         int piece = board[i];
         String symbol = piece == empty ? '' : variant.pieces[piece.type].symbol;
-        symbols.add(piece.colour == Bishop.white
-            ? symbol.toUpperCase()
-            : symbol.toLowerCase());
+        symbols.add(
+          piece.colour == Bishop.white
+              ? symbol.toUpperCase()
+              : symbol.toLowerCase(),
+        );
       }
     }
     return symbols;

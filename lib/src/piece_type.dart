@@ -1,3 +1,5 @@
+import 'package:bishop/bishop.dart';
+
 import 'betza.dart';
 import 'constants.dart';
 import 'move_definition.dart';
@@ -32,6 +34,9 @@ class PieceType {
   /// Can be overridden in a `Variant`.
   final int value;
 
+  /// Regions in which the behaviour of the piece is altered.
+  final List<RegionEffect> regionEffects;
+
   const PieceType({
     this.betza,
     required this.moves,
@@ -41,6 +46,7 @@ class PieceType {
     this.enPassantable = false,
     this.noSanSymbol = false,
     this.value = Bishop.defaultPieceValue,
+    this.regionEffects = const [],
   });
 
   /// Initialise the `PieceType`.
@@ -51,6 +57,11 @@ class PieceType {
         m.lameDirection = Direction(m.direction.h ~/ 2, m.direction.v ~/ 2);
         m.lameNormalised =
             m.lameDirection!.v * boardSize.north + m.lameDirection!.h;
+      }
+    }
+    for (RegionEffect re in regionEffects) {
+      if (re.pieceType != null) {
+        re.pieceType!.init(boardSize);
       }
     }
   }
@@ -66,6 +77,7 @@ class PieceType {
     bool enPassantable = false,
     bool noSanSymbol = false,
     int value = Bishop.defaultPieceValue,
+    List<RegionEffect> regionEffects = const [],
   }) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> moves = [];
@@ -96,6 +108,7 @@ class PieceType {
       enPassantable: enPassantable,
       noSanSymbol: noSanSymbol,
       value: value,
+      regionEffects: regionEffects,
     );
   }
 
