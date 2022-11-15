@@ -64,7 +64,10 @@ extension GameOutputs on Game {
         } else {
           san = pieceDef.symbol;
         }
-        san = pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
+        if (disambiguator.isNotEmpty) {
+          san =
+              pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
+        }
         if (move.capture) san = '${san}x';
         san = '$san${squareName(move.to, size)}';
 
