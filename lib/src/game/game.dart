@@ -559,7 +559,9 @@ class Game {
           continue;
         }
         // Check king target square is empty (or occupied by the castling rook)
-        if (board[targetSq].isNotEmpty && targetSq != rookSq) continue;
+        if (board[targetSq].isNotEmpty &&
+            targetSq != rookSq &&
+            targetSq != square) continue;
         int numMidSqs = (targetFile - royalFile!).abs();
         bool valid = true;
         if (!options.ignorePieces) {
