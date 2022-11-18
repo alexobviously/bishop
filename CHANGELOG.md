@@ -1,7 +1,8 @@
 ### 0.6.1
 - Fixed a bug in gating move generation on non standard sized boards.
 - Xiangqi support: variant and piece definitions, flying generals rule.
-- Fixed a bug where the SAN format for pawn captures might be wrong (thanks @malaschitz)
+- Fixed a bug where the SAN format for pawn captures might be wrong (thanks @malaschitz).
+- Fixed Chess960 castling moves not being generated for kings on g1 (thanks @malaschitz).
 
 ### 0.6.0
 - Support for hopper pieces, such as the Grasshopper and Xiangqi Cannon, and Betza modifiers 'p' and 'g'.
