@@ -845,13 +845,19 @@ class Game {
     } else if (fromSq.type == variant.castlingPiece) {
       // rook moved
       int fromFile = file(move.from, size);
+      int fromRank = rank(move.from, size);
       int ks = colour == Bishop.white ? Castling.k : Castling.bk;
       int qs = colour == Bishop.white ? Castling.q : Castling.bq;
-      if (fromFile == castlingTargetK && castlingRights.hasRight(ks)) {
+      int firstRank = colour == Bishop.white ? 0 : size.h - 1;
+      if (fromFile == castlingTargetK &&
+          castlingRights.hasRight(ks) &&
+          fromRank == firstRank) {
         castlingRights = castlingRights.flip(ks);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
-      } else if (fromFile == castlingTargetQ && castlingRights.hasRight(qs)) {
+      } else if (fromFile == castlingTargetQ &&
+          castlingRights.hasRight(qs) &&
+          fromRank == firstRank) {
         castlingRights = castlingRights.flip(qs);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
