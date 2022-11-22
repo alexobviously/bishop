@@ -867,14 +867,20 @@ class Game {
         move.capturedPiece!.type == variant.castlingPiece) {
       // rook captured
       int toFile = file(move.to, size);
+      int toRank = rank(move.to, size);
       int opponent = colour.opponent;
       int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
       int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
-      if (toFile == castlingTargetK && castlingRights.hasRight(ks)) {
+      int firstRank = colour == Bishop.white ? 0 : size.h - 1;
+      if (toFile == castlingTargetK &&
+          castlingRights.hasRight(ks) &&
+          toRank == firstRank) {
         castlingRights = castlingRights.flip(ks);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
-      } else if (toFile == castlingTargetQ && castlingRights.hasRight(qs)) {
+      } else if (toFile == castlingTargetQ &&
+          castlingRights.hasRight(qs) &&
+          toRank == firstRank) {
         castlingRights = castlingRights.flip(qs);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
