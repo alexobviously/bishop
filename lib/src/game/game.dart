@@ -566,8 +566,9 @@ class Game {
         int numMidSqs = (targetFile - royalFile!).abs();
         bool valid = true;
         if (!options.ignorePieces) {
+          int step = targetFile > royalFile! ? 1 : -1;
           for (int j = 1; j <= numMidSqs; j++) {
-            int midFile = royalFile! + (i == 0 ? j : -j);
+            int midFile = royalFile! + step;
             int midSq = getSquare(midFile, royalRank, variant.boardSize);
             // None of these squares can be attacked
             if (isAttacked(midSq, colour.opponent)) {
