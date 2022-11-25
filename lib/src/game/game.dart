@@ -871,7 +871,7 @@ class Game {
       int opponent = colour.opponent;
       int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
       int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
-      int firstRank = colour == Bishop.white ? 0 : size.h - 1;
+      int firstRank = opponent == Bishop.white ? Bishop.rank1 : size.h - 1;
       if (toFile == castlingTargetK &&
           castlingRights.hasRight(ks) &&
           toRank == firstRank) {
