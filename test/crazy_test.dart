@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:bishop/bishop.dart';
 import 'package:test/expect.dart';
 import 'package:test/scaffolding.dart';
@@ -43,7 +41,7 @@ void main() {
       //
       List<String> hand = [...g.handSymbols()[0], ...g.handSymbols()[1]]
         ..sort();
-      expect(hand.join(), 'NRnp');
+      expect(hand.join(), 'NRpq');
     });
   });
 }

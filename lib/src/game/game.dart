@@ -737,9 +737,8 @@ class Game {
 
     // Add captured piece to hand
     if (variant.hands && move.capture) {
-      int piece = move.capturedPiece!.hasFlag(promoFlag)
-          ? variant.promotionPieces[0]
-          : move.capturedPiece!.type;
+      int piece =
+          move.capturedPiece!.hasFlag(promoFlag) ? 1 : move.capturedPiece!.type;
       hands![colour].add(piece);
       pieces[makePiece(piece, colour)]++;
     }
