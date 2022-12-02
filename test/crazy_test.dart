@@ -43,5 +43,23 @@ void main() {
         ..sort();
       expect(hand.join(), 'NRpq');
     });
+    test('Put pawn on first, last lane', () {
+      Game g = Game(
+        variant: Variant.crazyhouse(),
+      );
+      List<String> moves = 'e2e4,e7e5,d2d4,e5d4,d1f3,g8f6,c1g5'.split(',');
+      for (String m in moves) {
+        bool ok = g.makeMoveString(m);
+        expect(ok, true);
+      }
+      List<Move> gmoves = g.generateLegalMoves();
+      Set<String> smoves = {};
+      for (Move m in gmoves) {
+        smoves.add(g.toAlgebraic(m));
+      }
+      expect(smoves.contains('p@e7'), true);
+      expect(smoves.contains('p@d1'), false);
+      expect(smoves.contains('p@g8'), false);
+    });
   });
 }

@@ -340,7 +340,12 @@ class Game {
         bool onPromoRank = colour == Bishop.white
             ? hRank == size.maxRank
             : hRank == Bishop.rank1;
+        bool firstRank = colour == Bishop.white
+            ? hRank == Bishop.rank1
+            : hRank == size.maxRank;
         if (onPromoRank && variant.pieces[p].type.promotable) continue;
+        //first rank not available for promotable pieces
+        if (firstRank && variant.pieces[p].type.promotable) continue;
         int dropPiece = p;
         // TODO: support more than one promo piece in this case
         if (p.hasFlag(promoFlag)) dropPiece = variant.promotionPieces[0];
