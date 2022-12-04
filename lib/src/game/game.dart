@@ -642,9 +642,39 @@ class Game {
   /// Generates a move for each piece in [variant.promotionPieces] for the [base] move.
   List<Move> generatePromotionMoves(Move base) {
     List<Move> moves = [];
-    for (int p in variant.promotionPieces) {
-      Move m = base.copyWith(promoSource: board[base.from].type, promoPiece: p);
-      moves.add(m);
+    if (variant.data.name == Variant.grand().name) {
+      Colour c = board[base.from].colour;
+      Map<int, int> boardPieces = {};
+      board.where((e) => e.colour == c && e.type > 0).forEach((e) {
+        boardPieces[e.type] = (boardPieces[e.piece.type] ?? 0) + 1;
+      });
+      Map<int, bool> taken = {
+        variant.pieceIndexLookup['Q']!:
+            (boardPieces[variant.pieceIndexLookup['Q']!] ?? 0) < 1,
+        variant.pieceIndexLookup['R']!:
+            (boardPieces[variant.pieceIndexLookup['R']!] ?? 0) < 2,
+        variant.pieceIndexLookup['N']!:
+            (boardPieces[variant.pieceIndexLookup['N']!] ?? 0) < 2,
+        variant.pieceIndexLookup['B']!:
+            (boardPieces[variant.pieceIndexLookup['B']!] ?? 0) < 2,
+        variant.pieceIndexLookup['A']!:
+            (boardPieces[variant.pieceIndexLookup['A']!] ?? 0) < 1,
+        variant.pieceIndexLookup['C']!:
+            (boardPieces[variant.pieceIndexLookup['C']!] ?? 0) < 1,
+      };
+      for (int p in variant.promotionPieces) {
+        if (taken[p] ?? false) {
+          Move m =
+              base.copyWith(promoSource: board[base.from].type, promoPiece: p);
+          moves.add(m);
+        }
+      }
+    } else {
+      for (int p in variant.promotionPieces) {
+        Move m =
+            base.copyWith(promoSource: board[base.from].type, promoPiece: p);
+        moves.add(m);
+      }
     }
     return moves;
   }
