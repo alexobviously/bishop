@@ -213,13 +213,7 @@ extension GameOutputs on Game {
       if (i < variant.boardSize.v - 1) fen = '$fen/';
     }
     if (variant.hands) {
-      String whiteHand = state.hands![Bishop.white]
-          .map((p) => variant.pieces[p].symbol.toUpperCase())
-          .join('');
-      String blackHand = state.hands![Bishop.black]
-          .map((p) => variant.pieces[p].symbol.toLowerCase())
-          .join('');
-      fen = '$fen[$whiteHand$blackHand]';
+      fen = '$fen[$handString]';
     }
     if (variant.gatingMode == GatingMode.flex) {
       String whiteGate = state.gates![Bishop.white]
@@ -339,7 +333,7 @@ extension GameOutputs on Game {
 
   /// Converts the internal representation of the hands to a list of piece symbols (e.g. 'P', 'q').
   /// You probably need this for interopability with other applications (such as the Squares package).
-  List<List<String>> handSymbols() {
+  List<List<String>> get handSymbols {
     if (!variant.hands) return [[], []];
     List<String> whiteHand = state.hands![Bishop.white]
         .map((p) => variant.pieces[p].symbol.toUpperCase())
@@ -348,6 +342,11 @@ extension GameOutputs on Game {
         .map((p) => variant.pieces[p].symbol.toLowerCase())
         .toList();
     return [whiteHand, blackHand];
+  }
+
+  String get handString {
+    final symbols = handSymbols;
+    return [...symbols.first, ...symbols.last].join('');
   }
 
   /// Converts the internal representation of the gates to a list of piece symbols (e.g. 'P', 'q').

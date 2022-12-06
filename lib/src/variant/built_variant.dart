@@ -7,6 +7,7 @@ class BuiltVariant {
   final Map<String, PieceDefinition> pieceLookup;
   final Map<String, int> pieceIndexLookup;
   final List<int> promotionPieces;
+  final List<int> promotablePieces;
   final int epPiece;
   final int castlingPiece;
   final int royalPiece;
@@ -18,6 +19,7 @@ class BuiltVariant {
     required this.pieceLookup,
     required this.pieceIndexLookup,
     required this.promotionPieces,
+    required this.promotablePieces,
     required this.epPiece,
     required this.castlingPiece,
     required this.royalPiece,
@@ -41,18 +43,24 @@ class BuiltVariant {
       pieceLookup[s] = piece;
       pieceIndexLookup[s] = pieces.length - 1;
     });
-    List<int> promotionPieces = [];
-    for (int i = 0; i < pieces.length; i++) {
-      // && !pieces[i].type.royal) ?
-      if (pieces[i].type.canPromoteTo) promotionPieces.add(i);
-    }
 
     return BuiltVariant(
       data: data,
       pieces: pieces,
       pieceLookup: pieceLookup,
       pieceIndexLookup: pieceIndexLookup,
-      promotionPieces: promotionPieces,
+      promotionPieces: pieces
+          .asMap()
+          .entries
+          .where((e) => e.value.type.canPromoteTo)
+          .map((e) => e.key)
+          .toList(),
+      promotablePieces: pieces
+          .asMap()
+          .entries
+          .where((e) => e.value.type.promotable)
+          .map((e) => e.key)
+          .toList(),
       epPiece: data.enPassant
           ? pieces.indexWhere((p) => p.type.enPassantable)
           : Bishop.invalid,

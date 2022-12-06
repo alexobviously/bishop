@@ -337,10 +337,8 @@ class Game {
       if (board[i].isNotEmpty) continue;
       for (int p in hand) {
         int hRank = size.rank(i);
-        bool onPromoRank = colour == Bishop.white
-            ? hRank == size.maxRank
-            : hRank == Bishop.rank1;
-        if (onPromoRank && variant.pieces[p].type.promotable) continue;
+        bool onEdgeRank = hRank == Bishop.rank1 || hRank == size.maxRank;
+        if (onEdgeRank && variant.pieces[p].type.promotable) continue;
         int dropPiece = p;
         // TODO: support more than one promo piece in this case
         if (p.hasFlag(promoFlag)) dropPiece = variant.promotionPieces[0];
@@ -739,7 +737,7 @@ class Game {
     // Add captured piece to hand
     if (variant.hands && move.capture) {
       int piece = move.capturedPiece!.hasFlag(promoFlag)
-          ? variant.promotionPieces[0]
+          ? variant.promotablePieces.first
           : move.capturedPiece!.type;
       hands![colour].add(piece);
       pieces[makePiece(piece, colour)]++;

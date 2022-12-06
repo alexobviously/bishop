@@ -42,3 +42,6 @@ jobs:
 
       - name: Run Hopper tests
         run: dart test test/hopper_test.dart
+
+      - name: Run Crazyhouse tests
+        run: dart test test/crazyhouse_test.dart
