@@ -4,6 +4,7 @@
 - Fixed a bug where the SAN format for pawn captures might be wrong (thanks @malaschitz).
 - Fixed Chess960 castling moves not being generated for kings on g1 (thanks @malaschitz).
 - Fixed Crazyhouse bugs: pawns being droppable on the first rank, and promoted pieces not being captured as pawns (thanks @malaschitz).
+- Fixed a extremely rare case where a rook on the file of another uncastled rook of the same colour would affect the castling rights of that other rook (thanks @malaschitz).
 
 ### 0.6.0
 - Support for hopper pieces, such as the Grasshopper and Xiangqi Cannon, and Betza modifiers 'p' and 'g'.

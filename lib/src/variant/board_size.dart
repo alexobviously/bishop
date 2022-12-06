@@ -56,6 +56,12 @@ class BoardSize {
   /// Returns true if [a] and [b] are on the same rank.
   bool squaresOnSameRank(int a, int b) => rank(a) == rank(b);
 
+  /// Get the first rank for player [colour].
+  int firstRank(int colour) => colour == Bishop.white ? Bishop.rank1 : maxRank;
+
+  /// Get the last rank (i.e. promotion rank) for player [colour].
+  int lastRank(int colour) => firstRank(colour.opponent);
+
   @override
   String toString() => 'BoardSize($h, $v)';
 }

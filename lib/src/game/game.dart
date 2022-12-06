@@ -845,13 +845,18 @@ class Game {
     } else if (fromSq.type == variant.castlingPiece) {
       // rook moved
       int fromFile = size.file(move.from);
+      bool onFirstRank = size.rank(move.from) == size.firstRank(colour);
       int ks = colour == Bishop.white ? Castling.k : Castling.bk;
       int qs = colour == Bishop.white ? Castling.q : Castling.bq;
-      if (fromFile == castlingTargetK && castlingRights.hasRight(ks)) {
+      if (fromFile == castlingTargetK &&
+          onFirstRank &&
+          castlingRights.hasRight(ks)) {
         castlingRights = castlingRights.flip(ks);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
-      } else if (fromFile == castlingTargetQ && castlingRights.hasRight(qs)) {
+      } else if (fromFile == castlingTargetQ &&
+          onFirstRank &&
+          castlingRights.hasRight(qs)) {
         castlingRights = castlingRights.flip(qs);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
@@ -861,13 +866,18 @@ class Game {
       // rook captured
       int toFile = size.file(move.to);
       int opponent = colour.opponent;
+      bool onFirstRank = size.rank(move.to) == size.firstRank(opponent);
       int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
       int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
-      if (toFile == castlingTargetK && castlingRights.hasRight(ks)) {
+      if (toFile == castlingTargetK &&
+          onFirstRank &&
+          castlingRights.hasRight(ks)) {
         castlingRights = castlingRights.flip(ks);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
-      } else if (toFile == castlingTargetQ && castlingRights.hasRight(qs)) {
+      } else if (toFile == castlingTargetQ &&
+          onFirstRank &&
+          castlingRights.hasRight(qs)) {
         castlingRights = castlingRights.flip(qs);
         hash ^= zobrist.table[zobrist.castling][state.castlingRights];
         hash ^= zobrist.table[zobrist.castling][castlingRights];
