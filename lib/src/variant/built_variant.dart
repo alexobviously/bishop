@@ -72,6 +72,32 @@ class BuiltVariant {
     );
   }
 
+  PieceType pieceType(int piece, int square) {
+    // TODO: make this more efficient by building some of these values in advance
+    final pd = pieces[piece.type];
+    if (data.regions.isEmpty || pd.type.regionEffects.isEmpty) {
+      return pd.type;
+    }
+    List<RegionEffect> effects = pd.type.changePieceRegionEffects;
+    if (effects.isEmpty) {
+      return pd.type;
+    }
+    List<String> regions = [];
+    for (BoardRegion region in data.regions) {
+      if (boardSize.inRegion(square, region)) {
+        regions.add(region.id);
+      }
+    }
+    for (RegionEffect re in effects) {
+      if (regions.contains(
+        piece.colour == Bishop.white ? re.whiteRegion : re.blackRegion,
+      )) {
+        return re.pieceType!;
+      }
+    }
+    return pd.type;
+  }
+
   int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
   List<int> pieceIndices(List<String> symbols) =>
       symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();

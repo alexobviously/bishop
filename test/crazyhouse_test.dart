@@ -25,7 +25,7 @@ Fen: r2qk2n/2p5/2b1ppb1/pp1pP1Bn/7p/5P2/PPPP2PP/RNB2RK1[RNqp] w q - 0 31
 */
 
 void main() {
-  group('Misc', () {
+  group('Crazyhouse', () {
     test('Crazyhouse take promoted pawn', () {
       Game g = Game(variant: Variant.crazyhouse());
       List<String> moves =

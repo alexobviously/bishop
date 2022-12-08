@@ -371,7 +371,7 @@ class Game {
     Colour colour = piece.colour;
     int dirMult = Bishop.playerDirection[piece.colour];
     List<Move> moves = [];
-    PieceType pieceType = variant.pieces[piece.type].type;
+    PieceType pieceType = variant.pieceType(piece, square);
     int from = square;
     int fromRank = size.rank(from);
     bool exit = false;
@@ -961,12 +961,18 @@ class Game {
     return move;
   }
 
-  /// Makes a random valid move for the current player.
-  Move makeRandomMove() {
+  /// Gets a random valid move for the current player.
+  Move getRandomMove() {
     List<Move> moves = generateLegalMoves();
     int i = Random().nextInt(moves.length);
-    makeMove(moves[i]);
     return moves[i];
+  }
+
+  /// Makes a random valid move for the current player.
+  Move makeRandomMove() {
+    Move m = getRandomMove();
+    makeMove(m);
+    return m;
   }
 
   /// Makes a move from an algebraic move string (e.g. e2e4, f7f8q).
@@ -1038,6 +1044,7 @@ class Game {
   /// to mate the other.
   /// Returns true if there *isn't* sufficient material (and therefore it's a draw).
   bool get insufficientMaterial {
+    if (!variant.materialConditions.enabled) return false;
     if (hasSufficientMaterial(Bishop.white)) return false;
     return !hasSufficientMaterial(Bishop.black);
   }

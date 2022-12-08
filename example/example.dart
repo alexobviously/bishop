@@ -9,7 +9,9 @@ void main(List<String> args) async {
   while (!game.gameOver) {
     print(game.ascii());
     print(game.fen);
-    game.makeRandomMove();
+    Move m = game.getRandomMove();
+    print('${Bishop.playerName[game.turn]}: ${game.toSan(m)}');
+    game.makeMove(m);
   }
   print(game.ascii());
   print(game.pgn());

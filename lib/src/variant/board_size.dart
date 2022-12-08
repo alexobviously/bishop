@@ -62,6 +62,24 @@ class BoardSize {
   /// Get the last rank (i.e. promotion rank) for player [colour].
   int lastRank(int colour) => firstRank(colour.opponent);
 
+  bool inRegion(int square, BoardRegion region) {
+    int r = rank(square);
+    int f = file(square);
+    if (region.startFile != null && f < region.startFile!) {
+      return false;
+    }
+    if (region.endFile != null && f > region.endFile!) {
+      return false;
+    }
+    if (region.startRank != null && r < region.startRank!) {
+      return false;
+    }
+    if (region.endRank != null && r > region.endRank!) {
+      return false;
+    }
+    return true;
+  }
+
   @override
   String toString() => 'BoardSize($h, $v)';
 }

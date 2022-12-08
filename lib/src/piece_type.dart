@@ -1,10 +1,5 @@
 import 'package:bishop/bishop.dart';
 
-import 'betza.dart';
-import 'constants.dart';
-import 'move_definition.dart';
-import 'variant/variant.dart';
-
 /// Specifies a piece type, with all of its moves and attributes.
 class PieceType {
   /// A Betza notation string that defines the piece.
@@ -36,6 +31,14 @@ class PieceType {
 
   /// Regions in which the behaviour of the piece is altered.
   final List<RegionEffect> regionEffects;
+
+  /// Region effects that change the piece type.
+  List<RegionEffect> get changePieceRegionEffects =>
+      regionEffects.where((e) => e.pieceType != null).toList();
+
+  /// Region effects that restrict movement.
+  List<RegionEffect> get restrictMovementRegionEffects =>
+      regionEffects.where((e) => e.restrictMovement).toList();
 
   const PieceType({
     this.betza,

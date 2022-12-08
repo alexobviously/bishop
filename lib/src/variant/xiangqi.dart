@@ -41,8 +41,9 @@ class Xiangqi {
           'P': soldier(),
         },
         castlingOptions: CastlingOptions.none,
+        materialConditions: MaterialConditions.none,
         startPosition: defaultFen,
-        flyingGenerals: true,
+        flyingGenerals: false, // TODO: account for other pieces, lol
         regions: [
           const BoardRegion(
             id: 'redSide',

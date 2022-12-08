@@ -135,7 +135,8 @@ enum Variants {
   nano(Variant.nano),
   seirawan(Variant.seirawan),
   threeCheck(Variant.threeCheck),
-  musketeer(Musketeer.variant);
+  musketeer(Musketeer.variant),
+  xiangqi(Xiangqi.variant);
 
   final Variant Function() builder;
   const Variants(this.builder);
