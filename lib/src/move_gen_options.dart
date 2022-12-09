@@ -63,4 +63,8 @@ class MoveGenOptions {
     legal: false,
     ignorePieces: true,
   );
+
+  @override
+  String toString() =>
+      'MoveGenOptions($captures, $quiet, $castling, $legal, $ignorePieces, $pieceType, $onlySquare)';
 }

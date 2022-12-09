@@ -390,6 +390,9 @@ class Game {
         if (exit) break;
         int to = square + md.normalised * (i + 1) * dirMult;
         if (!onBoard(to, variant.boardSize)) break;
+        if (variant.hasRegions) {
+          if (!variant.allowMovement(piece, to)) break;
+        }
         if (md.lame) {
           int fromLame = from + md.normalised * i * dirMult;
           int blockSq = fromLame + md.lameNormalised! * dirMult;

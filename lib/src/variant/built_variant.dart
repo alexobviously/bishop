@@ -98,6 +98,28 @@ class BuiltVariant {
     return pd.type;
   }
 
+  /// For use with restricted movement regions - determines whether it is
+  /// allowed for [piece] to move to [square].
+  bool allowMovement(int piece, int square) {
+    final pd = pieces[piece.type];
+    if (data.regions.isEmpty || pd.type.regionEffects.isEmpty) {
+      return true;
+    }
+    List<RegionEffect> effects = pd.type.restrictMovementRegionEffects;
+    if (effects.isEmpty) {
+      return true;
+    }
+    String? regionId = piece.colour == Bishop.white
+        ? effects.first.whiteRegion
+        : effects.first.blackRegion;
+    if (regionId == null) return true;
+
+    BoardRegion? region =
+        data.regions.firstWhereOrNull((e) => e.id == regionId);
+    if (region == null) return true;
+    return boardSize.inRegion(square, region);
+  }
+
   int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
   List<int> pieceIndices(List<String> symbols) =>
       symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
@@ -160,6 +182,7 @@ class BuiltVariant {
 
   bool get castling => data.castling;
   bool get gating => data.gating;
+  bool get hasRegions => data.regions.isNotEmpty;
 
   @override
   String toString() => name;

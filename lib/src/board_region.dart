@@ -2,7 +2,6 @@ import 'package:bishop/bishop.dart';
 
 class BoardRegion {
   final String id;
-  final int? player;
   final int? startRank;
   final int? endRank;
   final int? startFile;
@@ -10,12 +9,15 @@ class BoardRegion {
 
   const BoardRegion({
     required this.id,
-    this.player,
     this.startRank,
     this.endRank,
     this.startFile,
     this.endFile,
   });
+
+  @override
+  String toString() =>
+      'BoardRegion($id, $startFile-$endFile, $startRank-$endRank)';
 }
 
 class RegionEffect {
