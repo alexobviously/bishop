@@ -45,3 +45,6 @@ jobs:
 
       - name: Run Crazyhouse tests
         run: dart test test/crazyhouse_test.dart
+      
+      - name: Run Region tests
+        run: dart test test/region_test.dart
