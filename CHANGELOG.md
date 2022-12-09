@@ -1,6 +1,7 @@
 ### 0.6.1
+- Board regions and region effects - these allow custom behaviour to be defined for pieces that are in specific areas of the board, and the ability to restrict piece types to regions.
 - Fixed a bug in gating move generation on non standard sized boards.
-- Xiangqi support: variant and piece definitions, flying generals rule.
+- Xiangqi support: variant and piece definitions, regions and effects.
 - Fixed a bug where the SAN format for pawn captures might be wrong (thanks @malaschitz).
 - Fixed Chess960 castling moves not being generated for kings on g1 (thanks @malaschitz).
 - Fixed Crazyhouse bugs: pawns being droppable on the first rank, and promoted pieces not being captured as pawns (thanks @malaschitz).

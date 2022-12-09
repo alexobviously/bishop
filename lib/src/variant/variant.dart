@@ -75,10 +75,19 @@ class Variant {
   /// but you still want to use the normal pawn definition.
   final Map<String, int>? pieceValues;
 
+  /// The flying generals rule from Xiangqi, i.e. royal pieces (kings/generals)
+  /// are not allowed to face each other if this is true.
+  /// CURRENTLY NOT WORKING.
   final bool flyingGenerals;
+
+  /// A list of region definitions for the board, for use with `RegionEffects`
+  /// in piece definitions.
   final List<BoardRegion> regions;
 
+  /// Whether this variant involves castling.
   bool get castling => castlingOptions.enabled;
+
+  /// Whether this variant involves gating.
   bool get gating => gatingMode > GatingMode.none;
 
   /// All piece symbols in use by this variant.
