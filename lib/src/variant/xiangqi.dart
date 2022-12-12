@@ -12,14 +12,15 @@ class Xiangqi {
         regionEffects: [palaceMovement()],
       );
   static PieceType advisor() =>
-      PieceType.fromBetza('F', regionEffects: [palaceMovement()]);
+      PieceType.fromBetza('F', value: 200, regionEffects: [palaceMovement()]);
   static PieceType elephant() =>
-      PieceType.fromBetza('nA', regionEffects: [sideMovement()]);
-  static PieceType horse() => PieceType.fromBetza('nN');
-  static PieceType chariot() => PieceType.fromBetza('R');
-  static PieceType cannon() => PieceType.fromBetza('mRcpR');
+      PieceType.fromBetza('nA', value: 200, regionEffects: [sideMovement()]);
+  static PieceType horse() => PieceType.fromBetza('nN', value: 400);
+  static PieceType chariot() => PieceType.fromBetza('R', value: 900);
+  static PieceType cannon() => PieceType.fromBetza('mRcpR', value: 450);
   static PieceType soldier() => PieceType.fromBetza(
         'fsW',
+        value: 100, // TODO: this should be 200 but multi-value pieces aren't supported
         regionEffects: [
           RegionEffect.changePiece(
             whiteRegion: 'redSide',
@@ -28,7 +29,7 @@ class Xiangqi {
           ),
         ],
       );
-  static PieceType weakSoldier() => PieceType.fromBetza('fW');
+  static PieceType weakSoldier() => PieceType.fromBetza('fW', value: 100);
 
   static Variant variant() => Variant(
         name: 'Xiangqi',
