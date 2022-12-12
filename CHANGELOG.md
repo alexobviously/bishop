@@ -1,3 +1,6 @@
+### 0.6.2
+- Switched to standard symbols for Xiangqi, i.e. Elephants are 'B' and Horses are 'N'.
+
 ### 0.6.1
 - Board regions and region effects - these allow custom behaviour to be defined for pieces that are in specific areas of the board, and the ability to restrict piece types to regions.
 - Fixed a bug in gating move generation on non standard sized boards.
