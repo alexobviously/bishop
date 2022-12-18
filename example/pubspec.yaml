@@ -1,0 +1,12 @@
+name: bishop_example
+description: A sample command-line application.
+version: 0.1.0
+publish_to: 'none'
+
+environment:
+  sdk: '>=2.17.1 <3.0.0'
+
+dependencies:
+  colorize: ^3.0.0
+  bishop:
+    path: ../

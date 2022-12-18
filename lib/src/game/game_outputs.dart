@@ -150,6 +150,9 @@ extension GameOutputs on Game {
     return nodes;
   }
 
+  List<String> algebraicMoves() =>
+      generateLegalMoves().map((e) => toAlgebraic(e)).toList();
+
   List<String> sanMoves() {
     List<Move> moveStack = [];
     while (canUndo) {
