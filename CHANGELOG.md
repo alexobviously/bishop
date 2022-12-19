@@ -1,3 +1,7 @@
+### 0.6.3
+- Added examples/play.dart - interactive CLI application for playing a game.
+- Convenience methods on Game - `moveHistory`, `moveHistoryAlgebraic` and `moveHistorySan`.
+
 ### 0.6.2
 - Switched to standard symbols for Xiangqi, i.e. Elephants are 'B' and Horses are 'N'.
 
@@ -56,7 +60,7 @@
 
 ### 0.2.10
 - Another small variant (mini - 6x6)
-- *buildRandomPosition()* for generating arbitrary random positions, see Variant.miniRandom for an example
+- `buildRandomPosition()` for generating arbitrary random positions, see Variant.miniRandom for an example
 - Fixed a bug in which drop moves were not being legalised
 - Fixed SAN disambiguators for pawns
 - Various minor improvements
@@ -73,12 +77,12 @@
 
 ### 0.2.6
 - Support loading incomplete FEN strings
-- *Game.validateFen()* function
-- *CastlingOptions.useRookAsTarget*: formats algebraic moves correctly for Chess960
+- `Game.validateFen()` function
+- `CastlingOptions.useRookAsTarget`: formats algebraic moves correctly for Chess960
 
 ### 0.2.5
 - Premove generation
-- *Game.loadFen()* function
+- `Game.loadFen()` function
 
 ### 0.2.4
 - Fixed engine not wanting to checkmate you
@@ -94,7 +98,7 @@
 - Piece values
 
 ### 0.2.1
-- Added *Game.boardSymbols()*, for use with the **squares** package
+- Added `Game.boardSymbols()`, for use with the **squares** package
 
 ### 0.2.0
 - Renamed package to Bishop

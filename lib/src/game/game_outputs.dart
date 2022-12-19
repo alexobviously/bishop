@@ -150,10 +150,22 @@ extension GameOutputs on Game {
     return nodes;
   }
 
+  /// Get a list of legal moves in the current position, in algebraic format.
   List<String> algebraicMoves() =>
       generateLegalMoves().map((e) => toAlgebraic(e)).toList();
 
-  List<String> sanMoves() {
+  /// Get a list of moves played in the game so far.
+  List<Move> get moveHistory =>
+      history.where((e) => e.move != null).map((e) => e.move!).toList();
+
+  /// Get the history of the game (i.e. all moves played) in algebraic format.
+  List<String> get moveHistoryAlgebraic => history
+      .where((e) => e.move != null)
+      .map((e) => toAlgebraic(e.move!))
+      .toList();
+
+  /// Get the history of the game (i.e. all moves played) in SAN format.
+  List<String> get moveHistorySan {
     List<Move> moveStack = [];
     while (canUndo) {
       Move? m = undo();
@@ -170,8 +182,11 @@ extension GameOutputs on Game {
     return moves;
   }
 
+  @Deprecated('Use Game.moveHistorySan')
+  List<String> sanMoves() => moveHistorySan;
+
   String pgn() {
-    List<String> moves = sanMoves();
+    List<String> moves = moveHistorySan;
     int firstMove = state.fullMoves - (moves.length ~/ 2);
     int firstTurn = history.first.turn;
     int turn = firstTurn;

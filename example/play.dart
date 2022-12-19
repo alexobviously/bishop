@@ -13,7 +13,13 @@ void main(List<String> args) async {
   }
   selectUseEngine();
   printYellow(
-    'Enter your moves as algebraic strings, e.g. b1c3, e7e8q, etc.\n\'moves\': list available moves.\n\'resign\': resign.\n\'pgn\': prints the PGN so far.\n\'random\': make a random move.',
+    '''Enter your moves as algebraic strings, e.g. b1c3, e7e8q, etc.
+    \'moves\': list available moves.
+    \'resign\': resign.
+    \'pgn\': prints the PGN so far.
+    \'history\': prints move history in algebraic form.
+    \'random\': make a random move.
+    ''',
   );
   game = Game(variant: variant!);
   if (useEngine) engine = Engine(game: game);
@@ -25,6 +31,7 @@ void main(List<String> args) async {
     printState = true;
     if (game.turn == colour!) {
       handlePlayerInput();
+      if (resigned) break;
     } else {
       bool success = await makeAiMove();
       if (!success) {
@@ -36,11 +43,14 @@ void main(List<String> args) async {
   print(game.ascii());
   printCyan(game.fen);
   printPgn();
+  printHistory();
 }
 
 bool printState = true;
+bool resigned = false;
 
 void printPgn() => printYellow(game.pgn());
+void printHistory() => printYellow(game.moveHistoryAlgebraic.join(' '));
 void printMoves() => printYellow(game.algebraicMoves().join(', '));
 
 void handlePlayerInput() {
@@ -50,9 +60,18 @@ void handlePlayerInput() {
     printPgn();
     return;
   }
+  if (input == 'history') {
+    printState = false;
+    printHistory();
+    return;
+  }
   if (input == 'moves') {
     printState = false;
     printMoves();
+    return;
+  }
+  if (input == 'resign') {
+    resigned = true;
     return;
   }
   Move? m;
@@ -81,6 +100,7 @@ Future<bool> makeAiMove() async {
 
 Future<Move?> getAiMove() async {
   if (useEngine) {
+    printCyan('Engine thinking...');
     final res = await engine!.search();
     return res.move;
   } else {
