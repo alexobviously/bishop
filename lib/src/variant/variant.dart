@@ -80,9 +80,10 @@ class Variant {
   /// CURRENTLY NOT WORKING.
   final bool flyingGenerals;
 
-  /// A list of region definitions for the board, for use with `RegionEffects`
-  /// in piece definitions.
-  final List<BoardRegion> regions;
+  /// A map of region definitions for the board, for use with `RegionEffects`
+  /// in piece definitions. The keys used here are used to reference the regions
+  /// in effects.
+  final Map<String, BoardRegion> regions;
 
   /// Whether this variant involves castling.
   bool get castling => castlingOptions.enabled;
@@ -122,7 +123,7 @@ class Variant {
     this.gatingMode = GatingMode.none,
     this.pieceValues,
     this.flyingGenerals = false,
-    this.regions = const [],
+    this.regions = const {},
   }) : assert(
           startPosition != null || startPosBuilder != null,
           'Variant needs either a startPosition or startPosBuilder',
@@ -148,7 +149,7 @@ class Variant {
     GatingMode? gatingMode,
     Map<String, int>? pieceValues,
     bool? flyingGenerals,
-    List<BoardRegion>? regions,
+    Map<String, BoardRegion>? regions,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -328,4 +329,27 @@ class Variant {
         name: 'Three Check',
         gameEndConditions: GameEndConditions.threeCheck,
       );
+
+  factory Variant.kingOfTheHill() {
+    final standard = Variant.standard();
+    Map<String, PieceType> pieceTypes = {...standard.pieceTypes};
+    pieceTypes['K'] = PieceType.fromBetza(
+      'K',
+      royal: true,
+      canPromoteTo: false,
+      regionEffects: [RegionEffect.winGame(white: 'hill', black: 'hill')],
+    );
+    return standard.copyWith(
+      name: 'King of the Hill',
+      pieceTypes: pieceTypes,
+      regions: {
+        'hill': BoardRegion(
+          startFile: Bishop.fileD,
+          endFile: Bishop.fileE,
+          startRank: Bishop.rank4,
+          endRank: Bishop.rank5,
+        ),
+      },
+    );
+  }
 }

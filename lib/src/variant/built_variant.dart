@@ -12,6 +12,7 @@ class BuiltVariant {
   final int castlingPiece;
   final int royalPiece;
   final MaterialConditions<int> materialConditions;
+  final Map<int, List<String>> winRegions;
 
   const BuiltVariant({
     required this.data,
@@ -24,12 +25,14 @@ class BuiltVariant {
     required this.castlingPiece,
     required this.royalPiece,
     required this.materialConditions,
+    required this.winRegions,
   });
 
   factory BuiltVariant.fromData(Variant data) {
     // TODO: make these immutable somehow
     data.pieceTypes.forEach((_, p) => p.init(data.boardSize));
 
+    Map<int, List<String>> winRegions = {};
     List<PieceDefinition> pieces = [PieceDefinition.empty()];
     Map<String, PieceDefinition> pieceLookup = {};
     Map<String, int> pieceIndexLookup = {};
@@ -41,7 +44,24 @@ class BuiltVariant {
       PieceDefinition piece = PieceDefinition(type: p, symbol: s, value: value);
       pieces.add(piece);
       pieceLookup[s] = piece;
-      pieceIndexLookup[s] = pieces.length - 1;
+      int pieceId = pieces.length - 1;
+      pieceIndexLookup[s] = pieceId;
+      if (p.winRegionEffects.isNotEmpty) {
+        List<String> whiteWinRegions = p.winRegionEffects
+            .where((e) => e.whiteRegion != null)
+            .map((e) => e.whiteRegion!)
+            .toList();
+        List<String> blackWinRegions = p.winRegionEffects
+            .where((e) => e.blackRegion != null)
+            .map((e) => e.blackRegion!)
+            .toList();
+        if (whiteWinRegions.isNotEmpty) {
+          winRegions[makePiece(pieceId, Bishop.white)] = whiteWinRegions;
+        }
+        if (blackWinRegions.isNotEmpty) {
+          winRegions[makePiece(pieceId, Bishop.black)] = blackWinRegions;
+        }
+      }
     });
 
     return BuiltVariant(
@@ -69,6 +89,7 @@ class BuiltVariant {
           : Bishop.invalid,
       royalPiece: pieces.indexWhere((p) => p.type.royal),
       materialConditions: data.materialConditions.convert(pieces),
+      winRegions: winRegions,
     );
   }
 
@@ -83,9 +104,9 @@ class BuiltVariant {
       return pd.type;
     }
     List<String> regions = [];
-    for (BoardRegion region in data.regions) {
-      if (boardSize.inRegion(square, region)) {
-        regions.add(region.id);
+    for (final region in data.regions.entries) {
+      if (boardSize.inRegion(square, region.value)) {
+        regions.add(region.key);
       }
     }
     for (RegionEffect re in effects) {
@@ -109,15 +130,26 @@ class BuiltVariant {
     if (effects.isEmpty) {
       return true;
     }
-    String? regionId = piece.colour == Bishop.white
-        ? effects.first.whiteRegion
-        : effects.first.blackRegion;
+    String? regionId = effects.first.regionForPlayer(piece.colour);
     if (regionId == null) return true;
 
-    BoardRegion? region =
-        data.regions.firstWhereOrNull((e) => e.id == regionId);
+    BoardRegion? region = data.regions[regionId];
     if (region == null) return true;
     return boardSize.inRegion(square, region);
+  }
+
+  /// Determins whether [piece] (including colour) is in one of its win
+  /// regions, if it has any.
+  bool inWinRegion(int piece, int square) {
+    if (!pieceHasWinRegions(piece)) return false;
+    for (String r in winRegions[piece]!) {
+      BoardRegion? region = data.regions[r];
+      if (region == null) continue;
+      if (boardSize.inRegion(square, region)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
@@ -183,6 +215,10 @@ class BuiltVariant {
   bool get castling => data.castling;
   bool get gating => data.gating;
   bool get hasRegions => data.regions.isNotEmpty;
+  bool get hasWinRegions => winRegions.isNotEmpty;
+
+  /// [piece] should contain its colour.
+  bool pieceHasWinRegions(int piece) => winRegions.containsKey(piece);
 
   @override
   String toString() => name;

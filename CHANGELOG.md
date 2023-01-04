@@ -1,4 +1,6 @@
 ### 0.6.3
+- Added variant: King of the Hill.
+- Support for win regions.
 - Added examples/play.dart - interactive CLI application for playing a game.
 - Convenience methods on Game - `moveHistory`, `moveHistoryAlgebraic` and `moveHistorySan`.
 

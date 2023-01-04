@@ -20,6 +20,8 @@ class Game {
   late String startPosition;
   List<State> history = [];
   State get state => history.last;
+  State? get prevState =>
+      history.length > 1 ? history[history.length - 2] : null;
   bool get canUndo => history.length > 1;
   Colour get turn => state.turn;
 
@@ -698,6 +700,7 @@ class Game {
       (i) => List.from(state.virginFiles[i]),
     );
     List<int> pieces = List.from(state.pieces);
+    WinCondition? winCondition;
 
     // TODO: more validation?
     Square fromSq = move.from >= Bishop.boardStart ? board[move.from] : empty;
@@ -765,7 +768,6 @@ class Game {
           : makePiece(move.dropPiece!, colour);
       hash ^= zobrist.table[move.to][putPiece.piece];
       board[move.to] = putPiece;
-      //if (move.from == HAND) print('$colour ${move.dropPiece!}');
       if (move.from == Bishop.hand) hands![colour].remove(move.dropPiece!);
     } else if (move.promotion) {
       // Place the promoted piece
@@ -886,6 +888,12 @@ class Game {
         hash ^= zobrist.table[zobrist.castling][castlingRights];
       }
     }
+    if (variant.hasWinRegions) {
+      int p = board[move.to].piece;
+      if (variant.pieceHasWinRegions(p) && variant.inWinRegion(p, move.to)) {
+        winCondition = WinCondition.inRegion;
+      }
+    }
 
     State newState = State(
       move: move,
@@ -902,6 +910,7 @@ class Game {
       gates: gates,
       pieces: pieces,
       checks: List.from(state.checks),
+      winCondition: winCondition,
     );
     history.add(newState);
 
@@ -1029,6 +1038,9 @@ class Game {
           variant.gameEndConditions.checkLimit!) {
         return true;
       }
+    }
+    if (state.winCondition != null) {
+      return true;
     }
     return inCheck && generateLegalMoves().isEmpty;
   }

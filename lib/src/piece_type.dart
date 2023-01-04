@@ -40,6 +40,10 @@ class PieceType {
   List<RegionEffect> get restrictMovementRegionEffects =>
       regionEffects.where((e) => e.restrictMovement).toList();
 
+  /// Region effects that win the game.
+  List<RegionEffect> get winRegionEffects =>
+      regionEffects.where((e) => e.winGame).toList();
+
   const PieceType({
     this.betza,
     required this.moves,

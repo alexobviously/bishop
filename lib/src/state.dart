@@ -48,6 +48,10 @@ class State {
   /// For use with variants such as three-check.
   final List<int> checks;
 
+  /// This should be null most of the time. Used to indicate special case
+  /// win conditions that have been met by a preceding move.
+  final WinCondition? winCondition;
+
   /// The Zobrist hash of the game state.
   /// Needs to be set after construction of the first hash, but otherwise is
   /// updated in `Game.makeMove()`.
@@ -69,6 +73,7 @@ class State {
     this.gates,
     required this.pieces,
     this.checks = const [0, 0],
+    this.winCondition,
     this.hash = 0,
   });
 
@@ -85,6 +90,7 @@ class State {
     List<Hand>? gates,
     List<int>? pieces,
     List<int>? checks,
+    WinCondition? winCondition,
     int? hash,
   }) =>
       State(
@@ -100,6 +106,7 @@ class State {
         gates: gates ?? this.gates,
         pieces: pieces ?? this.pieces,
         checks: checks ?? this.checks,
+        winCondition: winCondition ?? this.winCondition,
         hash: hash ?? this.hash,
       );
 }

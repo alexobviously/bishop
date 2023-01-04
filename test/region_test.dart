@@ -30,7 +30,7 @@ void main() {
       test('Region test: ${t.region}/${t.square}', () {
         Variant v = t.variant ?? Xiangqi.variant();
         final size = v.boardSize;
-        BoardRegion region = v.regions.firstWhere((e) => e.id == t.region);
+        BoardRegion region = v.regions[t.region]!;
         int square = squareNumber(t.square, size);
         bool inRegion = size.inRegion(square, region);
         expect(inRegion, t.inRegion);

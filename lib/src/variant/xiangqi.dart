@@ -20,7 +20,8 @@ class Xiangqi {
   static PieceType cannon() => PieceType.fromBetza('mRcpR', value: 450);
   static PieceType soldier() => PieceType.fromBetza(
         'fsW',
-        value: 100, // TODO: this should be 200 but multi-value pieces aren't supported
+        value:
+            100, // TODO: this should be 200 but multi-value pieces aren't supported
         regionEffects: [
           RegionEffect.changePiece(
             whiteRegion: 'redSide',
@@ -47,32 +48,28 @@ class Xiangqi {
         materialConditions: MaterialConditions.none,
         startPosition: defaultFen,
         flyingGenerals: false, // TODO: account for other pieces, lol
-        regions: [
-          const BoardRegion(
-            id: 'redSide',
+        regions: {
+          'redSide': const BoardRegion(
             startRank: Bishop.rank1,
             endRank: Bishop.rank5,
           ),
-          const BoardRegion(
-            id: 'blackSide',
+          'blackSide': const BoardRegion(
             startRank: Bishop.rank6,
             endRank: Bishop.rank10,
           ),
-          const BoardRegion(
-            id: 'redPalace',
+          'redPalace': const BoardRegion(
             startRank: Bishop.rank1,
             endRank: Bishop.rank3,
             startFile: Bishop.fileD,
             endFile: Bishop.fileF,
           ),
-          const BoardRegion(
-            id: 'blackPalace',
+          'blackPalace': const BoardRegion(
             startRank: Bishop.rank8,
             endRank: Bishop.rank10,
             startFile: Bishop.fileD,
             endFile: Bishop.fileF,
           ),
-        ],
+        },
       );
   static RegionEffect palaceMovement() =>
       RegionEffect.movement(white: 'redPalace', black: 'blackPalace');
