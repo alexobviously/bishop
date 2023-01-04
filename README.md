@@ -31,6 +31,10 @@ designed to be interoperable with Bishop.
 ### Upcoming Features
 * X-FEN output (input works)
 * Atomic chess exploding pieces (and more generally, flexible capture behaviour)
+* Support for Bughouse, and similar games
+
+### Built-in Variants
+Chess, Chess960/Fischer Random, Crazyhouse, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi, and a variety of small board versions of chess.
 
 ### A Random Game
 Playing a random game is easy!

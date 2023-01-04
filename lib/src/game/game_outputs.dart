@@ -274,7 +274,7 @@ extension GameOutputs on Game {
       whiteGate = processGate(whiteGate);
       blackGate = processGate(blackGate);
 
-      fen = '$whiteGate/$fen/$blackGate';
+      fen = '$blackGate/$fen/$whiteGate';
     }
     String turnStr = state.turn == Bishop.white ? 'w' : 'b';
     String castling = state.castlingRights.formatted;

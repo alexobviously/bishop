@@ -1,3 +1,6 @@
+### 0.6.4
+- Fixed gates being output the wrong way round in FEN strings for fixed gating variants.
+
 ### 0.6.3
 - Added variant: King of the Hill.
 - Support for win regions.
