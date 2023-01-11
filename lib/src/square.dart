@@ -47,14 +47,9 @@ int squareNumber(String name, [BoardSize boardSize = const BoardSize(8, 8)]) {
   return square;
 }
 
-// TODO: find a clever bitwise way to do this, like 0x88
-bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
-  if (square < 0) return false;
-  if (square >= boardSize.numSquares * 2) return false;
-  int x = square % (boardSize.h * 2);
-  return x < boardSize.h;
-}
-
+@Deprecated('Use BoardSize.onBoard or Bishop.onBoard')
+bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) =>
+    boardSize.onBoard(square);
 @Deprecated('Use BoardSize.file or Bishop.file')
 int file(int square, [BoardSize size = BoardSize.standard]) =>
     size.file(square);

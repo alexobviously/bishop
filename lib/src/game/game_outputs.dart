@@ -337,7 +337,7 @@ extension GameOutputs on Game {
   List<String> boardSymbols([bool full = false]) {
     List<String> symbols = [];
     for (int i = 0; i < board.length; i++) {
-      if (full || onBoard(i, size)) {
+      if (full || size.onBoard(i)) {
         int piece = board[i];
         String symbol = piece == empty ? '' : variant.pieces[piece.type].symbol;
         symbols.add(

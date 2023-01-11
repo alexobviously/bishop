@@ -63,23 +63,19 @@ class BoardSize {
   int lastRank(int colour) => firstRank(colour.opponent);
 
   // Returns true if [square] is within the bounds of [region].
-  bool inRegion(int square, BoardRegion region) {
-    int r = rank(square);
-    int f = file(square);
-    if (region.startFile != null && f < region.startFile!) {
-      return false;
-    }
-    if (region.endFile != null && f > region.endFile!) {
-      return false;
-    }
-    if (region.startRank != null && r < region.startRank!) {
-      return false;
-    }
-    if (region.endRank != null && r > region.endRank!) {
-      return false;
-    }
-    return true;
+  bool inRegion(int square, Region region) =>
+      region.contains(file(square), rank(square));
+
+  /// Determines whether a square is on the board.
+  bool onBoard(int square) {
+    if (square < 0) return false;
+    if (square >= numSquares * 2) return false;
+    int x = square % (h * 2);
+    return x < h;
   }
+
+  List<int> squaresForArea(int centre, Area area) =>
+      area.translate(file(centre), rank(centre)).squares(this);
 
   @override
   String toString() => 'BoardSize($h, $v)';

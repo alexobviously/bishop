@@ -98,6 +98,9 @@ class Direction {
     return perms;
   }
 
+  /// Returns a copy of this Direction, translated by [x] and [y].
+  Direction translate(int x, int y) => Direction(h + x, v + y);
+
   @override
   String toString() => '($h,$v)';
 

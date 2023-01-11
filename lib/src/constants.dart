@@ -89,6 +89,10 @@ class Bishop {
   /// Returns the square index at [file] and [rank], according to [size].
   int square(int file, int rank, [BoardSize size = BoardSize.standard]) =>
       size.square(file, rank);
+
+  /// Determines whether a square is on the board.
+  bool onBoard(int square, [BoardSize size = const BoardSize(8, 8)]) =>
+      size.onBoard(square);
 }
 
 @Deprecated('Use Bishop.white')

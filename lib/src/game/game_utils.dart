@@ -19,7 +19,7 @@ extension GameUtils on Game {
   int evaluate(Colour player) {
     int eval = 0;
     for (int i = 0; i < size.numIndices; i++) {
-      if (!onBoard(i, size)) continue;
+      if (!size.onBoard(i)) continue;
       Square square = board[i];
       if (square.isNotEmpty) {
         Colour colour = square.colour;

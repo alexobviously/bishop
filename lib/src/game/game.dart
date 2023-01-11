@@ -228,7 +228,7 @@ class Game {
       String symbol = c.toUpperCase();
       if (isNumeric(c)) {
         emptySquares = (emptySquares * 10) + int.parse(c);
-        if (!onBoard(sq + emptySquares - 1, size)) {
+        if (!size.onBoard(sq + emptySquares - 1)) {
           throw ('Invalid FEN: rank overflow [$c, ${sq + emptySquares - 1}]');
         }
       } else {
@@ -237,7 +237,7 @@ class Game {
       }
       if (c == '/') sq += variant.boardSize.h;
       if (pieceLookup.containsKey(symbol)) {
-        if (!onBoard(sq, size)) {
+        if (!size.onBoard(sq)) {
           throw ('Invalid FEN: rank overflow [$symbol, $sq]');
         }
         // it's a piece
@@ -335,7 +335,7 @@ class Game {
     List<Move> drops = [];
     Set<int> hand = state.hands![colour].toSet();
     for (int i = 0; i < size.numIndices; i++) {
-      if (!onBoard(i, size)) continue;
+      if (!size.onBoard(i)) continue;
       if (board[i].isNotEmpty) continue;
       for (int p in hand) {
         int hRank = size.rank(i);
@@ -391,7 +391,7 @@ class Game {
       for (int i = 0; i < range; i++) {
         if (exit) break;
         int to = square + md.normalised * (i + 1) * dirMult;
-        if (!onBoard(to, variant.boardSize)) break;
+        if (!variant.boardSize.onBoard(to)) break;
         if (variant.hasRegions) {
           if (!variant.allowMovement(piece, to)) break;
         }
@@ -683,8 +683,8 @@ class Game {
   /// Make a move and modify the game state. Returns true if the move was valid
   /// and made successfully.
   bool makeMove(Move move) {
-    if ((move.from != Bishop.hand && !onBoard(move.from, size)) ||
-        !onBoard(move.to, size)) {
+    if ((move.from != Bishop.hand && !size.onBoard(move.from)) ||
+        !size.onBoard(move.to)) {
       return false;
     }
     int hash = state.hash;
