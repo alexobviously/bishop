@@ -370,7 +370,7 @@ extension GameOutputs on Game {
 
   /// Converts the internal representation of the gates to a list of piece symbols (e.g. 'P', 'q').
   /// You probably need this for interopability with other applications (such as the Squares package).
-  List<List<String>> gateSymbols() {
+  List<List<String>> get gateSymbols {
     if (!variant.gating) return [[], []];
     List<String> whiteGate = state.gates![Bishop.white]
         .map((p) => variant.pieces[p].symbol.toUpperCase())
