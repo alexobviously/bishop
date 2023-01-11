@@ -19,6 +19,7 @@ class Game {
   late List<int> board;
   late String startPosition;
   List<State> history = [];
+  BishopState get bishopState => state.full(board: [...board], size: size);
   State get state => history.last;
   State? get prevState =>
       history.length > 1 ? history[history.length - 2] : null;
@@ -222,7 +223,7 @@ class Game {
 
     for (String c in boardSymbols) {
       if (c == '~') {
-        board[sq - 1] = board[sq - 1] + promoFlag;
+        board[sq - 1] = board[sq - 1] + Bishop.promoFlag;
         continue;
       }
       String symbol = c.toUpperCase();
@@ -299,7 +300,7 @@ class Game {
       pieces: pieces,
       checks: checks,
     );
-    newState.hash = zobrist.compute(newState, board);
+    newState = newState.copyWith(hash: zobrist.compute(newState, board));
     zobrist.incrementHash(newState.hash);
     history.add(newState);
   }
@@ -343,7 +344,7 @@ class Game {
         if (onEdgeRank && variant.pieces[p].type.promotable) continue;
         int dropPiece = p;
         // TODO: support more than one promo piece in this case
-        if (p.hasFlag(promoFlag)) dropPiece = variant.promotionPieces[0];
+        if (p.hasFlag(Bishop.promoFlag)) dropPiece = variant.promotionPieces[0];
         Move m = Move.drop(to: i, dropPiece: dropPiece);
         drops.add(m);
       }
@@ -703,12 +704,13 @@ class Game {
     WinCondition? winCondition;
 
     // TODO: more validation?
-    Square fromSq = move.from >= Bishop.boardStart ? board[move.from] : empty;
+    Square fromSq =
+        move.from >= Bishop.boardStart ? board[move.from] : Bishop.empty;
     // Square toSq = board[move.to];
     int fromRank = size.rank(move.from);
     int fromFile = size.file(move.from);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
-    if (fromSq != empty && fromSq.colour != state.turn) return false;
+    if (fromSq != Bishop.empty && fromSq.colour != state.turn) return false;
     int colour = turn;
     // Remove the moved piece, if this piece came from on the board.
     if (move.from >= Bishop.boardStart) {
@@ -722,16 +724,16 @@ class Game {
           if (variant.gatingMode == GatingMode.flex) {
             gates![colour].remove(move.dropPiece!);
           } else if (variant.gatingMode == GatingMode.fixed) {
-            gates![colour][fromFile] = empty;
+            gates![colour][fromFile] = Bishop.empty;
           }
           int dropPiece = move.dropPiece!;
           hash ^= zobrist.table[move.from][dropPiece.piece];
           board[move.from] = makePiece(dropPiece, colour);
         } else {
-          board[move.from] = empty;
+          board[move.from] = Bishop.empty;
         }
       } else {
-        board[move.from] = empty;
+        board[move.from] = Bishop.empty;
       }
       // Mark the file as touched.
       if ((fromRank == 0 && colour == Bishop.white) ||
@@ -742,7 +744,7 @@ class Game {
 
     // Add captured piece to hand
     if (variant.hands && move.capture) {
-      int piece = move.capturedPiece!.hasFlag(promoFlag)
+      int piece = move.capturedPiece!.hasFlag(Bishop.promoFlag)
           ? variant.promotablePieces.first
           : move.capturedPiece!.type;
       hands![colour].add(piece);
@@ -771,7 +773,8 @@ class Game {
       if (move.from == Bishop.hand) hands![colour].remove(move.dropPiece!);
     } else if (move.promotion) {
       // Place the promoted piece
-      board[move.to] = makePiece(move.promoPiece!, state.turn, promoFlag);
+      board[move.to] =
+          makePiece(move.promoPiece!, state.turn, Bishop.promoFlag);
       hash ^= zobrist.table[move.to][board[move.to].piece];
       pieces[board[move.to].piece]++;
     }
@@ -791,7 +794,7 @@ class Game {
       int captureSq =
           move.to + Bishop.playerDirection[colour.opponent] * size.north;
       hash ^= zobrist.table[captureSq][board[captureSq].piece];
-      board[captureSq] = empty;
+      board[captureSq] = Bishop.empty;
       pieces[board[captureSq].piece]--;
     }
 
@@ -827,7 +830,7 @@ class Game {
         hash ^= zobrist.table[rookSq][board[rookSq].piece];
       }
       hash ^= zobrist.table[rookSq][rook.piece];
-      board[move.castlingPieceSquare!] = empty;
+      board[move.castlingPieceSquare!] = Bishop.empty;
       board[kingSq] = fromSq;
       board[rookSq] = rook;
       castlingRights = castlingRights.remove(colour);
@@ -947,8 +950,8 @@ class Game {
       int rookSq = size.square(rookFile, royalRank);
       int rook = board[rookSq];
       int king = board[move.to];
-      board[move.to] = empty;
-      board[rookSq] = empty;
+      board[move.to] = Bishop.empty;
+      board[rookSq] = Bishop.empty;
       board[move.from] = king;
       board[move.castlingPieceSquare!] = rook;
     } else {
@@ -965,7 +968,7 @@ class Game {
       if (move.capture && !move.enPassant) {
         board[move.to] = move.capturedPiece!;
       } else {
-        board[move.to] = empty;
+        board[move.to] = Bishop.empty;
       }
     }
 

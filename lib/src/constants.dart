@@ -18,6 +18,8 @@ class Bishop {
   static const int boardStart = 0;
   static const int invalid = -1;
   static const int hand = -2;
+  static const Square empty = 0;
+  static const int promoFlag = 1;
 
   static const List<int> playerDirection = [-1, 1];
   static const List<String> playerName = ['White', 'Black'];

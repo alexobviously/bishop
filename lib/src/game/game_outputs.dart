@@ -222,7 +222,8 @@ extension GameOutputs on Game {
         } else {
           if (empty > 0) addEmptySquares();
           String char = variant.pieces[sq.type].char(sq.colour);
-          if (variant.outputOptions.showPromoted && sq.hasFlag(promoFlag)) {
+          if (variant.outputOptions.showPromoted &&
+              sq.hasFlag(Bishop.promoFlag)) {
             char += '~';
           }
           fen = '$fen$char';
@@ -339,7 +340,8 @@ extension GameOutputs on Game {
     for (int i = 0; i < board.length; i++) {
       if (full || size.onBoard(i)) {
         int piece = board[i];
-        String symbol = piece == empty ? '' : variant.pieces[piece.type].symbol;
+        String symbol =
+            piece == Bishop.empty ? '' : variant.pieces[piece.type].symbol;
         symbols.add(
           piece.colour == Bishop.white
               ? symbol.toUpperCase()

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:bishop/bishop.dart';
+import 'package:bishop/src/ability.dart';
 
 part 'board_size.dart';
 part 'built_variant.dart';
@@ -350,6 +351,16 @@ class Variant {
           endRank: Bishop.rank5,
         ),
       },
+    );
+  }
+
+  factory Variant.atomic() {
+    final standard = Variant.standard();
+    final ability = Ability.kamikaze(Area.radius(3));
+    return standard.copyWith(
+      name: 'Atomic Chess',
+      pieceTypes: standard.pieceTypes
+          .map((k, v) => MapEntry(k, v.copyWith(abilities: [ability]))),
     );
   }
 }

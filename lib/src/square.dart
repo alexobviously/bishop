@@ -3,7 +3,9 @@ import 'variant/variant.dart';
 
 typedef Square = int;
 
+@Deprecated('Use Bishop.empty')
 const Square empty = 0;
+@Deprecated('Use Bishop.promoFlag')
 const int promoFlag = 1;
 
 extension SquareLogic on Square {

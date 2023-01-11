@@ -113,7 +113,7 @@ class Area implements Region {
     return Area(directions: dirs);
   }
 
-  factory Area.radius(int size, {bool omitCentre = true}) => Area.filled(
+  factory Area.radius(int size, {bool omitCentre = false}) => Area.filled(
         width: size * 2 + 1,
         height: size * 2 + 1,
         omitCentre: omitCentre,

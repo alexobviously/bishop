@@ -1,6 +1,4 @@
-import 'castling_rights.dart';
-import 'constants.dart';
-import 'move.dart';
+import 'package:bishop/bishop.dart';
 
 /// A record of the game's state at a particular move.
 /// Doesn't include the board state.
@@ -55,12 +53,12 @@ class State {
   /// The Zobrist hash of the game state.
   /// Needs to be set after construction of the first hash, but otherwise is
   /// updated in `Game.makeMove()`.
-  int hash;
+  final int hash;
 
   @override
   String toString() => 'State(turn: $turn, moves: $fullMoves, hash: $hash)';
 
-  State({
+  const State({
     this.move,
     required this.turn,
     required this.halfMoves,
@@ -109,4 +107,47 @@ class State {
         winCondition: winCondition ?? this.winCondition,
         hash: hash ?? this.hash,
       );
+
+  BishopState full({required List<int> board, required BoardSize size}) =>
+      BishopState(
+        board: board,
+        size: size,
+        move: move,
+        turn: turn,
+        halfMoves: halfMoves,
+        fullMoves: fullMoves,
+        castlingRights: castlingRights,
+        epSquare: epSquare,
+        royalSquares: royalSquares,
+        virginFiles: virginFiles,
+        hands: hands,
+        gates: gates,
+        pieces: pieces,
+        checks: checks,
+        winCondition: winCondition,
+        hash: hash,
+      );
+}
+
+class BishopState extends State {
+  final List<int> board;
+  final BoardSize size;
+  const BishopState({
+    required this.board,
+    required this.size,
+    super.move,
+    required super.turn,
+    required super.halfMoves,
+    required super.fullMoves,
+    required super.castlingRights,
+    super.epSquare,
+    required super.royalSquares,
+    required super.virginFiles,
+    super.hands,
+    super.gates,
+    required super.pieces,
+    super.checks,
+    super.winCondition,
+    super.hash,
+  });
 }

@@ -1,4 +1,5 @@
 import 'package:bishop/bishop.dart';
+import 'package:bishop/src/ability.dart';
 
 /// Specifies a piece type, with all of its moves and attributes.
 class PieceType {
@@ -32,6 +33,8 @@ class PieceType {
   /// Regions in which the behaviour of the piece is altered.
   final List<RegionEffect> regionEffects;
 
+  final List<Ability> abilities;
+
   /// Region effects that change the piece type.
   List<RegionEffect> get changePieceRegionEffects =>
       regionEffects.where((e) => e.pieceType != null).toList();
@@ -54,7 +57,33 @@ class PieceType {
     this.noSanSymbol = false,
     this.value = Bishop.defaultPieceValue,
     this.regionEffects = const [],
+    this.abilities = const [],
   });
+
+  PieceType copyWith({
+    String? betza,
+    List<MoveDefinition>? moves,
+    bool? royal,
+    bool? promotable,
+    bool? canPromoteTo,
+    bool? enPassantable,
+    bool? noSanSymbol,
+    int? value,
+    List<RegionEffect>? regionEffects,
+    List<Ability>? abilities,
+  }) =>
+      PieceType(
+        betza: betza ?? this.betza,
+        moves: moves ?? this.moves,
+        royal: royal ?? this.royal,
+        promotable: promotable ?? this.promotable,
+        canPromoteTo: canPromoteTo ?? this.canPromoteTo,
+        enPassantable: enPassantable ?? this.enPassantable,
+        noSanSymbol: noSanSymbol ?? this.noSanSymbol,
+        value: value ?? this.value,
+        regionEffects: regionEffects ?? this.regionEffects,
+        abilities: abilities ?? this.abilities,
+      );
 
   /// Initialise the `PieceType`.
   void init(BoardSize boardSize) {
@@ -85,6 +114,7 @@ class PieceType {
     bool noSanSymbol = false,
     int value = Bishop.defaultPieceValue,
     List<RegionEffect> regionEffects = const [],
+    List<Ability> abilities = const [],
   }) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> moves = [];
@@ -116,6 +146,7 @@ class PieceType {
       noSanSymbol: noSanSymbol,
       value: value,
       regionEffects: regionEffects,
+      abilities: abilities,
     );
   }
 
