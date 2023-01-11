@@ -48,10 +48,4 @@ enum CastlingFormat {
   /// castling rights. For example, the default chess position's castling rights
   /// would be rendered as 'HAha'.
   shredder,
-
-  /// Currently unsupported for output. Coming soon!
-  /// A middle ground between Standard and Shredder notation.
-  /// Uses the standard format ('KQkq') unless there is an ambiguity, in which
-  /// case the ambiguous rook's file will be used.
-  xfen,
 }

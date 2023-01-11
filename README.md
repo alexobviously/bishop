@@ -26,10 +26,10 @@ designed to be interoperable with Bishop.
 * Flex gating (e.g. Seirawan)
 * Fixed gating (e.g. Musketeer)
 * Different game end conditions for variants like three-check
+* Board regions for piece movement restriction (e.g. Xiangqi palaces) and win conditions (e.g. King of the Hill)
 * An engine (not strong but fine for testing)
 
 ### Upcoming Features
-* X-FEN output (input works)
 * Atomic chess exploding pieces (and more generally, flexible capture behaviour)
 * Support for Bughouse, and similar games
 

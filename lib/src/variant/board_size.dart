@@ -62,6 +62,7 @@ class BoardSize {
   /// Get the last rank (i.e. promotion rank) for player [colour].
   int lastRank(int colour) => firstRank(colour.opponent);
 
+  // Returns true if [square] is within the bounds of [region].
   bool inRegion(int square, BoardRegion region) {
     int r = rank(square);
     int f = file(square);
