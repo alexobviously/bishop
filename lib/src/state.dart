@@ -112,4 +112,31 @@ class BishopState {
         winCondition: winCondition ?? this.winCondition,
         hash: hash ?? this.hash,
       );
+
+  BishopState executeActions({
+    required List<ActionEffect> effects,
+    Zobrist? zobrist,
+  }) {
+    int hash = this.hash;
+    List<int> board = [...this.board];
+    List<int> pieces = [...this.pieces];
+    for (final effect in effects) {
+      if (effect is ActionEffectModifySquare) {
+        if (zobrist != null) {
+          hash ^= zobrist.table[effect.square][effect.content.piece];
+          bool capture = board[effect.square].isNotEmpty;
+          if (capture) {
+            int piece = board[effect.square].piece;
+            hash ^= zobrist.table[effect.square][piece];
+            pieces[piece]--;
+          }
+        }
+        board[effect.square] = effect.content;
+        if (effect.content.isNotEmpty) {
+          pieces[effect.content.piece]++;
+        }
+      }
+    }
+    return copyWith(board: board, hash: hash);
+  }
 }

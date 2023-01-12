@@ -362,7 +362,7 @@ class Variant {
     final standard = Variant.standard();
     return standard.copyWith(
       name: 'Atomic Chess',
-      actions: [Action.kamikaze(Area.radius(3))],
+      actions: [Action.kamikaze(Area.radius(1))],
     );
   }
 }

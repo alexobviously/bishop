@@ -921,6 +921,19 @@ class Game {
       checks: List.from(state.checks),
       winCondition: winCondition,
     );
+
+    if (variant.hasActionsForEvent(ActionEvent.duringMove)) {
+      final effects = variant.executeActions(
+        ActionTrigger(
+          event: ActionEvent.duringMove,
+          variant: variant,
+          state: state,
+          move: move,
+        ),
+      );
+      newState = newState.executeActions(effects: effects, zobrist: zobrist);
+    }
+
     history.add(newState);
 
     // kind of messy doing it like this, but inCheck depends on the current state

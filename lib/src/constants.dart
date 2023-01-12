@@ -142,6 +142,7 @@ enum Variants {
   seirawan(Variant.seirawan),
   threeCheck(Variant.threeCheck),
   koth(Variant.kingOfTheHill),
+  atomic(Variant.atomic),
   musketeer(Musketeer.variant),
   xiangqi(Xiangqi.variant);
 
