@@ -88,9 +88,8 @@ extension GameOutputs on Game {
       }
     }
     makeMove(move);
-    // note: win conditions will result in checkmate: true, inCheck: false
-    if (inCheck || checkmate) {
-      san = '$san${checkmate ? '#' : '+'}';
+    if (inCheck || won) {
+      san = '$san${won ? '#' : '+'}';
     }
     undo();
     return san;

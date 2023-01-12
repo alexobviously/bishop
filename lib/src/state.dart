@@ -50,7 +50,7 @@ class BishopState {
 
   /// This should be null most of the time. Used to indicate special case
   /// win conditions that have been met by a preceding move.
-  final WinCondition? winCondition;
+  final GameResult? result;
 
   /// The Zobrist hash of the game state.
   /// Needs to be set after construction of the first hash, but otherwise is
@@ -74,7 +74,7 @@ class BishopState {
     this.gates,
     required this.pieces,
     this.checks = const [0, 0],
-    this.winCondition,
+    this.result,
     this.hash = 0,
   });
 
@@ -92,7 +92,7 @@ class BishopState {
     List<Hand>? gates,
     List<int>? pieces,
     List<int>? checks,
-    WinCondition? winCondition,
+    GameResult? result,
     int? hash,
   }) =>
       BishopState(
@@ -109,7 +109,7 @@ class BishopState {
         gates: gates ?? this.gates,
         pieces: pieces ?? this.pieces,
         checks: checks ?? this.checks,
-        winCondition: winCondition ?? this.winCondition,
+        result: result ?? this.result,
         hash: hash ?? this.hash,
       );
 
@@ -120,8 +120,9 @@ class BishopState {
     int hash = this.hash;
     List<int> board = [...this.board];
     List<int> pieces = [...this.pieces];
+    GameResult? result = this.result;
     for (final effect in effects) {
-      if (effect is ActionEffectModifySquare) {
+      if (effect is EffectModifySquare) {
         if (zobrist != null) {
           hash ^= zobrist.table[effect.square][effect.content.piece];
           bool capture = board[effect.square].isNotEmpty;
@@ -135,8 +136,14 @@ class BishopState {
         if (effect.content.isNotEmpty) {
           pieces[effect.content.piece]++;
         }
+      } else if (effect is EffectSetGameResult) {
+        result = effect.result;
       }
     }
-    return copyWith(board: board, hash: hash);
+    return copyWith(
+      board: board,
+      hash: hash,
+      result: result,
+    );
   }
 }

@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:bishop/bishop.dart';
 
+part 'game_endings.dart';
 part 'game_info.dart';
 part 'game_outputs.dart';
+part 'game_result.dart';
 part 'game_utils.dart';
 
 /// Tracks the state of the game, handles move generation and validation,
@@ -630,10 +632,7 @@ class Game {
       List<Move> remove = [];
       for (Move m in moves) {
         makeMove(m);
-        if (kingAttacked(colour)) remove.add(m);
-        if (variant.data.flyingGenerals && royalsFacing) {
-          remove.add(m);
-        }
+        if (state.result != null || kingAttacked(colour)) remove.add(m);
         undo();
       }
       for (Move m in remove) {
@@ -706,7 +705,7 @@ class Game {
       (i) => List.from(state.virginFiles[i]),
     );
     List<int> pieces = List.from(state.pieces);
-    WinCondition? winCondition;
+    GameResult? result;
 
     // TODO: more validation?
     Square fromSq =
@@ -899,7 +898,7 @@ class Game {
     if (variant.hasWinRegions) {
       int p = board[move.to].piece;
       if (variant.pieceHasWinRegions(p) && variant.inWinRegion(p, move.to)) {
-        winCondition = WinCondition.inRegion;
+        result = WonGameEnteredRegion(winner: state.turn, square: move.to);
       }
     }
 
@@ -919,7 +918,7 @@ class Game {
       gates: gates,
       pieces: pieces,
       checks: List.from(state.checks),
-      winCondition: winCondition,
+      result: result,
     );
 
     if (variant.hasActionsForEvent(ActionEvent.duringMove)) {
@@ -1012,93 +1011,6 @@ class Game {
   /// Check if [player]'s king is currently attacked.
   bool kingAttacked(int player) =>
       isAttacked(state.royalSquares[player], player.opponent);
-
-  /// Is the current player's king in check?
-  bool get inCheck => kingAttacked(state.turn);
-
-  /// Is this checkmate?
-  /// Currently, other win/lose game end conditions (like three check), also
-  /// count as a checkmate.
-  bool get checkmate {
-    if (variant.gameEndConditions.checkLimit != null) {
-      if (state.checks[state.turn.opponent] >=
-          variant.gameEndConditions.checkLimit!) {
-        return true;
-      }
-    }
-    if (state.winCondition != null) {
-      return true;
-    }
-    return inCheck && generateLegalMoves().isEmpty;
-  }
-
-  /// Returns true if the royal pieces for each player are on the same file,
-  /// e.g. Xiangqi's flying generals rule.
-  bool get royalsFacing => size.squaresOnSameFile(
-        state.royalSquares[Bishop.white],
-        state.royalSquares[Bishop.black],
-      );
-
-  /// Is this stalemate?
-  bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
-
-  /// Check if there is currently sufficient material on the board for one player
-  /// to mate the other.
-  /// Returns true if there *isn't* sufficient material (and therefore it's a draw).
-  bool get insufficientMaterial {
-    if (!variant.materialConditions.enabled) return false;
-    if (hasSufficientMaterial(Bishop.white)) return false;
-    return !hasSufficientMaterial(Bishop.black);
-  }
-
-  /// Determines whether there is sufficient material for [player] to deliver
-  /// mate in the board position specified in [state].
-  /// [state] defaults to the current board state if unspecified.
-  bool hasSufficientMaterial(Colour player, {BishopState? state}) {
-    BishopState newState = state ?? this.state;
-    for (int p in variant.materialConditions.soloMaters) {
-      if (newState.pieces[makePiece(p, player)] > 0) return true;
-    }
-    // TODO: figure out how to track square colours to check bishop pairs
-    for (int p in variant.materialConditions.pairMaters) {
-      if (newState.pieces[makePiece(p, player)] > 1) return true;
-    }
-    for (int p in variant.materialConditions.combinedPairMaters) {
-      if (newState.pieces[makePiece(p, player)] +
-              newState.pieces[makePiece(p, player.opponent)] >
-          1) {
-        return true;
-      }
-    }
-    for (List<int> c in variant.materialConditions.specialCases) {
-      bool met = true;
-      for (int p in c) {
-        if (newState.pieces[makePiece(p, player)] < 1) met = false;
-      }
-      if (met) return true;
-    }
-    return false;
-  }
-
-  /// Check if we have reached the repetition draw limit (threefold repetition
-  /// in standard chess).
-  /// Configurable in [Variant.repetitionDraw].
-  bool get repetition => variant.repetitionDraw != null
-      ? hashHits >= variant.repetitionDraw!
-      : false;
-
-  /// Check if we have reached the half move rule (aka the 50 move rule in
-  /// standard chess).
-  /// Configurable in [variant.halfMoveDraw].
-  bool get halfMoveRule =>
-      variant.halfMoveDraw != null && state.halfMoves >= variant.halfMoveDraw!;
-
-  /// Check if there is any kind of draw.
-  bool get inDraw =>
-      stalemate || insufficientMaterial || repetition || halfMoveRule;
-
-  /// Check if it's checkmate or a draw.
-  bool get gameOver => checkmate || inDraw;
 
   /// Check the number of times the current position has occurred in the hash table.
   int get hashHits => zobrist.hashHits(state.hash);

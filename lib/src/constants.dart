@@ -152,11 +152,3 @@ enum Variants {
   /// Builds a `Variant` for use with `Game`.
   Variant build() => builder();
 }
-
-/// Special win conditions that are set in the state.
-/// Note: these are only checked after moves are made. If you instantiate a game
-/// that is in a winning position from the beginning according to its position,
-/// it will not be recognised (may change in future).
-enum WinCondition {
-  inRegion,
-}

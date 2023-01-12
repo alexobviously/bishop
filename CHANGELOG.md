@@ -1,5 +1,6 @@
 ### 1.0.0
 - The state of the board is now stored in `BishopState`, instead of a single list in `Game` being modified. This improves code readability and also results in small performance improvements in most cases.
+- More descriptive game results. Use `Game.result` to see the exact way the game ended (null if it's still ongoing). Old getters like `Game.checkmate` still exist but `result` is preferred.
 
 ### 0.6.4
 - Fixed gates being output the wrong way round in FEN strings for fixed gating variants.

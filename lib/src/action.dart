@@ -37,7 +37,7 @@ class Actions {
       (ActionTrigger trigger) => trigger.variant.boardSize
           .squaresForArea(trigger.move.to, area)
           .where((e) => trigger.state.board[e] != Bishop.empty)
-          .map((e) => ActionEffectModifySquare(e, Bishop.empty))
+          .map((e) => EffectModifySquare(e, Bishop.empty))
           .toList();
 }
 
@@ -94,22 +94,27 @@ abstract class ActionEffect {
   const ActionEffect();
 }
 
-class ActionEffectModifySquare extends ActionEffect {
+class EffectModifySquare extends ActionEffect {
   final int square;
   final int content;
-  const ActionEffectModifySquare(this.square, this.content);
+  const EffectModifySquare(this.square, this.content);
 }
 
-class ActionEffectAddToHand extends ActionEffect {
+class EffectAddToHand extends ActionEffect {
   final int player;
   final int piece;
-  const ActionEffectAddToHand(this.player, this.piece);
+  const EffectAddToHand(this.player, this.piece);
 }
 
-class ActionEffectRemoveFromHand extends ActionEffect {
+class EffectRemoveFromHand extends ActionEffect {
   final int player;
   final int piece;
-  const ActionEffectRemoveFromHand(this.player, this.piece);
+  const EffectRemoveFromHand(this.player, this.piece);
+}
+
+class EffectSetGameResult extends ActionEffect {
+  final GameResult? result;
+  const EffectSetGameResult(this.result);
 }
 
 class ActionTrigger {

@@ -15,7 +15,7 @@ class Engine {
     int printBest = 0,
   }) async {
     if (game.gameOver) {
-      print(game.inDraw ? 'Draw' : 'Checkmate');
+      print(game.drawn ? 'Draw' : 'Checkmate');
       return EngineResult();
     }
     int endTime = DateTime.now().millisecondsSinceEpoch + timeLimit;
@@ -54,14 +54,15 @@ class Engine {
       }
     }
 
-    return EngineResult(move: moves.first, eval: evals[moves.first], depth: depthSearched);
+    return EngineResult(
+        move: moves.first, eval: evals[moves.first], depth: depthSearched);
   }
 
   int negamax(int depth, int alpha, int beta, Colour player, [int debug = 0]) {
     int value = -Bishop.mateUpper;
     List<Move> moves = game.generateLegalMoves();
     if (moves.isEmpty) {
-      if (game.inDraw) {
+      if (game.drawn) {
         return 0;
       } else if (game.turn == player) {
         return Bishop.mateUpper;
