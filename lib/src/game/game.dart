@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:bishop/bishop.dart';
-import 'package:bishop/src/action.dart';
 
 part 'game_info.dart';
 part 'game_outputs.dart';
@@ -17,13 +16,11 @@ class Game {
   /// Used by the Zobrist hash table.
   final int seed;
   late Zobrist zobrist;
-  late List<int> board;
+  List<int> get board => state.board;
   late String startPosition;
-  List<State> history = [];
-  BishopState get bishopState =>
-      state.full(board: [...board], variant: variant);
-  State get state => history.last;
-  State? get prevState =>
+  List<BishopState> history = [];
+  BishopState get state => history.last;
+  BishopState? get prevState =>
       history.length > 1 ? history[history.length - 2] : null;
   bool get canUndo => history.length > 1;
   Colour get turn => state.turn;
@@ -59,7 +56,11 @@ class Game {
     royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
   }
 
-  int setupCastling(String castlingString, List<int> royalSquares) {
+  int setupCastling(
+    String castlingString,
+    List<int> royalSquares,
+    List<int> board,
+  ) {
     if (castlingString == '-') {
       return 0;
     }
@@ -129,7 +130,7 @@ class Game {
       pieceLookup[variant.pieces[i].symbol] = i;
     }
 
-    board = List.filled(variant.boardSize.numSquares * 2, 0);
+    List<int> board = List.filled(variant.boardSize.numSquares * 2, 0);
     List<String> sections = fen.split(' ');
 
     // Parse hands for variants with drops
@@ -288,8 +289,9 @@ class Game {
     int turn = turnStr == 'w' ? Bishop.white : Bishop.black;
     int? ep = epStr == '-' ? null : squareNumber(epStr, variant.boardSize);
     int castling =
-        variant.castling ? setupCastling(castlingStr, royalSquares) : 0;
-    State newState = State(
+        variant.castling ? setupCastling(castlingStr, royalSquares, board) : 0;
+    BishopState newState = BishopState(
+      board: board,
       turn: turn,
       halfMoves: int.parse(halfMoves),
       fullMoves: int.parse(fullMoves),
@@ -686,6 +688,7 @@ class Game {
   /// Make a move and modify the game state. Returns true if the move was valid
   /// and made successfully.
   bool makeMove(Move move) {
+    List<int> board = [...state.board];
     if ((move.from != Bishop.hand && !size.onBoard(move.from)) ||
         !size.onBoard(move.to)) {
       return false;
@@ -704,11 +707,6 @@ class Game {
     );
     List<int> pieces = List.from(state.pieces);
     WinCondition? winCondition;
-    BishopState? preState;
-    BishopState? postState;
-    if (variant.hasActionsForEvent(ActionEvent.beforeMove)) {
-      preState = state.full(board: board, variant: variant);
-    }
 
     // TODO: more validation?
     Square fromSq =
@@ -905,7 +903,8 @@ class Game {
       }
     }
 
-    State newState = State(
+    BishopState newState = BishopState(
+      board: board,
       move: move,
       turn: 1 - state.turn,
       halfMoves: halfMoves,
@@ -942,43 +941,8 @@ class Game {
   /// Returns the move that was undone.
   Move? undo() {
     if (history.length == 1) return null;
-    State lastState = history.removeLast();
+    BishopState lastState = history.removeLast();
     Move move = lastState.move!;
-
-    int toSq = board[move.to];
-
-    if (move.castling) {
-      bool kingside = move.castlingDir == Castling.k;
-      int royalRank = size.rank(move.from);
-      int castlingFile = kingside
-          ? variant.castlingOptions.kTarget!
-          : variant.castlingOptions.qTarget!;
-      int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
-      int rookSq = size.square(rookFile, royalRank);
-      int rook = board[rookSq];
-      int king = board[move.to];
-      board[move.to] = Bishop.empty;
-      board[rookSq] = Bishop.empty;
-      board[move.from] = king;
-      board[move.castlingPieceSquare!] = rook;
-    } else {
-      if (move.promotion) {
-        board[move.from] = makePiece(move.promoSource!, state.turn);
-      } else {
-        if (move.from >= Bishop.boardStart) board[move.from] = toSq;
-      }
-      if (move.enPassant) {
-        int captureSq = move.to +
-            Bishop.playerDirection[move.capturedPiece!.colour] * size.north;
-        board[captureSq] = move.capturedPiece!;
-      }
-      if (move.capture && !move.enPassant) {
-        board[move.to] = move.capturedPiece!;
-      } else {
-        board[move.to] = Bishop.empty;
-      }
-    }
-
     zobrist.decrementHash(lastState.hash);
     return move;
   }
@@ -1077,8 +1041,8 @@ class Game {
   /// Determines whether there is sufficient material for [player] to deliver
   /// mate in the board position specified in [state].
   /// [state] defaults to the current board state if unspecified.
-  bool hasSufficientMaterial(Colour player, {State? state}) {
-    State newState = state ?? this.state;
+  bool hasSufficientMaterial(Colour player, {BishopState? state}) {
+    BishopState newState = state ?? this.state;
     for (int p in variant.materialConditions.soloMaters) {
       if (newState.pieces[makePiece(p, player)] > 0) return true;
     }

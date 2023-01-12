@@ -34,7 +34,7 @@ class Actions {
           actions.map((e) => e(trigger)).expand((e) => e).toList();
 
   static ActionDefinition explosion(Area area) =>
-      (ActionTrigger trigger) => trigger.state.size
+      (ActionTrigger trigger) => trigger.variant.boardSize
           .squaresForArea(trigger.move.to, area)
           .where((e) => trigger.state.board[e] != Bishop.empty)
           .map((e) => AbilityEffectModifySquare(e, Bishop.empty))
@@ -63,7 +63,7 @@ class Conditions {
         if (colour != null && sq.colour != colour) {
           return false;
         }
-        return trigger.state.variant.pieceIndexLookup[piece] == sq.piece;
+        return trigger.variant.pieceIndexLookup[piece] == sq.piece;
       };
   static ActionCondition capturedPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
@@ -72,7 +72,7 @@ class Conditions {
         if (colour != null && sq.colour != colour) {
           return false;
         }
-        return trigger.state.variant.pieceIndexLookup[piece] == sq.piece;
+        return trigger.variant.pieceIndexLookup[piece] == sq.piece;
       };
   static ActionCondition movingPieceType(int type, {int? colour}) =>
       (ActionTrigger trigger) {
@@ -115,10 +115,12 @@ class AbilityEffectRemoveFromHand extends ActionEffect {
 class ActionTrigger {
   final ActionEvent event;
   final BishopState state;
+  final BuiltVariant variant;
   final Move move;
 
   const ActionTrigger({
     required this.event,
+    required this.variant,
     required this.state,
     required this.move,
   });

@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:bishop/bishop.dart';
-import 'package:bishop/src/action.dart';
 
 part 'board_size.dart';
 part 'built_variant.dart';

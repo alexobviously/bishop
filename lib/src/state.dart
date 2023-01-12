@@ -1,8 +1,10 @@
 import 'package:bishop/bishop.dart';
 
 /// A record of the game's state at a particular move.
-/// Doesn't include the board state.
-class State {
+class BishopState {
+  /// The contents of each square on the board.
+  final List<int> board;
+
   /// The previous move that was played. If null, the game has just started.
   final Move? move;
 
@@ -58,7 +60,8 @@ class State {
   @override
   String toString() => 'State(turn: $turn, moves: $fullMoves, hash: $hash)';
 
-  const State({
+  const BishopState({
+    required this.board,
     this.move,
     required this.turn,
     required this.halfMoves,
@@ -75,7 +78,8 @@ class State {
     this.hash = 0,
   });
 
-  State copyWith({
+  BishopState copyWith({
+    List<int>? board,
     Move? move,
     Colour? turn,
     int? halfMoves,
@@ -91,7 +95,8 @@ class State {
     WinCondition? winCondition,
     int? hash,
   }) =>
-      State(
+      BishopState(
+        board: board ?? this.board,
         move: move ?? this.move,
         turn: turn ?? this.turn,
         halfMoves: halfMoves ?? this.halfMoves,
@@ -107,50 +112,4 @@ class State {
         winCondition: winCondition ?? this.winCondition,
         hash: hash ?? this.hash,
       );
-
-  BishopState full({required List<int> board, required BuiltVariant variant}) =>
-      BishopState(
-        board: board,
-        variant: variant,
-        move: move,
-        turn: turn,
-        halfMoves: halfMoves,
-        fullMoves: fullMoves,
-        castlingRights: castlingRights,
-        epSquare: epSquare,
-        royalSquares: royalSquares,
-        virginFiles: virginFiles,
-        hands: hands,
-        gates: gates,
-        pieces: pieces,
-        checks: checks,
-        winCondition: winCondition,
-        hash: hash,
-      );
-}
-
-class BishopState extends State {
-  final List<int> board;
-  final BuiltVariant variant;
-
-  BoardSize get size => variant.boardSize;
-
-  const BishopState({
-    required this.board,
-    required this.variant,
-    super.move,
-    required super.turn,
-    required super.halfMoves,
-    required super.fullMoves,
-    required super.castlingRights,
-    super.epSquare,
-    required super.royalSquares,
-    required super.virginFiles,
-    super.hands,
-    super.gates,
-    required super.pieces,
-    super.checks,
-    super.winCondition,
-    super.hash,
-  });
 }
