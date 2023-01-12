@@ -44,6 +44,7 @@ void main(List<String> args) async {
   printCyan(game.fen);
   printPgn();
   printHistory();
+  printCyan('Result: ${game.result}');
 }
 
 bool printState = true;

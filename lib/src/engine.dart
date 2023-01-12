@@ -63,11 +63,14 @@ class Engine {
 
   int negamax(int depth, int alpha, int beta, Colour player, [int debug = 0]) {
     int value = -Bishop.mateUpper;
+    if (game.drawn) return 0;
+    final result = game.result;
+    if (result is WonGame) {
+      return result.winner == player ? -Bishop.mateUpper : Bishop.mateUpper;
+    }
     List<Move> moves = game.generateLegalMoves();
     if (moves.isEmpty) {
-      if (game.drawn) {
-        return 0;
-      } else if (game.turn == player) {
+      if (game.turn == player) {
         return Bishop.mateUpper;
       } else {
         return -Bishop.mateUpper;

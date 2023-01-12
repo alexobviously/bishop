@@ -236,6 +236,15 @@ class BuiltVariant {
   bool hasActionsForEvent(ActionEvent event) =>
       actionsByEvent[event]!.isNotEmpty;
 
+  Iterable<Action> actionsForTrigger(
+    ActionTrigger trigger, {
+    bool checkPrecondition = true,
+  }) =>
+      checkPrecondition
+          ? actionsByEvent[trigger.event]!
+              .where((e) => e.precondition?.call(trigger) ?? true)
+          : actionsByEvent[trigger.event]!;
+
   List<ActionEffect> executeActions(ActionTrigger trigger) {
     List<ActionEffect> effects = [];
     for (Action action in actionsByEvent[trigger.event]!) {

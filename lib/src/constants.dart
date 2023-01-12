@@ -15,6 +15,8 @@ class Bishop {
   static const Colour white = 0;
   static const Colour black = 1;
 
+  static const List<Colour> colours = [white, black];
+
   static const int boardStart = 0;
   static const int invalid = -1;
   static const int hand = -2;

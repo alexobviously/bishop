@@ -5,15 +5,50 @@ typedef ActionCondition = bool Function(ActionTrigger trigger);
 
 class Action {
   final ActionEvent event;
+  final ActionCondition? precondition;
   final ActionCondition? condition;
   final ActionDefinition action;
 
-  const Action({required this.event, this.condition, required this.action});
+  const Action({
+    required this.event,
+    this.precondition,
+    this.condition,
+    required this.action,
+  });
 
-  static Action kamikaze(Area area) => Action(
-        event: ActionEvent.duringMove,
-        condition: Conditions.isCapture,
-        action: Actions.explosion(area),
+  factory Action.kamikaze(Area area) => Action(
+        event: ActionEvent.afterMove,
+        precondition: Conditions.isCapture,
+        action: ActionDefinitions.explosion(area),
+      );
+
+  factory Action.checkRoyalsAlive({
+    ActionEvent event = ActionEvent.afterMove,
+    ActionCondition? precondition,
+    ActionCondition? condition,
+  }) =>
+      Action(
+        event: event,
+        precondition: precondition,
+        condition: condition,
+        action: (ActionTrigger trigger) {
+          int king = trigger.variant.royalPiece;
+          List<bool> kingsAlive = Bishop.colours
+              .map(
+                (e) =>
+                    trigger.state.board[trigger.state.royalSquares[e].piece] ==
+                    makePiece(king, e),
+              )
+              .toList();
+          if (kingsAlive[Bishop.white]) {
+            return kingsAlive[Bishop.black]
+                ? []
+                : [EffectSetGameResult(WonGameRoyalDead(winner: Bishop.white))];
+          }
+          return kingsAlive[Bishop.black]
+              ? [EffectSetGameResult(WonGameRoyalDead(winner: Bishop.black))]
+              : [EffectSetGameResult(DrawnGameBothRoyalsDead())];
+        },
       );
 
   /// Copies the Action with the added condition that the piece type is [type].
@@ -28,7 +63,7 @@ class Action {
       );
 }
 
-class Actions {
+class ActionDefinitions {
   static ActionDefinition merge(List<ActionDefinition> actions) =>
       (ActionTrigger trigger) =>
           actions.map((e) => e(trigger)).expand((e) => e).toList();
@@ -86,7 +121,6 @@ class Conditions {
 
 enum ActionEvent {
   beforeMove,
-  duringMove,
   afterMove;
 }
 
@@ -129,4 +163,17 @@ class ActionTrigger {
     required this.state,
     required this.move,
   });
+
+  ActionTrigger copyWith({
+    ActionEvent? event,
+    BishopState? state,
+    BuiltVariant? variant,
+    Move? move,
+  }) =>
+      ActionTrigger(
+        event: event ?? this.event,
+        variant: variant ?? this.variant,
+        state: state ?? this.state,
+        move: move ?? this.move,
+      );
 }

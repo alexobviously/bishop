@@ -632,7 +632,9 @@ class Game {
       List<Move> remove = [];
       for (Move m in moves) {
         makeMove(m);
-        if (state.result != null || kingAttacked(colour)) remove.add(m);
+        if ((state.result is WonGame &&
+                (state.result as WonGame).winner != colour) ||
+            kingAttacked(colour)) remove.add(m);
         undo();
       }
       for (Move m in remove) {
@@ -921,16 +923,16 @@ class Game {
       result: result,
     );
 
-    if (variant.hasActionsForEvent(ActionEvent.duringMove)) {
-      final effects = variant.executeActions(
-        ActionTrigger(
-          event: ActionEvent.duringMove,
+    if (variant.hasActionsForEvent(ActionEvent.afterMove)) {
+      newState = newState.executeActions(
+        trigger: ActionTrigger(
+          event: ActionEvent.afterMove,
           variant: variant,
           state: state,
           move: move,
         ),
+        zobrist: zobrist,
       );
-      newState = newState.executeActions(effects: effects, zobrist: zobrist);
     }
 
     history.add(newState);

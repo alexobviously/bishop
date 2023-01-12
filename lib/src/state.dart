@@ -114,14 +114,37 @@ class BishopState {
       );
 
   BishopState executeActions({
-    required List<ActionEffect> effects,
+    required ActionTrigger trigger,
+    Iterable<Action>? actions,
     Zobrist? zobrist,
   }) {
+    actions ??= trigger.variant.actionsForTrigger(trigger);
+    if (actions.isEmpty) return this;
+    final action = actions.first;
+    BishopState state = this;
+    if (action.condition?.call(trigger) ?? true) {
+      state = applyEffects(effects: action.action(trigger));
+    }
+    return actions.length > 1
+        ? state.executeActions(
+            trigger: trigger.copyWith(state: state),
+            actions: actions.skip(1),
+            zobrist: zobrist,
+          )
+        : state;
+  }
+
+  BishopState applyEffects({
+    required Iterable<ActionEffect> effects,
+    Zobrist? zobrist,
+  }) {
+    if (effects.isEmpty) return this;
     int hash = this.hash;
     List<int> board = [...this.board];
     List<int> pieces = [...this.pieces];
     GameResult? result = this.result;
-    for (final effect in effects) {
+
+    for (ActionEffect effect in effects) {
       if (effect is EffectModifySquare) {
         if (zobrist != null) {
           hash ^= zobrist.table[effect.square][effect.content.piece];
@@ -140,6 +163,7 @@ class BishopState {
         result = effect.result;
       }
     }
+
     return copyWith(
       board: board,
       hash: hash,
