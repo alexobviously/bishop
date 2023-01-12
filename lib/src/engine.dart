@@ -55,7 +55,10 @@ class Engine {
     }
 
     return EngineResult(
-        move: moves.first, eval: evals[moves.first], depth: depthSearched);
+      move: moves.first,
+      eval: evals[moves.first],
+      depth: depthSearched,
+    );
   }
 
   int negamax(int depth, int alpha, int beta, Colour player, [int debug = 0]) {

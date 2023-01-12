@@ -40,6 +40,10 @@ class DrawTest {
   final Variant variant;
   final String fen;
   final bool draw;
-  const DrawTest(
-      {required this.variant, required this.fen, required this.draw});
+
+  const DrawTest({
+    required this.variant,
+    required this.fen,
+    required this.draw,
+  });
 }

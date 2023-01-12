@@ -20,6 +20,7 @@ class Bishop {
   static const int hand = -2;
   static const Square empty = 0;
   static const int promoFlag = 1;
+  static const defaultSeed = 7363661891;
 
   static const List<int> playerDirection = [-1, 1];
   static const List<String> playerName = ['White', 'Black'];
@@ -126,6 +127,7 @@ enum GatingMode {
   bool operator <=(GatingMode other) => index <= other.index;
 }
 
+@Deprecated('Use Bishop.defaultSeed')
 const defaultSeed = 7363661891;
 
 /// All built in variants.

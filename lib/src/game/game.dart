@@ -39,12 +39,12 @@ class Game {
   String toString() => 'Game(${variant.name}, $fen)';
 
   Game({
-    required Variant variant,
+    Variant? variant,
     String? fen,
     FenBuilder? fenBuilder,
-    this.seed = defaultSeed,
+    this.seed = Bishop.defaultSeed,
   }) {
-    this.variant = BuiltVariant.fromData(variant);
+    this.variant = BuiltVariant.fromData(variant ?? Variant.standard());
     setup(fen: fen, fenBuilder: fenBuilder);
   }
 
