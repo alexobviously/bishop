@@ -108,10 +108,10 @@ class State {
         hash: hash ?? this.hash,
       );
 
-  BishopState full({required List<int> board, required BoardSize size}) =>
+  BishopState full({required List<int> board, required BuiltVariant variant}) =>
       BishopState(
         board: board,
-        size: size,
+        variant: variant,
         move: move,
         turn: turn,
         halfMoves: halfMoves,
@@ -131,10 +131,13 @@ class State {
 
 class BishopState extends State {
   final List<int> board;
-  final BoardSize size;
+  final BuiltVariant variant;
+
+  BoardSize get size => variant.boardSize;
+
   const BishopState({
     required this.board,
-    required this.size,
+    required this.variant,
     super.move,
     required super.turn,
     required super.halfMoves,

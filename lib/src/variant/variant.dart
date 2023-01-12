@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:bishop/bishop.dart';
-import 'package:bishop/src/ability.dart';
+import 'package:bishop/src/action.dart';
 
 part 'board_size.dart';
 part 'built_variant.dart';
@@ -86,6 +86,8 @@ class Variant {
   /// in effects.
   final Map<String, BoardRegion> regions;
 
+  final List<Action> actions;
+
   /// Whether this variant involves castling.
   bool get castling => castlingOptions.enabled;
 
@@ -125,6 +127,7 @@ class Variant {
     this.pieceValues,
     this.flyingGenerals = false,
     this.regions = const {},
+    this.actions = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
           'Variant needs either a startPosition or startPosBuilder',
@@ -151,6 +154,7 @@ class Variant {
     Map<String, int>? pieceValues,
     bool? flyingGenerals,
     Map<String, BoardRegion>? regions,
+    List<Action>? actions,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -173,6 +177,7 @@ class Variant {
       pieceValues: pieceValues ?? this.pieceValues,
       flyingGenerals: flyingGenerals ?? this.flyingGenerals,
       regions: regions ?? this.regions,
+      actions: actions ?? this.actions,
     );
   }
 
@@ -356,11 +361,9 @@ class Variant {
 
   factory Variant.atomic() {
     final standard = Variant.standard();
-    final ability = Ability.kamikaze(Area.radius(3));
     return standard.copyWith(
       name: 'Atomic Chess',
-      pieceTypes: standard.pieceTypes
-          .map((k, v) => MapEntry(k, v.copyWith(abilities: [ability]))),
+      actions: [Action.kamikaze(Area.radius(3))],
     );
   }
 }

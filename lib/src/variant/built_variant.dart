@@ -13,6 +13,8 @@ class BuiltVariant {
   final int royalPiece;
   final MaterialConditions<int> materialConditions;
   final Map<int, List<String>> winRegions;
+  final List<Action> actions;
+  final Map<ActionEvent, List<Action>> actionsByEvent;
 
   const BuiltVariant({
     required this.data,
@@ -26,6 +28,8 @@ class BuiltVariant {
     required this.royalPiece,
     required this.materialConditions,
     required this.winRegions,
+    required this.actions,
+    required this.actionsByEvent,
   });
 
   factory BuiltVariant.fromData(Variant data) {
@@ -36,6 +40,7 @@ class BuiltVariant {
     List<PieceDefinition> pieces = [PieceDefinition.empty()];
     Map<String, PieceDefinition> pieceLookup = {};
     Map<String, int> pieceIndexLookup = {};
+    List<Action> actions = [...data.actions];
     data.pieceTypes.forEach((s, p) {
       int value = p.royal ? Bishop.mateUpper : p.value;
       if (data.pieceValues?.containsKey(s) ?? false) {
@@ -62,7 +67,13 @@ class BuiltVariant {
           winRegions[makePiece(pieceId, Bishop.black)] = blackWinRegions;
         }
       }
+      actions.addAll(p.actions.map((e) => e.forPieceType(pieceId)));
     });
+
+    Map<ActionEvent, List<Action>> actionsByEvent = {
+      for (final e in ActionEvent.values)
+        e: actions.where((a) => a.event == e).toList(),
+    };
 
     return BuiltVariant(
       data: data,
@@ -90,6 +101,8 @@ class BuiltVariant {
       royalPiece: pieces.indexWhere((p) => p.type.royal),
       materialConditions: data.materialConditions.convert(pieces),
       winRegions: winRegions,
+      actions: actions,
+      actionsByEvent: actionsByEvent,
     );
   }
 
@@ -219,6 +232,19 @@ class BuiltVariant {
 
   /// [piece] should contain its colour.
   bool pieceHasWinRegions(int piece) => winRegions.containsKey(piece);
+
+  bool hasActionsForEvent(ActionEvent event) =>
+      actionsByEvent[event]!.isNotEmpty;
+
+  List<ActionEffect> executeActions(ActionTrigger trigger) {
+    List<ActionEffect> effects = [];
+    for (Action action in actionsByEvent[trigger.event]!) {
+      if (action.condition?.call(trigger) ?? true) {
+        effects.addAll(action.action(trigger));
+      }
+    }
+    return effects;
+  }
 
   @override
   String toString() => name;

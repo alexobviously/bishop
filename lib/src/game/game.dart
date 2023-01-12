@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:bishop/bishop.dart';
+import 'package:bishop/src/action.dart';
 
 part 'game_info.dart';
 part 'game_outputs.dart';
@@ -19,7 +20,8 @@ class Game {
   late List<int> board;
   late String startPosition;
   List<State> history = [];
-  BishopState get bishopState => state.full(board: [...board], size: size);
+  BishopState get bishopState =>
+      state.full(board: [...board], variant: variant);
   State get state => history.last;
   State? get prevState =>
       history.length > 1 ? history[history.length - 2] : null;
@@ -702,6 +704,11 @@ class Game {
     );
     List<int> pieces = List.from(state.pieces);
     WinCondition? winCondition;
+    BishopState? preState;
+    BishopState? postState;
+    if (variant.hasActionsForEvent(ActionEvent.beforeMove)) {
+      preState = state.full(board: board, variant: variant);
+    }
 
     // TODO: more validation?
     Square fromSq =

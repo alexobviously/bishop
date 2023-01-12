@@ -1,5 +1,5 @@
 import 'package:bishop/bishop.dart';
-import 'package:bishop/src/ability.dart';
+import 'package:bishop/src/action.dart';
 
 /// Specifies a piece type, with all of its moves and attributes.
 class PieceType {
@@ -33,7 +33,7 @@ class PieceType {
   /// Regions in which the behaviour of the piece is altered.
   final List<RegionEffect> regionEffects;
 
-  final List<Ability> abilities;
+  final List<Action> actions;
 
   /// Region effects that change the piece type.
   List<RegionEffect> get changePieceRegionEffects =>
@@ -57,7 +57,7 @@ class PieceType {
     this.noSanSymbol = false,
     this.value = Bishop.defaultPieceValue,
     this.regionEffects = const [],
-    this.abilities = const [],
+    this.actions = const [],
   });
 
   PieceType copyWith({
@@ -70,7 +70,7 @@ class PieceType {
     bool? noSanSymbol,
     int? value,
     List<RegionEffect>? regionEffects,
-    List<Ability>? abilities,
+    List<Action>? actions,
   }) =>
       PieceType(
         betza: betza ?? this.betza,
@@ -82,7 +82,7 @@ class PieceType {
         noSanSymbol: noSanSymbol ?? this.noSanSymbol,
         value: value ?? this.value,
         regionEffects: regionEffects ?? this.regionEffects,
-        abilities: abilities ?? this.abilities,
+        actions: actions ?? this.actions,
       );
 
   /// Initialise the `PieceType`.
@@ -114,7 +114,7 @@ class PieceType {
     bool noSanSymbol = false,
     int value = Bishop.defaultPieceValue,
     List<RegionEffect> regionEffects = const [],
-    List<Ability> abilities = const [],
+    List<Action> abilities = const [],
   }) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> moves = [];
@@ -146,7 +146,7 @@ class PieceType {
       noSanSymbol: noSanSymbol,
       value: value,
       regionEffects: regionEffects,
-      abilities: abilities,
+      actions: abilities,
     );
   }
 
