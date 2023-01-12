@@ -1,5 +1,5 @@
 ### 1.0.0
-- The state of the board is now stored in `BishopState`, instead of a single list in `Game` being modified.
+- The state of the board is now stored in `BishopState`, instead of a single list in `Game` being modified. This improves code readability and also results in small performance improvements in most cases.
 
 ### 0.6.4
 - Fixed gates being output the wrong way round in FEN strings for fixed gating variants.

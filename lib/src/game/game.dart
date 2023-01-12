@@ -304,7 +304,7 @@ class Game {
       pieces: pieces,
       checks: checks,
     );
-    newState = newState.copyWith(hash: zobrist.compute(newState, board));
+    newState = newState.copyWith(hash: zobrist.compute(newState));
     zobrist.incrementHash(newState.hash);
     history.add(newState);
   }
