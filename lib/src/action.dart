@@ -24,6 +24,7 @@ class Action {
 
   factory Action.checkRoyalsAlive({
     ActionEvent event = ActionEvent.afterMove,
+    bool allowSuicide = false,
     ActionCondition? precondition,
     ActionCondition? condition,
   }) =>
@@ -47,7 +48,9 @@ class Action {
           }
           return kingsAlive[Bishop.black]
               ? [EffectSetGameResult(WonGameRoyalDead(winner: Bishop.black))]
-              : [EffectSetGameResult(DrawnGameBothRoyalsDead())];
+              : (allowSuicide
+                  ? [EffectSetGameResult(DrawnGameBothRoyalsDead())]
+                  : [EffectInvalidateMove()]);
         },
       );
 
@@ -149,6 +152,10 @@ class EffectRemoveFromHand extends ActionEffect {
 class EffectSetGameResult extends ActionEffect {
   final GameResult? result;
   const EffectSetGameResult(this.result);
+}
+
+class EffectInvalidateMove extends EffectSetGameResult {
+  const EffectInvalidateMove() : super(const InvalidMoveResult());
 }
 
 class ActionTrigger {

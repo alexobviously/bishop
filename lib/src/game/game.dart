@@ -359,8 +359,8 @@ class Game {
     if (legal) {
       List<Move> remove = [];
       for (Move m in drops) {
-        makeMove(m);
-        if (kingAttacked(colour)) remove.add(m);
+        bool valid = makeMove(m);
+        if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
         undo();
       }
       for (Move m in remove) {
@@ -631,10 +631,8 @@ class Game {
     if (options.legal) {
       List<Move> remove = [];
       for (Move m in moves) {
-        makeMove(m);
-        if ((state.result is WonGame &&
-                (state.result as WonGame).winner != colour) ||
-            kingAttacked(colour)) remove.add(m);
+        bool valid = makeMove(m);
+        if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
         undo();
       }
       for (Move m in remove) {
@@ -936,6 +934,7 @@ class Game {
     }
 
     history.add(newState);
+    if (newState.invalidMove) return false;
 
     // kind of messy doing it like this, but inCheck depends on the current state
     // maybe that's a case for refactoring some methods into State?

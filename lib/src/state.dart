@@ -57,6 +57,8 @@ class BishopState {
   /// updated in `Game.makeMove()`.
   final int hash;
 
+  bool get invalidMove => result is InvalidMoveResult;
+
   @override
   String toString() => 'State(turn: $turn, moves: $fullMoves, hash: $hash)';
 
@@ -118,6 +120,7 @@ class BishopState {
     Iterable<Action>? actions,
     Zobrist? zobrist,
   }) {
+    if (invalidMove) return this;
     actions ??= trigger.variant.actionsForTrigger(trigger);
     if (actions.isEmpty) return this;
     final action = actions.first;
@@ -138,6 +141,7 @@ class BishopState {
     required Iterable<ActionEffect> effects,
     Zobrist? zobrist,
   }) {
+    if (invalidMove) return this;
     if (effects.isEmpty) return this;
     int hash = this.hash;
     List<int> board = [...this.board];

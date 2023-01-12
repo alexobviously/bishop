@@ -7,6 +7,14 @@ abstract class GameResult {
   String toString() => 'GameResult';
 }
 
+/// A special case to propagate invalidation through to makeMove.
+class InvalidMoveResult extends GameResult {
+  const InvalidMoveResult();
+
+  @override
+  String toString() => 'InvalidMoveResult';
+}
+
 class WonGame extends GameResult {
   final int winner;
   const WonGame({required this.winner});
