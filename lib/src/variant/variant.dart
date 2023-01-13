@@ -370,7 +370,7 @@ class Variant {
     return standard.copyWith(
       name: 'Atomic Chess',
       actions: [
-        Action.kamikaze(Area.radius(1)),
+        Action.explodeOnCapture(Area.radius(1)),
         Action.checkRoyalsAlive(),
       ],
     );

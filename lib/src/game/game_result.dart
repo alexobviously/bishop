@@ -62,10 +62,16 @@ class WonGameRoyalDead extends WonGame {
 
 class DrawnGameStalemate extends DrawnGame {
   const DrawnGameStalemate();
+
+  @override
+  String toString() => 'DrawnGameStalemate';
 }
 
 class DrawnGameInsufficientMaterial extends DrawnGame {
   const DrawnGameInsufficientMaterial();
+
+  @override
+  String toString() => 'DrawnGameInsufficientMaterial';
 }
 
 class DrawnGameRepetition extends DrawnGame {

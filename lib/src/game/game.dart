@@ -926,7 +926,7 @@ class Game {
         trigger: ActionTrigger(
           event: ActionEvent.afterMove,
           variant: variant,
-          state: state,
+          state: newState,
           move: move,
         ),
         zobrist: zobrist,

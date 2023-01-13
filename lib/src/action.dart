@@ -1,12 +1,31 @@
+import 'dart:math';
+
 import 'package:bishop/bishop.dart';
 
+/// A function that generates a `List<ActionEffect>` based on an
+/// `ActionTrigger` passed to it.
 typedef ActionDefinition = List<ActionEffect> Function(ActionTrigger trigger);
+
+/// A function that validates an `ActionTrigger`.
 typedef ActionCondition = bool Function(ActionTrigger trigger);
 
 class Action {
+  /// The type of event that will trigger this action.
   final ActionEvent event;
+
+  /// The [precondition] is checked before any action in the group is executed.
+  /// In other words, the [precondition] will act on the state of the game,
+  /// ignoring any changes that happen as a result of actions executed before
+  /// this one, that are triggered by the same event.
   final ActionCondition? precondition;
+
+  /// The [condition] is checked before executing the action in its sequence, i.e.
+  /// effects applied by actions occurring before this in the sequence will be
+  /// taken into account by the [condition], in contrast with [precondition].
   final ActionCondition? condition;
+
+  /// A function that generates a `List<ActionEffect>` based on an
+  /// `ActionTrigger` passed to it.
   final ActionDefinition action;
 
   const Action({
@@ -16,7 +35,7 @@ class Action {
     required this.action,
   });
 
-  factory Action.kamikaze(Area area) => Action(
+  factory Action.explodeOnCapture(Area area) => Action(
         event: ActionEvent.afterMove,
         precondition: Conditions.isCapture,
         action: ActionDefinitions.explosion(area),
@@ -24,7 +43,7 @@ class Action {
 
   factory Action.checkRoyalsAlive({
     ActionEvent event = ActionEvent.afterMove,
-    bool allowSuicide = false,
+    bool allowDraw = false,
     ActionCondition? precondition,
     ActionCondition? condition,
   }) =>
@@ -48,10 +67,18 @@ class Action {
           }
           return kingsAlive[Bishop.black]
               ? [EffectSetGameResult(WonGameRoyalDead(winner: Bishop.black))]
-              : (allowSuicide
+              : (allowDraw
                   ? [EffectSetGameResult(DrawnGameBothRoyalsDead())]
                   : [EffectInvalidateMove()]);
         },
+      );
+
+  /// The flying generals rule from Xiangqi. If the generals/kings are facing
+  /// each other, with no pieces between, the move will be invalidated.
+  factory Action.flyingGenerals() => Action(
+        event: ActionEvent.afterMove,
+        precondition: Conditions.royalsNotFacing,
+        action: ActionDefinitions.invalidateMove,
       );
 
   /// Copies the Action with the added condition that the piece type is [type].
@@ -70,6 +97,12 @@ class ActionDefinitions {
   static ActionDefinition merge(List<ActionDefinition> actions) =>
       (ActionTrigger trigger) =>
           actions.map((e) => e(trigger)).expand((e) => e).toList();
+
+  static ActionDefinition transformCondition(
+    ActionCondition condition,
+    List<ActionEffect> Function(bool result) transformer,
+  ) =>
+      (ActionTrigger trigger) => transformer(condition(trigger));
 
   static ActionDefinition explosion(Area area) =>
       (ActionTrigger trigger) => trigger.variant.boardSize
@@ -111,6 +144,13 @@ class ActionDefinitions {
               ),
             )
           ];
+
+  /// Simply output the effects regardless of the trigger.
+  static ActionDefinition pass(List<ActionEffect> effects) => (_) => effects;
+
+  /// Invalidates the move, regardless of the trigger.
+  static ActionDefinition get invalidateMove =>
+      pass(const [EffectInvalidateMove()]);
 }
 
 class Conditions {
@@ -121,14 +161,19 @@ class Conditions {
         }
         return true;
       };
-  static ActionCondition isCapture =
+
+  static ActionCondition invert(ActionCondition condition) =>
+      (ActionTrigger trigger) => !condition(trigger);
+
+  static ActionCondition get isCapture =>
       (ActionTrigger trigger) => trigger.move.capture;
-  static ActionCondition isNotCapture =
+  static ActionCondition get isNotCapture =>
       (ActionTrigger trigger) => !trigger.move.capture;
-  static ActionCondition isPromotion =
+  static ActionCondition get isPromotion =>
       (ActionTrigger trigger) => trigger.move.promotion;
-  static ActionCondition isNotPromotion =
+  static ActionCondition get isNotPromotion =>
       (ActionTrigger trigger) => !trigger.move.promotion;
+
   static ActionCondition movingPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
         int sq = trigger.state.board[trigger.move.from];
@@ -137,6 +182,7 @@ class Conditions {
         }
         return trigger.variant.pieceIndexLookup[piece] == sq.type;
       };
+
   static ActionCondition capturedPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
         if (trigger.move.capturedPiece == null) return false;
@@ -146,6 +192,7 @@ class Conditions {
         }
         return trigger.variant.pieceIndexLookup[piece] == sq.type;
       };
+
   static ActionCondition movingPieceType(int type, {int? colour}) =>
       (ActionTrigger trigger) {
         int sq = trigger.move.handDrop
@@ -155,6 +202,22 @@ class Conditions {
           return false;
         }
         return sq.type == type;
+      };
+
+  static ActionCondition get royalsNotFacing => (ActionTrigger trigger) {
+        final state = trigger.state;
+        final size = trigger.variant.boardSize;
+        int whiteSq = state.royalSquares[Bishop.white];
+        int blackSq = state.royalSquares[Bishop.black];
+        if (!size.squaresOnSameFile(whiteSq, blackSq)) {
+          return false;
+        }
+        int start = min(whiteSq, blackSq);
+        int end = max(whiteSq, blackSq);
+        for (int i = start + size.north; i < end; i += size.north) {
+          if (state.board[i].isNotEmpty) return false;
+        }
+        return true;
       };
 }
 

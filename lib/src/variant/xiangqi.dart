@@ -47,7 +47,6 @@ class Xiangqi {
         castlingOptions: CastlingOptions.none,
         materialConditions: MaterialConditions.none,
         startPosition: defaultFen,
-        flyingGenerals: false, // TODO: account for other pieces, lol
         regions: {
           'redSide': const BoardRegion(
             startRank: Bishop.rank1,
@@ -70,6 +69,7 @@ class Xiangqi {
             endFile: Bishop.fileF,
           ),
         },
+        actions: [Action.flyingGenerals()],
       );
   static RegionEffect palaceMovement() =>
       RegionEffect.movement(white: 'redPalace', black: 'blackPalace');
