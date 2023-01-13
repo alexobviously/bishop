@@ -1,4 +1,4 @@
-import 'constants.dart';
+import 'package:bishop/bishop.dart';
 
 /// Specifies a group of moves.
 class MoveDefinition {
@@ -31,9 +31,13 @@ class MoveDefinition {
   /// Currently only -1, 0 and 1 are supported by Betza notation ('p' and 'g').
   final int hopDistance;
 
-  late int normalised;
-  Direction? lameDirection;
-  int? lameNormalised;
+  /// The number to add to a square id to translate in the direction specified
+  /// by this move.
+  /// Don't set this yourself, it will be calculated when `Variant.normalise()`
+  /// is called.
+  final int normalised;
+  final Direction? lameDirection;
+  final int? lameNormalised;
 
   bool get slider => range != 1;
   bool get hopper => slider && hopDistance > -1;
@@ -41,7 +45,7 @@ class MoveDefinition {
   bool get quiet => modality == Modality.both || modality == Modality.quiet;
   bool get capture => modality == Modality.both || modality == Modality.capture;
 
-  MoveDefinition({
+  const MoveDefinition({
     required this.direction,
     this.range = 1,
     this.modality = Modality.both,
@@ -49,7 +53,51 @@ class MoveDefinition {
     this.firstOnly = false,
     this.lame = false,
     this.hopDistance = -1,
+    this.normalised = 0,
+    this.lameDirection,
+    this.lameNormalised,
   });
+
+  MoveDefinition copyWith({
+    Direction? direction,
+    int? range,
+    Modality? modality,
+    bool? enPassant,
+    bool? firstOnly,
+    bool? lame,
+    int? hopDistance,
+    int? normalised,
+    Direction? lameDirection,
+    int? lameNormalised,
+  }) =>
+      MoveDefinition(
+        direction: direction ?? this.direction,
+        range: range ?? this.range,
+        modality: modality ?? this.modality,
+        enPassant: enPassant ?? this.enPassant,
+        firstOnly: firstOnly ?? this.firstOnly,
+        lame: lame ?? this.lame,
+        hopDistance: hopDistance ?? this.hopDistance,
+        normalised: normalised ?? this.normalised,
+        lameDirection: lameDirection ?? this.lameDirection,
+        lameNormalised: lameNormalised ?? this.lameNormalised,
+      );
+
+  /// Calculates the values needed to use this on a board of [size].
+  MoveDefinition normalise(BoardSize size) {
+    int normalised = direction.v * size.h * 2 + direction.h;
+    Direction? lameDirection = this.lameDirection;
+    int? lameNormalised = this.lameNormalised;
+    if (lame) {
+      lameDirection = Direction(direction.h ~/ 2, direction.v ~/ 2);
+      lameNormalised = lameDirection.v * size.north + lameDirection.h;
+    }
+    return copyWith(
+      normalised: normalised,
+      lameDirection: lameDirection,
+      lameNormalised: lameNormalised,
+    );
+  }
 
   @override
   String toString() {

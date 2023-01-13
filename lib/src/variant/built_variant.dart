@@ -33,8 +33,7 @@ class BuiltVariant {
   });
 
   factory BuiltVariant.fromData(Variant data) {
-    // TODO: make these immutable somehow
-    data.pieceTypes.forEach((_, p) => p.init(data.boardSize));
+    data = data.normalise();
 
     Map<int, List<String>> winRegions = {};
     List<PieceDefinition> pieces = [PieceDefinition.empty()];

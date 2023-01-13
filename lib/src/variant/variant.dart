@@ -187,6 +187,11 @@ class Variant {
     );
   }
 
+  Variant normalise() => copyWith(
+        pieceTypes:
+            pieceTypes.map((k, v) => MapEntry(k, v.normalise(boardSize))),
+      );
+
   factory Variant.standard() {
     return Variant(
       name: 'Chess',

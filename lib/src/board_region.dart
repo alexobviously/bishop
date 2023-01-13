@@ -172,6 +172,25 @@ class RegionEffect {
     this.winGame = false,
   });
 
+  RegionEffect copyWith({
+    String? whiteRegion,
+    String? blackRegion,
+    PieceType? pieceType,
+    bool? restrictMovement,
+    bool? winGame,
+  }) =>
+      RegionEffect(
+        whiteRegion: whiteRegion ?? this.whiteRegion,
+        blackRegion: blackRegion ?? this.blackRegion,
+        pieceType: pieceType ?? this.pieceType,
+        restrictMovement: restrictMovement ?? this.restrictMovement,
+        winGame: winGame ?? this.winGame,
+      );
+
+  RegionEffect normalise(BoardSize size) => pieceType == null
+      ? this
+      : copyWith(pieceType: pieceType!.normalise(size));
+
   /// An effect that restricts the movement of the piece to within the region.
   factory RegionEffect.movement({String? white, String? black}) => RegionEffect(
         whiteRegion: white,

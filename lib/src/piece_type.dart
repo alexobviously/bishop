@@ -84,22 +84,10 @@ class PieceType {
         actions: actions ?? this.actions,
       );
 
-  /// Initialise the `PieceType`.
-  void init(BoardSize boardSize) {
-    for (MoveDefinition m in moves) {
-      m.normalised = m.direction.v * boardSize.h * 2 + m.direction.h;
-      if (m.lame) {
-        m.lameDirection = Direction(m.direction.h ~/ 2, m.direction.v ~/ 2);
-        m.lameNormalised =
-            m.lameDirection!.v * boardSize.north + m.lameDirection!.h;
-      }
-    }
-    for (RegionEffect re in regionEffects) {
-      if (re.pieceType != null) {
-        re.pieceType!.init(boardSize);
-      }
-    }
-  }
+  PieceType normalise(BoardSize size) => copyWith(
+        moves: moves.map((e) => e.normalise(size)).toList(),
+        regionEffects: regionEffects.map((e) => e.normalise(size)).toList(),
+      );
 
   factory PieceType.empty() => PieceType(moves: [], canPromoteTo: false);
 
