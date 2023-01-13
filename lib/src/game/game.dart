@@ -577,14 +577,21 @@ class Game {
         if (!options.ignorePieces) {
           for (int j = 1; j <= numMidSqs; j++) {
             int midFile = royalFile! + (i == 0 ? j : -j);
+
+            // For some Chess960 positions.
+            // See also https://github.com/alexobviously/bishop/issues/11
+            // as to why this is first.
+            if (midFile == rookFile) continue;
+
             int midSq = size.square(midFile, royalRank);
+
             // None of these squares can be attacked
             if (isAttacked(midSq, colour.opponent)) {
               // squares between & dest square must not be attacked
               valid = false;
               break;
             }
-            if (midFile == rookFile) continue; // for some chess960 positions
+
             if (midFile == targetFile && targetFile == royalFile) {
               continue;
             } // king starting on target

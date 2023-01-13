@@ -43,8 +43,18 @@ void main() {
     PerftBenchmark(Positions.position4, 3, 9467),
     PerftBenchmark(Positions.position5, 3, 62379),
     PerftBenchmark(Positions.position6, 3, 89890),
-    // PerftBenchmark('bqnb1rkr/pp3ppp/3ppn2/2p5/5P2/P2P4/NPP1P1PP/BQ1BNRKR w HFhf - 2 9', CHESS960, 3, 12189), // fails
-    //PerftBenchmark('2nnrbkr/p1qppppp/8/1ppb4/6PP/3PP3/PPP2P2/BQNNRBKR w HEhe - 1 9', CHESS960, 3, 18002),
+    // PerftBenchmark(
+    //   'bqnb1rkr/pp3ppp/3ppn2/2p5/5P2/P2P4/NPP1P1PP/BQ1BNRKR w HFhf - 2 9',
+    //   3,
+    //   12189,
+    //   variant: Variants.chess960,
+    // ), // used to fail, now seems fine - be aware
+    // PerftBenchmark(
+    //   '2nnrbkr/p1qppppp/8/1ppb4/6PP/3PP3/PPP2P2/BQNNRBKR w HEhe - 1 9',
+    //   3,
+    //   18002,
+    //   variant: Variants.chess960,
+    // ),
   ];
   double total = 0;
   for (PerftBenchmark perft in perfts) {
