@@ -7,6 +7,7 @@ part 'built_variant.dart';
 part 'castling_options.dart';
 part 'chess_960.dart';
 part 'game_end_conditions.dart';
+part 'hand_options.dart';
 part 'output_options.dart';
 part 'material_conditions.dart';
 part 'musketeer.dart';
@@ -17,6 +18,9 @@ part 'xiangqi.dart';
 class Variant {
   /// A human-friendly name.
   final String name;
+
+  /// An optional description of the variant.
+  final String description;
 
   /// The size of the board.
   final BoardSize boardSize;
@@ -64,7 +68,7 @@ class Variant {
   final int? repetitionDraw;
 
   /// Are hands enabled in this variant? For example, Crazyhouse.
-  final bool hands;
+  final HandOptions handOptions;
 
   /// What type of gating, if any, is used in this variant?
   final GatingMode gatingMode;
@@ -107,6 +111,7 @@ class Variant {
 
   const Variant({
     required this.name,
+    this.description = '',
     this.boardSize = BoardSize.standard,
     required this.pieceTypes,
     this.castlingOptions = CastlingOptions.standard,
@@ -121,7 +126,7 @@ class Variant {
     this.firstMoveRanks = const [[], []],
     this.halfMoveDraw,
     this.repetitionDraw,
-    this.hands = false,
+    this.handOptions = HandOptions.disabled,
     this.gatingMode = GatingMode.none,
     this.pieceValues,
     this.flyingGenerals = false,
@@ -134,6 +139,7 @@ class Variant {
 
   Variant copyWith({
     String? name,
+    String? description,
     BoardSize? boardSize,
     Map<String, PieceType>? pieceTypes,
     CastlingOptions? castlingOptions,
@@ -148,7 +154,7 @@ class Variant {
     List<List<int>>? firstMoveRanks,
     int? halfMoveDraw,
     int? repetitionDraw,
-    bool? hands,
+    HandOptions? handOptions,
     GatingMode? gatingMode,
     Map<String, int>? pieceValues,
     bool? flyingGenerals,
@@ -157,6 +163,7 @@ class Variant {
   }) {
     return Variant(
       name: name ?? this.name,
+      description: description ?? this.description,
       boardSize: boardSize ?? this.boardSize,
       pieceTypes: pieceTypes ?? this.pieceTypes,
       castlingOptions: castlingOptions ?? this.castlingOptions,
@@ -171,7 +178,7 @@ class Variant {
       firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
       repetitionDraw: repetitionDraw ?? this.repetitionDraw,
-      hands: hands ?? this.hands,
+      handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
       pieceValues: pieceValues ?? this.pieceValues,
       flyingGenerals: flyingGenerals ?? this.flyingGenerals,
@@ -220,7 +227,7 @@ class Variant {
   factory Variant.crazyhouse() {
     return Variant.standard().copyWith(
       name: 'Crazyhouse',
-      hands: true,
+      handOptions: HandOptions.captures,
     );
   }
 
@@ -366,6 +373,26 @@ class Variant {
         Action.kamikaze(Area.radius(1)),
         Action.checkRoyalsAlive(),
       ],
+    );
+  }
+
+  factory Variant.spawn() {
+    final standard = Variant.standard();
+    final pieceTypes = standard.pieceTypes;
+    pieceTypes['K'] = PieceType.king().copyWith(
+      actions: [
+        Action(
+          event: ActionEvent.afterMove,
+          action: ActionDefinitions.addToHand('P'),
+        ),
+      ],
+    );
+    return standard.copyWith(
+      name: 'Spawn Chess',
+      description: 'Moving the exposed king adds a pawn to the player\'s hand.',
+      startPosition: 'rnbnkbnr/8/8/8/8/8/8/RNBNKBNR w KQkq - 0 1',
+      handOptions: HandOptions.enabledOnly,
+      pieceTypes: pieceTypes,
     );
   }
 }

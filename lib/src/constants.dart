@@ -148,7 +148,8 @@ enum Variants {
   koth(Variant.kingOfTheHill),
   atomic(Variant.atomic),
   musketeer(Musketeer.variant),
-  xiangqi(Xiangqi.variant);
+  xiangqi(Xiangqi.variant),
+  spawn(Variant.spawn);
 
   final Variant Function() builder;
   const Variants(this.builder);

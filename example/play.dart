@@ -25,7 +25,12 @@ void main(List<String> args) async {
   if (useEngine) engine = Engine(game: game);
   while (!game.gameOver) {
     if (printState) {
+      List<String>? hands = game.variant.handsEnabled
+          ? game.handSymbols.map((e) => e.join(' ')).toList()
+          : null;
+      if (hands != null) print('Hand: ${hands.last}');
       print(game.ascii());
+      if (hands != null) print('Hand: ${hands.first}');
       printCyan(game.fen);
     }
     printState = true;
@@ -40,7 +45,7 @@ void main(List<String> args) async {
       }
     }
   }
-  print(game.ascii());
+
   printCyan(game.fen);
   printPgn();
   printHistory();

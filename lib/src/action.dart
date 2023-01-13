@@ -77,6 +77,40 @@ class ActionDefinitions {
           .where((e) => trigger.state.board[e] != Bishop.empty)
           .map((e) => EffectModifySquare(e, Bishop.empty))
           .toList();
+
+  static ActionDefinition addToHand(
+    String type, {
+    bool forOpponent = false,
+    int count = 1,
+  }) =>
+      (ActionTrigger trigger) => [
+            ...List.filled(
+              count,
+              EffectAddToHand(
+                (forOpponent ^ (trigger.event == ActionEvent.beforeMove))
+                    ? trigger.state.turn.opponent
+                    : trigger.state.turn,
+                trigger.variant.pieceIndexLookup[type]!,
+              ),
+            )
+          ];
+
+  static ActionDefinition removeFromHand(
+    String type, {
+    bool forOpponent = false,
+    int count = 1,
+  }) =>
+      (ActionTrigger trigger) => [
+            ...List.filled(
+              count,
+              EffectRemoveFromHand(
+                (forOpponent ^ (trigger.event == ActionEvent.beforeMove))
+                    ? trigger.state.turn.opponent
+                    : trigger.state.turn,
+                trigger.variant.pieceIndexLookup[type]!,
+              ),
+            )
+          ];
 }
 
 class Conditions {
@@ -101,7 +135,7 @@ class Conditions {
         if (colour != null && sq.colour != colour) {
           return false;
         }
-        return trigger.variant.pieceIndexLookup[piece] == sq.piece;
+        return trigger.variant.pieceIndexLookup[piece] == sq.type;
       };
   static ActionCondition capturedPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
@@ -110,11 +144,13 @@ class Conditions {
         if (colour != null && sq.colour != colour) {
           return false;
         }
-        return trigger.variant.pieceIndexLookup[piece] == sq.piece;
+        return trigger.variant.pieceIndexLookup[piece] == sq.type;
       };
   static ActionCondition movingPieceType(int type, {int? colour}) =>
       (ActionTrigger trigger) {
-        int sq = trigger.state.board[trigger.move.from];
+        int sq = trigger.move.handDrop
+            ? trigger.move.dropPiece!
+            : trigger.state.board[trigger.move.from];
         if (colour != null && sq.colour != colour) {
           return false;
         }

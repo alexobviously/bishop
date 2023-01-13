@@ -140,7 +140,7 @@ class Game {
     List<List<int>>? gates;
     List<int> pieces = List.filled((variant.pieces.length + 1) * 2, 0);
     List<int> checks = [0, 0];
-    if (variant.hands || variant.gatingMode == GatingMode.flex) {
+    if (variant.handsEnabled || variant.gatingMode == GatingMode.flex) {
       List<List<int>> temp = [[], []];
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
       RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
@@ -158,7 +158,7 @@ class Game {
           }
         }
       }
-      if (variant.hands) {
+      if (variant.handsEnabled) {
         hands = temp;
       } else if (variant.gatingMode == GatingMode.flex) {
         gates = temp;
@@ -331,7 +331,7 @@ class Game {
         moves.addAll(pieceMoves);
       }
     }
-    if (variant.hands && options.quiet && !options.onlyPiece) {
+    if (variant.handsEnabled && options.quiet && !options.onlyPiece) {
       moves.addAll(generateDrops(colour));
     }
     return moves;
@@ -747,7 +747,7 @@ class Game {
     }
 
     // Add captured piece to hand
-    if (variant.hands && move.capture) {
+    if (variant.addCapturesToHand && move.capture) {
       int piece = move.capturedPiece!.hasFlag(Bishop.promoFlag)
           ? variant.promotablePieces.first
           : move.capturedPiece!.type;

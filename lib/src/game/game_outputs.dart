@@ -231,7 +231,7 @@ extension GameOutputs on Game {
       if (empty > 0) addEmptySquares();
       if (i < variant.boardSize.v - 1) fen = '$fen/';
     }
-    if (variant.hands) {
+    if (variant.handsEnabled) {
       fen = '$fen[$handString]';
     }
     if (variant.gatingMode == GatingMode.flex) {
@@ -354,7 +354,7 @@ extension GameOutputs on Game {
   /// Converts the internal representation of the hands to a list of piece symbols (e.g. 'P', 'q').
   /// You probably need this for interopability with other applications (such as the Squares package).
   List<List<String>> get handSymbols {
-    if (!variant.hands) return [[], []];
+    if (!variant.handsEnabled) return [[], []];
     List<String> whiteHand = state.hands![Bishop.white]
         .map((p) => variant.pieces[p].symbol.toUpperCase())
         .toList();

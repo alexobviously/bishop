@@ -147,6 +147,9 @@ class BishopState {
     List<int> board = [...this.board];
     List<int> pieces = [...this.pieces];
     GameResult? result = this.result;
+    List<Hand>? hands = this.hands != null
+        ? List.generate(this.hands!.length, (i) => List.from(this.hands![i]))
+        : null;
 
     for (ActionEffect effect in effects) {
       if (effect is EffectModifySquare) {
@@ -165,6 +168,18 @@ class BishopState {
         }
       } else if (effect is EffectSetGameResult) {
         result = effect.result;
+      } else if (effect is EffectAddToHand) {
+        if (hands != null) {
+          hands[effect.player].add(effect.piece);
+          pieces[makePiece(effect.piece, effect.player)]++;
+        }
+      } else if (effect is EffectRemoveFromHand) {
+        if (hands != null) {
+          if (hands[effect.player].contains(effect.piece)) {
+            hands[effect.player].remove(effect.piece);
+            pieces[makePiece(effect.piece, effect.player)]--;
+          }
+        }
       }
     }
 
@@ -172,6 +187,7 @@ class BishopState {
       board: board,
       hash: hash,
       result: result,
+      hands: hands,
     );
   }
 }

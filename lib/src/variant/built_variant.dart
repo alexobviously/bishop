@@ -214,7 +214,9 @@ class BuiltVariant {
   int? get repetitionDraw => data.repetitionDraw;
 
   /// Are hands enabled in this variant? For example, Crazyhouse.
-  bool get hands => data.hands;
+  bool get handsEnabled => data.handOptions.enableHands;
+
+  bool get addCapturesToHand => data.handOptions.addCapturesToHand;
 
   /// What type of gating, if any, is used in this variant?
   GatingMode get gatingMode => data.gatingMode;
