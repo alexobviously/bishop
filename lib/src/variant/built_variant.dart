@@ -105,10 +105,13 @@ class BuiltVariant {
     );
   }
 
-  PieceType pieceType(int piece, int square) {
+  PieceType pieceType(int piece, [int? square]) {
     // TODO: make this more efficient by building some of these values in advance
     final pd = pieces[piece.type];
-    if (data.regions.isEmpty || pd.type.regionEffects.isEmpty) {
+    if (square == null ||
+        data.regions.isEmpty ||
+        pd.type.regionEffects.isEmpty ||
+        !boardSize.onBoard(square)) {
       return pd.type;
     }
     List<RegionEffect> effects = pd.type.changePieceRegionEffects;
@@ -254,6 +257,38 @@ class BuiltVariant {
       }
     }
     return effects;
+  }
+
+  /// Generates a move for each piece in [variant.promotionPieces] for the [base] move.
+  List<Move> generatePromotionMovesBasic({
+    required Move base,
+    required BishopState state,
+    bool includeBase = false,
+  }) {
+    List<Move> moves = [];
+    for (int p in promotionPieces) {
+      Move m = base.copyWith(
+        promoSource: state.board[base.from].type,
+        promoPiece: p,
+      );
+      moves.add(m);
+    }
+    return moves;
+  }
+
+  List<Move> generatePromotionMoves({
+    required Move base,
+    required BishopState state,
+    PieceType? pieceType,
+  }) {
+    pieceType ??= this.pieceType(state.board[base.from], base.from);
+    final params = PromotionParams(
+      base: base,
+      state: state,
+      variant: this,
+      pieceType: pieceType,
+    );
+    return Promotion.basic(params);
   }
 
   @override

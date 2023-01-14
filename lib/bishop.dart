@@ -14,6 +14,7 @@ export 'src/move_list_extension.dart';
 export 'src/move_gen_options.dart';
 export 'src/move.dart';
 export 'src/piece_type.dart';
+export 'src/promotion.dart';
 export 'src/square.dart';
 export 'src/state.dart';
 export 'src/utils.dart';
