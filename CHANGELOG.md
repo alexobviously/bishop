@@ -2,7 +2,10 @@
 - A powerful new action system with an accessible API for creating custom game logic. Trigger actions on certain events and execute them if their conditions are met.
   - Support for Atomic Chess.
   - Xiangqi flying generals rule implemented.
-- Promotion move generation is now handled by builder functions, and can be defined in variants with `PromotionOptions`. This allows for more versatile promotion move generation, including cases like limiting the number of pieces of a certain type, having different piece types having different promotions, non-rank based promotion areas, etc.
+- Overhaul regarding how promotion works:
+  - Promotion move generation is now handled by builder functions, and can be defined in variants with `PromotionOptions`. This allows for more versatile promotion move generation, including cases like limiting the number of pieces of a certain type, conditional promotions, non-rank based promotion areas, etc.
+  - `PieceType` definitions now take `PiecePromoOptions` object that encapsulates its promotion behaviour. It is possible to define pieces that only have specific promotion options here (e.g. like Shogi).
+  - Grand chess is now working as expected.
 - The state of the board is now stored in `BishopState`, instead of a single list in `Game` being modified. This improves code readability and also results in small performance improvements in most cases.
 - More descriptive game results. Use `Game.result` to see the exact way the game ended (null if it's still ongoing). Old getters like `Game.checkmate` still exist but `result` is preferred.
 - `Variant.hands` boolean option replaced with `HandOptions`, allowing for variants where hands are enabled but captured pieces aren't added to them (pieces can now be added through actions - see `Variant.spawn()` example).

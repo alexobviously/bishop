@@ -8,6 +8,9 @@ class BuiltVariant {
   final Map<String, int> pieceIndexLookup;
   final List<int> promotionPieces;
   final List<int> promotablePieces;
+  final PromotionBuilder? promotionBuilder;
+  final Map<int, int>? promoLimits;
+  final Map<int, List<int>>? promoMap;
   final int epPiece;
   final int castlingPiece;
   final int royalPiece;
@@ -15,7 +18,6 @@ class BuiltVariant {
   final Map<int, List<String>> winRegions;
   final List<Action> actions;
   final Map<ActionEvent, List<Action>> actionsByEvent;
-  final PromotionBuilder? promotionBuilder;
 
   const BuiltVariant({
     required this.data,
@@ -24,6 +26,9 @@ class BuiltVariant {
     required this.pieceIndexLookup,
     required this.promotionPieces,
     required this.promotablePieces,
+    this.promotionBuilder,
+    this.promoLimits,
+    this.promoMap,
     required this.epPiece,
     required this.castlingPiece,
     required this.royalPiece,
@@ -31,7 +36,6 @@ class BuiltVariant {
     required this.winRegions,
     required this.actions,
     required this.actionsByEvent,
-    this.promotionBuilder,
   });
 
   BuiltVariant copyWith({
@@ -41,6 +45,9 @@ class BuiltVariant {
     Map<String, int>? pieceIndexLookup,
     List<int>? promotionPieces,
     List<int>? promotablePieces,
+    PromotionBuilder? promotionBuilder,
+    Map<int, int>? promoLimits,
+    Map<int, List<int>>? promoMap,
     int? epPiece,
     int? castlingPiece,
     int? royalPiece,
@@ -48,7 +55,6 @@ class BuiltVariant {
     Map<int, List<String>>? winRegions,
     List<Action>? actions,
     Map<ActionEvent, List<Action>>? actionsByEvent,
-    PromotionBuilder? promotionBuilder,
   }) =>
       BuiltVariant(
         data: data ?? this.data,
@@ -57,6 +63,9 @@ class BuiltVariant {
         pieceIndexLookup: pieceIndexLookup ?? this.pieceIndexLookup,
         promotionPieces: promotionPieces ?? this.promotionPieces,
         promotablePieces: promotablePieces ?? this.promotablePieces,
+        promotionBuilder: promotionBuilder ?? this.promotionBuilder,
+        promoLimits: promoLimits ?? this.promoLimits,
+        promoMap: promoMap ?? this.promoMap,
         epPiece: epPiece ?? this.epPiece,
         castlingPiece: castlingPiece ?? this.castlingPiece,
         royalPiece: royalPiece ?? this.royalPiece,
@@ -64,7 +73,6 @@ class BuiltVariant {
         winRegions: winRegions ?? this.winRegions,
         actions: actions ?? this.actions,
         actionsByEvent: actionsByEvent ?? this.actionsByEvent,
-        promotionBuilder: promotionBuilder ?? this.promotionBuilder,
       );
 
   factory BuiltVariant.fromData(Variant data) {
@@ -109,6 +117,14 @@ class BuiltVariant {
         e: actions.where((a) => a.event == e).toList(),
     };
 
+    Map<int, List<int>>? promoMap = {};
+    for (final p in pieces.asMap().entries) {
+      final promotesTo = p.value.type.promoOptions.promotesTo;
+      if (promotesTo == null) continue;
+      promoMap[p.key] = promotesTo.map((e) => pieceIndexLookup[e]!).toList();
+    }
+    if (promoMap.isEmpty) promoMap = null;
+
     final bv = BuiltVariant(
       data: data,
       pieces: pieces,
@@ -126,6 +142,9 @@ class BuiltVariant {
           .where((e) => e.value.type.promoOptions.canPromote)
           .map((e) => e.key)
           .toList(),
+      promoLimits: data.promotionOptions.pieceLimits
+          ?.map((k, v) => MapEntry(pieceIndexLookup[k]!, v)),
+      promoMap: promoMap,
       epPiece: data.enPassant
           ? pieces.indexWhere((p) => p.type.enPassantable)
           : Bishop.invalid,
@@ -291,21 +310,55 @@ class BuiltVariant {
     return effects;
   }
 
+  List<int> getPromoPieces({
+    BishopState? state,
+    PieceType? pieceType,
+    int? pieceIndex,
+  }) {
+    bool checkPromoMap =
+        promoMap != null && pieceType != null && pieceIndex != null;
+    bool checkLimits = promoLimits != null && state != null;
+    if (!checkPromoMap && !checkLimits) return promotionPieces;
+
+    List<int> promoPieces =
+        checkPromoMap ? [...promoMap![pieceIndex]!] : [...promotionPieces];
+
+    if (checkLimits) {
+      for (int p in promoLimits!.keys) {
+        if (promoPieces.contains(p)) {
+          int remaining =
+              promoLimits![p]! - state.pieces[makePiece(p, state.turn)];
+          if (remaining < 1) {
+            promoPieces.remove(p);
+          }
+        }
+      }
+    }
+
+    return promoPieces;
+  }
+
   List<Move>? generatePromotionMoves({
     required Move base,
     required BishopState state,
     PieceType? pieceType,
   }) {
     if (promotionBuilder == null) return null;
-    pieceType ??= this.pieceType(state.board[base.from], base.from);
+    int piece = state.board[base.from].type;
+    pieceType ??= this.pieceType(piece, base.from);
+    if (!pieceType.promoOptions.canPromote) return null;
     final params = PromotionParams(
       move: base,
       state: state,
       variant: this,
       pieceType: pieceType,
+      promoPieces: getPromoPieces(
+        state: state,
+        pieceType: pieceType,
+        pieceIndex: piece,
+      ),
     );
     List<Move>? moves = promotionBuilder!(params);
-    // if (moves.isEmpty) moves.add(base);
     return moves;
   }
 

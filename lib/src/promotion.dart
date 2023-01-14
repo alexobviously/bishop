@@ -43,12 +43,14 @@ class PromotionParams {
   final BishopState state;
   final BuiltVariant variant;
   final PieceType pieceType;
+  final List<int> promoPieces;
 
   const PromotionParams({
     required this.move,
     required this.state,
     required this.variant,
     required this.pieceType,
+    required this.promoPieces,
   });
 }
 
@@ -73,7 +75,7 @@ class Promotion {
         if (!promo) return null;
 
         List<Move> moves = [];
-        for (int p in params.variant.promotionPieces) {
+        for (int p in params.promoPieces) {
           Move m = params.move.copyWith(
             promoSource: params.state.board[params.move.from].type,
             promoPiece: p,
@@ -100,15 +102,16 @@ class Promotion {
             ? toRank >= ranks[Bishop.white]
             : toRank <= ranks[Bishop.black];
         if (!optPromo) return null;
+
         bool forcedPromo = false;
         if (forcedRanks != null) {
           forcedPromo = colour == Bishop.white
-              ? toRank >= params.variant.boardSize.maxRank
-              : toRank <= Bishop.rank1;
+              ? toRank >= forcedRanks[Bishop.white]
+              : toRank <= forcedRanks[Bishop.black];
         }
 
         List<Move> moves = [];
-        for (int p in params.variant.promotionPieces) {
+        for (int p in params.promoPieces) {
           Move m = params.move.copyWith(
             promoSource: params.state.board[params.move.from].type,
             promoPiece: p,

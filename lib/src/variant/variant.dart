@@ -251,8 +251,13 @@ class Variant {
       startPosition:
           'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
       castlingOptions: CastlingOptions.none,
-      promotionOptions:
-          PromotionOptions.optional(ranks: [Bishop.rank8, Bishop.rank3]),
+      promotionOptions: PromotionOptions.optional(
+        ranks: [Bishop.rank8, Bishop.rank3],
+        pieceLimits: {
+          'Q': 1, 'A': 1, 'C': 1, //
+          'R': 2, 'N': 2, 'B': 2, //
+        },
+      ),
       firstMoveRanks: [
         [Bishop.rank3],
         [Bishop.rank8],
