@@ -12,11 +12,7 @@ class PieceType {
   /// Royal pieces can be checkmated, and can castle.
   final bool royal;
 
-  /// Whether this piece type can be promoted.
-  final bool promotable;
-
-  /// Whether this piece type can be promoted to by a promotable piece.
-  final bool canPromoteTo;
+  final PiecePromoOptions promoOptions;
 
   /// Whether this piece can set the en passant flag.
   final bool enPassantable;
@@ -50,8 +46,7 @@ class PieceType {
     this.betza,
     required this.moves,
     this.royal = false,
-    this.promotable = false,
-    this.canPromoteTo = true,
+    this.promoOptions = PiecePromoOptions.promoPiece,
     this.enPassantable = false,
     this.noSanSymbol = false,
     this.value = Bishop.defaultPieceValue,
@@ -63,8 +58,7 @@ class PieceType {
     String? betza,
     List<MoveDefinition>? moves,
     bool? royal,
-    bool? promotable,
-    bool? canPromoteTo,
+    PiecePromoOptions? promoOptions,
     bool? enPassantable,
     bool? noSanSymbol,
     int? value,
@@ -75,8 +69,7 @@ class PieceType {
         betza: betza ?? this.betza,
         moves: moves ?? this.moves,
         royal: royal ?? this.royal,
-        promotable: promotable ?? this.promotable,
-        canPromoteTo: canPromoteTo ?? this.canPromoteTo,
+        promoOptions: promoOptions ?? this.promoOptions,
         enPassantable: enPassantable ?? this.enPassantable,
         noSanSymbol: noSanSymbol ?? this.noSanSymbol,
         value: value ?? this.value,
@@ -89,14 +82,16 @@ class PieceType {
         regionEffects: regionEffects.map((e) => e.normalise(size)).toList(),
       );
 
-  factory PieceType.empty() => PieceType(moves: [], canPromoteTo: false);
+  factory PieceType.empty() => PieceType(
+        moves: [],
+        promoOptions: PiecePromoOptions.none,
+      );
 
   /// Generate a piece type with all of its moves from [Betza notation](https://www.gnu.org/software/xboard/Betza.html).
   factory PieceType.fromBetza(
     String betza, {
     bool royal = false,
-    bool promotable = false,
-    bool canPromoteTo = true,
+    PiecePromoOptions promoOptions = PiecePromoOptions.promoPiece,
     bool enPassantable = false,
     bool noSanSymbol = false,
     int value = Bishop.defaultPieceValue,
@@ -127,8 +122,7 @@ class PieceType {
       betza: betza,
       moves: moves,
       royal: royal,
-      promotable: promotable,
-      canPromoteTo: canPromoteTo,
+      promoOptions: promoOptions,
       enPassantable: enPassantable,
       noSanSymbol: noSanSymbol,
       value: value,
@@ -141,15 +135,20 @@ class PieceType {
   factory PieceType.bishop() => PieceType.fromBetza('B', value: 300);
   factory PieceType.rook() => PieceType.fromBetza('R', value: 500);
   factory PieceType.queen() => PieceType.fromBetza('Q', value: 900);
-  factory PieceType.king() =>
-      PieceType.fromBetza('K', royal: true, canPromoteTo: false);
-  factory PieceType.staticKing() =>
-      PieceType.fromBetza('', royal: true, canPromoteTo: false);
+  factory PieceType.king() => PieceType.fromBetza(
+        'K',
+        royal: true,
+        promoOptions: PiecePromoOptions.none,
+      );
+  factory PieceType.staticKing() => PieceType.fromBetza(
+        '',
+        royal: true,
+        promoOptions: PiecePromoOptions.none,
+      );
   factory PieceType.pawn() => PieceType.fromBetza(
         'fmWfceFifmnD',
-        promotable: true,
+        promoOptions: PiecePromoOptions.promotable,
         enPassantable: true,
-        canPromoteTo: false,
         noSanSymbol: true,
         value: 100,
       ); // seriously
@@ -157,8 +156,7 @@ class PieceType {
   /// A pawn with no double move and no en passant.
   factory PieceType.simplePawn() => PieceType.fromBetza(
         'fmWfcF',
-        promotable: true,
-        canPromoteTo: false,
+        promoOptions: PiecePromoOptions.promotable,
         noSanSymbol: true,
         value: 100,
       );

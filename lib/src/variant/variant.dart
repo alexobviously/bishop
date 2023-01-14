@@ -342,7 +342,7 @@ class Variant {
     pieceTypes['K'] = PieceType.fromBetza(
       'K',
       royal: true,
-      canPromoteTo: false,
+      promoOptions: PiecePromoOptions.none,
       regionEffects: [RegionEffect.winGame(white: 'hill', black: 'hill')],
     );
     return standard.copyWith(

@@ -8,7 +8,7 @@ class Xiangqi {
   static PieceType general() => PieceType.fromBetza(
         'W',
         royal: true,
-        canPromoteTo: false,
+        promoOptions: PiecePromoOptions.none,
         regionEffects: [palaceMovement()],
       );
   static PieceType advisor() =>

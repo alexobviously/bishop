@@ -347,7 +347,9 @@ class Game {
       for (int p in hand) {
         int hRank = size.rank(i);
         bool onEdgeRank = hRank == Bishop.rank1 || hRank == size.maxRank;
-        if (onEdgeRank && variant.pieces[p].type.promotable) continue;
+        if (onEdgeRank && variant.pieces[p].type.promoOptions.canPromote) {
+          continue;
+        }
         int dropPiece = p;
         // TODO: support more than one promo piece in this case
         if (p.hasFlag(Bishop.promoFlag)) dropPiece = variant.promotionPieces[0];
@@ -435,7 +437,10 @@ class Game {
 
         void addMove(Move m) {
           final mm = variant.generatePromotionMoves(
-              base: m, state: state, pieceType: pieceType);
+            base: m,
+            state: state,
+            pieceType: pieceType,
+          );
           if (mm != null) moves.addAll(mm);
           // bool removeBase = false;
           if (mm == null) moves.add(m);
@@ -771,7 +776,7 @@ class Game {
     }
     // Manage halfmove counter
     int halfMoves = state.halfMoves;
-    if (move.capture || fromPiece.promotable) {
+    if (move.capture || fromPiece.promoOptions.canPromote) {
       halfMoves = 0;
     } else {
       halfMoves++;

@@ -1,7 +1,8 @@
 part of 'variant.dart';
 
 abstract class PromotionOptions {
-  const PromotionOptions();
+  final Map<int, int>? pieceLimits;
+  const PromotionOptions({this.pieceLimits});
   PromotionBuilder? build(BuiltVariant variant);
 
   static const none = NoPromotion();
@@ -23,28 +24,31 @@ abstract class PromotionOptions {
       );
 
   factory PromotionOptions.custom(
-          PromotionBuilder? Function(BuiltVariant variant) builder) =>
+    PromotionBuilder? Function(BuiltVariant variant) builder,
+  ) =>
       CustomPromotion(builder: builder);
 }
 
-class NoPromotion implements PromotionOptions {
-  const NoPromotion();
+class NoPromotion extends PromotionOptions {
+  const NoPromotion({super.pieceLimits});
+
   @override
   PromotionBuilder? build(_) => null;
 }
 
-class StandardPromotion implements PromotionOptions {
+class StandardPromotion extends PromotionOptions {
   final List<int>? ranks;
   const StandardPromotion({this.ranks});
 
   @override
   PromotionBuilder? build(BuiltVariant variant) {
     return Promotion.standard(
-        ranks: ranks ?? [variant.boardSize.maxRank, Bishop.rank1]);
+      ranks: ranks ?? [variant.boardSize.maxRank, Bishop.rank1],
+    );
   }
 }
 
-class OptionalPromotion implements PromotionOptions {
+class OptionalPromotion extends PromotionOptions {
   final List<int>? ranks;
   final bool forced;
   final List<int>? forcedRanks;
@@ -66,7 +70,7 @@ class OptionalPromotion implements PromotionOptions {
   }
 }
 
-class CustomPromotion implements PromotionOptions {
+class CustomPromotion extends PromotionOptions {
   final PromotionBuilder? Function(BuiltVariant variant) builder;
   const CustomPromotion({required this.builder});
 

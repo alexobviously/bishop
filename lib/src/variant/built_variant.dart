@@ -55,7 +55,7 @@ class BuiltVariant {
         pieces: pieces ?? this.pieces,
         pieceLookup: pieceLookup ?? this.pieceLookup,
         pieceIndexLookup: pieceIndexLookup ?? this.pieceIndexLookup,
-        promotionPieces: promotablePieces ?? this.promotionPieces,
+        promotionPieces: promotionPieces ?? this.promotionPieces,
         promotablePieces: promotablePieces ?? this.promotablePieces,
         epPiece: epPiece ?? this.epPiece,
         castlingPiece: castlingPiece ?? this.castlingPiece,
@@ -117,13 +117,13 @@ class BuiltVariant {
       promotionPieces: pieces
           .asMap()
           .entries
-          .where((e) => e.value.type.canPromoteTo)
+          .where((e) => e.value.type.promoOptions.canPromoteTo)
           .map((e) => e.key)
           .toList(),
       promotablePieces: pieces
           .asMap()
           .entries
-          .where((e) => e.value.type.promotable)
+          .where((e) => e.value.type.promoOptions.canPromote)
           .map((e) => e.key)
           .toList(),
       epPiece: data.enPassant
