@@ -11,6 +11,7 @@ extension Opponent on Colour {
 typedef Hand = List<int>;
 typedef FenBuilder = String Function();
 
+// TODO: there's a lot of stuff here now, maybe refactor and not call this constants?
 class Bishop {
   static const Colour white = 0;
   static const Colour black = 1;

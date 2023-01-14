@@ -39,12 +39,3 @@ int fileFromSymbol(String symbol) =>
 @Deprecated('Use BoardSize.onBoard or Bishop.onBoard')
 bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) =>
     boardSize.onBoard(square);
-@Deprecated('Use BoardSize.file or Bishop.file')
-int file(int square, [BoardSize size = BoardSize.standard]) =>
-    size.file(square);
-@Deprecated('Use BoardSize.rank or Bishop.rank')
-int rank(int square, [BoardSize size = BoardSize.standard]) =>
-    size.rank(square);
-@Deprecated('Use BoardSize.square or Bishop.square')
-int getSquare(int file, int rank, [BoardSize size = BoardSize.standard]) =>
-    size.square(file, rank);
