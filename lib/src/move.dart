@@ -121,10 +121,9 @@ class Move {
     BoardSize size = BoardSize.standard,
     bool useRookForCastling = false,
   }) {
-    String fromStr = from == Bishop.hand ? '@' : squareName(from, size);
-    String toStr = squareName(
+    String fromStr = from == Bishop.hand ? '@' : size.squareName(from);
+    String toStr = size.squareName(
       (castling && useRookForCastling) ? castlingPieceSquare! : to,
-      size,
     );
     return '$fromStr$toStr';
   }

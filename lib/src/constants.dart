@@ -98,6 +98,10 @@ class Bishop {
   /// Determines whether a square is on the board.
   bool onBoard(int square, [BoardSize size = const BoardSize(8, 8)]) =>
       size.onBoard(square);
+
+  /// Returns the name for a square, according to chess conventions, e.g. c6, b1.
+  String squareName(int square, [BoardSize size = const BoardSize(8, 8)]) =>
+      size.squareName(square);
 }
 
 @Deprecated('Use Bishop.white')

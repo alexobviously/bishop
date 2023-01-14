@@ -24,12 +24,9 @@ Square makePiece(int piece, Colour colour, [int flags = 0]) {
   return (flags << 8) + (piece << 1) + colour;
 }
 
-String squareName(int square, [BoardSize boardSize = const BoardSize(8, 8)]) {
-  int rank = boardSize.v - (square ~/ (boardSize.h * 2));
-  int file = square % (boardSize.h * 2);
-  String fileName = String.fromCharCode(Bishop.asciiA + file);
-  return '$fileName$rank';
-}
+@Deprecated('Use BoardSize.squareName or Bishop.squareName')
+String squareName(int square, [BoardSize size = const BoardSize(8, 8)]) =>
+    size.squareName(square);
 
 String fileSymbol(int file) => String.fromCharCode(Bishop.asciiA + file);
 int fileFromSymbol(String symbol) =>

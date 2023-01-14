@@ -77,6 +77,14 @@ class BoardSize {
   List<int> squaresForArea(int centre, Area area) =>
       area.translate(file(centre), rank(centre)).squares(this);
 
+  /// Returns the name for a square, according to chess conventions, e.g. c6, b1.
+  String squareName(int square) {
+    int rank = v - (square ~/ (h * 2));
+    int file = square % (h * 2);
+    String fileName = String.fromCharCode(Bishop.asciiA + file);
+    return '$fileName$rank';
+  }
+
   @override
   String toString() => 'BoardSize($h, $v)';
 }

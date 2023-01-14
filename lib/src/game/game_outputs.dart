@@ -29,8 +29,8 @@ extension GameOutputs on Game {
       alg = '$alg/${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
       if (move.castling) {
         String dropSq = move.dropOnRookSquare
-            ? squareName(move.castlingPieceSquare!, size)
-            : squareName(move.from, size);
+            ? size.squareName(move.castlingPieceSquare!)
+            : size.squareName(move.from);
         alg = '$alg$dropSq';
       }
     }
@@ -62,7 +62,7 @@ extension GameOutputs on Game {
         PieceDefinition pieceDef = variant.pieces[piece];
         String disambiguator = getDisambiguator(move, moves);
         if (pieceDef.type.noSanSymbol) {
-          if (move.capture) san = squareName(move.from, size)[0];
+          if (move.capture) san = size.squareName(move.from)[0];
         } else {
           san = pieceDef.symbol;
         }
@@ -71,7 +71,7 @@ extension GameOutputs on Game {
               pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
         }
         if (move.capture) san = '${san}x';
-        san = '$san${squareName(move.to, size)}';
+        san = '$san${size.squareName(move.to)}';
 
         if (move.promotion) {
           san = '$san=${variant.pieces[move.promoPiece!].symbol}';
@@ -82,8 +82,8 @@ extension GameOutputs on Game {
       san = '$san/${variant.pieces[move.dropPiece!].symbol}';
       if (move.castling) {
         String dropSq = move.dropOnRookSquare
-            ? squareName(move.castlingPieceSquare!, size)
-            : squareName(move.from, size);
+            ? size.squareName(move.castlingPieceSquare!)
+            : size.squareName(move.from);
         san = '$san$dropSq';
       }
     }
@@ -125,7 +125,7 @@ extension GameOutputs on Game {
 
     String disambiguator = '';
     if (ambiguity) {
-      String sqName = squareName(move.from, size);
+      String sqName = size.squareName(move.from);
       if (needFile) disambiguator = sqName[0];
       if (needRank) disambiguator = '$disambiguator${sqName[1]}';
     }
@@ -293,9 +293,7 @@ extension GameOutputs on Game {
           state.virginFiles[Bishop.black].map((e) => fileSymbol(e)).join('');
       castling = '$castling$whiteVFiles$blackVFiles';
     }
-    String ep = state.epSquare != null
-        ? squareName(state.epSquare!, variant.boardSize)
-        : '-';
+    String ep = state.epSquare != null ? size.squareName(state.epSquare!) : '-';
     String aux = '';
     if (variant.gameEndConditions.checkLimit != null) {
       aux = ' +${state.checks[Bishop.white]}+${state.checks[Bishop.black]}';
@@ -387,10 +385,10 @@ extension GameOutputs on Game {
         lastFrom: state.move != null
             ? (state.move!.from == Bishop.hand
                 ? 'hand'
-                : squareName(state.move!.from, size))
+                : size.squareName(state.move!.from))
             : null,
-        lastTo: state.move != null ? squareName(state.move!.to, size) : null,
+        lastTo: state.move != null ? size.squareName(state.move!.to) : null,
         checkSq:
-            inCheck ? squareName(state.royalSquares[state.turn], size) : null,
+            inCheck ? size.squareName(state.royalSquares[state.turn]) : null,
       );
 }
