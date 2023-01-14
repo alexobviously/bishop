@@ -289,7 +289,7 @@ class Game {
     }
 
     int turn = turnStr == 'w' ? Bishop.white : Bishop.black;
-    int? ep = epStr == '-' ? null : squareNumber(epStr, variant.boardSize);
+    int? ep = epStr == '-' ? null : size.squareNumber(epStr);
     int castling =
         variant.castling ? setupCastling(castlingStr, royalSquares, board) : 0;
     BishopState newState = BishopState(

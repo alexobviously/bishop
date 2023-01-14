@@ -85,6 +85,21 @@ class BoardSize {
     return '$fileName$rank';
   }
 
+  /// Returns the square id for a square with [name].
+  int squareNumber(String name) {
+    name = name.toLowerCase();
+    RegExp rx = RegExp(r'([A-Za-z])([0-9]+)');
+    RegExpMatch? match = rx.firstMatch(name);
+    assert(match != null, 'Invalid square name: $name');
+    assert(match!.groupCount == 2, 'Invalid square name: $name');
+    String file = match!.group(1)!;
+    String rank = match.group(2)!;
+    int fileNum = file.codeUnits[0] - Bishop.asciiA;
+    int rankNum = v - int.parse(rank);
+    int square = rankNum * h * 2 + fileNum;
+    return square;
+  }
+
   @override
   String toString() => 'BoardSize($h, $v)';
 }

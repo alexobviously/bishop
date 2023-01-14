@@ -9,8 +9,10 @@ void main() {
         variant: Variant.standard(),
         fen: 'rn1qkbnr/ppp1pppp/2b5/3p4/2PP4/5Q2/PP2PPPP/RNB1KBNR b KQkq - 0 1',
       );
-      final m =
-          g.generatePremoves().from(squareNumber('d4')).to(squareNumber('d5'));
+      final m = g
+          .generatePremoves()
+          .from(Bishop.squareNumber('d4'))
+          .to(Bishop.squareNumber('d5'));
       expect(m.length, 1);
     });
   });

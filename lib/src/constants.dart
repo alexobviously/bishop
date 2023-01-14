@@ -84,24 +84,38 @@ class Bishop {
   };
 
   /// Gets the file for [square], according to [size].
-  int file(int square, [BoardSize size = BoardSize.standard]) =>
+  static int file(int square, [BoardSize size = BoardSize.standard]) =>
       size.file(square);
 
   /// Gets the rank for [square], according to [size].
-  int rank(int square, [BoardSize size = BoardSize.standard]) =>
+  static int rank(int square, [BoardSize size = BoardSize.standard]) =>
       size.rank(square);
 
   /// Returns the square index at [file] and [rank], according to [size].
-  int square(int file, int rank, [BoardSize size = BoardSize.standard]) =>
+  static int square(
+    int file,
+    int rank, [
+    BoardSize size = BoardSize.standard,
+  ]) =>
       size.square(file, rank);
 
   /// Determines whether a square is on the board.
-  bool onBoard(int square, [BoardSize size = const BoardSize(8, 8)]) =>
+  static bool onBoard(int square, [BoardSize size = const BoardSize(8, 8)]) =>
       size.onBoard(square);
 
   /// Returns the name for a square, according to chess conventions, e.g. c6, b1.
-  String squareName(int square, [BoardSize size = const BoardSize(8, 8)]) =>
+  static String squareName(
+    int square, [
+    BoardSize size = const BoardSize(8, 8),
+  ]) =>
       size.squareName(square);
+
+  /// Returns the square id for a square with [name].
+  static int squareNumber(
+    String name, [
+    BoardSize size = const BoardSize(8, 8),
+  ]) =>
+      size.squareNumber(name);
 }
 
 @Deprecated('Use Bishop.white')

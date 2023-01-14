@@ -31,7 +31,7 @@ void main() {
         Variant v = t.variant ?? Xiangqi.variant();
         final size = v.boardSize;
         BoardRegion region = v.regions[t.region]!;
-        int square = squareNumber(t.square, size);
+        int square = size.squareNumber(t.square);
         bool inRegion = size.inRegion(square, region);
         expect(inRegion, t.inRegion);
       });
