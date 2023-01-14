@@ -407,19 +407,6 @@ class Game {
           int blockSq = fromLame + md.lameNormalised! * dirMult;
           if (board[blockSq].isNotEmpty && !options.ignorePieces) break;
         }
-        bool optPromo = false;
-        bool forcedPromo = false;
-        if (pieceType.promotable && variant.promotion) {
-          int toRank = size.rank(to);
-          optPromo = colour == Bishop.white
-              ? toRank >= variant.promotionRanks[Bishop.black]
-              : toRank <= variant.promotionRanks[Bishop.white];
-          if (optPromo) {
-            forcedPromo = colour == Bishop.white
-                ? toRank >= size.maxRank
-                : toRank <= Bishop.rank1;
-          }
-        }
 
         Square target = board[to];
         bool setEnPassant =
@@ -447,8 +434,11 @@ class Game {
         }
 
         void addMove(Move m) {
-          if (optPromo) moves.addAll(generatePromotionMoves(m));
-          bool addBase = !forcedPromo;
+          final mm = variant.generatePromotionMoves(
+              base: m, state: state, pieceType: pieceType);
+          if (mm != null) moves.addAll(mm);
+          // bool removeBase = false;
+          if (mm == null) moves.add(m);
           if (variant.gating) {
             int gRank = size.rank(m.from);
             if ((gRank == Bishop.rank1 && colour == Bishop.white) ||
@@ -457,11 +447,11 @@ class Game {
               moves.addAll(gatingMoves);
               if (gatingMoves.isNotEmpty &&
                   variant.gatingMode == GatingMode.fixed) {
-                addBase = false;
+                moves.remove(m);
               }
             }
           }
-          if (addBase) moves.add(m);
+          // if (!addBase) moves.remove(m);
           if (options.onlySquare != null && m.to == options.onlySquare) {
             exit = true;
           }
@@ -645,16 +635,6 @@ class Game {
       for (Move m in remove) {
         moves.remove(m);
       }
-    }
-    return moves;
-  }
-
-  /// Generates a move for each piece in [variant.promotionPieces] for the [base] move.
-  List<Move> generatePromotionMoves(Move base) {
-    List<Move> moves = [];
-    for (int p in variant.promotionPieces) {
-      Move m = base.copyWith(promoSource: board[base.from].type, promoPiece: p);
-      moves.add(m);
     }
     return moves;
   }

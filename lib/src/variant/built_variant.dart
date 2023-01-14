@@ -15,6 +15,7 @@ class BuiltVariant {
   final Map<int, List<String>> winRegions;
   final List<Action> actions;
   final Map<ActionEvent, List<Action>> actionsByEvent;
+  final PromotionBuilder? promotionBuilder;
 
   const BuiltVariant({
     required this.data,
@@ -30,7 +31,41 @@ class BuiltVariant {
     required this.winRegions,
     required this.actions,
     required this.actionsByEvent,
+    this.promotionBuilder,
   });
+
+  BuiltVariant copyWith({
+    Variant? data,
+    List<PieceDefinition>? pieces,
+    Map<String, PieceDefinition>? pieceLookup,
+    Map<String, int>? pieceIndexLookup,
+    List<int>? promotionPieces,
+    List<int>? promotablePieces,
+    int? epPiece,
+    int? castlingPiece,
+    int? royalPiece,
+    MaterialConditions<int>? materialConditions,
+    Map<int, List<String>>? winRegions,
+    List<Action>? actions,
+    Map<ActionEvent, List<Action>>? actionsByEvent,
+    PromotionBuilder? promotionBuilder,
+  }) =>
+      BuiltVariant(
+        data: data ?? this.data,
+        pieces: pieces ?? this.pieces,
+        pieceLookup: pieceLookup ?? this.pieceLookup,
+        pieceIndexLookup: pieceIndexLookup ?? this.pieceIndexLookup,
+        promotionPieces: promotablePieces ?? this.promotionPieces,
+        promotablePieces: promotablePieces ?? this.promotablePieces,
+        epPiece: epPiece ?? this.epPiece,
+        castlingPiece: castlingPiece ?? this.castlingPiece,
+        royalPiece: royalPiece ?? this.royalPiece,
+        materialConditions: materialConditions ?? this.materialConditions,
+        winRegions: winRegions ?? this.winRegions,
+        actions: actions ?? this.actions,
+        actionsByEvent: actionsByEvent ?? this.actionsByEvent,
+        promotionBuilder: promotionBuilder ?? this.promotionBuilder,
+      );
 
   factory BuiltVariant.fromData(Variant data) {
     data = data.normalise();
@@ -74,7 +109,7 @@ class BuiltVariant {
         e: actions.where((a) => a.event == e).toList(),
     };
 
-    return BuiltVariant(
+    final bv = BuiltVariant(
       data: data,
       pieces: pieces,
       pieceLookup: pieceLookup,
@@ -103,6 +138,8 @@ class BuiltVariant {
       actions: actions,
       actionsByEvent: actionsByEvent,
     );
+
+    return bv.copyWith(promotionBuilder: data.promotionOptions.build(bv));
   }
 
   PieceType pieceType(int piece, [int? square]) {
@@ -195,12 +232,7 @@ class BuiltVariant {
   FenBuilder? get startPosBuilder => data.startPosBuilder;
 
   /// Is promotion enabled?
-  bool get promotion => data.promotion;
-
-  /// The first ranks for [WHITE, BLACK] that pieces can be promoted on.
-  /// If the rank specified is not the final rank the piece can reach, then promotion
-  /// will be optional on every rank up until the final rank, when it becomes mandatory.
-  List<int> get promotionRanks => data.promotionRanks;
+  bool get promotion => promotionBuilder != null;
 
   /// Is en passant allowed in this variant?
   bool get enPassant => data.enPassant;
@@ -259,36 +291,22 @@ class BuiltVariant {
     return effects;
   }
 
-  /// Generates a move for each piece in [variant.promotionPieces] for the [base] move.
-  List<Move> generatePromotionMovesBasic({
-    required Move base,
-    required BishopState state,
-    bool includeBase = false,
-  }) {
-    List<Move> moves = [];
-    for (int p in promotionPieces) {
-      Move m = base.copyWith(
-        promoSource: state.board[base.from].type,
-        promoPiece: p,
-      );
-      moves.add(m);
-    }
-    return moves;
-  }
-
-  List<Move> generatePromotionMoves({
+  List<Move>? generatePromotionMoves({
     required Move base,
     required BishopState state,
     PieceType? pieceType,
   }) {
+    if (promotionBuilder == null) return null;
     pieceType ??= this.pieceType(state.board[base.from], base.from);
     final params = PromotionParams(
-      base: base,
+      move: base,
       state: state,
       variant: this,
       pieceType: pieceType,
     );
-    return Promotion.basic(params);
+    List<Move>? moves = promotionBuilder!(params);
+    // if (moves.isEmpty) moves.add(base);
+    return moves;
   }
 
   @override

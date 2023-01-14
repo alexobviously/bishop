@@ -21,7 +21,8 @@ void main(List<String> args) async {
     \'random\': make a random move.
     ''',
   );
-  game = Game(variant: variant!);
+  game = Game(
+      variant: variant!, fen: '10/10/10/2k4P2/10/10/3K6/10/10/10 w - - 0 1');
   if (useEngine) engine = Engine(game: game);
   while (!game.gameOver) {
     if (printState) {

@@ -46,6 +46,7 @@ class Xiangqi {
         },
         castlingOptions: CastlingOptions.none,
         materialConditions: MaterialConditions.none,
+        promotionOptions: PromotionOptions.none,
         startPosition: defaultFen,
         regions: {
           'redSide': const BoardRegion(

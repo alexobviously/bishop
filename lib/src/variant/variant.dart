@@ -9,6 +9,7 @@ part 'chess_960.dart';
 part 'game_end_conditions.dart';
 part 'hand_options.dart';
 part 'output_options.dart';
+part 'promotion_options.dart';
 part 'material_conditions.dart';
 part 'musketeer.dart';
 part 'xiangqi.dart';
@@ -32,6 +33,9 @@ class Variant {
   /// The castling rules for this VariantData.
   final CastlingOptions castlingOptions;
 
+  /// Defines the promotion behaviour in the game.
+  final PromotionOptions promotionOptions;
+
   /// Material conditions that define how insufficient material draws should be decided.
   final MaterialConditions<String> materialConditions;
 
@@ -45,14 +49,6 @@ class Variant {
   /// If this variant can start in a number of different positions, such as Chess960,
   /// provide a function that does this. See [VariantData.chess960()] for an example.
   final FenBuilder? startPosBuilder;
-
-  /// Is promotion enabled?
-  final bool promotion;
-
-  /// The first ranks for [WHITE, BLACK] that pieces can be promoted on.
-  /// If the rank specified is not the final rank the piece can reach, then promotion
-  /// will be optional on every rank up until the final rank, when it becomes mandatory.
-  final List<int> promotionRanks;
 
   /// Is en passant allowed in this variant?
   final bool enPassant;
@@ -115,13 +111,12 @@ class Variant {
     this.boardSize = BoardSize.standard,
     required this.pieceTypes,
     this.castlingOptions = CastlingOptions.standard,
+    this.promotionOptions = PromotionOptions.standard,
     this.materialConditions = MaterialConditions.none,
     this.gameEndConditions = GameEndConditions.standard,
     this.outputOptions = OutputOptions.standard,
     this.startPosition,
     this.startPosBuilder,
-    this.promotion = false,
-    this.promotionRanks = const [-1, -1],
     this.enPassant = false,
     this.firstMoveRanks = const [[], []],
     this.halfMoveDraw,
@@ -143,13 +138,12 @@ class Variant {
     BoardSize? boardSize,
     Map<String, PieceType>? pieceTypes,
     CastlingOptions? castlingOptions,
+    PromotionOptions? promotionOptions,
     MaterialConditions<String>? materialConditions,
     GameEndConditions? gameEndConditions,
     OutputOptions? outputOptions,
     String? startPosition,
     FenBuilder? startPosBuilder,
-    bool? promotion,
-    List<int>? promotionRanks,
     bool? enPassant,
     List<List<int>>? firstMoveRanks,
     int? halfMoveDraw,
@@ -167,13 +161,12 @@ class Variant {
       boardSize: boardSize ?? this.boardSize,
       pieceTypes: pieceTypes ?? this.pieceTypes,
       castlingOptions: castlingOptions ?? this.castlingOptions,
+      promotionOptions: promotionOptions ?? this.promotionOptions,
       materialConditions: materialConditions ?? this.materialConditions,
       gameEndConditions: gameEndConditions ?? this.gameEndConditions,
       outputOptions: outputOptions ?? this.outputOptions,
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
-      promotion: promotion ?? this.promotion,
-      promotionRanks: promotionRanks ?? this.promotionRanks,
       enPassant: enPassant ?? this.enPassant,
       firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
@@ -200,8 +193,6 @@ class Variant {
       castlingOptions: CastlingOptions.standard,
       materialConditions: MaterialConditions.standard,
       outputOptions: OutputOptions.standard,
-      promotion: true,
-      promotionRanks: [Bishop.rank1, Bishop.rank8],
       enPassant: true,
       halfMoveDraw: 100,
       repetitionDraw: 3,
@@ -260,7 +251,8 @@ class Variant {
       startPosition:
           'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
       castlingOptions: CastlingOptions.none,
-      promotionRanks: [Bishop.rank3, Bishop.rank8],
+      promotionOptions:
+          PromotionOptions.optional(ranks: [Bishop.rank8, Bishop.rank3]),
       firstMoveRanks: [
         [Bishop.rank3],
         [Bishop.rank8],
@@ -282,7 +274,6 @@ class Variant {
       pieceTypes: standard.pieceTypes..['P'] = PieceType.simplePawn(),
       castlingOptions: CastlingOptions.mini,
       enPassant: false,
-      promotionRanks: [Bishop.rank1, Bishop.rank6],
     );
   }
 
@@ -302,7 +293,6 @@ class Variant {
       name: 'Micro Chess',
       boardSize: BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
-      promotionRanks: [Bishop.rank1, Bishop.rank5],
       castlingOptions: CastlingOptions.micro,
       firstMoveRanks: [
         [Bishop.rank2],
@@ -317,7 +307,6 @@ class Variant {
       name: 'Nano Chess',
       boardSize: BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
-      promotionRanks: [Bishop.rank1, Bishop.rank5],
       castlingOptions: CastlingOptions.nano,
       firstMoveRanks: [
         [Bishop.rank2],
