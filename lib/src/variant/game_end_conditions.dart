@@ -1,25 +1,25 @@
 part of 'variant.dart';
 
-class GameEndConditionsSet {
+class GameEndConditionSet {
   final GameEndConditions white;
   final GameEndConditions black;
 
-  const GameEndConditionsSet(this.white, this.black);
+  const GameEndConditionSet(this.white, this.black);
 
-  factory GameEndConditionsSet.symmetric(GameEndConditions conditions) =>
-      GameEndConditionsSet(conditions, conditions);
+  factory GameEndConditionSet.symmetric(GameEndConditions conditions) =>
+      GameEndConditionSet(conditions, conditions);
 
-  static const standard = GameEndConditionsSet(
+  static const standard = GameEndConditionSet(
     GameEndConditions.standard,
     GameEndConditions.standard,
   );
 
-  static const threeCheck = GameEndConditionsSet(
+  static const threeCheck = GameEndConditionSet(
     GameEndConditions.threeCheck,
     GameEndConditions.threeCheck,
   );
 
-  static const horde = GameEndConditionsSet(
+  static const horde = GameEndConditionSet(
     GameEndConditions.standard,
     GameEndConditions(elimination: true),
   );

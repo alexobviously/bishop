@@ -39,7 +39,7 @@ class Variant {
   /// Material conditions that define how insufficient material draws should be decided.
   final MaterialConditions<String> materialConditions;
 
-  final GameEndConditionsSet gameEndConditions;
+  final GameEndConditionSet gameEndConditions;
 
   final OutputOptions outputOptions;
 
@@ -113,7 +113,7 @@ class Variant {
     this.castlingOptions = CastlingOptions.standard,
     this.promotionOptions = PromotionOptions.standard,
     this.materialConditions = MaterialConditions.none,
-    this.gameEndConditions = GameEndConditionsSet.standard,
+    this.gameEndConditions = GameEndConditionSet.standard,
     this.outputOptions = OutputOptions.standard,
     this.startPosition,
     this.startPosBuilder,
@@ -140,7 +140,7 @@ class Variant {
     CastlingOptions? castlingOptions,
     PromotionOptions? promotionOptions,
     MaterialConditions<String>? materialConditions,
-    GameEndConditionsSet? gameEndConditions,
+    GameEndConditionSet? gameEndConditions,
     OutputOptions? outputOptions,
     String? startPosition,
     FenBuilder? startPosBuilder,
@@ -339,7 +339,7 @@ class Variant {
 
   factory Variant.threeCheck() => Variant.standard().copyWith(
         name: 'Three Check',
-        gameEndConditions: GameEndConditionsSet.threeCheck,
+        gameEndConditions: GameEndConditionSet.threeCheck,
       );
 
   factory Variant.kingOfTheHill() {
@@ -380,7 +380,7 @@ class Variant {
         name: 'Horde Chess',
         startPosition:
             'rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1',
-        gameEndConditions: GameEndConditionsSet.horde,
+        gameEndConditions: GameEndConditionSet.horde,
         firstMoveRanks: [
           [Bishop.rank1, Bishop.rank2], // white
           [Bishop.rank7, Bishop.rank8], // black
