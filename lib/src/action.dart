@@ -120,7 +120,7 @@ class ActionDefinitions {
             ...List.filled(
               count,
               EffectAddToHand(
-                (forOpponent ^ (trigger.event == ActionEvent.beforeMove))
+                (forOpponent ^ (trigger.event != ActionEvent.beforeMove))
                     ? trigger.state.turn.opponent
                     : trigger.state.turn,
                 trigger.variant.pieceIndexLookup[type]!,
@@ -137,7 +137,7 @@ class ActionDefinitions {
             ...List.filled(
               count,
               EffectRemoveFromHand(
-                (forOpponent ^ (trigger.event == ActionEvent.beforeMove))
+                (forOpponent ^ (trigger.event != ActionEvent.beforeMove))
                     ? trigger.state.turn.opponent
                     : trigger.state.turn,
                 trigger.variant.pieceIndexLookup[type]!,
@@ -195,13 +195,10 @@ class Conditions {
 
   static ActionCondition movingPieceType(int type, {int? colour}) =>
       (ActionTrigger trigger) {
-        int sq = trigger.move.handDrop
-            ? trigger.move.dropPiece!
-            : trigger.state.board[trigger.move.from];
-        if (colour != null && sq.colour != colour) {
+        if (colour != null && trigger.piece.colour != colour) {
           return false;
         }
-        return sq.type == type;
+        return trigger.piece.type == type;
       };
 
   static ActionCondition get royalsNotFacing => (ActionTrigger trigger) {
@@ -262,12 +259,14 @@ class ActionTrigger {
   final BishopState state;
   final BuiltVariant variant;
   final Move move;
+  final int piece;
 
   const ActionTrigger({
     required this.event,
     required this.variant,
     required this.state,
     required this.move,
+    required this.piece,
   });
 
   ActionTrigger copyWith({
@@ -275,11 +274,13 @@ class ActionTrigger {
     BishopState? state,
     BuiltVariant? variant,
     Move? move,
+    int? piece,
   }) =>
       ActionTrigger(
         event: event ?? this.event,
         variant: variant ?? this.variant,
         state: state ?? this.state,
         move: move ?? this.move,
+        piece: piece ?? this.piece,
       );
 }

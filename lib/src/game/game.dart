@@ -679,11 +679,31 @@ class Game {
   /// Make a move and modify the game state. Returns true if the move was valid
   /// and made successfully.
   bool makeMove(Move move) {
+    BishopState state = this.state;
+    Square fromSq =
+        move.from >= Bishop.boardStart ? state.board[move.from] : Bishop.empty;
+
+    if (variant.hasActionsForEvent(ActionEvent.beforeMove)) {
+      state = state.executeActions(
+        trigger: ActionTrigger(
+          event: ActionEvent.beforeMove,
+          variant: variant,
+          state: state,
+          move: move,
+          piece: move.dropPiece ?? fromSq,
+        ),
+        zobrist: zobrist,
+      );
+    }
+
+    if (state.invalidMove) return false;
+
     List<int> board = [...state.board];
     if ((move.from != Bishop.hand && !size.onBoard(move.from)) ||
         !size.onBoard(move.to)) {
       return false;
     }
+
     int hash = state.hash;
     hash ^= zobrist.table[zobrist.turn][Zobrist.meta];
     List<Hand>? hands = state.hands != null
@@ -700,8 +720,7 @@ class Game {
     GameResult? result;
 
     // TODO: more validation?
-    Square fromSq =
-        move.from >= Bishop.boardStart ? board[move.from] : Bishop.empty;
+
     // Square toSq = board[move.to];
     int fromRank = size.rank(move.from);
     int fromFile = size.file(move.from);
@@ -920,6 +939,7 @@ class Game {
           variant: variant,
           state: newState,
           move: move,
+          piece: move.dropPiece ?? fromSq,
         ),
         zobrist: zobrist,
       );
