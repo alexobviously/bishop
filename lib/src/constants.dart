@@ -166,6 +166,7 @@ enum Variants {
   threeCheck(Variant.threeCheck),
   koth(Variant.kingOfTheHill),
   atomic(Variant.atomic),
+  horde(Variant.horde),
   musketeer(Musketeer.variant),
   xiangqi(Xiangqi.variant),
   spawn(Variant.spawn);

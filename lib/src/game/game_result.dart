@@ -60,6 +60,20 @@ class WonGameRoyalDead extends WonGame {
   String toString() => 'WonGameRoyalDead($winner)';
 }
 
+class WonGameElimination extends WonGame {
+  const WonGameElimination({required super.winner});
+
+  @override
+  String toString() => 'WonGameElimination($winner)';
+}
+
+class WonGameStalemate extends WonGame {
+  const WonGameStalemate({required super.winner});
+
+  @override
+  String toString() => 'WonGameStalemate($winner)';
+}
+
 class DrawnGameStalemate extends DrawnGame {
   const DrawnGameStalemate();
 

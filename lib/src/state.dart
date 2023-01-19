@@ -59,6 +59,19 @@ class BishopState {
 
   bool get invalidMove => result is InvalidMoveResult;
 
+  /// The total number of pieces currently in play belonging to [player].
+  int pieceCount(int player) {
+    // super ugly but efficient
+    int count = 0;
+    for (int i = player; i < pieces.length; i += 2) {
+      count += pieces[i];
+    }
+    return count;
+  }
+
+  int get whitePieceCount => pieceCount(Bishop.white);
+  int get blackPieceCount => pieceCount(Bishop.black);
+
   @override
   String toString() => 'State(turn: $turn, moves: $fullMoves, hash: $hash)';
 

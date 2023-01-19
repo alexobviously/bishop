@@ -295,7 +295,7 @@ extension GameOutputs on Game {
     }
     String ep = state.epSquare != null ? size.squareName(state.epSquare!) : '-';
     String aux = '';
-    if (variant.gameEndConditions.checkLimit != null) {
+    if (variant.gameEndConditions.hasCheckLimit != null) {
       aux = ' +${state.checks[Bishop.white]}+${state.checks[Bishop.black]}';
     }
     fen =

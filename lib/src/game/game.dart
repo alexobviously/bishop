@@ -930,7 +930,7 @@ class Game {
 
     // kind of messy doing it like this, but inCheck depends on the current state
     // maybe that's a case for refactoring some methods into State?
-    if (variant.gameEndConditions.checkLimit != null) {
+    if (variant.gameEndConditions[newState.turn.opponent].checkLimit != null) {
       if (inCheck) {
         history.last = newState.copyWith(
           checks: List.from(newState.checks)..[newState.turn.opponent] += 1,

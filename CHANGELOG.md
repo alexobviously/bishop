@@ -8,6 +8,9 @@
   - Grand chess is now working as expected.
 - The state of the board is now stored in `BishopState`, instead of a single list in `Game` being modified. This improves code readability and also results in small performance improvements in most cases.
 - More descriptive game results. Use `Game.result` to see the exact way the game ended (null if it's still ongoing). Old getters like `Game.checkmate` still exist but `result` is preferred.
+- `Variant.gameEndConditions` now takes a `GameEndConditionsSet`, allowing for asymmetric end conditions.
+- `GameEndConditions` now allows disabling stalemate (resulting in a loss for the stalemated player), and elimination losses (when all pieces are removed).
+  - Support for Horde Chess.
 - `Variant.hands` boolean option replaced with `HandOptions`, allowing for variants where hands are enabled but captured pieces aren't added to them (pieces can now be added through actions - see `Variant.spawn()` example).
 - `PieceType` and `MoveDefinition` are now immutable, and are normalised with `copyWith` methods instead of mutation.
 - Fixed a bug which would invalidate castling moves in Chess960 if the target square was the rook square, and that was attacked (thanks @malaschitz).

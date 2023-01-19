@@ -240,7 +240,7 @@ class BuiltVariant {
   /// The castling rules for this VariantData.
   CastlingOptions get castlingOptions => data.castlingOptions;
 
-  GameEndConditions get gameEndConditions => data.gameEndConditions;
+  GameEndConditionsSet get gameEndConditions => data.gameEndConditions;
   OutputOptions get outputOptions => data.outputOptions;
 
   /// A full starting position, specified as a

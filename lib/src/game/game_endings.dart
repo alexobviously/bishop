@@ -8,9 +8,11 @@ extension GameEndings on Game {
   bool get checkmate => inCheck && generateLegalMoves().isEmpty;
 
   bool get checkLimitMet =>
-      variant.gameEndConditions.checkLimit != null &&
+      variant.gameEndConditions[state.turn.opponent].checkLimit != null &&
       state.checks[state.turn.opponent] >=
-          variant.gameEndConditions.checkLimit!;
+          variant.gameEndConditions[state.turn.opponent].checkLimit!;
+
+  bool get eliminated => state.pieceCount(state.turn) < 1;
 
   GameResult? get result {
     if (state.result != null) return state.result;
@@ -21,7 +23,14 @@ extension GameEndings on Game {
         numChecks: state.checks[state.turn.opponent],
       );
     }
-    if (stalemate) return DrawnGameStalemate();
+    if (variant.gameEndConditions[state.turn].elimination) {
+      if (eliminated) return WonGameElimination(winner: state.turn.opponent);
+    }
+    if (stalemate) {
+      return variant.gameEndConditions[state.turn].stalemate
+          ? DrawnGameStalemate()
+          : WonGameStalemate(winner: state.turn.opponent);
+    }
     if (insufficientMaterial) return DrawnGameInsufficientMaterial();
     if (repetition) return DrawnGameRepetition(repeats: hashHits);
     if (halfMoveRule) return DrawnGameLength(halfMoves: state.halfMoves);
