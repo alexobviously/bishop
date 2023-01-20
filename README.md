@@ -55,7 +55,7 @@ designed to be interoperable with Bishop.
 * Chasing rules, such as those Xiangqi has
 
 ### Built-in Variants
-Chess, Chess960/Fischer Random, Crazyhouse, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi, and a variety of small board versions of chess.
+Chess, Chess960/Fischer Random, Crazyhouse, Atomic, Horde, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi, and a variety of small board versions of chess.
 
 ***
 

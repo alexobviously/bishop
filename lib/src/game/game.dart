@@ -126,11 +126,7 @@ class Game {
   /// ep square, etc.
   void loadFen(String fen, [bool strict = false]) {
     zobrist = Zobrist(variant, seed);
-    Map<String, int> pieceLookup =
-        {}; // TODO: replace with variant.pieceLookup?
-    for (int i = 0; i < variant.pieces.length; i++) {
-      pieceLookup[variant.pieces[i].symbol] = i;
-    }
+    final pieceLookup = variant.pieceIndexLookup;
 
     List<int> board = List.filled(variant.boardSize.numSquares * 2, 0);
     List<String> sections = fen.split(' ');
