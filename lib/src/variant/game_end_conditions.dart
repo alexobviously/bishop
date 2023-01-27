@@ -19,11 +19,6 @@ class GameEndConditionSet {
     GameEndConditions.threeCheck,
   );
 
-  static const horde = GameEndConditionSet(
-    GameEndConditions.standard,
-    GameEndConditions(elimination: true),
-  );
-
   bool get hasCheckLimit =>
       white.checkLimit != null || black.checkLimit != null;
 

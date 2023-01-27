@@ -93,17 +93,22 @@ class Action {
       );
 }
 
+/// Some common actions.
 class ActionDefinitions {
+  /// Merges several [actions] into a single definition.
   static ActionDefinition merge(List<ActionDefinition> actions) =>
       (ActionTrigger trigger) =>
           actions.map((e) => e(trigger)).expand((e) => e).toList();
 
+  /// Tranforms a [condition] into an action definition.
   static ActionDefinition transformCondition(
     ActionCondition condition,
     List<ActionEffect> Function(bool result) transformer,
   ) =>
       (ActionTrigger trigger) => transformer(condition(trigger));
 
+  /// An action that removes every piece in [area] around the destination
+  /// square of a move.
   static ActionDefinition explosion(Area area) =>
       (ActionTrigger trigger) => trigger.variant.boardSize
           .squaresForArea(trigger.move.to, area)
@@ -111,6 +116,7 @@ class ActionDefinitions {
           .map((e) => EffectModifySquare(e, Bishop.empty))
           .toList();
 
+  /// An action that adds a piece of [type] to the moving player's hand.
   static ActionDefinition addToHand(
     String type, {
     bool forOpponent = false,
@@ -128,6 +134,7 @@ class ActionDefinitions {
             )
           ];
 
+  /// An action that removes a piece of [type] from the moving player's hand.
   static ActionDefinition removeFromHand(
     String type, {
     bool forOpponent = false,
@@ -153,7 +160,9 @@ class ActionDefinitions {
       pass(const [EffectInvalidateMove()]);
 }
 
+/// Some common conditions for actions.
 class Conditions {
+  /// Merges multiple [conditions] into one.
   static ActionCondition merge(List<ActionCondition> conditions) =>
       (ActionTrigger trigger) {
         for (final c in conditions) {
@@ -162,18 +171,27 @@ class Conditions {
         return true;
       };
 
+  /// Inverts the result of a condition.
   static ActionCondition invert(ActionCondition condition) =>
       (ActionTrigger trigger) => !condition(trigger);
 
+  /// Returns true if the move is a capture.
   static ActionCondition get isCapture =>
       (ActionTrigger trigger) => trigger.move.capture;
+
+  /// Returns true if the move is not a capture.
   static ActionCondition get isNotCapture =>
       (ActionTrigger trigger) => !trigger.move.capture;
+
+  /// Returns true if the move is a promotion move.
   static ActionCondition get isPromotion =>
       (ActionTrigger trigger) => trigger.move.promotion;
+
+  /// Returns true if the move is not a promotion move.
   static ActionCondition get isNotPromotion =>
       (ActionTrigger trigger) => !trigger.move.promotion;
 
+  /// Returns true if the moving piece is of type [piece].
   static ActionCondition movingPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
         int sq = trigger.state.board[trigger.move.from];
@@ -183,6 +201,7 @@ class Conditions {
         return trigger.variant.pieceIndexLookup[piece] == sq.type;
       };
 
+  /// Returns true if the captured piece is of type [piece].
   static ActionCondition capturedPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
         if (trigger.move.capturedPiece == null) return false;
@@ -193,6 +212,8 @@ class Conditions {
         return trigger.variant.pieceIndexLookup[piece] == sq.type;
       };
 
+  /// Returns true if the moving piece is of type [type].
+  /// See `movingPieceIs` to do this with a string piece type.
   static ActionCondition movingPieceType(int type, {int? colour}) =>
       (ActionTrigger trigger) {
         if (colour != null && trigger.piece.colour != colour) {
@@ -201,6 +222,8 @@ class Conditions {
         return trigger.piece.type == type;
       };
 
+  /// Returns true if the royal pieces are not facing, or if they are facing
+  /// with no pieces between them.
   static ActionCondition get royalsNotFacing => (ActionTrigger trigger) {
         final state = trigger.state;
         final size = trigger.variant.boardSize;
@@ -218,8 +241,16 @@ class Conditions {
       };
 }
 
+/// The type of event that triggers an action.
 enum ActionEvent {
+  /// Actions with this event type are triggered in `makeMove` before the
+  /// logic of a move is applied. Useful for custom validation logic.
   beforeMove,
+
+  /// Actions with this event are applied directly after the logic of a move
+  /// is applied, and are typically used to add custom move logic, or to
+  /// validate that the move would not put the game in an illegal state.
+  /// If you don't know which event to use, you probably want this one.
   afterMove;
 }
 
@@ -227,38 +258,57 @@ abstract class ActionEffect {
   const ActionEffect();
 }
 
+/// Causes [square] to be set to [content].
 class EffectModifySquare extends ActionEffect {
   final int square;
   final int content;
   const EffectModifySquare(this.square, this.content);
 }
 
+/// Causes [piece] to be added to [player]'s hand.
 class EffectAddToHand extends ActionEffect {
   final int player;
   final int piece;
   const EffectAddToHand(this.player, this.piece);
 }
 
+/// Causes [piece] to be removed from [player]'s hand.
+/// If such a piece doesn't exist to be removed, nothing will happen.
 class EffectRemoveFromHand extends ActionEffect {
   final int player;
   final int piece;
   const EffectRemoveFromHand(this.player, this.piece);
 }
 
+/// Sets the result of the game to [result]. This will end the game.
 class EffectSetGameResult extends ActionEffect {
   final GameResult? result;
   const EffectSetGameResult(this.result);
 }
 
+/// This effect will cause the move being processed to be marked as invalid,
+/// meaning that it won't appear in a legal moves list.
 class EffectInvalidateMove extends EffectSetGameResult {
   const EffectInvalidateMove() : super(const InvalidMoveResult());
 }
 
+/// A class that contains all the data relevant to the action being triggered.
 class ActionTrigger {
+  /// The event type triggering the action.
   final ActionEvent event;
+
+  /// The state of the game at the time of the trigger. If the event is not
+  /// `ActionEvent.beforeMove`, then this will reflect the state after the
+  /// basic parts of the move have been made. This includes the turn.
   final BishopState state;
+
+  /// The variant being played.
   final BuiltVariant variant;
+
+  /// The move that is being made to trigger this action.
   final Move move;
+
+  /// The piece moved in the last move, for convenience.
   final int piece;
 
   const ActionTrigger({

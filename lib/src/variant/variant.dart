@@ -380,30 +380,33 @@ class Variant {
         name: 'Horde Chess',
         startPosition:
             'rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1',
-        gameEndConditions: GameEndConditionSet.horde,
         firstMoveRanks: [
           [Bishop.rank1, Bishop.rank2], // white
           [Bishop.rank7, Bishop.rank8], // black
         ],
       );
 
-  factory Variant.spawn() {
-    final standard = Variant.standard();
-    final pieceTypes = standard.pieceTypes;
-    pieceTypes['K'] = PieceType.king().copyWith(
-      actions: [
-        Action(
-          event: ActionEvent.afterMove,
-          action: ActionDefinitions.addToHand('P'),
-        ),
-      ],
-    );
-    return standard.copyWith(
-      name: 'Spawn Chess',
-      description: 'Moving the exposed king adds a pawn to the player\'s hand.',
-      startPosition: 'rnbnkbnr/8/8/8/8/8/8/RNBNKBNR w KQkq - 0 1',
-      handOptions: HandOptions.enabledOnly,
-      pieceTypes: pieceTypes,
-    );
-  }
+  factory Variant.spawn() => Variant.standard().copyWith(
+        name: 'Spawn Chess',
+        description:
+            'Moving the exposed king adds a pawn to the player\'s hand.',
+        startPosition: 'rnbnkbnr/p6p/8/8/8/8/P6P/RNBNKBNR[PPpp] w KQkq - 0 1',
+        handOptions: HandOptions.enabledOnly,
+        castlingOptions: CastlingOptions.none,
+        pieceTypes: {
+          'P': PieceType.pawn(),
+          'N': PieceType.knight(),
+          'B': PieceType.bishop(),
+          'R': PieceType.rook(),
+          'Q': PieceType.queen(),
+          'K': PieceType.king().copyWith(
+            actions: [
+              Action(
+                event: ActionEvent.afterMove,
+                action: ActionDefinitions.addToHand('P'),
+              ),
+            ],
+          ),
+        },
+      );
 }

@@ -89,7 +89,7 @@ class Atom {
   final int range;
   final Modality modality;
 
-  Atom({
+  const Atom({
     required this.base,
     this.dirMods = const [],
     this.funcMods = const [],
