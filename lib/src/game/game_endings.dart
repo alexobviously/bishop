@@ -37,6 +37,13 @@ extension GameEndings on Game {
     return null;
   }
 
+  /// Returns the player who won the game, or null if the game is drawn or ongoing.
+  int? get winner {
+    final r = result;
+    if (r is WonGame) return r.winner;
+    return null;
+  }
+
   /// Returns true if the royal pieces for each player are on the same file,
   /// e.g. Xiangqi's flying generals rule.
   bool get royalsFacing => size.squaresOnSameFile(

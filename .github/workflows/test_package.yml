@@ -54,3 +54,6 @@ jobs:
 
       - name: Run Action tests
         run: dart test test/action_test.dart
+
+      - name: Run Ending tests
+        run: dart test test/ending_test.dart

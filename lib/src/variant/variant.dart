@@ -365,13 +365,13 @@ class Variant {
     );
   }
 
-  factory Variant.atomic() {
+  factory Variant.atomic({bool allowExplosionDraw = false}) {
     final standard = Variant.standard();
     return standard.copyWith(
       name: 'Atomic Chess',
       actions: [
         Action.explodeOnCapture(Area.radius(1)),
-        Action.checkRoyalsAlive(),
+        Action.checkRoyalsAlive(allowDraw: allowExplosionDraw),
       ],
     );
   }

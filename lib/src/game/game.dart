@@ -990,6 +990,9 @@ class Game {
     return makeMove(m);
   }
 
+  /// Checks whether an algebraic move string (e.g. e2e4, f7f8q) is a valid move.
+  bool isMoveValid(String move) => getMove(move) != null;
+
   /// Makes multiple [moves] in order, in algebraic format (e.g. e2e4, f7f8q).
   /// Returns the number of moves that were successfully made. If everything
   /// went fine, this should be equal to [moves.length].
