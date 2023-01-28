@@ -390,14 +390,14 @@ class Variant {
         name: 'Spawn Chess',
         description:
             'Moving the exposed king adds a pawn to the player\'s hand.',
-        startPosition: 'rnbnkbnr/p6p/8/8/8/8/P6P/RNBNKBNR[PPpp] w KQkq - 0 1',
+        startPosition: 'rnb1nbnr/8/3k4/8/8/4K3/8/RNBN1BNR[PPpp] w KQkq - 0 1',
         handOptions: HandOptions.enabledOnly,
         castlingOptions: CastlingOptions.none,
         pieceTypes: {
           'P': PieceType.pawn(),
           'N': PieceType.knight(),
-          'B': PieceType.bishop(),
-          'R': PieceType.rook(),
+          'B': PieceType.fromBetza('B2'),
+          'R': PieceType.fromBetza('R3'),
           'Q': PieceType.queen(),
           'K': PieceType.king().copyWith(
             actions: [

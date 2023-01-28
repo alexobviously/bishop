@@ -29,7 +29,7 @@ class Action {
   final ActionDefinition action;
 
   const Action({
-    required this.event,
+    this.event = ActionEvent.afterMove,
     this.precondition,
     this.condition,
     required this.action,
@@ -87,8 +87,9 @@ class Action {
   Action forPieceType(int type) => Action(
         event: event,
         action: action,
+        precondition: precondition,
         condition: condition != null
-            ? Conditions.merge([condition!, Conditions.movingPieceType(type)])
+            ? Conditions.merge([Conditions.movingPieceType(type), condition!])
             : Conditions.movingPieceType(type),
       );
 }

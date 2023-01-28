@@ -51,3 +51,6 @@ jobs:
 
       - name: Run Promotion tests
         run: dart test test/promo_test.dart
+
+      - name: Run Action tests
+        run: dart test test/action_test.dart

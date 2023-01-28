@@ -139,7 +139,7 @@ class BishopState {
     final action = actions.first;
     BishopState state = this;
     if (action.condition?.call(trigger) ?? true) {
-      state = applyEffects(effects: action.action(trigger));
+      state = applyEffects(effects: action.action(trigger), zobrist: zobrist);
     }
     return actions.length > 1
         ? state.executeActions(
@@ -168,13 +168,14 @@ class BishopState {
       if (effect is EffectModifySquare) {
         if (zobrist != null) {
           hash ^= zobrist.table[effect.square][effect.content.piece];
-          bool capture = board[effect.square].isNotEmpty;
-          if (capture) {
-            int piece = board[effect.square].piece;
-            hash ^= zobrist.table[effect.square][piece];
-            pieces[piece]--;
-          }
         }
+        bool capture = board[effect.square].isNotEmpty;
+        if (capture) {
+          int piece = board[effect.square].piece;
+          if (zobrist != null) hash ^= zobrist.table[effect.square][piece];
+          pieces[piece]--;
+        }
+
         board[effect.square] = effect.content;
         if (effect.content.isNotEmpty) {
           pieces[effect.content.piece]++;
@@ -200,6 +201,7 @@ class BishopState {
       board: board,
       hash: hash,
       result: result,
+      pieces: pieces,
       hands: hands,
     );
   }
