@@ -29,8 +29,9 @@ void main() {
     });
     test('WonGameEnteredRegion (koth)', () {
       final g = Game(
-          variant: Variant.kingOfTheHill(),
-          fen: '8/8/3k4/8/8/4K3/8/8 b - - 0 1');
+        variant: Variant.kingOfTheHill(),
+        fen: '8/8/3k4/8/8/4K3/8/8 b - - 0 1',
+      );
       g.makeMoveString('d6d5');
       expect(g.result, isA<WonGameEnteredRegion>());
       expect(g.winner, Bishop.black);
