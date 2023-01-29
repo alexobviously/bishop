@@ -4,9 +4,9 @@
 
 #### A chess logic package with flexible variant support.
 
-Bishop is designed with flexibility in mind. The goal is to be able to build and play any arbitrary variant of chess without having to build a new package every time. Currently, it supports a variety of fairy piece variants, variants with drops like Crazyhouse, and many others. More features are coming, including support for Asian games like Xiangqi.
+Bishop is designed with flexibility in mind. The goal is to be able to build and play any arbitrary variant of chess without having to build a new package every time. It supports a variety of fairy piece variants, with pieces that move in unconventional ways, and piece definition with Betza notation. It also supports variants with altered rules, such as King of the Hill and Atomic chess, Asian games like Xiangqi, and variants with various implementations of hands and gating like Crazyhouse, Seirawan and Musketeer. It's also possible to implement fairly complex custom logic with the actions system.
 
-As a result of the amount of generalisation required to make a package like this work, performance does take a bit of a hit. As such, it might be difficult to build a strong engine with this. However, it's perfectly sufficient for logic generation and validation, etc. Hopefully the performance can be improved in the future though - this is a work in progress!
+Of course, it also supports standard chess.
 
 Bishop is written in pure dart with no dependencies.
 
@@ -36,6 +36,7 @@ designed to be interoperable with Bishop.
 * Legal move generation
 * FEN & PGN input and output
 * Easy and flexible variant definition
+* Different board sizes
 * Fairy pieces
   * Arbitrary move configuration
   * Betza parsing
@@ -49,8 +50,8 @@ designed to be interoperable with Bishop.
 * Flex gating (e.g. Seirawan)
 * Fixed gating (e.g. Musketeer)
 * Different game end conditions for variants like three-check
-* Board regions for piece movement restriction (e.g. Xiangqi palaces) and win conditions (e.g. King of the Hill)
-* An engine (not strong but fine for testing)
+* Board regions for piece movement restriction (e.g. Xiangqi palaces), piece behaviour changes (e.g. Xiangqi soldier) and win conditions (e.g. King of the Hill)
+* A basic engine that works with any definable variant (not strong but fine for testing)
 
 ### Planned Features
 * Janggi, Shogi and their variants
@@ -87,14 +88,14 @@ print(moves.map((e) => g.toSan(e)).toList());
 
 Pick a move with algebraic notation, and play it:
 ```dart
-Game game = Game(variant: Variant.standard());
+Game game = Game();
 Move? m = g.getMove('e2e4')!; // returns null if the move isn't found
 bool result = game.makeMove(m); // returns false if the move is invalid
 ```
 
 Start a game from an arbitrary position
 ```dart
-Game game = Game(variant: Variant.standard(), fen: 'rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3');
+Game game = Game(fen: 'rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3');
 ```
 
 ***
@@ -193,7 +194,7 @@ factory Variant.kingOfTheHill() {
 }
 ```
 
-Here is a more complex definition of a variant in which bishops cannot leave their side of the board, and knights turn into kniroos (pieces with knight+rook movement):
+Here is a more complex definition of a variant in which bishops cannot leave their side of the board, and knights turn into kniroos (pieces with knight+rook movement) when they cross to the opponent's side:
 ```dart
 final standard = Variant.standard();
 Map<String, PieceType> pieceTypes = {...standard.pieceTypes};
