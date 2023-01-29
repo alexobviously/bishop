@@ -31,4 +31,12 @@ void main() {
     g.makeMoveString('e1e2');
     expect(g.state.hands![Bishop.white].length, 3);
   });
+  test('Piece specific action doesn\'t execute for other pieces', () {
+    final g = Game(
+      variant: Variant.spawn(),
+      fen: '4k3/8/8/8/8/8/8/N3K3 w - - 0 1',
+    );
+    g.makeMoveString('a1c2');
+    expect(g.state.hands![Bishop.white].length, 0);
+  });
 }

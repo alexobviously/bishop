@@ -75,9 +75,12 @@ class Action {
 
   /// The flying generals rule from Xiangqi. If the generals/kings are facing
   /// each other, with no pieces between, the move will be invalidated.
-  factory Action.flyingGenerals() => Action(
+  /// Set [activeCondition] to true if you have other actions that might modify
+  /// the board before this.
+  factory Action.flyingGenerals({bool activeCondition = false}) => Action(
         event: ActionEvent.afterMove,
-        precondition: Conditions.royalsNotFacing,
+        precondition: activeCondition ? null : Conditions.royalsNotFacing,
+        condition: activeCondition ? Conditions.royalsNotFacing : null,
         action: ActionDefinitions.invalidateMove,
       );
 
@@ -87,10 +90,12 @@ class Action {
   Action forPieceType(int type) => Action(
         event: event,
         action: action,
-        precondition: precondition,
-        condition: condition != null
-            ? Conditions.merge([Conditions.movingPieceType(type), condition!])
+        precondition: precondition != null
+            ? Conditions.merge(
+                [Conditions.movingPieceType(type), precondition!],
+              )
             : Conditions.movingPieceType(type),
+        condition: condition,
       );
 }
 
@@ -127,9 +132,9 @@ class ActionDefinitions {
             ...List.filled(
               count,
               EffectAddToHand(
-                (forOpponent ^ (trigger.event != ActionEvent.beforeMove))
-                    ? trigger.state.turn.opponent
-                    : trigger.state.turn,
+                forOpponent
+                    ? trigger.piece.colour.opponent
+                    : trigger.piece.colour,
                 trigger.variant.pieceIndexLookup[type]!,
               ),
             )
@@ -145,9 +150,9 @@ class ActionDefinitions {
             ...List.filled(
               count,
               EffectRemoveFromHand(
-                (forOpponent ^ (trigger.event != ActionEvent.beforeMove))
-                    ? trigger.state.turn.opponent
-                    : trigger.state.turn,
+                forOpponent
+                    ? trigger.piece.colour.opponent
+                    : trigger.piece.colour,
                 trigger.variant.pieceIndexLookup[type]!,
               ),
             )
@@ -195,11 +200,10 @@ class Conditions {
   /// Returns true if the moving piece is of type [piece].
   static ActionCondition movingPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
-        int sq = trigger.state.board[trigger.move.from];
-        if (colour != null && sq.colour != colour) {
+        if (colour != null && trigger.piece.colour != colour) {
           return false;
         }
-        return trigger.variant.pieceIndexLookup[piece] == sq.type;
+        return trigger.variant.pieceIndexLookup[piece] == trigger.piece.type;
       };
 
   /// Returns true if the captured piece is of type [piece].
