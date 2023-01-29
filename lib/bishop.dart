@@ -1,7 +1,7 @@
 /// A chess logic package with flexible variant support.
 library bishop;
 
-export 'src/action.dart';
+export 'src/actions/actions.dart';
 export 'src/betza.dart';
 export 'src/board_region.dart';
 export 'src/castling_rights.dart';
