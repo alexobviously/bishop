@@ -1,24 +1,17 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:bishop/bishop.dart';
 import 'constants.dart';
+import 'perft.dart';
 
 class PerftBenchmark extends BenchmarkBase {
-  final String fen;
-  final Variants variant;
-  final int depth;
-  final int nodes;
+  final PerftTest test;
   Game? game;
 
-  PerftBenchmark(
-    this.fen,
-    this.depth,
-    this.nodes, {
-    this.variant = Variants.standard,
-  }) : super("Perft(fen:'$fen')");
+  PerftBenchmark(this.test) : super("Perft(fen:'${test.fen}')");
 
   @override
   void setup() {
-    game = Game(variant: variant.build(), fen: fen);
+    game = Game(variant: test.variant.build(), fen: test.fen);
   }
 
   @override
@@ -28,38 +21,22 @@ class PerftBenchmark extends BenchmarkBase {
 
   @override
   void run() {
-    int result = game!.perft(depth);
-    if (result != nodes) {
-      throw 'Wrong result: Expected <$nodes> but got <$result>.';
+    int result = game!.perft(test.depth);
+    if (result != test.nodes) {
+      throw 'Wrong result: Expected <${test.nodes}> but got <$result>.';
     }
   }
 }
 
 void main() {
   List<PerftBenchmark> perfts = [
-    PerftBenchmark(Positions.standardDefault, 3, 8902),
-    PerftBenchmark(Positions.kiwiPete, 2, 2039),
-    PerftBenchmark(Positions.rookPin, 4, 43238),
-    PerftBenchmark(Positions.position4, 3, 9467),
-    PerftBenchmark(Positions.position5, 3, 62379),
-    PerftBenchmark(Positions.position6, 3, 89890),
-    // PerftBenchmark(
-    //   'bqnb1rkr/pp3ppp/3ppn2/2p5/5P2/P2P4/NPP1P1PP/BQ1BNRKR w HFhf - 2 9',
-    //   3,
-    //   12189,
-    //   variant: Variants.chess960,
-    // ), // used to fail, now seems fine - be aware
-    // PerftBenchmark(
-    //   '2nnrbkr/p1qppppp/8/1ppb4/6PP/3PP3/PPP2P2/BQNNRBKR w HEhe - 1 9',
-    //   3,
-    //   18002,
-    //   variant: Variants.chess960,
-    // ),
+    ...Perfts.standard.map((e) => PerftBenchmark(e)),
   ];
   double total = 0;
   for (PerftBenchmark perft in perfts) {
     double time = perft.measure();
-    print('${time.toStringAsFixed(2)}us [${perft.fen}, ${perft.variant.name}]');
+    print(
+        '${time.toStringAsFixed(2)}us [${perft.test.fen}, ${perft.test.variant.name}]');
     total += time;
   }
   print('-- Total Runtime: ${(total / 1000).toStringAsFixed(2)}ms --');
