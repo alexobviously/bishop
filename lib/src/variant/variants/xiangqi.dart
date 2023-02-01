@@ -1,4 +1,4 @@
-part of 'variant.dart';
+part of '../variant.dart';
 
 /// Xiangqi / Cờ Tướng / Chinese Chess defintions.
 /// Still a work in progress, some things are incomplete.

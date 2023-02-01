@@ -11,8 +11,8 @@ part 'hand_options.dart';
 part 'output_options.dart';
 part 'promotion_options.dart';
 part 'material_conditions.dart';
-part 'musketeer.dart';
-part 'xiangqi.dart';
+part 'variants/musketeer.dart';
+part 'variants/xiangqi.dart';
 
 /// Specifies the rules and pieces to be used, size of the board,
 /// information on how FENs are outputted, and so on and so on.
