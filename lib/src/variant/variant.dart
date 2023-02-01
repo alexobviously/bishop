@@ -75,11 +75,6 @@ class Variant {
   /// but you still want to use the normal pawn definition.
   final Map<String, int>? pieceValues;
 
-  /// The flying generals rule from Xiangqi, i.e. royal pieces (kings/generals)
-  /// are not allowed to face each other if this is true.
-  /// CURRENTLY NOT WORKING.
-  final bool flyingGenerals;
-
   /// A map of region definitions for the board, for use with `RegionEffects`
   /// in piece definitions. The keys used here are used to reference the regions
   /// in effects.
@@ -124,7 +119,6 @@ class Variant {
     this.handOptions = HandOptions.disabled,
     this.gatingMode = GatingMode.none,
     this.pieceValues,
-    this.flyingGenerals = false,
     this.regions = const {},
     this.actions = const [],
   }) : assert(
@@ -151,7 +145,6 @@ class Variant {
     HandOptions? handOptions,
     GatingMode? gatingMode,
     Map<String, int>? pieceValues,
-    bool? flyingGenerals,
     Map<String, BoardRegion>? regions,
     List<Action>? actions,
   }) {
@@ -174,7 +167,6 @@ class Variant {
       handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
       pieceValues: pieceValues ?? this.pieceValues,
-      flyingGenerals: flyingGenerals ?? this.flyingGenerals,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
     );
