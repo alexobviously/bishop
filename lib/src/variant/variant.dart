@@ -126,6 +126,75 @@ class Variant {
           'Variant needs either a startPosition or startPosBuilder',
         );
 
+  factory Variant.fromJson(Map<String, dynamic> json) {
+    return Variant(
+      name: json['name'],
+      description: json['description'],
+      boardSize: BoardSize.fromString(json['boardSize']),
+      pieceTypes: json['pieceTypes'].map<String, PieceType>(
+        (k, v) => MapEntry(k as String, PieceType.fromJson(v)),
+      ),
+      castlingOptions: CastlingOptions.fromJson(json['castlingOptions']),
+      materialConditions: json.containsKey('materialConditions')
+          ? MaterialConditions.fromJson(json['materialConditions'])
+          : MaterialConditions.none,
+      gameEndConditions: json.containsKey('gameEndConditions')
+          ? GameEndConditionSet.fromJson(json['gameEndConditions'])
+          : GameEndConditionSet.standard,
+      outputOptions: json.containsKey('outputOptions')
+          ? OutputOptions.fromJson(json['outputOptions'])
+          : OutputOptions.standard,
+      startPosition: json['startPosition'],
+      enPassant: json['enPassant'],
+      firstMoveRanks: (json['firstMoveRanks'] as List<dynamic>?)
+              ?.map((e) => (e as List<dynamic>).map((e) => e as int).toList())
+              .toList() ??
+          const [[], []],
+      halfMoveDraw: json['halfMoveDraw'],
+      repetitionDraw: json['repetitionDraw'],
+      handOptions: json.containsKey('handOptions')
+          ? HandOptions.fromJson(json['handOptions'])
+          : HandOptions.disabled,
+      gatingMode: GatingMode.values
+          .firstWhere((e) => e.name == (json['gatingMode'] ?? 'none')),
+      pieceValues: (json['pieceValues'] as Map<String, dynamic>?)?.map(
+        (k, v) => MapEntry(k, v as int),
+      ),
+      regions: (json['regions'] as Map<String, dynamic>?)
+              ?.map((k, v) => MapEntry(k, BoardRegion.fromJson(v))) ??
+          const {},
+    );
+  }
+
+  Map<String, dynamic> toJson({bool verbose = false}) => {
+        'name': name,
+        'description': description,
+        'boardSize': boardSize.simpleString,
+        'pieceTypes':
+            pieceTypes.map((k, v) => MapEntry(k, v.toJson(verbose: verbose))),
+        'castlingOptions': castlingOptions.toJson(),
+        // 'promotionOptions': promotionOptions.toJson(),
+        'materialConditions': materialConditions.toJson(),
+        if (verbose || gameEndConditions != GameEndConditionSet.standard)
+          'gameEndConditions': gameEndConditions.toJson(),
+        if (verbose || outputOptions != OutputOptions.standard)
+          'outputOptions': outputOptions.toJson(),
+        'startPosition': startPosition,
+        // 'startPosBuilder': startPosBuilder,
+        'enPassant': enPassant,
+        'firstMoveRanks': firstMoveRanks,
+        if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
+        if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
+        if (verbose || handOptions != HandOptions.disabled)
+          'handOptions': handOptions.toJson(),
+        if (verbose || gatingMode != GatingMode.none)
+          'gatingMode': gatingMode.name,
+        if (pieceValues != null) 'pieceValues': pieceValues,
+        if (verbose || regions.isNotEmpty)
+          'regions': regions.map((k, v) => MapEntry(k, v.toJson())),
+        // 'actions': actions,
+      };
+
   Variant copyWith({
     String? name,
     String? description,

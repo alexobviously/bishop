@@ -33,6 +33,20 @@ class BoardRegion implements Region {
     this.endFile,
   });
 
+  factory BoardRegion.fromJson(Map<String, dynamic> json) => BoardRegion(
+        startRank: json['startRank'],
+        endRank: json['endRank'],
+        startFile: json['startFile'],
+        endFile: json['endFile'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        if (startRank != null) 'startRank': startRank,
+        if (endRank != null) 'endRank': endRank,
+        if (startFile != null) 'startFile': startFile,
+        if (endFile != null) 'endFile': endFile,
+      };
+
   BoardRegion finalise(BoardSize size) => BoardRegion(
         startRank: startRank ?? 0,
         endRank: endRank ?? size.maxRank,
@@ -171,6 +185,24 @@ class RegionEffect {
     this.restrictMovement = false,
     this.winGame = false,
   });
+
+  factory RegionEffect.fromJson(Map<String, dynamic> json) => RegionEffect(
+        whiteRegion: json['whiteRegion'],
+        blackRegion: json['blackRegion'],
+        pieceType: json.containsKey('pieceType')
+            ? PieceType.fromJson(json['pieceType'])
+            : null,
+        restrictMovement: json['restrictMovement'] ?? false,
+        winGame: json['winGame'] ?? false,
+      );
+
+  Map<String, dynamic> toJson({bool verbose = false}) => {
+        if (whiteRegion != null) 'whiteRegion': whiteRegion,
+        if (blackRegion != null) 'blackRegion': blackRegion,
+        if (pieceType != null) 'pieceType': pieceType!.toJson(verbose: verbose),
+        if (verbose || restrictMovement) 'restrictMovement': restrictMovement,
+        if (verbose || winGame) 'winGame': winGame,
+      };
 
   RegionEffect copyWith({
     String? whiteRegion,

@@ -31,6 +31,28 @@ class MaterialConditions<T> {
     this.specialCases = const [],
   });
 
+  factory MaterialConditions.fromJson(Map<String, dynamic> json) =>
+      MaterialConditions(
+        enabled: json['enabled'],
+        soloMaters: (json['soloMaters'] ?? []).cast<T>(),
+        pairMaters: (json['pairMaters'] ?? []).cast<T>(),
+        combinedPairMaters: (json['combinedPairMaters'] ?? []).cast<T>(),
+        specialCases: (json['specialCases'] as List<dynamic>?)
+                ?.map((e) => (e as List<dynamic>).map((e) => e as T).toList())
+                .toList() ??
+            [],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'enabled': enabled,
+        if (enabled) ...{
+          'soloMaters': soloMaters,
+          'pairMaters': pairMaters,
+          'combinedPairMaters': combinedPairMaters,
+          'specialCases': specialCases,
+        },
+      };
+
   MaterialConditions copyWith({
     bool? enabled,
     List<T>? soloMaters,

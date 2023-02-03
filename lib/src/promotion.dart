@@ -18,6 +18,19 @@ class PiecePromoOptions {
     this.promotesTo,
   });
 
+  factory PiecePromoOptions.fromJson(Map<String, dynamic> json) =>
+      PiecePromoOptions(
+        canPromote: json['canPromote'] ?? false,
+        canPromoteTo: json['canPromoteTo'] ?? false,
+        promotesTo: json['promotesTo'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'canPromote': canPromote,
+        'canPromoteTo': canPromoteTo,
+        if (promotesTo != null) 'promotesTo': promotesTo,
+      };
+
   /// A piece that cannot be promoted and isn't a promotion option.
   static const none = PiecePromoOptions(canPromote: false, canPromoteTo: false);
 
@@ -33,6 +46,16 @@ class PiecePromoOptions {
         canPromote: true,
         promotesTo: pieces,
       );
+
+  @override
+  int get hashCode =>
+      canPromote.hashCode ^
+      canPromoteTo.hashCode << 1 ^
+      (promotesTo?.join('').hashCode ?? 0) << 2;
+
+  @override
+  bool operator ==(Object other) =>
+      other is PiecePromoOptions && hashCode == other.hashCode;
 }
 
 typedef PromotionSetup = PromotionBuilder Function(BuiltVariant variant);

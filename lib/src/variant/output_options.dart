@@ -15,10 +15,23 @@ class OutputOptions {
   final bool virginFiles;
 
   const OutputOptions({
-    required this.castlingFormat,
+    this.castlingFormat = CastlingFormat.standard,
     this.showPromoted = false,
     this.virginFiles = false,
   });
+
+  factory OutputOptions.fromJson(Map<String, dynamic> json) => OutputOptions(
+        castlingFormat: CastlingFormat.values
+            .firstWhere((e) => e.name == json['castlingFormat']),
+        showPromoted: json['showPromoted'],
+        virginFiles: json['virginFiles'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'castlingFormat': castlingFormat.name,
+        'showPromoted': showPromoted,
+        'virginFiles': virginFiles,
+      };
 
   static const standard =
       OutputOptions(castlingFormat: CastlingFormat.standard);
@@ -32,6 +45,16 @@ class OutputOptions {
     castlingFormat: CastlingFormat.standard,
     virginFiles: true,
   );
+
+  @override
+  int get hashCode =>
+      castlingFormat.hashCode ^
+      showPromoted.hashCode << 1 ^
+      virginFiles.hashCode << 2;
+
+  @override
+  bool operator ==(Object other) =>
+      other is OutputOptions && hashCode == other.hashCode;
 }
 
 /// Determines how castling rights are represented in FEN strings.

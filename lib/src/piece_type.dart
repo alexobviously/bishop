@@ -54,6 +54,43 @@ class PieceType {
     this.actions = const [],
   });
 
+  factory PieceType.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('betza')) {
+      return PieceType.fromBetza(
+        json['betza'],
+        royal: json['royal'] ?? false,
+        promoOptions: json.containsKey('promoOptions')
+            ? PiecePromoOptions.fromJson(json['promoOptions'])
+            : PiecePromoOptions.promoPiece,
+        enPassantable: json['enPassantable'] ?? false,
+        noSanSymbol: json['noSanSymbol'] ?? false,
+        value: json['value'] ?? Bishop.defaultPieceValue,
+        regionEffects: (json['regionEffects'] as List<dynamic>?)
+                ?.map((e) => RegionEffect.fromJson(e))
+                .toList() ??
+            [],
+      );
+    }
+    throw UnimplementedError('Non-betza pieces in json are not supported yet');
+  }
+
+  Map<String, dynamic> toJson({bool verbose = false}) {
+    // todo: support non-betza import/export
+    return {
+      'betza': betza,
+      if (verbose || royal) 'royal': royal,
+      if (verbose || promoOptions != PiecePromoOptions.promoPiece)
+        'promoOptions': promoOptions.toJson(),
+      if (verbose || enPassantable) 'enPassantable': enPassantable,
+      if (verbose || noSanSymbol) 'noSanSymbol': true,
+      if (verbose || value != Bishop.defaultPieceValue) 'value': value,
+      if (verbose || regionEffects.isNotEmpty)
+        'regionEffects':
+            regionEffects.map((e) => e.toJson(verbose: verbose)).toList(),
+      // if(verbose || actions.isNotEmpty) 'actions': actions,
+    };
+  }
+
   PieceType copyWith({
     String? betza,
     List<MoveDefinition>? moves,

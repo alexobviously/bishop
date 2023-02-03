@@ -34,6 +34,28 @@ class CastlingOptions {
   //   }
   // }
 
+  factory CastlingOptions.fromJson(Map<String, dynamic> json) =>
+      CastlingOptions(
+        enabled: json['enabled'],
+        kTarget: json['kTarget'],
+        qTarget: json['qTarget'],
+        fixedRooks: json['fixedRooks'] ?? true,
+        kRook: json['kRook'],
+        qRook: json['qRook'],
+        useRookAsTarget: json['useRookAsTarget'] ?? false,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'enabled': enabled,
+        if (kTarget != null) 'kTarget': kTarget,
+        if (qTarget != null) 'qTarget': qTarget,
+        if (enabled) 'fixedRooks': fixedRooks,
+        if (kRook != null) 'kRook': kRook,
+        if (qRook != null) 'qRook': qRook,
+        if (rookPiece != null) 'rookPiece': rookPiece,
+        if (enabled) 'useRookAsTarget': useRookAsTarget,
+      };
+
   CastlingOptions copyWith({
     bool? enabled,
     int? kTarget,

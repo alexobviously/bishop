@@ -10,8 +10,25 @@ class HandOptions {
 
   const HandOptions({this.enableHands = false, this.addCapturesToHand = false});
 
+  factory HandOptions.fromJson(Map<String, dynamic> json) => HandOptions(
+        enableHands: json['enableHands'],
+        addCapturesToHand: json['addCapturesToHand'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'enableHands': enableHands,
+        'addCapturesToHand': addCapturesToHand,
+      };
+
   static const disabled = HandOptions();
   static const captures =
       HandOptions(enableHands: true, addCapturesToHand: true);
   static const enabledOnly = HandOptions(enableHands: true);
+
+  @override
+  int get hashCode => enableHands.hashCode ^ addCapturesToHand.hashCode << 1;
+
+  @override
+  bool operator ==(Object other) =>
+      other is HandOptions && hashCode == other.hashCode;
 }

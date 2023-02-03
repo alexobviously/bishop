@@ -6,6 +6,21 @@ class GameEndConditionSet {
 
   const GameEndConditionSet(this.white, this.black);
 
+  Map<String, dynamic> toJson() => isSymmetric
+      ? white.toJson()
+      : {
+          'white': white.toJson(),
+          'black': black.toJson(),
+        };
+
+  factory GameEndConditionSet.fromJson(Map<String, dynamic> json) =>
+      json.containsKey('white')
+          ? GameEndConditionSet(
+              GameEndConditions.fromJson(json['white']),
+              GameEndConditions.fromJson(json['black']),
+            )
+          : GameEndConditionSet.symmetric(GameEndConditions.fromJson(json));
+
   factory GameEndConditionSet.symmetric(GameEndConditions conditions) =>
       GameEndConditionSet(conditions, conditions);
 
@@ -19,6 +34,8 @@ class GameEndConditionSet {
     GameEndConditions.threeCheck,
   );
 
+  bool get isSymmetric => white == black;
+
   bool get hasCheckLimit =>
       white.checkLimit != null || black.checkLimit != null;
 
@@ -27,6 +44,15 @@ class GameEndConditionSet {
     if (index == Bishop.black) return black;
     throw RangeError('index can only be 0 or 1');
   }
+
+  @override
+  int get hashCode => white.hashCode ^ black.hashCode << 4;
+
+  @override
+  bool operator ==(Object other) =>
+      other is GameEndConditionSet &&
+      white == other.white &&
+      black == other.black;
 }
 
 class GameEndConditions {
@@ -46,9 +72,33 @@ class GameEndConditions {
     this.checkLimit,
   });
 
+  Map<String, dynamic> toJson() => {
+        'stalemate': stalemate,
+        'elimination': elimination,
+        if (checkLimit != null) 'checkLimit': checkLimit,
+      };
+
+  factory GameEndConditions.fromJson(Map<String, dynamic> json) =>
+      GameEndConditions(
+        stalemate: json['stalemate'],
+        elimination: json['elimination'],
+        checkLimit: json['checkLimit'],
+      );
+
   static const GameEndConditions standard = GameEndConditions();
   static const GameEndConditions threeCheck = GameEndConditions(checkLimit: 3);
 
   @override
   String toString() => 'GameEndConditions(checkLimit: $checkLimit)';
+
+  @override
+  int get hashCode =>
+      stalemate.hashCode ^ elimination.hashCode << 1 ^ checkLimit.hashCode << 2;
+
+  @override
+  bool operator ==(Object other) =>
+      other is GameEndConditions &&
+      stalemate == other.stalemate &&
+      elimination == other.elimination &&
+      checkLimit == other.checkLimit;
 }
