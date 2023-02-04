@@ -91,7 +91,8 @@ class PieceType {
         'regionEffects':
             regionEffects.map((e) => e.toJson(verbose: verbose)).toList(),
       if (verbose || actions.isNotEmpty)
-        'actions': BishopSerialisation.exportMany<Action>(actions),
+        'actions':
+            BishopSerialisation.exportMany<Action>(actions, strict: false),
     };
   }
 

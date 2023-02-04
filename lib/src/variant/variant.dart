@@ -473,12 +473,7 @@ class Variant {
           'R': PieceType.fromBetza('R3'),
           'Q': PieceType.queen(),
           'K': PieceType.king().copyWith(
-            actions: [
-              Action(
-                event: ActionEvent.afterMove,
-                action: ActionDefinitions.addToHand('P'),
-              ),
-            ],
+            actions: [ActionAddToHand('P')],
           ),
         },
       );

@@ -21,10 +21,12 @@ class BishopSerialisation {
       ];
 
   static List<BishopTypeAdapter> get baseActionAdapters => [
+        AddToHandAdapter(),
         CheckRoyalsAliveAdapter(),
         ExplodeOnCaptureAdapter(),
         ExplosionRadiusAdapter(),
         FlyingGeneralsAdapter(),
+        RemoveFromHandAdapter(),
       ];
 
   static List<T> buildMany<T>(
