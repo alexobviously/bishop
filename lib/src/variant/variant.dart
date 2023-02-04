@@ -135,6 +135,12 @@ class Variant {
         (k, v) => MapEntry(k as String, PieceType.fromJson(v)),
       ),
       castlingOptions: CastlingOptions.fromJson(json['castlingOptions']),
+      promotionOptions: (json.containsKey('promotionOptions')
+              ? BishopSerialisation.build<PromotionOptions>(
+                  json['promotionOptions'],
+                )
+              : null) ??
+          PromotionOptions.standard,
       materialConditions: json.containsKey('materialConditions')
           ? MaterialConditions.fromJson(json['materialConditions'])
           : MaterialConditions.none,
@@ -173,10 +179,8 @@ class Variant {
         'pieceTypes':
             pieceTypes.map((k, v) => MapEntry(k, v.toJson(verbose: verbose))),
         'castlingOptions': castlingOptions.toJson(),
-        if (verbose || promotionOptions is! NoPromotion)
-          'promotionOptions': BishopSerialisation.export<PromotionOptions>(
-            object: promotionOptions,
-          ),
+        'promotionOptions':
+            BishopSerialisation.export<PromotionOptions>(promotionOptions),
         'materialConditions': materialConditions.toJson(),
         if (verbose || gameEndConditions != GameEndConditionSet.standard)
           'gameEndConditions': gameEndConditions.toJson(),

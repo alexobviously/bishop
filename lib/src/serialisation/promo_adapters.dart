@@ -15,8 +15,10 @@ class StandardPromotionAdapter extends BishopTypeAdapter<StandardPromotion> {
 
   @override
   StandardPromotion build(Map<String, dynamic>? params) => StandardPromotion(
-        pieceLimits: params?['pieceLimits'],
-        ranks: params?['ranks'],
+        pieceLimits: (params?['pieceLimits'] as Map<String, dynamic>?)?.map(
+          (k, e) => MapEntry(k, e as int),
+        ),
+        ranks: params?['ranks']?.cast<int>(),
       );
 
   @override
@@ -32,10 +34,12 @@ class OptionalPromotionAdapter extends BishopTypeAdapter<OptionalPromotion> {
 
   @override
   OptionalPromotion build(Map<String, dynamic>? params) => OptionalPromotion(
-        pieceLimits: params?['pieceLimits'],
-        ranks: params?['ranks'],
+        pieceLimits: (params?['pieceLimits'] as Map<String, dynamic>?)?.map(
+          (k, e) => MapEntry(k, e as int),
+        ),
+        ranks: params?['ranks']?.cast<int>(),
         forced: params?['forced'] ?? true,
-        forcedRanks: params?['forcedRanks'],
+        forcedRanks: params?['forcedRanks']?.cast<int>(),
       );
 
   @override

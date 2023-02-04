@@ -19,20 +19,20 @@ class BishopSerialisation {
         OptionalPromotionAdapter(),
       ];
 
-  static List<T> buildMany<T>({
-    required List input,
+  static List<T> buildMany<T>(
+    List input, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
   }) =>
       input
-          .map((e) => build<T>(input: e, adapters: adapters, strict: strict))
+          .map((e) => build<T>(e, adapters: adapters, strict: strict))
           .where((e) => e != null)
           .map((e) => e as T)
           .toList();
 
-  static T? build<T>({
+  static T? build<T>(
+    dynamic input, {
     List<BishopTypeAdapter> adapters = const [],
-    dynamic input,
     bool strict = true,
   }) {
     adapters = [...baseAdapters, ...adapters];
@@ -63,18 +63,18 @@ class BishopSerialisation {
     return object;
   }
 
-  static List exportMany<T>({
-    required List<T> objects,
+  static List exportMany<T>(
+    List<T> objects, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
   }) =>
       objects
-          .map((e) => export<T>(object: e, adapters: adapters, strict: strict))
+          .map((e) => export<T>(e, adapters: adapters, strict: strict))
           .where((e) => e != null)
           .toList();
 
-  static dynamic export<T>({
-    required T object,
+  static dynamic export<T>(
+    T object, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
   }) {
