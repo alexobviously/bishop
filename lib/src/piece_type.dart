@@ -69,6 +69,9 @@ class PieceType {
                 ?.map((e) => RegionEffect.fromJson(e))
                 .toList() ??
             [],
+        actions: json.containsKey('actions')
+            ? BishopSerialisation.buildMany<Action>(json['actions'])
+            : const [],
       );
     }
     throw UnimplementedError('Non-betza pieces in json are not supported yet');
@@ -87,7 +90,8 @@ class PieceType {
       if (verbose || regionEffects.isNotEmpty)
         'regionEffects':
             regionEffects.map((e) => e.toJson(verbose: verbose)).toList(),
-      // if(verbose || actions.isNotEmpty) 'actions': actions,
+      if (verbose || actions.isNotEmpty)
+        'actions': BishopSerialisation.exportMany<Action>(actions),
     };
   }
 
@@ -133,7 +137,7 @@ class PieceType {
     bool noSanSymbol = false,
     int value = Bishop.defaultPieceValue,
     List<RegionEffect> regionEffects = const [],
-    List<Action> abilities = const [],
+    List<Action> actions = const [],
   }) {
     List<Atom> atoms = Betza.parse(betza);
     List<MoveDefinition> moves = [];
@@ -164,7 +168,7 @@ class PieceType {
       noSanSymbol: noSanSymbol,
       value: value,
       regionEffects: regionEffects,
-      actions: abilities,
+      actions: actions,
     );
   }
 

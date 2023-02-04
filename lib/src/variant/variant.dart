@@ -169,6 +169,9 @@ class Variant {
       regions: (json['regions'] as Map<String, dynamic>?)
               ?.map((k, v) => MapEntry(k, BoardRegion.fromJson(v))) ??
           const {},
+      actions: json.containsKey('actions')
+          ? BishopSerialisation.buildMany<Action>(json['actions'])
+          : const [],
     );
   }
 
@@ -199,7 +202,9 @@ class Variant {
         if (pieceValues != null) 'pieceValues': pieceValues,
         if (verbose || regions.isNotEmpty)
           'regions': regions.map((k, v) => MapEntry(k, v.toJson())),
-        // 'actions': actions,
+        if (verbose || actions.isNotEmpty)
+          'actions':
+              BishopSerialisation.exportMany<Action>(actions, strict: false),
       };
 
   Variant copyWith({
@@ -438,7 +443,7 @@ class Variant {
     return standard.copyWith(
       name: 'Atomic Chess',
       actions: [
-        Action.explodeOnCapture(Area.radius(1)),
+        Action.explosionRadius(1),
         Action.checkRoyalsAlive(allowDraw: allowExplosionDraw),
       ],
     );

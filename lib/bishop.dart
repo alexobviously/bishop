@@ -2,6 +2,7 @@
 library bishop;
 
 export 'src/actions/actions.dart';
+export 'src/actions/base_actions.dart';
 export 'src/betza.dart';
 export 'src/board_region.dart';
 export 'src/castling_rights.dart';

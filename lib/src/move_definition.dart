@@ -122,6 +122,13 @@ class Direction {
   final int v;
   const Direction(this.h, this.v);
 
+  factory Direction.fromString(String str) {
+    final parts = str.split(',');
+    return Direction(int.parse(parts.first), int.parse(parts.last));
+  }
+
+  String get simpleString => '$h,$v';
+
   /// Rooks move orthogonally.
   bool get orthogonal => h == 0 || v == 0;
 

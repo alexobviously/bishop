@@ -108,6 +108,11 @@ class Area implements Region {
 
   const Area({required this.directions});
 
+  factory Area.fromStrings(List<String> directions) =>
+      Area(directions: directions.map((e) => Direction.fromString(e)).toList());
+
+  List<String> export() => directions.map((e) => e.simpleString).toList();
+
   factory Area.filled({
     required int width,
     required int height,

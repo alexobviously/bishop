@@ -7,6 +7,7 @@ class BishopSerialisation {
   static List<BishopTypeAdapter> get baseAdapters {
     _baseAdapters ??= [
       ...basePromoAdapters,
+      ...baseActionAdapters,
     ];
     return _baseAdapters!;
   }
@@ -17,6 +18,13 @@ class BishopSerialisation {
         NoPromotionAdapter(),
         StandardPromotionAdapter(),
         OptionalPromotionAdapter(),
+      ];
+
+  static List<BishopTypeAdapter> get baseActionAdapters => [
+        CheckRoyalsAliveAdapter(),
+        ExplodeOnCaptureAdapter(),
+        ExplosionRadiusAdapter(),
+        FlyingGeneralsAdapter(),
       ];
 
   static List<T> buildMany<T>(
@@ -79,21 +87,26 @@ class BishopSerialisation {
     bool strict = true,
   }) {
     adapters = [...baseAdapters, ...adapters];
-    final adapter =
-        adapters.firstWhereOrNull((e) => e.type == object.runtimeType);
-    if (adapter == null) {
-      if (strict) {
-        throw BishopException('Adapter not found (${object.runtimeType})');
+    try {
+      final adapter =
+          adapters.firstWhereOrNull((e) => e.type == object.runtimeType);
+      if (adapter == null) {
+        if (strict) {
+          throw BishopException('Adapter not found (${object.runtimeType})');
+        }
+        return null;
       }
+      final params = adapter.export(object);
+      if (params == null || params.isEmpty) {
+        return adapter.id;
+      }
+      return {
+        'id': adapter.id,
+        ...params,
+      };
+    } on BishopException {
+      if (strict) rethrow;
       return null;
     }
-    final params = adapter.export(object);
-    if (params == null || params.isEmpty) {
-      return adapter.id;
-    }
-    return {
-      'id': adapter.id,
-      ...params,
-    };
   }
 }

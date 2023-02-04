@@ -53,54 +53,28 @@ class Action {
         action: action ?? this.action,
       );
 
-  factory Action.explodeOnCapture(Area area) => Action(
-        event: ActionEvent.afterMove,
-        precondition: Conditions.isCapture,
-        action: ActionDefinitions.explosion(area),
-      );
+  factory Action.explodeOnCapture(Area area) => ActionExplodeOnCapture(area);
+  factory Action.explosionRadius(int radius) => ActionExplosionRadius(radius);
 
   factory Action.checkRoyalsAlive({
-    ActionEvent event = ActionEvent.afterMove,
     bool allowDraw = false,
+    ActionEvent event = ActionEvent.afterMove,
     ActionCondition? precondition,
     ActionCondition? condition,
   }) =>
-      Action(
+      ActionCheckRoyalsAlive(
+        allowDraw: allowDraw,
         event: event,
         precondition: precondition,
         condition: condition,
-        action: (ActionTrigger trigger) {
-          int king = trigger.variant.royalPiece;
-          List<bool> kingsAlive = Bishop.colours
-              .map(
-                (e) =>
-                    trigger.state.board[trigger.state.royalSquares[e].piece] ==
-                    makePiece(king, e),
-              )
-              .toList();
-          if (kingsAlive[Bishop.white]) {
-            return kingsAlive[Bishop.black]
-                ? []
-                : [EffectSetGameResult(WonGameRoyalDead(winner: Bishop.white))];
-          }
-          return kingsAlive[Bishop.black]
-              ? [EffectSetGameResult(WonGameRoyalDead(winner: Bishop.black))]
-              : (allowDraw
-                  ? [EffectSetGameResult(DrawnGameBothRoyalsDead())]
-                  : [EffectInvalidateMove()]);
-        },
       );
 
   /// The flying generals rule from Xiangqi. If the generals/kings are facing
   /// each other, with no pieces between, the move will be invalidated.
   /// Set [activeCondition] to true if you have other actions that might modify
   /// the board before this.
-  factory Action.flyingGenerals({bool activeCondition = false}) => Action(
-        event: ActionEvent.afterMove,
-        precondition: activeCondition ? null : Conditions.royalsNotFacing,
-        condition: activeCondition ? Conditions.royalsNotFacing : null,
-        action: ActionDefinitions.invalidateMove,
-      );
+  factory Action.flyingGenerals({bool activeCondition = false}) =>
+      ActionFlyingGenerals(activeCondition: activeCondition);
 
   /// Copies the Action with the added condition that the piece type is [type].
   /// Used internally when building variants, to enable convenience actions on
