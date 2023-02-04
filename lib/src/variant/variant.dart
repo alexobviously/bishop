@@ -195,6 +195,7 @@ class Variant {
     return {
       'name': name,
       'description': description,
+      'bishopVersion': '1.1.0',
       'boardSize': boardSize.simpleString,
       'pieceTypes': pieceTypes.map(
         (k, v) => MapEntry(

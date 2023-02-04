@@ -29,6 +29,8 @@ designed to be interoperable with Bishop.
 
 [Actions](#actions)
 
+[JSON Serialisation](#json-serialisation)
+
 ***
 
 ## Features 
@@ -306,6 +308,17 @@ Action pawnAdder = Action(
 It's basically a matter of taste which of these you decide to use.
 
 If you want to see more complex examples, look at `Action.flyingGenerals` (Xiangqi's rule that prevents the generals from facing each other), and `Variant.atomic` (a variant in which pieces explode on capture).
+
+***
+
+## JSON Serialisation
+It's possible to import and export Bishop variants in JSON format, simply use the `Variant.fromJson()` constructor, and export with `Variant.toJson()`. In most cases, this will be straightforward, and require no further configuration.
+
+There are some parameters, namely `PromotionOptions` and `Action` classes, that require type adapters to be registered if custom implementations are built. Note that this isn't necessary if you don't want to use serialisation, and most likely only the most complex apps with user-generated variants will need this. This is relatively straightforward though - simply create a `BishopTypeAdapter` that implements the JSON import and export functionality and include it in either `Variant.adapters` or the `adapters` parameter in `fromJson`/`toJson`. See [example/json.dart]() for a demonstration of how to do this.
+
+Serialisation currently has a couple of limitations:
+* `Variant.startPosBuilder` is not supported. This will most likely result in the position builder functionality being refactored soon.
+* Parameterised conditions in Actions currently cannot be exported, because they are just function closures. For example, `ActionCheckRoyalsAlive` optionally takes a `condition`; if this condition is set, then the action will not be exported with the variant. If it isn't set, then there will be no problems. Similarly to `startPosBuilder`, this will probably result in conditions being refactored into a form that works with type adapters.
 
 ***
 
