@@ -173,7 +173,10 @@ class Variant {
         'pieceTypes':
             pieceTypes.map((k, v) => MapEntry(k, v.toJson(verbose: verbose))),
         'castlingOptions': castlingOptions.toJson(),
-        // 'promotionOptions': promotionOptions.toJson(),
+        if (verbose || promotionOptions is! NoPromotion)
+          'promotionOptions': BishopSerialisation.export<PromotionOptions>(
+            object: promotionOptions,
+          ),
         'materialConditions': materialConditions.toJson(),
         if (verbose || gameEndConditions != GameEndConditionSet.standard)
           'gameEndConditions': gameEndConditions.toJson(),

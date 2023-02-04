@@ -48,7 +48,7 @@ abstract class PromotionOptions {
 }
 
 class NoPromotion extends PromotionOptions {
-  const NoPromotion({super.pieceLimits});
+  const NoPromotion();
 
   @override
   PromotionBuilder? build(BuiltVariant variant) => null;

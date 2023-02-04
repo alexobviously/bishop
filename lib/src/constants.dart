@@ -177,3 +177,12 @@ enum Variants {
   /// Builds a `Variant` for use with `Game`.
   Variant build() => builder();
 }
+
+class BishopException {
+  final String? message;
+  const BishopException([this.message]);
+
+  @override
+  String toString() =>
+      message == null ? 'BishopException' : 'BishopException($message)';
+}
