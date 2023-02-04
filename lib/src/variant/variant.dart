@@ -126,18 +126,23 @@ class Variant {
           'Variant needs either a startPosition or startPosBuilder',
         );
 
-  factory Variant.fromJson(Map<String, dynamic> json) {
+  factory Variant.fromJson(
+    Map<String, dynamic> json, {
+    List<BishopTypeAdapter> adapters = const [],
+  }) {
     return Variant(
       name: json['name'],
       description: json['description'],
       boardSize: BoardSize.fromString(json['boardSize']),
       pieceTypes: json['pieceTypes'].map<String, PieceType>(
-        (k, v) => MapEntry(k as String, PieceType.fromJson(v)),
+        (k, v) =>
+            MapEntry(k as String, PieceType.fromJson(v, adapters: adapters)),
       ),
       castlingOptions: CastlingOptions.fromJson(json['castlingOptions']),
       promotionOptions: (json.containsKey('promotionOptions')
               ? BishopSerialisation.build<PromotionOptions>(
                   json['promotionOptions'],
+                  adapters: adapters,
                 )
               : null) ??
           PromotionOptions.standard,
@@ -170,12 +175,19 @@ class Variant {
               ?.map((k, v) => MapEntry(k, BoardRegion.fromJson(v))) ??
           const {},
       actions: json.containsKey('actions')
-          ? BishopSerialisation.buildMany<Action>(json['actions'])
+          ? BishopSerialisation.buildMany<Action>(
+              json['actions'],
+              adapters: adapters,
+            )
           : const [],
     );
   }
 
-  Map<String, dynamic> toJson({bool verbose = false}) => {
+  Map<String, dynamic> toJson({
+    bool verbose = false,
+    List<BishopTypeAdapter> adapters = const [],
+  }) =>
+      {
         'name': name,
         'description': description,
         'boardSize': boardSize.simpleString,

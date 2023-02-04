@@ -54,7 +54,10 @@ class PieceType {
     this.actions = const [],
   });
 
-  factory PieceType.fromJson(Map<String, dynamic> json) {
+  factory PieceType.fromJson(
+    Map<String, dynamic> json, {
+    List<BishopTypeAdapter> adapters = const [],
+  }) {
     if (json.containsKey('betza')) {
       return PieceType.fromBetza(
         json['betza'],
@@ -70,14 +73,20 @@ class PieceType {
                 .toList() ??
             [],
         actions: json.containsKey('actions')
-            ? BishopSerialisation.buildMany<Action>(json['actions'])
+            ? BishopSerialisation.buildMany<Action>(
+                json['actions'],
+                adapters: adapters,
+              )
             : const [],
       );
     }
     throw UnimplementedError('Non-betza pieces in json are not supported yet');
   }
 
-  Map<String, dynamic> toJson({bool verbose = false}) {
+  Map<String, dynamic> toJson({
+    bool verbose = false,
+    List<BishopTypeAdapter> adapters = const [],
+  }) {
     // todo: support non-betza import/export
     return {
       'betza': betza,
@@ -91,8 +100,11 @@ class PieceType {
         'regionEffects':
             regionEffects.map((e) => e.toJson(verbose: verbose)).toList(),
       if (verbose || actions.isNotEmpty)
-        'actions':
-            BishopSerialisation.exportMany<Action>(actions, strict: false),
+        'actions': BishopSerialisation.exportMany<Action>(
+          actions,
+          strict: false,
+          adapters: adapters,
+        ),
     };
   }
 
