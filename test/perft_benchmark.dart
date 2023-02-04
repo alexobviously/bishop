@@ -1,6 +1,5 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:bishop/bishop.dart';
-import 'constants.dart';
 import 'perft.dart';
 
 class PerftBenchmark extends BenchmarkBase {
@@ -36,7 +35,8 @@ void main() {
   for (PerftBenchmark perft in perfts) {
     double time = perft.measure();
     print(
-        '${time.toStringAsFixed(2)}us [${perft.test.fen}, ${perft.test.variant.name}]');
+      '${time.toStringAsFixed(2)}us [${perft.test.fen}, ${perft.test.variant.name}]',
+    );
     total += time;
   }
   print('-- Total Runtime: ${(total / 1000).toStringAsFixed(2)}ms --');

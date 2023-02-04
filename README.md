@@ -38,6 +38,7 @@ designed to be interoperable with Bishop.
 * Legal move generation
 * FEN & PGN input and output
 * Easy and flexible variant definition
+* Importing and exporting variants as JSON for portability
 * Different board sizes
 * Fairy pieces
   * Arbitrary move configuration
@@ -58,7 +59,6 @@ designed to be interoperable with Bishop.
 ### Planned Features
 * Janggi, Shogi and their variants
 * Support for Bughouse, and similar games
-* JSON import/export for variant portability
 * Chasing rules, such as those Xiangqi has
 
 ### Built-in Variants
@@ -316,8 +316,9 @@ It's possible to import and export Bishop variants in JSON format, simply use th
 
 There are some parameters, namely `PromotionOptions` and `Action` classes, that require type adapters to be registered if custom implementations are built. Note that this isn't necessary if you don't want to use serialisation, and most likely only the most complex apps with user-generated variants will need this. This is relatively straightforward though - simply create a `BishopTypeAdapter` that implements the JSON import and export functionality and include it in either `Variant.adapters` or the `adapters` parameter in `fromJson`/`toJson`. See [example/json.dart](https://github.com/alexobviously/bishop/blob/master/example/json.dart) for a demonstration of how to do this.
 
-Serialisation currently has a couple of limitations:
+Serialisation currently has a few limitations:
 * `Variant.startPosBuilder` is not supported. This will most likely result in the position builder functionality being refactored soon.
+* Piece types that aren't built with `PieceType.fromBetza()` aren't supported yet.
 * Parameterised conditions in Actions currently cannot be exported, because they are just function closures. For example, `ActionCheckRoyalsAlive` optionally takes a `condition`; if this condition is set, then the action will not be exported with the variant. If it isn't set, then there will be no problems. Similarly to `startPosBuilder`, this will probably result in conditions being refactored into a form that works with type adapters.
 
 ***
