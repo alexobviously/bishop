@@ -1,3 +1,6 @@
+### 1.1.0
+- JSON Serialisation support - `Variant.fromJson()` and `Variant.toJson()`.
+
 ### 1.0.0
 - A powerful new action system with an accessible API for creating custom game logic. Trigger actions on certain events and execute them if their conditions are met.
   - Support for Atomic Chess.
