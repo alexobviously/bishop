@@ -1,0 +1,48 @@
+{
+ "name": "Example",
+ "description": "An example variant for JSON serialisation",
+ "boardSize": "3x5",
+ "pieceTypes": {
+  "K": {
+   "betza": "K",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   }
+  },
+  "N": {
+   "betza": "N",
+   "value": 300
+  },
+  "P": {
+   "betza": "fmWfcF",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "noSanSymbol": true,
+   "value": 100
+  }
+ },
+ "castlingOptions": {
+  "enabled": false
+ },
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {
+  "enabled": false
+ },
+ "startPosition": "nkn/ppp/3/PPP/NKN w - - 0 1",
+ "enPassant": false,
+ "firstMoveRanks": [
+  [],
+  []
+ ],
+ "actions": [
+  "example.action.doesNothing",
+  {
+   "id": "example.action.doesNothing",
+   "something": "pawn"
+  }
+ ]
+}

@@ -82,6 +82,8 @@ class Variant {
 
   final List<Action> actions;
 
+  final List<BishopTypeAdapter> adapters;
+
   /// Whether this variant involves castling.
   bool get castling => castlingOptions.enabled;
 
@@ -121,6 +123,7 @@ class Variant {
     this.pieceValues,
     this.regions = const {},
     this.actions = const [],
+    this.adapters = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
           'Variant needs either a startPosition or startPosBuilder',
@@ -180,44 +183,56 @@ class Variant {
               adapters: adapters,
             )
           : const [],
+      adapters: adapters,
     );
   }
 
   Map<String, dynamic> toJson({
     bool verbose = false,
     List<BishopTypeAdapter> adapters = const [],
-  }) =>
-      {
-        'name': name,
-        'description': description,
-        'boardSize': boardSize.simpleString,
-        'pieceTypes':
-            pieceTypes.map((k, v) => MapEntry(k, v.toJson(verbose: verbose))),
-        'castlingOptions': castlingOptions.toJson(),
-        'promotionOptions':
-            BishopSerialisation.export<PromotionOptions>(promotionOptions),
-        'materialConditions': materialConditions.toJson(),
-        if (verbose || gameEndConditions != GameEndConditionSet.standard)
-          'gameEndConditions': gameEndConditions.toJson(),
-        if (verbose || outputOptions != OutputOptions.standard)
-          'outputOptions': outputOptions.toJson(),
-        'startPosition': startPosition,
-        // 'startPosBuilder': startPosBuilder,
-        'enPassant': enPassant,
-        'firstMoveRanks': firstMoveRanks,
-        if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
-        if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
-        if (verbose || handOptions != HandOptions.disabled)
-          'handOptions': handOptions.toJson(),
-        if (verbose || gatingMode != GatingMode.none)
-          'gatingMode': gatingMode.name,
-        if (pieceValues != null) 'pieceValues': pieceValues,
-        if (verbose || regions.isNotEmpty)
-          'regions': regions.map((k, v) => MapEntry(k, v.toJson())),
-        if (verbose || actions.isNotEmpty)
-          'actions':
-              BishopSerialisation.exportMany<Action>(actions, strict: false),
-      };
+  }) {
+    final allAdapters = [...adapters, ...this.adapters];
+    return {
+      'name': name,
+      'description': description,
+      'boardSize': boardSize.simpleString,
+      'pieceTypes': pieceTypes.map(
+        (k, v) => MapEntry(
+          k,
+          v.toJson(verbose: verbose, adapters: allAdapters),
+        ),
+      ),
+      'castlingOptions': castlingOptions.toJson(),
+      'promotionOptions': BishopSerialisation.export<PromotionOptions>(
+        promotionOptions,
+        adapters: allAdapters,
+      ),
+      'materialConditions': materialConditions.toJson(),
+      if (verbose || gameEndConditions != GameEndConditionSet.standard)
+        'gameEndConditions': gameEndConditions.toJson(),
+      if (verbose || outputOptions != OutputOptions.standard)
+        'outputOptions': outputOptions.toJson(),
+      'startPosition': startPosition,
+      // 'startPosBuilder': startPosBuilder,
+      'enPassant': enPassant,
+      'firstMoveRanks': firstMoveRanks,
+      if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
+      if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
+      if (verbose || handOptions != HandOptions.disabled)
+        'handOptions': handOptions.toJson(),
+      if (verbose || gatingMode != GatingMode.none)
+        'gatingMode': gatingMode.name,
+      if (pieceValues != null) 'pieceValues': pieceValues,
+      if (verbose || regions.isNotEmpty)
+        'regions': regions.map((k, v) => MapEntry(k, v.toJson())),
+      if (verbose || actions.isNotEmpty)
+        'actions': BishopSerialisation.exportMany<Action>(
+          actions,
+          strict: false,
+          adapters: allAdapters,
+        ),
+    };
+  }
 
   Variant copyWith({
     String? name,
@@ -240,6 +255,7 @@ class Variant {
     Map<String, int>? pieceValues,
     Map<String, BoardRegion>? regions,
     List<Action>? actions,
+    List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
       name: name ?? this.name,
@@ -262,6 +278,7 @@ class Variant {
       pieceValues: pieceValues ?? this.pieceValues,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
+      adapters: adapters ?? this.adapters,
     );
   }
 
@@ -475,7 +492,7 @@ class Variant {
         name: 'Spawn Chess',
         description:
             'Moving the exposed king adds a pawn to the player\'s hand.',
-        startPosition: 'rnb1nbnr/8/3k4/8/8/4K3/8/RNBN1BNR[PPpp] w KQkq - 0 1',
+        startPosition: 'rnb1nbnr/8/3k4/8/8/4K3/8/RNBN1BNR[PPpp] w - - 0 1',
         handOptions: HandOptions.enabledOnly,
         castlingOptions: CastlingOptions.none,
         pieceTypes: {

@@ -45,7 +45,7 @@ class BishopSerialisation {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
   }) {
-    adapters = [...baseAdapters, ...adapters];
+    adapters = [...adapters, ...baseAdapters];
     String? id;
     Map<String, dynamic>? params;
     if (input is String) id = input;
@@ -88,7 +88,7 @@ class BishopSerialisation {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
   }) {
-    adapters = [...baseAdapters, ...adapters];
+    adapters = [...adapters, ...baseAdapters];
     try {
       final adapter =
           adapters.firstWhereOrNull((e) => e.type == object.runtimeType);
