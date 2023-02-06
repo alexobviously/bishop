@@ -56,7 +56,6 @@ class Shogi {
       );
 }
 
-/// Working, apart from drop square logic (Dobutsu allows drops anywhere).
 class Dobutsu {
   static const defaultFen = 'gle/1c1/1C1/ELG[-] w - - 0 1';
 
@@ -73,6 +72,7 @@ class Dobutsu {
 
   static Variant dobutsu() => Variant(
         name: 'Dobutsu Shogi',
+        description: 'A simple Shogi variant aimed at children.',
         boardSize: BoardSize(3, 4),
         startPosition: defaultFen,
         pieceTypes: {
