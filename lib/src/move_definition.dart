@@ -58,6 +58,22 @@ class MoveDefinition {
     this.lameNormalised,
   });
 
+  /// Build a move definition from a betza [atom] and a [direction].
+  factory MoveDefinition.fromBetza(Atom atom, Direction direction) =>
+      MoveDefinition(
+        direction: direction,
+        range: atom.range,
+        modality: atom.modality,
+        enPassant: atom.enPassant,
+        firstOnly: atom.firstOnly,
+        lame: atom.lame,
+        hopDistance: atom.unlimitedHopper
+            ? 0
+            : atom.limitedHopper
+                ? 1
+                : -1,
+      );
+
   MoveDefinition copyWith({
     Direction? direction,
     int? range,
@@ -138,6 +154,13 @@ class Direction {
   /// Knights move obliquely.
   bool get oblique => !orthogonal && !diagonal;
 
+  /// Whether this direction is orthogonal, diagonal, or oblique.
+  DirectionType get type => orthogonal
+      ? DirectionType.orthogonal
+      : diagonal
+          ? DirectionType.diagonal
+          : DirectionType.oblique;
+
   /// A list of directions that occur from mirroring this `Direction` in both axes.
   List<Direction> get permutations {
     List<Direction> perms = [];
@@ -153,6 +176,9 @@ class Direction {
     return perms;
   }
 
+  /// Returns this direction in the positive direction of both axes.
+  Direction abs() => Direction(h.abs(), v.abs());
+
   /// Returns a copy of this Direction, translated by [x] and [y].
   Direction translate(int x, int y) => Direction(h + x, v + y);
 
@@ -165,4 +191,10 @@ class Direction {
 
   @override
   int get hashCode => (h << 8) + v;
+}
+
+enum DirectionType {
+  orthogonal,
+  diagonal,
+  oblique;
 }

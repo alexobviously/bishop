@@ -133,9 +133,14 @@ const int INVALID = Bishop.invalid;
 const int HAND = Bishop.hand;
 
 enum Modality {
-  quiet,
-  capture,
-  both;
+  quiet('m'),
+  capture('c'),
+  both('');
+
+  final String betza;
+  const Modality(this.betza);
+  factory Modality.fromBetza(String betza) =>
+      values.firstWhere((e) => e.betza == betza);
 }
 
 enum GatingMode {
