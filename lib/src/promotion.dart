@@ -47,6 +47,10 @@ class PiecePromoOptions {
         promotesTo: pieces,
       );
 
+  /// A piece that can be promoted, but only to [piece].
+  factory PiecePromoOptions.promotesToOne(String piece) =>
+      PiecePromoOptions.promotesTo([piece]);
+
   @override
   int get hashCode =>
       canPromote.hashCode ^
