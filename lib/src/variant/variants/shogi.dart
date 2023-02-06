@@ -67,6 +67,7 @@ class Dobutsu {
   static PieceType chick() =>
       PieceType.fromBetza('fW', promoOptions: PiecePromoOptions.promotable);
   static PieceType hen() => Shogi.gold();
+  static PieceType lion() => PieceType.king();
 
   static Variant variant() => dobutsu();
 
@@ -75,12 +76,12 @@ class Dobutsu {
         boardSize: BoardSize(3, 4),
         startPosition: defaultFen,
         pieceTypes: {
-          'L': PieceType.king(), // lion
+          'L': lion(),
           'G': giraffe(),
           'E': elephant(),
           'C': chick(),
           'H': hen(),
         },
         handOptions: HandOptions.captures,
-      );
+      ).withCampMate();
 }

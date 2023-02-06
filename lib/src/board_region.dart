@@ -33,6 +33,14 @@ class BoardRegion implements Region {
     this.endFile,
   });
 
+  /// A board region consisting of the entirety of a single rank.
+  factory BoardRegion.rank(int rank) =>
+      BoardRegion(startRank: rank, endRank: rank);
+
+  /// A board region consisting of the entirety of a single file.
+  factory BoardRegion.file(int file) =>
+      BoardRegion(startFile: file, endFile: file);
+
   factory BoardRegion.fromJson(Map<String, dynamic> json) => BoardRegion(
         startRank: json['startRank'],
         endRank: json['endRank'],

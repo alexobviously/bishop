@@ -290,6 +290,33 @@ class Variant {
             pieceTypes.map((k, v) => MapEntry(k, v.normalise(boardSize))),
       );
 
+  /// Copies the variant with the 'campmate' end condition:
+  /// When a royal piece enters the opposite rank, that player wins the game.
+  Variant withCampMate({
+    String whiteRegionName = 'whiteCamp',
+    String blackRegionName = 'blackCamp',
+    int? whiteRank,
+    int? blackRank,
+  }) {
+    final effect =
+        RegionEffect.winGame(white: blackRegionName, black: whiteRegionName);
+    final pieces = pieceTypes.map(
+      (k, v) => MapEntry(
+        k,
+        v.royal ? v.copyWith(regionEffects: [...v.regionEffects, effect]) : v,
+      ),
+    );
+    return copyWith(
+      pieceTypes: pieces,
+      regions: {
+        ...regions,
+        whiteRegionName: BoardRegion.rank(whiteRank ?? Bishop.rank1),
+        if (whiteRegionName != blackRegionName)
+          blackRegionName: BoardRegion.rank(blackRank ?? boardSize.maxRank),
+      },
+    );
+  }
+
   factory Variant.standard() {
     return Variant(
       name: 'Chess',
