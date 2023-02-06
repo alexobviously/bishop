@@ -11,6 +11,8 @@ part 'hand_options.dart';
 part 'output_options.dart';
 part 'promotion_options.dart';
 part 'material_conditions.dart';
+
+part 'variants/asymmetric.dart';
 part 'variants/common.dart';
 part 'variants/large.dart';
 part 'variants/misc.dart';

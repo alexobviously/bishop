@@ -1,0 +1,124 @@
+{
+ "name": "Orda",
+ "description": "",
+ "bishopVersion": "1.1.2",
+ "boardSize": "8x8",
+ "pieceTypes": {
+  "K": {
+   "betza": "K",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "regionEffects": [
+    {
+     "whiteRegion": "blackCamp",
+     "blackRegion": "whiteCamp",
+     "winGame": true
+    }
+   ]
+  },
+  "P": {
+   "betza": "fmWfceFifmnD",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "enPassantable": true,
+   "noSanSymbol": true,
+   "value": 100
+  },
+  "N": {
+   "betza": "N",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 300
+  },
+  "B": {
+   "betza": "B",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 300
+  },
+  "R": {
+   "betza": "R",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 500
+  },
+  "Q": {
+   "betza": "Q",
+   "value": 900
+  },
+  "L": {
+   "betza": "mNcR",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 400
+  },
+  "H": {
+   "betza": "KN",
+   "value": 700
+  },
+  "A": {
+   "betza": "mNcB",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 400
+  },
+  "Y": {
+   "betza": "FfW",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   }
+  }
+ },
+ "castlingOptions": {
+  "enabled": true,
+  "kTarget": 6,
+  "qTarget": 2,
+  "fixedRooks": true,
+  "kRook": 7,
+  "qRook": 0,
+  "rookPiece": "R",
+  "useRookAsTarget": false
+ },
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {
+  "enabled": false
+ },
+ "startPosition": "lhaykahl/8/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1",
+ "enPassant": true,
+ "firstMoveRanks": [
+  [
+   1
+  ],
+  [
+   6
+  ]
+ ],
+ "halfMoveDraw": 100,
+ "repetitionDraw": 3,
+ "regions": {
+  "whiteCamp": {
+   "startRank": 0,
+   "endRank": 0
+  },
+  "blackCamp": {
+   "startRank": 7,
+   "endRank": 7
+  }
+ }
+}

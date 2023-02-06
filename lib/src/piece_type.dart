@@ -139,6 +139,9 @@ class PieceType {
   /// Returns a copy of the piece type with `PiecePromoOptions.none`.
   PieceType withNoPromotion() => copyWith(promoOptions: PiecePromoOptions.none);
 
+  /// Returns a copy of the piece type with [value].
+  PieceType withValue(int value) => copyWith(value: value);
+
   factory PieceType.empty() => PieceType(
         moves: [],
         promoOptions: PiecePromoOptions.none,
@@ -201,9 +204,9 @@ class PieceType {
         noSanSymbol: true,
         value: 100,
       );
-  factory PieceType.knibis() => PieceType.fromBetza('mNcB');
+  factory PieceType.knibis() => PieceType.fromBetza('mNcB', value: 400);
   factory PieceType.biskni() => PieceType.fromBetza('mBcN');
-  factory PieceType.kniroo() => PieceType.fromBetza('mNcR');
+  factory PieceType.kniroo() => PieceType.fromBetza('mNcR', value: 400);
   factory PieceType.rookni() => PieceType.fromBetza('mRcN');
   factory PieceType.bisroo() => PieceType.fromBetza('mBcR');
   factory PieceType.roobis() => PieceType.fromBetza('mRcB');

@@ -1,0 +1,78 @@
+{
+ "name": "Orda Mirror",
+ "description": "",
+ "bishopVersion": "1.1.2",
+ "boardSize": "8x8",
+ "pieceTypes": {
+  "K": {
+   "betza": "K",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "regionEffects": [
+    {
+     "whiteRegion": "blackCamp",
+     "blackRegion": "whiteCamp",
+     "winGame": true
+    }
+   ]
+  },
+  "P": {
+   "betza": "fmWfceFifmnD",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "enPassantable": true,
+   "noSanSymbol": true,
+   "value": 100
+  },
+  "L": {
+   "betza": "mNcR",
+   "value": 400
+  },
+  "H": {
+   "betza": "KN",
+   "value": 700
+  },
+  "A": {
+   "betza": "mNcB",
+   "value": 400
+  },
+  "F": {
+   "betza": "mQcN",
+   "value": 500
+  }
+ },
+ "castlingOptions": {
+  "enabled": false
+ },
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {
+  "enabled": false
+ },
+ "startPosition": "lhafkahl/8/pppppppp/8/8/PPPPPPPP/8/LHAFKAHL w - - 0 1",
+ "enPassant": true,
+ "firstMoveRanks": [
+  [
+   1
+  ],
+  [
+   6
+  ]
+ ],
+ "halfMoveDraw": 100,
+ "repetitionDraw": 3,
+ "regions": {
+  "whiteCamp": {
+   "startRank": 0,
+   "endRank": 0
+  },
+  "blackCamp": {
+   "startRank": 7,
+   "endRank": 7
+  }
+ }
+}

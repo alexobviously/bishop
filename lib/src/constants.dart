@@ -185,7 +185,9 @@ enum Variants {
   spawn(MiscVariants.spawn),
   hoppelPoppel(MiscVariants.hoppelPoppel),
   kinglet(MiscVariants.kinglet),
-  threeKings(MiscVariants.threeKings);
+  threeKings(MiscVariants.threeKings),
+  orda(Orda.orda),
+  ordaMirror(Orda.ordaMirror);
 
   final Variant Function() builder;
   const Variants(this.builder);

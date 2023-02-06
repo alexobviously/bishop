@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:bishop/bishop.dart';
 
+import 'play.dart';
+
 Map<String, dynamic> readJson(String filename) {
   final data = File(filename).readAsStringSync();
   return jsonDecode(data);
@@ -16,11 +18,23 @@ void writeJson(String filename, Map<String, dynamic> json) {
 
 void main(List<String> args) {
   if (args.isNotEmpty && args.contains('export')) {
-    for (Variants v in Variants.values) {
-      final file = File('json/${v.name}.json');
+    List<String> vlist = [...args];
+    vlist.remove('export');
+    List<Variants> variants = vlist.isEmpty
+        ? Variants.values
+        : vlist
+            .map(
+              (e) => Variants.values
+                  .firstWhere((v) => e.toLowerCase() == v.name.toLowerCase()),
+            )
+            .toList();
+    for (Variants v in variants) {
+      String filename = 'json/${v.name}.json';
+      final file = File(filename);
       final map = v.build().toJson(verbose: false);
       final json = JsonEncoder.withIndent(' ').convert(map);
       file.writeAsStringSync(json);
+      printMagenta('Wrote $filename');
     }
     return;
   }

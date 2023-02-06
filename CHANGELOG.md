@@ -1,3 +1,7 @@
+### 1.1.3
+- Variants:
+  - Orda (`Orda.orda()`) and Orda Mirror (`Orda.ordaMirror()`).
+
 ### 1.1.2
 - `ActionCheckPieceCount`: allows for win conditions based on elimination of arbitrary pieces.
 - `Variant.forbidChecks`: if true, it is impossible for anyone to deliver a check.
