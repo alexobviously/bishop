@@ -169,7 +169,9 @@ enum Variants {
   atomic(Variant.atomic),
   horde(Variant.horde),
   musketeer(Musketeer.variant),
-  xiangqi(Xiangqi.variant),
+  xiangqi(Xiangqi.xiangqi),
+  miniXiangqi(Xiangqi.mini),
+  manchu(Xiangqi.manchu),
   spawn(Variant.spawn);
 
   final Variant Function() builder;

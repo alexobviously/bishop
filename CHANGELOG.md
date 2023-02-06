@@ -1,3 +1,6 @@
+### 1.1.1
+- Xiangqi variants added: Mini Xiangqi and Manchu (`Xiangqi.mini()`, `Xiangqi.manchu()`).
+
 ### 1.1.0
 - JSON Serialisation support - `Variant.fromJson()` and `Variant.toJson()`.
 
