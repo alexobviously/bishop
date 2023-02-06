@@ -3,7 +3,7 @@ part of '../variant.dart';
 /// Variants of chess played on larger boards.
 class LargeVariants {
   static Variant capablanca() {
-    Variant standard = Variant.standard();
+    final standard = Variant.standard();
     return standard.copyWith(
       name: 'Capablanca Chess',
       boardSize: BoardSize(10, 8),
@@ -19,7 +19,7 @@ class LargeVariants {
   }
 
   static Variant grand() {
-    Variant standard = Variant.standard();
+    final standard = Variant.standard();
     return standard.copyWith(
       name: 'Grand Chess',
       boardSize: BoardSize(10, 10),
@@ -42,6 +42,25 @@ class LargeVariants {
         'C': PieceType.chancellor(), // marshal
         'A': PieceType.archbishop(), // cardinal
       },
+    );
+  }
+
+  static Variant shako() {
+    final standard = Variant.standard();
+    return standard.copyWith(
+      name: 'Shako',
+      boardSize: BoardSize(10, 10),
+      startPosition:
+          'c8c/ernbqkbnre/pppppppppp/10/10/10/10/PPPPPPPPPP/ERNBQKBNRE/C8C w KQkq - 0 1',
+      pieceTypes: {
+        ...standard.pieceTypes,
+        'E': PieceType.fromBetza('FA'),
+        'C': Xiangqi.cannon(),
+      },
+      firstMoveRanks: [
+        [Bishop.rank3], // white
+        [Bishop.rank8], // black
+      ],
     );
   }
 }

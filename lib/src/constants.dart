@@ -164,6 +164,7 @@ enum Variants {
   crazyhouse(CommonVariants.crazyhouse),
   capablanca(LargeVariants.capablanca),
   grand(LargeVariants.grand),
+  shako(LargeVariants.shako),
   mini(SmallVariants.mini),
   miniRandom(SmallVariants.miniRandom),
   micro(SmallVariants.micro),
