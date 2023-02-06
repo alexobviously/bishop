@@ -31,6 +31,8 @@ class Shogi {
   static PiecePromoOptions get promotesToGold =>
       PiecePromoOptions.promotesToOne('G');
 
+  static Variant variant() => shogi();
+
   static Variant shogi() => Variant(
         name: 'Shogi',
         boardSize: BoardSize(9, 9),
@@ -51,5 +53,34 @@ class Shogi {
         promotionOptions: PromotionOptions.optional(
           ranks: [Bishop.rank7, Bishop.rank3],
         ),
+      );
+}
+
+/// Working, apart from drop square logic (Dobutsu allows drops anywhere).
+class Dobutsu {
+  static const defaultFen = 'gle/1c1/1C1/ELG[-] w - - 0 1';
+
+  static PieceType giraffe() =>
+      PieceType.fromBetza('W', promoOptions: PiecePromoOptions.none);
+  static PieceType elephant() =>
+      PieceType.fromBetza('F', promoOptions: PiecePromoOptions.none);
+  static PieceType chick() =>
+      PieceType.fromBetza('fW', promoOptions: PiecePromoOptions.promotable);
+  static PieceType hen() => Shogi.gold();
+
+  static Variant variant() => dobutsu();
+
+  static Variant dobutsu() => Variant(
+        name: 'Dobutsu Shogi',
+        boardSize: BoardSize(3, 4),
+        startPosition: defaultFen,
+        pieceTypes: {
+          'L': PieceType.king(), // lion
+          'G': giraffe(),
+          'E': elephant(),
+          'C': chick(),
+          'H': hen(),
+        },
+        handOptions: HandOptions.captures,
       );
 }

@@ -177,6 +177,8 @@ enum Variants {
   xiangqi(Xiangqi.xiangqi),
   miniXiangqi(Xiangqi.mini),
   manchu(Xiangqi.manchu),
+  shogi(Shogi.shogi),
+  dobutsu(Dobutsu.dobutsu),
   spawn(Variant.spawn);
 
   final Variant Function() builder;
