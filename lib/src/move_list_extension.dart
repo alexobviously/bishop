@@ -4,6 +4,9 @@ extension MoveListExtension on Iterable<Move> {
   /// All moves that involve a promotion.
   List<Move> get promoMoves => where((e) => e.promotion).toList();
 
+  /// All moves that involve castling.
+  List<Move> get castlingMoves => where((e) => e.castling).toList();
+
   /// All moves that involve gating.
   List<Move> get gatingMoves => where((e) => e.gate).toList();
 

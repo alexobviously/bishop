@@ -61,6 +61,15 @@ class LargeVariants {
         [Bishop.rank3], // white
         [Bishop.rank8], // black
       ],
+      castlingOptions: CastlingOptions(
+        enabled: true,
+        kTarget: Bishop.fileH,
+        qTarget: Bishop.fileD,
+        fixedRooks: true,
+        kRook: Bishop.fileI,
+        qRook: Bishop.fileB,
+        rookPiece: 'R',
+      ),
     );
   }
 }

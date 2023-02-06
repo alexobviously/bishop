@@ -42,6 +42,7 @@ class CastlingOptions {
         fixedRooks: json['fixedRooks'] ?? true,
         kRook: json['kRook'],
         qRook: json['qRook'],
+        rookPiece: json['rookPiece'],
         useRookAsTarget: json['useRookAsTarget'] ?? false,
       );
 
