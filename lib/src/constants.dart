@@ -13,7 +13,7 @@ typedef FenBuilder = String Function();
 
 // TODO: there's a lot of stuff here now, maybe refactor and not call this constants?
 class Bishop {
-  static const version = '1.1.1';
+  static const version = '1.1.2';
 
   static const Colour white = 0;
   static const Colour black = 1;
