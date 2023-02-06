@@ -102,3 +102,5 @@ class GameEndConditions {
       elimination == other.elimination &&
       checkLimit == other.checkLimit;
 }
+
+// TODO: make a shortcut for ActionCheckPieceCount here 

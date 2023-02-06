@@ -23,4 +23,19 @@ class MiscVariants {
           ),
         },
       );
+
+  static Variant kinglet() => Variant.standard().copyWith(
+        name: 'Kinglet Chess',
+        description:
+            'The first player to capture all the opponent\'s pawns wins.',
+        pieceTypes: {
+          'P': PieceType.pawn(),
+          'N': PieceType.knight().withNoPromotion(),
+          'B': PieceType.bishop().withNoPromotion(),
+          'R': PieceType.rook().withNoPromotion(),
+          'Q': PieceType.queen().withNoPromotion(),
+          'K': PieceType.fromBetza('K'),
+        },
+        actions: [ActionCheckPieceCount(pieceType: 'P')],
+      );
 }

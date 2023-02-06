@@ -1005,8 +1005,9 @@ class Game {
   }
 
   /// Check if [player]'s king is currently attacked.
-  bool kingAttacked(int player) =>
-      isAttacked(state.royalSquares[player], player.opponent);
+  bool kingAttacked(int player) => state.royalSquares[player] != Bishop.invalid
+      ? isAttacked(state.royalSquares[player], player.opponent)
+      : false;
 
   /// Check the number of times the current position has occurred in the hash table.
   int get hashHits => zobrist.hashHits(state.hash);

@@ -136,6 +136,9 @@ class PieceType {
         regionEffects: regionEffects.map((e) => e.normalise(size)).toList(),
       );
 
+  /// Returns a copy of the piece type with `PiecePromoOptions.none`.
+  PieceType withNoPromotion() => copyWith(promoOptions: PiecePromoOptions.none);
+
   factory PieceType.empty() => PieceType(
         moves: [],
         promoOptions: PiecePromoOptions.none,

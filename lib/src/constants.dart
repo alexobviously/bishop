@@ -182,7 +182,8 @@ enum Variants {
   shogi(Shogi.shogi),
   dobutsu(Dobutsu.dobutsu),
   spawn(MiscVariants.spawn),
-  hoppelPoppel(MiscVariants.hoppelPoppel);
+  hoppelPoppel(MiscVariants.hoppelPoppel),
+  kinglet(MiscVariants.kinglet);
 
   final Variant Function() builder;
   const Variants(this.builder);

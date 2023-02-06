@@ -110,3 +110,10 @@ class DrawnGameBothRoyalsDead extends DrawnGame {
   @override
   String toString() => 'DrawnGameBothRoyalsDead';
 }
+
+class DrawnGameElimination extends DrawnGame {
+  const DrawnGameElimination();
+
+  @override
+  String toString() => 'DrawnGameElimination';
+}

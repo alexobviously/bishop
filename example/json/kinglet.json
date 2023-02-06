@@ -1,0 +1,104 @@
+{
+ "name": "Kinglet Chess",
+ "description": "The first player to capture all the opponent's pawns wins.",
+ "bishopVersion": "1.1.2",
+ "boardSize": "8x8",
+ "pieceTypes": {
+  "P": {
+   "betza": "fmWfceFifmnD",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "enPassantable": true,
+   "noSanSymbol": true,
+   "value": 100
+  },
+  "N": {
+   "betza": "N",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 300
+  },
+  "B": {
+   "betza": "B",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 300
+  },
+  "R": {
+   "betza": "R",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 500
+  },
+  "Q": {
+   "betza": "Q",
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 900
+  },
+  "K": {
+   "betza": "K"
+  }
+ },
+ "castlingOptions": {
+  "enabled": true,
+  "kTarget": 6,
+  "qTarget": 2,
+  "fixedRooks": true,
+  "kRook": 7,
+  "qRook": 0,
+  "rookPiece": "R",
+  "useRookAsTarget": false
+ },
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {
+  "enabled": true,
+  "soloMaters": [
+   "P",
+   "Q",
+   "R",
+   "A",
+   "C"
+  ],
+  "pairMaters": [
+   "N"
+  ],
+  "combinedPairMaters": [
+   "B"
+  ],
+  "specialCases": [
+   [
+    "B",
+    "N"
+   ]
+  ]
+ },
+ "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+ "enPassant": true,
+ "firstMoveRanks": [
+  [
+   1
+  ],
+  [
+   6
+  ]
+ ],
+ "halfMoveDraw": 100,
+ "repetitionDraw": 3,
+ "actions": [
+  {
+   "id": "bishop.action.checkPieceCount",
+   "pieceType": "P"
+  }
+ ]
+}

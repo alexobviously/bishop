@@ -61,6 +61,74 @@ class CheckRoyalsAliveAdapter
   }
 }
 
+/// Checks if at least [count] pieces of type [pieceType] are present for [player].
+/// If [player] is null, then both players will be checked.
+/// If both players have less than [count], it will be a draw.
+/// If one player has less, then it will be a win for their opponent, unless
+/// [draw] is true in which case it will be a draw.
+class ActionCheckPieceCount extends Action {
+  final String pieceType;
+  final int count;
+  final bool draw;
+  final int? player;
+
+  ActionCheckPieceCount({
+    required this.pieceType,
+    this.count = 1,
+    this.draw = false,
+    this.player,
+    super.event = ActionEvent.afterMove,
+    super.precondition,
+    super.condition,
+  }) : super(
+          action: (ActionTrigger trigger) {
+            int piece = trigger.variant.pieceIndexLookup[pieceType]!;
+            bool white = player == Bishop.black ||
+                trigger.state.pieces[makePiece(piece, Bishop.white)] >= count;
+            bool black = player == Bishop.white ||
+                trigger.state.pieces[makePiece(piece, Bishop.black)] >= count;
+            if (white && black) return [];
+            if (draw || (!white && !black)) {
+              return [EffectSetGameResult(DrawnGameElimination())];
+            }
+            return [
+              EffectSetGameResult(
+                WonGameElimination(winner: white ? Bishop.white : Bishop.black),
+              ),
+            ];
+          },
+        );
+}
+
+class CheckPieceCountAdapter extends BishopTypeAdapter<ActionCheckPieceCount> {
+  @override
+  String get id => 'bishop.action.checkPieceCount';
+
+  @override
+  ActionCheckPieceCount build(Map<String, dynamic>? params) =>
+      ActionCheckPieceCount(
+        pieceType: params!['pieceType'],
+        count: params['count'] ?? 1,
+        draw: params['draw'] ?? false,
+        player: params['player'],
+        event: ActionEvent.import(params['event']),
+      );
+
+  @override
+  Map<String, dynamic>? export(ActionCheckPieceCount e) {
+    if (e.condition != null || e.precondition != null) {
+      throw BishopException('Unsupported export of condition or precondition');
+    }
+    return {
+      'pieceType': e.pieceType,
+      if (e.count != 1) 'count': e.count,
+      if (e.draw) 'draw': e.draw,
+      if (e.player != null) 'player': e.player,
+      if (e.event != ActionEvent.afterMove) 'event': e.event.export(),
+    };
+  }
+}
+
 class ActionFlyingGenerals extends Action {
   final bool activeCondition;
   ActionFlyingGenerals({this.activeCondition = false})

@@ -14,13 +14,16 @@ void writeJson(String filename, Map<String, dynamic> json) {
   file.writeAsStringSync(data);
 }
 
-void main() {
-  // for (Variants v in Variants.values) {
-  //   final file = File('json/${v.name}.json');
-  //   final map = v.build().toJson(verbose: false);
-  //   final json = JsonEncoder.withIndent(' ').convert(map);
-  //   file.writeAsStringSync(json);
-  // }
+void main(List<String> args) {
+  if (args.isNotEmpty && args.contains('export')) {
+    for (Variants v in Variants.values) {
+      final file = File('json/${v.name}.json');
+      final map = v.build().toJson(verbose: false);
+      final json = JsonEncoder.withIndent(' ').convert(map);
+      file.writeAsStringSync(json);
+    }
+    return;
+  }
 
   final variant = Variant(
     name: 'Example',

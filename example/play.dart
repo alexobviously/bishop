@@ -48,6 +48,7 @@ void main(List<String> args) async {
     }
   }
 
+  printMagenta(game.ascii());
   printCyan(game.fen);
   printPgn();
   printHistory();

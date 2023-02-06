@@ -78,4 +78,15 @@ class Conditions {
         }
         return true;
       };
+
+  static ActionCondition playerHasPieceCount({
+    required String pieceType,
+    required int player,
+    int count = 1,
+    bool draw = false,
+  }) =>
+      (ActionTrigger trigger) {
+        int piece = trigger.variant.pieceIndexLookup[pieceType]!;
+        return trigger.state.pieces[makePiece(piece, player)] >= count;
+      };
 }
