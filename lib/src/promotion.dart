@@ -22,7 +22,7 @@ class PiecePromoOptions {
       PiecePromoOptions(
         canPromote: json['canPromote'] ?? false,
         canPromoteTo: json['canPromoteTo'] ?? false,
-        promotesTo: json['promotesTo'],
+        promotesTo: json['promotesTo']?.cast<String>(),
       );
 
   Map<String, dynamic> toJson() => {

@@ -4,7 +4,7 @@ part of '../variant.dart';
 /// Many rules, specifically those related to dropping, are not implemented yet.
 class Shogi {
   static const defaultFen =
-      'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL[-] w 0 1';
+      'lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL[] w - - 0 1';
 
   static PieceType pawn() =>
       PieceType.fromBetza('fW', promoOptions: promotesToGold);
