@@ -1,8 +1,9 @@
 ### 1.1.1
-- Xiangqi variants added: Mini Xiangqi and Manchu (`Xiangqi.mini()`, `Xiangqi.manchu()`).
+- Added variant definitions: Mini Xiangqi (`Xiangqi.mini()`), Manchu (`Xiangqi.manchu()`), Hoppel-Poppel (`MiscVariants.hoppelPoppel()`).
 - Fixed a bug in serialisation of pieces with limited promo options.
 - Experimental (incomplete) Shogi and Dobutsu support.
 - `Variant.withCampMate()` - helper method to add the campmate end condition to a variant.
+- `Variant.withPieces()` and `Variant.withPiecesRemoved()` helpers.
 
 ### 1.1.0
 - JSON Serialisation support - `Variant.fromJson()` and `Variant.toJson()`.

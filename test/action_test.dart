@@ -13,7 +13,7 @@ void main() {
     });
     test('Add to Hand', () {
       final g = Game(
-        variant: Variant.spawn(),
+        variant: MiscVariants.spawn(),
         fen: '4k3/8/8/8/8/8/8/4K3 w - - 0 1',
       );
       g.makeMoveString('e1e2');
@@ -33,7 +33,7 @@ void main() {
   });
   test('Piece specific action doesn\'t execute for other pieces', () {
     final g = Game(
-      variant: Variant.spawn(),
+      variant: MiscVariants.spawn(),
       fen: '4k3/8/8/8/8/8/8/N3K3 w - - 0 1',
     );
     g.makeMoveString('a1c2');

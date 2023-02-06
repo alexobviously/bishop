@@ -160,26 +160,27 @@ const defaultSeed = 7363661891;
 /// All built in variants.
 enum Variants {
   standard(Variant.standard),
-  chess960(Variant.chess960),
-  crazyhouse(Variant.crazyhouse),
-  capablanca(Variant.capablanca),
-  grand(Variant.grand),
+  chess960(CommonVariants.chess960),
+  crazyhouse(CommonVariants.crazyhouse),
+  capablanca(LargeVariants.capablanca),
+  grand(LargeVariants.grand),
   mini(SmallVariants.mini),
   miniRandom(SmallVariants.miniRandom),
   micro(SmallVariants.micro),
   nano(SmallVariants.nano),
-  seirawan(Variant.seirawan),
-  threeCheck(Variant.threeCheck),
-  koth(Variant.kingOfTheHill),
-  atomic(Variant.atomic),
-  horde(Variant.horde),
+  seirawan(CommonVariants.seirawan),
+  threeCheck(CommonVariants.threeCheck),
+  koth(CommonVariants.kingOfTheHill),
+  atomic(CommonVariants.atomic),
+  horde(CommonVariants.horde),
   musketeer(Musketeer.variant),
   xiangqi(Xiangqi.xiangqi),
   miniXiangqi(Xiangqi.mini),
   manchu(Xiangqi.manchu),
   shogi(Shogi.shogi),
   dobutsu(Dobutsu.dobutsu),
-  spawn(Variant.spawn);
+  spawn(MiscVariants.spawn),
+  hoppelPoppel(MiscVariants.hoppelPoppel);
 
   final Variant Function() builder;
   const Variants(this.builder);

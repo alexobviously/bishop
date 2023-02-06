@@ -11,6 +11,9 @@ part 'hand_options.dart';
 part 'output_options.dart';
 part 'promotion_options.dart';
 part 'material_conditions.dart';
+part 'variants/common.dart';
+part 'variants/large.dart';
+part 'variants/misc.dart';
 part 'variants/musketeer.dart';
 part 'variants/shogi.dart';
 part 'variants/small.dart';
@@ -290,6 +293,15 @@ class Variant {
             pieceTypes.map((k, v) => MapEntry(k, v.normalise(boardSize))),
       );
 
+  /// Copies the variant with [pieceTypes], including piece types already in
+  /// the variant and overwriting them if necessary.
+  Variant withPieces(Map<String, PieceType> pieceTypes) =>
+      copyWith(pieceTypes: {...this.pieceTypes, ...pieceTypes});
+
+  /// Copies the variant with [pieces] removed.
+  Variant withPiecesRemoved(List<String> pieces) => copyWith(
+      pieceTypes: {...pieceTypes}..removeWhere((k, _) => pieces.contains(k)));
+
   /// Copies the variant with the 'campmate' end condition:
   /// When a royal piece enters the opposite rank, that player wins the game.
   Variant withCampMate({
@@ -344,151 +356,20 @@ class Variant {
     );
   }
 
-  factory Variant.chess960() {
-    return Variant.standard().copyWith(
-      name: 'Chess960',
-      startPosBuilder: build960Position,
-      castlingOptions: CastlingOptions.chess960,
-      outputOptions: OutputOptions.chess960,
-    );
-  }
-
-  factory Variant.crazyhouse() {
-    return Variant.standard().copyWith(
-      name: 'Crazyhouse',
-      handOptions: HandOptions.captures,
-    );
-  }
-
-  factory Variant.capablanca() {
-    Variant standard = Variant.standard();
-    return standard.copyWith(
-      name: 'Capablanca Chess',
-      boardSize: BoardSize(10, 8),
-      startPosition:
-          'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
-      castlingOptions: CastlingOptions.capablanca,
-      pieceTypes: {
-        ...standard.pieceTypes,
-        'A': PieceType.archbishop(),
-        'C': PieceType.chancellor(),
-      },
-    );
-  }
-
-  factory Variant.grand() {
-    Variant standard = Variant.standard();
-    return standard.copyWith(
-      name: 'Grand Chess',
-      boardSize: BoardSize(10, 10),
-      startPosition:
-          'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1',
-      castlingOptions: CastlingOptions.none,
-      promotionOptions: PromotionOptions.optional(
-        ranks: [Bishop.rank8, Bishop.rank3],
-        pieceLimits: {
-          'Q': 1, 'A': 1, 'C': 1, //
-          'R': 2, 'N': 2, 'B': 2, //
-        },
-      ),
-      firstMoveRanks: [
-        [Bishop.rank3],
-        [Bishop.rank8],
-      ],
-      pieceTypes: {
-        ...standard.pieceTypes,
-        'C': PieceType.chancellor(), // marshal
-        'A': PieceType.archbishop(), // cardinal
-      },
-    );
-  }
-
+  // These constructors may eventually be removed -
+  // prefer using the things they redirect to.
+  factory Variant.chess960() => CommonVariants.chess960();
+  factory Variant.crazyhouse() => CommonVariants.crazyhouse();
+  factory Variant.seirawan() => CommonVariants.seirawan();
+  factory Variant.threeCheck() => CommonVariants.threeCheck();
+  factory Variant.kingOfTheHill() => CommonVariants.kingOfTheHill();
+  factory Variant.atomic({bool allowExplosionDraw = false}) =>
+      CommonVariants.atomic(allowExplosionDraw: allowExplosionDraw);
+  factory Variant.horde() => CommonVariants.horde();
+  factory Variant.capablanca() => LargeVariants.capablanca();
+  factory Variant.grand() => LargeVariants.grand();
   factory Variant.mini() => SmallVariants.mini();
   factory Variant.miniRandom() => SmallVariants.miniRandom();
   factory Variant.micro() => SmallVariants.micro();
   factory Variant.nano() => SmallVariants.nano();
-
-  factory Variant.seirawan() {
-    Variant standard = Variant.standard();
-    return standard.copyWith(
-      name: 'Seirawan Chess',
-      startPosition:
-          'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
-      gatingMode: GatingMode.flex,
-      outputOptions: OutputOptions.seirawan,
-      pieceTypes: {
-        ...standard.pieceTypes,
-        'H': PieceType.archbishop(), // hawk
-        'E': PieceType.chancellor(), // elephant
-      },
-    );
-  }
-
-  factory Variant.threeCheck() => Variant.standard().copyWith(
-        name: 'Three Check',
-        gameEndConditions: GameEndConditionSet.threeCheck,
-      );
-
-  factory Variant.kingOfTheHill() {
-    final standard = Variant.standard();
-    Map<String, PieceType> pieceTypes = {...standard.pieceTypes};
-    pieceTypes['K'] = PieceType.fromBetza(
-      'K',
-      royal: true,
-      promoOptions: PiecePromoOptions.none,
-      regionEffects: [RegionEffect.winGame(white: 'hill', black: 'hill')],
-    );
-    return standard.copyWith(
-      name: 'King of the Hill',
-      pieceTypes: pieceTypes,
-      regions: {
-        'hill': BoardRegion(
-          startFile: Bishop.fileD,
-          endFile: Bishop.fileE,
-          startRank: Bishop.rank4,
-          endRank: Bishop.rank5,
-        ),
-      },
-    );
-  }
-
-  factory Variant.atomic({bool allowExplosionDraw = false}) {
-    final standard = Variant.standard();
-    return standard.copyWith(
-      name: 'Atomic Chess',
-      actions: [
-        Action.explosionRadius(1),
-        Action.checkRoyalsAlive(allowDraw: allowExplosionDraw),
-      ],
-    );
-  }
-
-  factory Variant.horde() => Variant.standard().copyWith(
-        name: 'Horde Chess',
-        startPosition:
-            'rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1',
-        firstMoveRanks: [
-          [Bishop.rank1, Bishop.rank2], // white
-          [Bishop.rank7, Bishop.rank8], // black
-        ],
-      );
-
-  factory Variant.spawn() => Variant.standard().copyWith(
-        name: 'Spawn Chess',
-        description:
-            'Moving the exposed king adds a pawn to the player\'s hand.',
-        startPosition: 'rnb1nbnr/8/3k4/8/8/4K3/8/RNBN1BNR[PPpp] w - - 0 1',
-        handOptions: HandOptions.enabledOnly,
-        castlingOptions: CastlingOptions.none,
-        pieceTypes: {
-          'P': PieceType.pawn(),
-          'N': PieceType.knight(),
-          'B': PieceType.fromBetza('B2'),
-          'R': PieceType.fromBetza('R3'),
-          'Q': PieceType.queen(),
-          'K': PieceType.king().copyWith(
-            actions: [ActionAddToHand('P')],
-          ),
-        },
-      );
 }
