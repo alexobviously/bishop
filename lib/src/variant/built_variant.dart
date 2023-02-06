@@ -272,6 +272,9 @@ class BuiltVariant {
   /// Set this to 3 for the threefold repeition rule in standard chess.
   int? get repetitionDraw => data.repetitionDraw;
 
+  /// If this is true, it is impossible to make a move that checks anyone.
+  bool get forbidChecks => data.forbidChecks;
+
   /// Are hands enabled in this variant? For example, Crazyhouse.
   bool get handsEnabled => data.handOptions.enableHands;
 

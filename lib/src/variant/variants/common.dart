@@ -74,4 +74,20 @@ class CommonVariants {
           [Bishop.rank7, Bishop.rank8], // black
         ],
       );
+
+  static Variant racingKings() => Variant.standard()
+      .copyWith(
+        name: 'Racing Kings',
+        description:
+            'The first player to run their king to the finish line wins.',
+        startPosition: '8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1',
+        castlingOptions: CastlingOptions.none,
+        forbidChecks: true,
+      )
+      .withCampMate(
+        whiteRegionName: 'end',
+        blackRegionName: 'end',
+        whiteRank: -1,
+        blackRank: -1,
+      );
 }

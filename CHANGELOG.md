@@ -1,20 +1,22 @@
 ### 1.1.2
-- `ActionCheckPieceCount` - allows for win conditions based on elimination of arbitrary pieces.
+- `ActionCheckPieceCount`: allows for win conditions based on elimination of arbitrary pieces.
+- `Variant.forbidChecks`: if true, it is impossible for anyone to deliver a check.
 - Variants:
-  - Kinglet (`MiscVariants.kinglet()`) - game is won when opponent has no pawns.
-  - Three Kings (`MiscVariants.threeKings()`) - players have three kings, and capturing any one results in a win.
+  - Kinglet (`MiscVariants.kinglet()`): game is won when opponent has no pawns.
+  - Three Kings (`MiscVariants.threeKings()`): players have three kings, and capturing any one results in a win.
+  - Racing Kings (`CommonVariants.racingKings()`).
 
 ### 1.1.1
 - Custom drop move generation is now possible with `Variant.handOptions.dropBuilder`.
 - Added variant definitions: Mini Xiangqi (`Xiangqi.mini()`), Manchu (`Xiangqi.manchu()`), Hoppel-Poppel (`MiscVariants.hoppelPoppel()`), Shako (`LargeVariants.shako()`), Dobutsu (`Dobutsu.dobutsu()`).
 - Fixed a bug in serialisation of pieces with limited promo options.
 - Experimental (incomplete) Shogi support.
-- `Variant.withCampMate()` - helper method to add the campmate end condition to a variant.
+- `Variant.withCampMate()`: helper method to add the campmate end condition to a variant.
 - `Variant.withPieces()` and `Variant.withPiecesRemoved()` helpers.
 - The play example can now load JSON variants.
 
 ### 1.1.0
-- JSON Serialisation support - `Variant.fromJson()` and `Variant.toJson()`.
+- JSON Serialisation support: `Variant.fromJson()` and `Variant.toJson()`.
 
 ### 1.0.0
 - A powerful new action system with an accessible API for creating custom game logic. Trigger actions on certain events and execute them if their conditions are met.

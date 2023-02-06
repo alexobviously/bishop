@@ -175,6 +175,7 @@ enum Variants {
   koth(CommonVariants.kingOfTheHill),
   atomic(CommonVariants.atomic),
   horde(CommonVariants.horde),
+  racingKings(CommonVariants.racingKings),
   musketeer(Musketeer.variant),
   xiangqi(Xiangqi.xiangqi),
   miniXiangqi(Xiangqi.mini),

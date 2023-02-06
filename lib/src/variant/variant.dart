@@ -68,6 +68,9 @@ class Variant {
   /// Set this to 3 for the threefold repeition rule in standard chess.
   final int? repetitionDraw;
 
+  /// If this is true, it is impossible to make a move that checks anyone.
+  final bool forbidChecks;
+
   /// Are hands enabled in this variant? For example, Crazyhouse.
   final HandOptions handOptions;
 
@@ -123,6 +126,7 @@ class Variant {
     this.firstMoveRanks = const [[], []],
     this.halfMoveDraw,
     this.repetitionDraw,
+    this.forbidChecks = false,
     this.handOptions = HandOptions.disabled,
     this.gatingMode = GatingMode.none,
     this.pieceValues,
@@ -171,6 +175,7 @@ class Variant {
           const [[], []],
       halfMoveDraw: json['halfMoveDraw'],
       repetitionDraw: json['repetitionDraw'],
+      forbidChecks: json['forbidChecks'] ?? false,
       handOptions: json.containsKey('handOptions')
           ? HandOptions.fromJson(json['handOptions'])
           : HandOptions.disabled,
@@ -224,6 +229,7 @@ class Variant {
       'firstMoveRanks': firstMoveRanks,
       if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
       if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
+      if (verbose || forbidChecks) 'forbidChecks': forbidChecks,
       if (verbose || handOptions.enableHands)
         'handOptions': handOptions.toJson(
           verbose: verbose,
@@ -259,6 +265,7 @@ class Variant {
     List<List<int>>? firstMoveRanks,
     int? halfMoveDraw,
     int? repetitionDraw,
+    bool? forbidChecks,
     HandOptions? handOptions,
     GatingMode? gatingMode,
     Map<String, int>? pieceValues,
@@ -282,6 +289,7 @@ class Variant {
       firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
       repetitionDraw: repetitionDraw ?? this.repetitionDraw,
+      forbidChecks: forbidChecks ?? this.forbidChecks,
       handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
       pieceValues: pieceValues ?? this.pieceValues,
@@ -308,12 +316,20 @@ class Variant {
 
   /// Copies the variant with the 'campmate' end condition:
   /// When a royal piece enters the opposite rank, that player wins the game.
+  /// Setting [whiteRank] or [blackRank] to a negative number will count in
+  /// reverse from the top of the board.
   Variant withCampMate({
     String whiteRegionName = 'whiteCamp',
     String blackRegionName = 'blackCamp',
     int? whiteRank,
     int? blackRank,
   }) {
+    if (whiteRank != null && whiteRank < 0) {
+      whiteRank = boardSize.maxRank + 1 + whiteRank;
+    }
+    if (blackRank != null && blackRank < 0) {
+      blackRank = boardSize.maxRank + 1 + blackRank;
+    }
     final effect =
         RegionEffect.winGame(white: blackRegionName, black: whiteRegionName);
     final pieces = pieceTypes.map(
