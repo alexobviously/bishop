@@ -1,0 +1,1 @@
+All built-in variants are provided here in JSON format for reference.

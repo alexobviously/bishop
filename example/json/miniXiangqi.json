@@ -1,0 +1,68 @@
+{
+ "name": "Mini Xiangqi",
+ "description": "A miniature variant of Xiangqi, played on a 7x7 board with no river.",
+ "bishopVersion": "1.1.1",
+ "boardSize": "7x7",
+ "pieceTypes": {
+  "K": {
+   "betza": "W",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "regionEffects": [
+    {
+     "whiteRegion": "redPalace",
+     "blackRegion": "blackPalace",
+     "restrictMovement": true
+    }
+   ]
+  },
+  "N": {
+   "betza": "nN",
+   "value": 400
+  },
+  "R": {
+   "betza": "R",
+   "value": 900
+  },
+  "C": {
+   "betza": "mRcpR",
+   "value": 450
+  },
+  "P": {
+   "betza": "fsW"
+  }
+ },
+ "castlingOptions": {
+  "enabled": false
+ },
+ "promotionOptions": "bishop.promo.none",
+ "materialConditions": {
+  "enabled": false
+ },
+ "startPosition": "rcnkncr/p1ppp1p/7/7/7/P1PPP1P/RCNKNCR w - - 0 1",
+ "enPassant": false,
+ "firstMoveRanks": [
+  [],
+  []
+ ],
+ "regions": {
+  "redPalace": {
+   "startRank": 0,
+   "endRank": 2,
+   "startFile": 2,
+   "endFile": 4
+  },
+  "blackPalace": {
+   "startRank": 4,
+   "endRank": 6,
+   "startFile": 2,
+   "endFile": 4
+  }
+ },
+ "actions": [
+  "bishop.action.flyingGenerals"
+ ]
+}

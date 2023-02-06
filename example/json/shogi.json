@@ -1,0 +1,115 @@
+{
+ "name": "Shogi",
+ "description": "",
+ "bishopVersion": "1.1.1",
+ "boardSize": "9x9",
+ "pieceTypes": {
+  "K": {
+   "betza": "K",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   }
+  },
+  "N": {
+   "betza": "fN",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false,
+    "promotesTo": [
+     "G"
+    ]
+   }
+  },
+  "S": {
+   "betza": "FfW",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false,
+    "promotesTo": [
+     "G"
+    ]
+   }
+  },
+  "L": {
+   "betza": "fR",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false,
+    "promotesTo": [
+     "G"
+    ]
+   }
+  },
+  "P": {
+   "betza": "fW",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false,
+    "promotesTo": [
+     "G"
+    ]
+   }
+  },
+  "G": {
+   "betza": "WfF"
+  },
+  "R": {
+   "betza": "R",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false,
+    "promotesTo": [
+     "D"
+    ]
+   }
+  },
+  "D": {
+   "betza": "FR"
+  },
+  "B": {
+   "betza": "B",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false,
+    "promotesTo": [
+     "H"
+    ]
+   }
+  },
+  "H": {
+   "betza": "WB"
+  }
+ },
+ "castlingOptions": {
+  "enabled": true,
+  "kTarget": 6,
+  "qTarget": 2,
+  "fixedRooks": true,
+  "kRook": 7,
+  "qRook": 0,
+  "rookPiece": "R",
+  "useRookAsTarget": false
+ },
+ "promotionOptions": {
+  "id": "bishop.promo.optional",
+  "ranks": [
+   6,
+   2
+  ]
+ },
+ "materialConditions": {
+  "enabled": false
+ },
+ "startPosition": "lnsgkgsnl/1r5b1/ppppppppp/9/9/9/PPPPPPPPP/1B5R1/LNSGKGSNL[] w - - 0 1",
+ "enPassant": false,
+ "firstMoveRanks": [
+  [],
+  []
+ ],
+ "handOptions": {
+  "enableHands": true,
+  "addCapturesToHand": true
+ }
+}

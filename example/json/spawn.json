@@ -1,0 +1,88 @@
+{
+ "name": "Spawn Chess",
+ "description": "Moving the exposed king adds a pawn to the player's hand.",
+ "bishopVersion": "1.1.1",
+ "boardSize": "8x8",
+ "pieceTypes": {
+  "P": {
+   "betza": "fmWfceFifmnD",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "enPassantable": true,
+   "noSanSymbol": true,
+   "value": 100
+  },
+  "N": {
+   "betza": "N",
+   "value": 300
+  },
+  "B": {
+   "betza": "B2"
+  },
+  "R": {
+   "betza": "R3"
+  },
+  "Q": {
+   "betza": "Q",
+   "value": 900
+  },
+  "K": {
+   "betza": "K",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "actions": [
+    {
+     "id": "bishop.action.addToHand",
+     "piece": "P"
+    }
+   ]
+  }
+ },
+ "castlingOptions": {
+  "enabled": false
+ },
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {
+  "enabled": true,
+  "soloMaters": [
+   "P",
+   "Q",
+   "R",
+   "A",
+   "C"
+  ],
+  "pairMaters": [
+   "N"
+  ],
+  "combinedPairMaters": [
+   "B"
+  ],
+  "specialCases": [
+   [
+    "B",
+    "N"
+   ]
+  ]
+ },
+ "startPosition": "rnb1nbnr/8/3k4/8/8/4K3/8/RNBN1BNR[PPpp] w - - 0 1",
+ "enPassant": true,
+ "firstMoveRanks": [
+  [
+   1
+  ],
+  [
+   6
+  ]
+ ],
+ "halfMoveDraw": 100,
+ "repetitionDraw": 3,
+ "handOptions": {
+  "enableHands": true,
+  "addCapturesToHand": false
+ }
+}

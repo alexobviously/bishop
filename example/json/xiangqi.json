@@ -1,0 +1,107 @@
+{
+ "name": "Xiangqi",
+ "description": "",
+ "bishopVersion": "1.1.1",
+ "boardSize": "9x10",
+ "pieceTypes": {
+  "K": {
+   "betza": "W",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "regionEffects": [
+    {
+     "whiteRegion": "redPalace",
+     "blackRegion": "blackPalace",
+     "restrictMovement": true
+    }
+   ]
+  },
+  "A": {
+   "betza": "F",
+   "regionEffects": [
+    {
+     "whiteRegion": "redPalace",
+     "blackRegion": "blackPalace",
+     "restrictMovement": true
+    }
+   ]
+  },
+  "B": {
+   "betza": "nA",
+   "regionEffects": [
+    {
+     "whiteRegion": "redSide",
+     "blackRegion": "blackSide",
+     "restrictMovement": true
+    }
+   ]
+  },
+  "N": {
+   "betza": "nN",
+   "value": 400
+  },
+  "R": {
+   "betza": "R",
+   "value": 900
+  },
+  "C": {
+   "betza": "mRcpR",
+   "value": 450
+  },
+  "P": {
+   "betza": "fsW",
+   "value": 100,
+   "regionEffects": [
+    {
+     "whiteRegion": "redSide",
+     "blackRegion": "blackSide",
+     "pieceType": {
+      "betza": "fW",
+      "value": 100
+     }
+    }
+   ]
+  }
+ },
+ "castlingOptions": {
+  "enabled": false
+ },
+ "promotionOptions": "bishop.promo.none",
+ "materialConditions": {
+  "enabled": false
+ },
+ "startPosition": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR w - - 0 1",
+ "enPassant": false,
+ "firstMoveRanks": [
+  [],
+  []
+ ],
+ "regions": {
+  "redSide": {
+   "startRank": 0,
+   "endRank": 4
+  },
+  "blackSide": {
+   "startRank": 5,
+   "endRank": 9
+  },
+  "redPalace": {
+   "startRank": 0,
+   "endRank": 2,
+   "startFile": 3,
+   "endFile": 5
+  },
+  "blackPalace": {
+   "startRank": 7,
+   "endRank": 9,
+   "startFile": 3,
+   "endFile": 5
+  }
+ },
+ "actions": [
+  "bishop.action.flyingGenerals"
+ ]
+}

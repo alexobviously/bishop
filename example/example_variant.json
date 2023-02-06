@@ -1,7 +1,7 @@
 {
  "name": "Example",
  "description": "An example variant for JSON serialisation",
- "bishopVersion": "1.1.0",
+ "bishopVersion": "1.1.1",
  "boardSize": "3x5",
  "pieceTypes": {
   "K": {

@@ -1,0 +1,102 @@
+{
+ "name": "Grand Chess",
+ "description": "",
+ "bishopVersion": "1.1.1",
+ "boardSize": "10x10",
+ "pieceTypes": {
+  "P": {
+   "betza": "fmWfceFifmnD",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "enPassantable": true,
+   "noSanSymbol": true,
+   "value": 100
+  },
+  "N": {
+   "betza": "N",
+   "value": 300
+  },
+  "B": {
+   "betza": "B",
+   "value": 300
+  },
+  "R": {
+   "betza": "R",
+   "value": 500
+  },
+  "Q": {
+   "betza": "Q",
+   "value": 900
+  },
+  "K": {
+   "betza": "K",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   }
+  },
+  "C": {
+   "betza": "RN",
+   "value": 900
+  },
+  "A": {
+   "betza": "BN",
+   "value": 900
+  }
+ },
+ "castlingOptions": {
+  "enabled": false
+ },
+ "promotionOptions": {
+  "id": "bishop.promo.optional",
+  "pieceLimits": {
+   "Q": 1,
+   "A": 1,
+   "C": 1,
+   "R": 2,
+   "N": 2,
+   "B": 2
+  },
+  "ranks": [
+   7,
+   2
+  ]
+ },
+ "materialConditions": {
+  "enabled": true,
+  "soloMaters": [
+   "P",
+   "Q",
+   "R",
+   "A",
+   "C"
+  ],
+  "pairMaters": [
+   "N"
+  ],
+  "combinedPairMaters": [
+   "B"
+  ],
+  "specialCases": [
+   [
+    "B",
+    "N"
+   ]
+  ]
+ },
+ "startPosition": "r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP/1NBQKCABN1/R8R w - - 0 1",
+ "enPassant": true,
+ "firstMoveRanks": [
+  [
+   2
+  ],
+  [
+   7
+  ]
+ ],
+ "halfMoveDraw": 100,
+ "repetitionDraw": 3
+}
