@@ -66,14 +66,14 @@ class BishopSerialisation {
     final adapter = adapters.firstWhereOrNull((e) => e.id == id);
     if (adapter == null) {
       if (strict) {
-        throw BishopException('Adapter not found ($id)');
+        throw BishopException('Adapter not found: $id');
       }
       return null;
     }
     final object = adapter.build(params);
     if (object is! T) {
       if (strict) {
-        throw BishopException('Adapter ($id) of invalid type (not $T)');
+        throw BishopException('Adapter $id of invalid type (not $T)');
       }
       return null;
     }
@@ -101,7 +101,7 @@ class BishopSerialisation {
           adapters.firstWhereOrNull((e) => e.type == object.runtimeType);
       if (adapter == null) {
         if (strict) {
-          throw BishopException('Adapter not found (${object.runtimeType})');
+          throw BishopException('Adapter not found: ${object.runtimeType}');
         }
         return null;
       }

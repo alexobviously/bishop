@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:bishop/bishop.dart';
 import 'package:colorize/colorize.dart';
 
+import 'json.dart';
+
 void main(List<String> args) async {
   while (variant == null) {
     selectVariant();
@@ -117,9 +119,15 @@ Future<Move?> getAiMove() async {
 void selectVariant() {
   printYellow('Select a variant:   (leave blank for standard chess)');
   printCyan(Variants.values.map((e) => e.name).join(', '));
+  printMagenta('Enter \'json filename.json\' to load a json variant');
   String input = stdin.readLineSync() ?? '';
   if (input.isEmpty) input = 'standard';
-  variant = variantFromString(input);
+  if (input.startsWith('json')) {
+    final json = readJson(input.split(' ').last);
+    variant = Variant.fromJson(json);
+  } else {
+    variant = variantFromString(input);
+  }
 
   if (variant == null) {
     printRed('Invalid variant');
@@ -164,4 +172,5 @@ late Game game;
 
 void printCyan(String text) => print(Colorize(text).cyan());
 void printYellow(String text) => print(Colorize(text).yellow());
+void printMagenta(String text) => print(Colorize(text).lightMagenta());
 void printRed(String text) => print(Colorize(text).red());

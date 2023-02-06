@@ -5,6 +5,7 @@
 - Experimental (incomplete) Shogi and support.
 - `Variant.withCampMate()` - helper method to add the campmate end condition to a variant.
 - `Variant.withPieces()` and `Variant.withPiecesRemoved()` helpers.
+- The play example can now load JSON variants.
 
 ### 1.1.0
 - JSON Serialisation support - `Variant.fromJson()` and `Variant.toJson()`.
