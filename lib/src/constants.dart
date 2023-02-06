@@ -23,6 +23,7 @@ class Bishop {
   static const int invalid = -1;
   static const int hand = -2;
   static const Square empty = 0;
+  // TODO: replace promoFlag with the original piece type
   static const int promoFlag = 1;
   static const defaultSeed = 7363661891;
 

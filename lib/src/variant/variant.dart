@@ -224,8 +224,11 @@ class Variant {
       'firstMoveRanks': firstMoveRanks,
       if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
       if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
-      if (verbose || handOptions != HandOptions.disabled)
-        'handOptions': handOptions.toJson(),
+      if (verbose || handOptions.enableHands)
+        'handOptions': handOptions.toJson(
+          verbose: verbose,
+          adapters: allAdapters,
+        ),
       if (verbose || gatingMode != GatingMode.none)
         'gatingMode': gatingMode.name,
       if (pieceValues != null) 'pieceValues': pieceValues,
@@ -300,7 +303,8 @@ class Variant {
 
   /// Copies the variant with [pieces] removed.
   Variant withPiecesRemoved(List<String> pieces) => copyWith(
-      pieceTypes: {...pieceTypes}..removeWhere((k, _) => pieces.contains(k)));
+        pieceTypes: {...pieceTypes}..removeWhere((k, _) => pieces.contains(k)),
+      );
 
   /// Copies the variant with the 'campmate' end condition:
   /// When a royal piece enters the opposite rank, that player wins the game.

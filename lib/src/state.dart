@@ -71,6 +71,8 @@ class BishopState {
 
   int get whitePieceCount => pieceCount(Bishop.white);
   int get blackPieceCount => pieceCount(Bishop.black);
+  Set<int> handPieceTypes(int colour) =>
+      hands != null ? hands![colour].toSet() : {};
 
   @override
   String toString() => 'State(turn: $turn, moves: $fullMoves, hash: $hash)';

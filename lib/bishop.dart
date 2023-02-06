@@ -7,6 +7,7 @@ export 'src/betza.dart';
 export 'src/board_region.dart';
 export 'src/castling_rights.dart';
 export 'src/constants.dart';
+export 'src/drops.dart';
 export 'src/engine.dart';
 export 'src/first_where_extension.dart';
 export 'src/game/game.dart';

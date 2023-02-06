@@ -8,9 +8,10 @@ class BuiltVariant {
   final Map<String, int> pieceIndexLookup;
   final List<int> promotionPieces;
   final List<int> promotablePieces;
-  final PromotionBuilder? promotionBuilder;
   final Map<int, int>? promoLimits;
   final Map<int, List<int>>? promoMap;
+  final PromotionBuilder? promotionBuilder;
+  final DropBuilderFunction? dropBuilder;
   final int epPiece;
   final int castlingPiece;
   final int royalPiece;
@@ -26,9 +27,10 @@ class BuiltVariant {
     required this.pieceIndexLookup,
     required this.promotionPieces,
     required this.promotablePieces,
-    this.promotionBuilder,
     this.promoLimits,
     this.promoMap,
+    this.promotionBuilder,
+    this.dropBuilder,
     required this.epPiece,
     required this.castlingPiece,
     required this.royalPiece,
@@ -45,9 +47,10 @@ class BuiltVariant {
     Map<String, int>? pieceIndexLookup,
     List<int>? promotionPieces,
     List<int>? promotablePieces,
-    PromotionBuilder? promotionBuilder,
     Map<int, int>? promoLimits,
     Map<int, List<int>>? promoMap,
+    PromotionBuilder? promotionBuilder,
+    DropBuilderFunction? dropBuilder,
     int? epPiece,
     int? castlingPiece,
     int? royalPiece,
@@ -63,9 +66,10 @@ class BuiltVariant {
         pieceIndexLookup: pieceIndexLookup ?? this.pieceIndexLookup,
         promotionPieces: promotionPieces ?? this.promotionPieces,
         promotablePieces: promotablePieces ?? this.promotablePieces,
-        promotionBuilder: promotionBuilder ?? this.promotionBuilder,
         promoLimits: promoLimits ?? this.promoLimits,
         promoMap: promoMap ?? this.promoMap,
+        promotionBuilder: promotionBuilder ?? this.promotionBuilder,
+        dropBuilder: dropBuilder ?? this.dropBuilder,
         epPiece: epPiece ?? this.epPiece,
         castlingPiece: castlingPiece ?? this.castlingPiece,
         royalPiece: royalPiece ?? this.royalPiece,
@@ -158,7 +162,9 @@ class BuiltVariant {
       actionsByEvent: actionsByEvent,
     );
 
-    return bv.copyWith(promotionBuilder: data.promotionOptions.build(bv));
+    return bv
+        .copyWith(promotionBuilder: data.promotionOptions.build(bv))
+        .copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv));
   }
 
   PieceType pieceType(int piece, [int? square]) {
@@ -360,6 +366,12 @@ class BuiltVariant {
     );
     List<Move>? moves = promotionBuilder!(params);
     return moves;
+  }
+
+  List<Move>? generateDrops({required BishopState state, required int colour}) {
+    if (dropBuilder == null) return null;
+    final params = DropParams(colour: colour, state: state, variant: this);
+    return dropBuilder!(params);
   }
 
   @override

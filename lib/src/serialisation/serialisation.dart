@@ -1,5 +1,6 @@
 import 'package:bishop/bishop.dart';
 
+part 'drop_adapters.dart';
 part 'promo_adapters.dart';
 part 'type_adapter.dart';
 
@@ -7,6 +8,7 @@ class BishopSerialisation {
   static List<BishopTypeAdapter> get baseAdapters {
     _baseAdapters ??= [
       ...basePromoAdapters,
+      ...baseDropAdapters,
       ...baseActionAdapters,
     ];
     return _baseAdapters!;
@@ -18,6 +20,11 @@ class BishopSerialisation {
         NoPromotionAdapter(),
         StandardPromotionAdapter(),
         OptionalPromotionAdapter(),
+      ];
+
+  static List<BishopTypeAdapter> get baseDropAdapters => [
+        StandardDropAdapter(),
+        UnrestrictedDropAdapter(),
       ];
 
   static List<BishopTypeAdapter> get baseActionAdapters => [

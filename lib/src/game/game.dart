@@ -335,24 +335,8 @@ class Game {
 
   /// Generates drop moves for [colour]. Used for variants with hands, e.g. Crazyhouse.
   List<Move> generateDrops(int colour, [bool legal = true]) {
-    List<Move> drops = [];
-    Set<int> hand = state.hands![colour].toSet();
-    for (int i = 0; i < size.numIndices; i++) {
-      if (!size.onBoard(i)) continue;
-      if (board[i].isNotEmpty) continue;
-      for (int p in hand) {
-        int hRank = size.rank(i);
-        bool onEdgeRank = hRank == Bishop.rank1 || hRank == size.maxRank;
-        if (onEdgeRank && variant.pieces[p].type.promoOptions.canPromote) {
-          continue;
-        }
-        int dropPiece = p;
-        // TODO: support more than one promo piece in this case
-        if (p.hasFlag(Bishop.promoFlag)) dropPiece = variant.promotionPieces[0];
-        Move m = Move.drop(to: i, dropPiece: dropPiece);
-        drops.add(m);
-      }
-    }
+    List<Move> drops =
+        variant.generateDrops(state: state, colour: colour) ?? [];
 
     if (legal) {
       List<Move> remove = [];

@@ -63,7 +63,7 @@ class PiecePromoOptions {
 }
 
 typedef PromotionSetup = PromotionBuilder Function(BuiltVariant variant);
-typedef PromotionBuilder = List<Move>? Function(PromotionParams request);
+typedef PromotionBuilder = List<Move>? Function(PromotionParams params);
 
 class PromotionParams {
   final Move move;

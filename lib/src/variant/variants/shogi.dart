@@ -82,6 +82,10 @@ class Dobutsu {
           'C': chick(),
           'H': hen(),
         },
-        handOptions: HandOptions.captures,
+        handOptions: HandOptions(
+          enableHands: true,
+          addCapturesToHand: true,
+          dropBuilder: DropBuilder.unrestricted,
+        ),
       ).withCampMate();
 }

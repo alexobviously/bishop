@@ -1,7 +1,8 @@
 ### 1.1.1
-- Added variant definitions: Mini Xiangqi (`Xiangqi.mini()`), Manchu (`Xiangqi.manchu()`), Hoppel-Poppel (`MiscVariants.hoppelPoppel()`), Shako (`LargeVariants.shako()`).
+- Custom drop move generation is now possible with `Variant.handOptions.dropBuilder`.
+- Added variant definitions: Mini Xiangqi (`Xiangqi.mini()`), Manchu (`Xiangqi.manchu()`), Hoppel-Poppel (`MiscVariants.hoppelPoppel()`), Shako (`LargeVariants.shako()`), Dobutsu (`Dobutsu.dobutsu()`).
 - Fixed a bug in serialisation of pieces with limited promo options.
-- Experimental (incomplete) Shogi and Dobutsu support.
+- Experimental (incomplete) Shogi and support.
 - `Variant.withCampMate()` - helper method to add the campmate end condition to a variant.
 - `Variant.withPieces()` and `Variant.withPiecesRemoved()` helpers.
 
