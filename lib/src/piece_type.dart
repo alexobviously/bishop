@@ -153,25 +153,9 @@ class PieceType {
     List<Action> actions = const [],
   }) {
     List<Atom> atoms = Betza.parse(betza);
-    List<MoveDefinition> moves = [];
-    for (Atom atom in atoms) {
-      for (Direction d in atom.directions) {
-        MoveDefinition md = MoveDefinition(
-          direction: d,
-          range: atom.range,
-          modality: atom.modality,
-          enPassant: atom.enPassant,
-          firstOnly: atom.firstOnly,
-          lame: atom.lame,
-          hopDistance: atom.unlimitedHopper
-              ? 0
-              : atom.limitedHopper
-                  ? 1
-                  : -1,
-        );
-        moves.add(md);
-      }
-    }
+    List<MoveDefinition> moves =
+        atoms.map((e) => e.moveDefinitions).expand((e) => e).toList();
+
     return PieceType(
       betza: betza,
       moves: moves,

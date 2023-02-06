@@ -200,13 +200,10 @@ class Atom {
     return dirs;
   }
 
-  String get modalityString => modality == Modality.quiet
-      ? 'm'
-      : modality == Modality.capture
-          ? 'c'
-          : '';
+  List<MoveDefinition> get moveDefinitions =>
+      directions.map((d) => MoveDefinition.fromBetza(this, d)).toList();
 
   @override
   String toString() =>
-      '$modalityString${dirMods.join('')}${funcMods.join('')}$base${range == 1 ? '' : range}';
+      '${modality.betza}${dirMods.join('')}${funcMods.join('')}$base${range == 1 ? '' : range}';
 }
