@@ -183,7 +183,8 @@ enum Variants {
   dobutsu(Dobutsu.dobutsu),
   spawn(MiscVariants.spawn),
   hoppelPoppel(MiscVariants.hoppelPoppel),
-  kinglet(MiscVariants.kinglet);
+  kinglet(MiscVariants.kinglet),
+  threeKings(MiscVariants.threeKings);
 
   final Variant Function() builder;
   const Variants(this.builder);

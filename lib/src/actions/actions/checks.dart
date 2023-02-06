@@ -66,16 +66,21 @@ class CheckRoyalsAliveAdapter
 /// If both players have less than [count], it will be a draw.
 /// If one player has less, then it will be a win for their opponent, unless
 /// [draw] is true in which case it will be a draw.
+/// If [drawsInvalidate] is true (default), then any drawn result will invalidate
+/// the move. In other words, moves that cause both players to not have enough
+/// pieces will not be allowed.
 class ActionCheckPieceCount extends Action {
   final String pieceType;
   final int count;
   final bool draw;
+  final bool drawsInvalidate;
   final int? player;
 
   ActionCheckPieceCount({
     required this.pieceType,
     this.count = 1,
     this.draw = false,
+    this.drawsInvalidate = true,
     this.player,
     super.event = ActionEvent.afterMove,
     super.precondition,
@@ -89,7 +94,9 @@ class ActionCheckPieceCount extends Action {
                 trigger.state.pieces[makePiece(piece, Bishop.black)] >= count;
             if (white && black) return [];
             if (draw || (!white && !black)) {
-              return [EffectSetGameResult(DrawnGameElimination())];
+              return drawsInvalidate
+                  ? [EffectInvalidateMove()]
+                  : [EffectSetGameResult(DrawnGameElimination())];
             }
             return [
               EffectSetGameResult(
@@ -110,6 +117,7 @@ class CheckPieceCountAdapter extends BishopTypeAdapter<ActionCheckPieceCount> {
         pieceType: params!['pieceType'],
         count: params['count'] ?? 1,
         draw: params['draw'] ?? false,
+        drawsInvalidate: params['drawsInvalidate'] ?? true,
         player: params['player'],
         event: ActionEvent.import(params['event']),
       );
@@ -123,6 +131,7 @@ class CheckPieceCountAdapter extends BishopTypeAdapter<ActionCheckPieceCount> {
       'pieceType': e.pieceType,
       if (e.count != 1) 'count': e.count,
       if (e.draw) 'draw': e.draw,
+      if (!e.drawsInvalidate) 'drawsInvalidate': e.drawsInvalidate,
       if (e.player != null) 'player': e.player,
       if (e.event != ActionEvent.afterMove) 'event': e.event.export(),
     };

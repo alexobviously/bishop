@@ -38,4 +38,15 @@ class MiscVariants {
         },
         actions: [ActionCheckPieceCount(pieceType: 'P')],
       );
+
+  static Variant threeKings() => Variant.standard().copyWith(
+        name: 'Three Kings Chess',
+        description:
+            'Each player has three kings, but only one has to be captured for them to win.',
+        startPosition: 'knbqkbnk/pppppppp/8/8/8/8/PPPPPPPP/KNBQKBNK w - - 0 1',
+        castlingOptions: CastlingOptions.none,
+        actions: [ActionCheckPieceCount(pieceType: 'K', count: 3)],
+      ).withPieces({
+        'K': PieceType.fromBetza('K', promoOptions: PiecePromoOptions.none),
+      });
 }

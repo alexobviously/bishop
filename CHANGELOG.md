@@ -1,6 +1,8 @@
 ### 1.1.2
 - `ActionCheckPieceCount` - allows for win conditions based on elimination of arbitrary pieces.
-- Variant definition: Kinglet (`MiscVariants.kinglet()`) - game is won when opponent has no pawns.
+- Variants:
+  - Kinglet (`MiscVariants.kinglet()`) - game is won when opponent has no pawns.
+  - Three Kings (`MiscVariants.threeKings()`) - players have three kings, and capturing any one results in a win.
 
 ### 1.1.1
 - Custom drop move generation is now possible with `Variant.handOptions.dropBuilder`.
