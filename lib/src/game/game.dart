@@ -32,7 +32,7 @@ class Game {
   int? castlingTargetQ;
   int? royalFile;
   List<String> castlingFileSymbols = ['K', 'Q', 'k', 'q'];
-  late MoveGenOptions royalCaptureOptions;
+  late MoveGenParams royalCaptureOptions;
 
   BoardSize get size => variant.boardSize;
 
@@ -56,7 +56,7 @@ class Game {
     startPosition =
         fen ?? (fenBuilder != null ? fenBuilder() : variant.startPosition!);
     loadFen(startPosition);
-    royalCaptureOptions = MoveGenOptions.pieceCaptures(variant.royalPiece);
+    royalCaptureOptions = MoveGenParams.pieceCaptures(variant.royalPiece);
   }
 
   int setupCastling(
@@ -310,16 +310,16 @@ class Game {
 
   /// Generates all legal moves for the player whose turn it is.
   List<Move> generateLegalMoves() =>
-      generatePlayerMoves(state.turn, MoveGenOptions.normal);
+      generatePlayerMoves(state.turn, MoveGenParams.normal);
 
   /// Generates all possible moves that could be played by the other player next turn,
   /// not respecting blocking pieces or checks.
   List<Move> generatePremoves() =>
-      generatePlayerMoves(state.turn.opponent, MoveGenOptions.premoves);
+      generatePlayerMoves(state.turn.opponent, MoveGenParams.premoves);
 
-  /// Generates all moves for the specified [colour]. See [MoveGenOptions] for possibilities.
-  List<Move> generatePlayerMoves(int colour, [MoveGenOptions? options]) {
-    options ??= MoveGenOptions.normal;
+  /// Generates all moves for the specified [colour]. See [MoveGenParams] for possibilities.
+  List<Move> generatePlayerMoves(int colour, [MoveGenParams? options]) {
+    options ??= MoveGenParams.normal;
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
       Square target = board[i];
@@ -375,7 +375,7 @@ class Game {
   /// Generates all moves for the piece on [square] in accordance with [options].
   List<Move> generatePieceMoves(
     int square, [
-    MoveGenOptions options = MoveGenOptions.normal,
+    MoveGenParams options = MoveGenParams.normal,
   ]) {
     Square piece = board[square];
     if (piece.isEmpty) return [];
@@ -725,7 +725,7 @@ class Game {
   /// Works by generating all legal moves for the other player, and therefore is slow.
   bool isAttacked(int square, Colour colour) {
     List<Move> attacks =
-        generatePlayerMoves(colour, MoveGenOptions.squareAttacks(square));
+        generatePlayerMoves(colour, MoveGenParams.squareAttacks(square));
     return attacks.isNotEmpty;
   }
 

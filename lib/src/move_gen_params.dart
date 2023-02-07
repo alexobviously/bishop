@@ -1,4 +1,5 @@
-class MoveGenOptions {
+
+class MoveGenParams {
   final bool captures;
   final bool quiet;
   final bool castling;
@@ -9,7 +10,7 @@ class MoveGenOptions {
 
   bool get onlyPiece => pieceType != null;
 
-  const MoveGenOptions({
+  const MoveGenParams({
     required this.captures,
     required this.quiet,
     required this.castling,
@@ -18,45 +19,45 @@ class MoveGenOptions {
     this.pieceType,
     this.onlySquare,
   });
-  static const normal = MoveGenOptions(
+  static const normal = MoveGenParams(
     captures: true,
     quiet: true,
     castling: true,
     legal: true,
   );
-  static const onlyQuiet = MoveGenOptions(
+  static const onlyQuiet = MoveGenParams(
     captures: false,
     quiet: true,
     castling: true,
     legal: true,
   );
-  static const onlyCaptures = MoveGenOptions(
+  static const onlyCaptures = MoveGenParams(
     captures: true,
     quiet: false,
     castling: false,
     legal: true,
   );
-  static const attacks = MoveGenOptions(
+  static const attacks = MoveGenParams(
     captures: true,
     quiet: false,
     castling: false,
     legal: false,
   );
-  factory MoveGenOptions.pieceCaptures(int pieceType) => MoveGenOptions(
+  factory MoveGenParams.pieceCaptures(int pieceType) => MoveGenParams(
         captures: true,
         quiet: false,
         castling: false,
         legal: false,
         pieceType: pieceType,
       );
-  factory MoveGenOptions.squareAttacks(int square) => MoveGenOptions(
+  factory MoveGenParams.squareAttacks(int square) => MoveGenParams(
         captures: true,
         quiet: false,
         castling: false,
         legal: false,
         onlySquare: square,
       );
-  static const premoves = MoveGenOptions(
+  static const premoves = MoveGenParams(
     captures: true,
     quiet: true,
     castling: true,
