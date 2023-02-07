@@ -1,22 +1,26 @@
-import 'package:bishop/bishop.dart';
+part of 'move.dart';
 
 /// A representation of a single move.
 /// This is a move that is made in a game, not a definition of a type of move
 /// that can be made by a piece. For that, see `MoveDefinition`.
-class Move {
+class NormalMove extends Move {
   /// The board location this move starts at.
+  @override
   final int from;
 
   /// The board location this move ends at.
+  @override
   final int to;
 
   /// The piece (including colour and flags) that is being captured, if one is.
+  @override
   final int? capturedPiece;
 
   /// The piece that exists before the promotion.
   final int? promoSource; // the piece type that got promoted
 
   /// The piece (type only) that is being promoted to.
+  @override
   final int? promoPiece; // this piece type that was promoted to
 
   /// If this is a castling move, in which direction is castling happening?
@@ -26,12 +30,15 @@ class Move {
   final int? castlingPieceSquare;
 
   /// If this move is en passant.
+  @override
   final bool enPassant;
 
   /// If this move sets the en passant flag.
+  @override
   final bool setEnPassant;
 
   /// The piece (type only) that is being dropped, if one is.
+  @override
   final int? dropPiece;
 
   /// For gating drops that are also castling moves - should we gate on square
@@ -39,12 +46,15 @@ class Move {
   final bool dropOnRookSquare;
 
   /// Whether a piece is captured as a result of this move.
+  @override
   bool get capture => capturedPiece != null;
 
   /// Whether the moved piece is promoted.
+  @override
   bool get promotion => promoPiece != null;
 
   /// Whether this is a castling move.
+  @override
   bool get castling => castlingDir != null;
 
   /// Whether this is a drop move (any type, including gating).
@@ -52,9 +62,11 @@ class Move {
 
   /// Whether this is a drop move where the piece came from the hand to an empty
   /// square, e.g. the drops in Crazyhouse.
+  @override
   bool get handDrop => drop && from == Bishop.hand;
 
   /// Whether this is a gated drop, e.g. the drops in Seirawan chess.
+  @override
   bool get gate => drop && from >= Bishop.boardStart;
 
   @override
@@ -68,7 +80,7 @@ class Move {
     return 'Move(${params.join(', ')})';
   }
 
-  const Move({
+  const NormalMove({
     required this.from,
     required this.to,
     this.capturedPiece,
@@ -82,7 +94,7 @@ class Move {
     this.dropOnRookSquare = false,
   });
 
-  Move copyWith({
+  NormalMove copyWith({
     int? from,
     int? to,
     int? capturedPiece,
@@ -95,7 +107,7 @@ class Move {
     int? dropPiece,
     bool? dropOnRookSquare,
   }) {
-    return Move(
+    return NormalMove(
       from: from ?? this.from,
       to: to ?? this.to,
       capturedPiece: capturedPiece ?? this.capturedPiece,
@@ -110,8 +122,8 @@ class Move {
     );
   }
 
-  factory Move.drop({required int to, required int dropPiece}) =>
-      Move(from: Bishop.hand, to: to, dropPiece: dropPiece);
+  factory NormalMove.drop({required int to, required int dropPiece}) =>
+      NormalMove(from: Bishop.hand, to: to, dropPiece: dropPiece);
 
   /// Provides the most basic algebraic form of the move.
   /// This is not entirely descriptive, and doesn't provide information on promo

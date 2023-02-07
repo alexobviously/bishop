@@ -6,7 +6,7 @@ class NoPromotionAdapter extends BishopTypeAdapter<NoPromotion> {
   @override
   NoPromotion build(Map<String, dynamic>? params) => NoPromotion();
   @override
-  Map<String, dynamic>? export(NoPromotion e) => {};
+  Map<String, dynamic>? export(NoPromotion e) => null;
 }
 
 class StandardPromotionAdapter extends BishopTypeAdapter<StandardPromotion> {

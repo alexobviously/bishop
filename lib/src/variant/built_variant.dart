@@ -12,6 +12,7 @@ class BuiltVariant {
   final Map<int, List<int>>? promoMap;
   final PromotionBuilder? promotionBuilder;
   final DropBuilderFunction? dropBuilder;
+  final MoveChecker? passChecker;
   final int epPiece;
   final int castlingPiece;
   final int royalPiece;
@@ -31,6 +32,7 @@ class BuiltVariant {
     this.promoMap,
     this.promotionBuilder,
     this.dropBuilder,
+    this.passChecker,
     required this.epPiece,
     required this.castlingPiece,
     required this.royalPiece,
@@ -51,6 +53,7 @@ class BuiltVariant {
     Map<int, List<int>>? promoMap,
     PromotionBuilder? promotionBuilder,
     DropBuilderFunction? dropBuilder,
+    MoveChecker? passChecker,
     int? epPiece,
     int? castlingPiece,
     int? royalPiece,
@@ -70,6 +73,7 @@ class BuiltVariant {
         promoMap: promoMap ?? this.promoMap,
         promotionBuilder: promotionBuilder ?? this.promotionBuilder,
         dropBuilder: dropBuilder ?? this.dropBuilder,
+        passChecker: passChecker ?? this.passChecker,
         epPiece: epPiece ?? this.epPiece,
         castlingPiece: castlingPiece ?? this.castlingPiece,
         royalPiece: royalPiece ?? this.royalPiece,
@@ -164,7 +168,8 @@ class BuiltVariant {
 
     return bv
         .copyWith(promotionBuilder: data.promotionOptions.build(bv))
-        .copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv));
+        .copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv))
+        .copyWith(passChecker: data.passOptions.build(bv));
   }
 
   PieceType pieceType(int piece, [int? square]) {
@@ -283,6 +288,9 @@ class BuiltVariant {
   /// What type of gating, if any, is used in this variant?
   GatingMode get gatingMode => data.gatingMode;
 
+  /// Whether this variant has pass moves.
+  bool get hasPass => passChecker != null;
+
   /// The relative values of pieces. These are usually already set in the [PieceType]
   /// definitions, so only use this if you want to override those.
   /// For example, you have a variant where a pawn is worth 200 instead of 100,
@@ -347,8 +355,8 @@ class BuiltVariant {
     return promoPieces;
   }
 
-  List<Move>? generatePromotionMoves({
-    required Move base,
+  List<NormalMove>? generatePromotionMoves({
+    required NormalMove base,
     required BishopState state,
     PieceType? pieceType,
   }) {
@@ -367,15 +375,20 @@ class BuiltVariant {
         pieceIndex: piece,
       ),
     );
-    List<Move>? moves = promotionBuilder!(params);
+    List<NormalMove>? moves = promotionBuilder!(params);
     return moves;
   }
 
   List<Move>? generateDrops({required BishopState state, required int colour}) {
     if (dropBuilder == null) return null;
-    final params = DropParams(colour: colour, state: state, variant: this);
+    final params = MoveParams(colour: colour, state: state, variant: this);
     return dropBuilder!(params);
   }
+
+  bool canPass({required BishopState state, required int colour}) =>
+      passChecker
+          ?.call(MoveParams(colour: colour, state: state, variant: this)) ??
+      false;
 
   @override
   String toString() => name;

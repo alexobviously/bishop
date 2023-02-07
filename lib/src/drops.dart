@@ -1,21 +1,10 @@
 import 'package:bishop/bishop.dart';
 
-class DropParams {
-  final int colour;
-  final BishopState state;
-  final BuiltVariant variant;
-  const DropParams({
-    required this.colour,
-    required this.state,
-    required this.variant,
-  });
-}
-
-typedef DropBuilderFunction = List<Move> Function(DropParams params);
+typedef DropBuilderFunction = List<Move> Function(MoveParams params);
 
 class Drops {
   static DropBuilderFunction standard({bool restrictPromoPieces = true}) =>
-      (DropParams params) {
+      (MoveParams params) {
         final variant = params.variant;
         final size = variant.boardSize;
         final state = params.state;
@@ -33,7 +22,8 @@ class Drops {
                 continue;
               }
             }
-            Move m = Move.drop(to: i, dropPiece: p);
+            final m = DropMove(to: i, piece: p);
+            // NormalMove m = NormalMove.drop(to: i, dropPiece: p);
             drops.add(m);
           }
         }

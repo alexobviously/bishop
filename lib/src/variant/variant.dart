@@ -9,6 +9,7 @@ part 'chess_960.dart';
 part 'game_end_conditions.dart';
 part 'hand_options.dart';
 part 'output_options.dart';
+part 'pass_options.dart';
 part 'promotion_options.dart';
 part 'material_conditions.dart';
 
@@ -79,6 +80,8 @@ class Variant {
   /// What type of gating, if any, is used in this variant?
   final GatingMode gatingMode;
 
+  final PassOptions passOptions;
+
   /// The relative values of pieces. These are usually already set in the [PieceType]
   /// definitions, so only use this if you want to override those.
   /// For example, you have a variant where a pawn is worth 200 instead of 100,
@@ -132,6 +135,7 @@ class Variant {
     this.handOptions = HandOptions.disabled,
     this.gatingMode = GatingMode.none,
     this.pieceValues,
+    this.passOptions = PassOptions.none,
     this.regions = const {},
     this.actions = const [],
     this.adapters = const [],
@@ -186,6 +190,13 @@ class Variant {
       pieceValues: (json['pieceValues'] as Map<String, dynamic>?)?.map(
         (k, v) => MapEntry(k, v as int),
       ),
+      passOptions: (json.containsKey('passOptions')
+              ? BishopSerialisation.build<PassOptions>(
+                  json['passOptions'],
+                  adapters: adapters,
+                )
+              : null) ??
+          PassOptions.none,
       regions: (json['regions'] as Map<String, dynamic>?)
               ?.map((k, v) => MapEntry(k, BoardRegion.fromJson(v))) ??
           const {},
@@ -240,6 +251,11 @@ class Variant {
       if (verbose || gatingMode != GatingMode.none)
         'gatingMode': gatingMode.name,
       if (pieceValues != null) 'pieceValues': pieceValues,
+      if (verbose || passOptions is! NoPass)
+        'passOptions': BishopSerialisation.export<PassOptions>(
+          passOptions,
+          adapters: allAdapters,
+        ),
       if (verbose || regions.isNotEmpty)
         'regions': regions.map((k, v) => MapEntry(k, v.toJson())),
       if (verbose || actions.isNotEmpty)
@@ -270,6 +286,7 @@ class Variant {
     bool? forbidChecks,
     HandOptions? handOptions,
     GatingMode? gatingMode,
+    PassOptions? passOptions,
     Map<String, int>? pieceValues,
     Map<String, BoardRegion>? regions,
     List<Action>? actions,
@@ -294,6 +311,7 @@ class Variant {
       forbidChecks: forbidChecks ?? this.forbidChecks,
       handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
+      passOptions: passOptions ?? this.passOptions,
       pieceValues: pieceValues ?? this.pieceValues,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
