@@ -171,7 +171,7 @@ extension GameMovement on Game {
     } else if (move.promotion) {
       // Place the promoted piece
       board[move.to] =
-          makePiece(move.promoPiece!, state.turn, Bishop.promoFlag);
+          makePiece(move.promoPiece!, state.turn, flags: Bishop.promoFlag);
       hash ^= zobrist.table[move.to][board[move.to].piece];
       pieces[board[move.to].piece]++;
     }

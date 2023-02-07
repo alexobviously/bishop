@@ -1,3 +1,11 @@
+### 1.2.0
+- Refactored `Move` objects, and the logic responsible for making moves in `Game`.
+- Slightly changed the encoding for squares:
+  - Colour now has two bits, supporting up to 4 players.
+  - Piece type has 8 bits instead of 7, increasing piece limit to 255.
+  - A secondary piece type ('internal') is now encoded, also with 8 bits. The primary use case for this is storing the type a piece had before its promotion.
+  - 12 bits for flags instead of 4.
+
 ### 1.1.3
 - Variants:
   - Orda (`Orda.orda()`) and Orda Mirror (`Orda.ordaMirror()`).

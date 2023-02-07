@@ -1,6 +1,12 @@
 import 'constants.dart';
 import 'variant/variant.dart';
 
+// Square anatomy
+// [00-01]    2 bit:    colour    (0: white, 1: black)
+// [02-09]    8 bits:   piece type
+// [10-17]    8 bits:   internal piece type
+// [18-29]    12 bits:  flags
+
 typedef Square = int;
 
 @Deprecated('Use Bishop.empty')
@@ -8,21 +14,25 @@ const Square empty = 0;
 @Deprecated('Use Bishop.promoFlag')
 const int promoFlag = 1;
 
-extension SquareLogic on Square {
-  Colour get colour => this & 1; // colour only
-  int get type => (this >> 1) & 127; // piece type only
-  int get piece => this & 255; // piece with colour
-  int get flags => (this >> 8) & 15;
-  bool get isEmpty => this == 0;
-  bool get isNotEmpty => this != 0;
-  bool hasFlag(int flag) => this & (flag << 8) != 0;
-  Square get flipColour => this ^ 1;
+extension SquareLogic on int {
+  int get colour => this & 3; // colour only
+  int get type => (this >> 2) & 255; // piece type only
+  int get internalType => (this >> 10) & 255; // internal type only
+  int get piece => this & 1023; // colour & type
+  int get flags => (this >> 18) & 4095; // flags only
+  bool get isEmpty => type == 0;
+  bool get isNotEmpty => type != 0;
+  bool hasFlag(int flag) => (this & (flag << 18)) != 0;
+  int get flipColour => this ^ 1;
 }
 
-Square makePiece(int piece, Colour colour, [int flags = 0]) {
-  assert(colour <= Bishop.black);
-  return (flags << 8) + (piece << 1) + colour;
-}
+int makePiece(
+  int piece,
+  int colour, {
+  int internalType = 0,
+  int flags = 0,
+}) =>
+    (flags << 18) + (internalType << 10) + (piece << 2) + colour;
 
 @Deprecated('Use BoardSize.squareName or Bishop.squareName')
 String squareName(int square, [BoardSize size = const BoardSize(8, 8)]) =>

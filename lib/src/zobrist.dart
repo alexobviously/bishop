@@ -47,7 +47,7 @@ class Zobrist {
     const int numParts = 4;
     Random r = Random(seed);
     int dimX = variant.boardSize.numIndices + numAux;
-    int dimY = max(variant.pieces.length * 2, Castling.mask + 1);
+    int dimY = max(variant.pieces.length * 4, Castling.mask + 1);
     // castling = dimY + 1;
     // turn = dimY + 2;
     List<List<int>> table = List<List<int>>.generate(

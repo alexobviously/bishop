@@ -135,7 +135,8 @@ class Game {
     // Parse hands for variants with drops
     List<List<int>>? hands;
     List<List<int>>? gates;
-    List<int> pieces = List.filled((variant.pieces.length + 1) * 2, 0);
+    // 4 is the number of players
+    List<int> pieces = List.filled((variant.pieces.length + 1) * 4, 0);
     List<int> checks = [0, 0];
     if (variant.handsEnabled || variant.gatingMode == GatingMode.flex) {
       List<List<int>> temp = [[], []];
