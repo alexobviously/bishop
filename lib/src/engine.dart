@@ -100,5 +100,5 @@ class EngineResult {
 
   bool get hasMove => move != null;
 
-  EngineResult({this.move, this.eval, this.depth});
+  const EngineResult({this.move, this.eval, this.depth});
 }

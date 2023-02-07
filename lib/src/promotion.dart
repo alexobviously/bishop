@@ -63,10 +63,10 @@ class PiecePromoOptions {
 }
 
 typedef PromotionSetup = PromotionBuilder Function(BuiltVariant variant);
-typedef PromotionBuilder = List<Move>? Function(PromotionParams params);
+typedef PromotionBuilder = List<NormalMove>? Function(PromotionParams params);
 
 class PromotionParams {
-  final Move move;
+  final NormalMove move;
   final BishopState state;
   final BuiltVariant variant;
   final PieceType pieceType;
@@ -101,9 +101,9 @@ class Promotion {
 
         if (!promo) return null;
 
-        List<Move> moves = [];
+        List<NormalMove> moves = [];
         for (int p in params.promoPieces) {
-          Move m = params.move.copyWith(
+          NormalMove m = params.move.copyWith(
             promoSource: params.state.board[params.move.from].type,
             promoPiece: p,
           );
@@ -137,9 +137,9 @@ class Promotion {
               : toRank <= forcedRanks[Bishop.black];
         }
 
-        List<Move> moves = [];
+        List<NormalMove> moves = [];
         for (int p in params.promoPieces) {
-          Move m = params.move.copyWith(
+          NormalMove m = params.move.copyWith(
             promoSource: params.state.board[params.move.from].type,
             promoPiece: p,
           );

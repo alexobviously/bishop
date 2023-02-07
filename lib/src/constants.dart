@@ -204,3 +204,16 @@ class BishopException {
   String toString() =>
       message == null ? 'BishopException' : 'BishopException($message)';
 }
+
+typedef MoveChecker = bool Function(MoveParams params);
+
+class MoveParams {
+  final int colour;
+  final BishopState state;
+  final BuiltVariant variant;
+  const MoveParams({
+    required this.colour,
+    required this.state,
+    required this.variant,
+  });
+}

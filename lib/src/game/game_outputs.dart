@@ -14,6 +14,11 @@ extension GameOutputs on Game {
 
   /// Returns the algebraic representation of [move], with respect to the board size.
   String toAlgebraic(Move move, {bool simplifyFixedGating = true}) {
+    if (move is PassMove) return move.algebraic();
+    if (move is DropMove) {
+      return '${variant.pieces[move.piece].symbol.toLowerCase()}${move.algebraic(size)}';
+    }
+    if (move is! NormalMove) return '';
     String alg = move.algebraic(
       size: size,
       useRookForCastling: variant.castlingOptions.useRookAsTarget,
@@ -42,8 +47,11 @@ extension GameOutputs on Game {
   /// is used to determine the disambiguator. Use this if you need speed and have already
   /// generated the list of moves elsewhere.
   String toSan(Move move, [List<Move>? moves]) {
+    if (move is PassMove) return move.algebraic();
+    if (move is! NormalMove && move is! DropMove) return '';
     String san = '';
     if (move.castling) {
+      move = move as NormalMove;
       // if queenside is the only castling option, render it as 'O-O'
       String kingside = 'O-O';
       String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
@@ -51,13 +59,14 @@ extension GameOutputs on Game {
           ? kingside
           : queenside;
     } else {
-      if (move.from == Bishop.hand) {
-        PieceDefinition pieceDef = variant.pieces[move.dropPiece!];
-        san = move.algebraic(size: size);
+      if (move is DropMove) {
+        PieceDefinition pieceDef = variant.pieces[move.piece];
+        san = move.algebraic(size);
         if (!pieceDef.type.noSanSymbol) {
           san = '${pieceDef.symbol.toUpperCase()}$san';
         }
       } else {
+        move = move as NormalMove;
         int piece = board[move.from].type;
         PieceDefinition pieceDef = variant.pieces[piece];
         String disambiguator = getDisambiguator(move, moves);
@@ -81,6 +90,7 @@ extension GameOutputs on Game {
     if (move.gate) {
       san = '$san/${variant.pieces[move.dropPiece!].symbol}';
       if (move.castling) {
+        move = move as NormalMove;
         String dropSq = move.dropOnRookSquare
             ? size.squareName(move.castlingPieceSquare!)
             : size.squareName(move.from);
@@ -99,7 +109,7 @@ extension GameOutputs on Game {
   /// one possible move. For example, in 'Nbxa4', this function provides the 'b'.
   /// Optionally, provide [moves] - a list of legal moves. This will be generated
   /// if it is not specified.
-  String getDisambiguator(Move move, [List<Move>? moves]) {
+  String getDisambiguator(NormalMove move, [List<Move>? moves]) {
     // provide a list of moves to make this more efficient
     moves ??= generateLegalMoves();
 
@@ -109,6 +119,7 @@ extension GameOutputs on Game {
     bool needRank = false;
     bool needFile = false;
     for (Move m in moves) {
+      if (m is! NormalMove) continue;
       if (m.handDrop) continue;
       if (m.drop && m.dropPiece != move.dropPiece) continue;
       if (m.from == move.from) continue;

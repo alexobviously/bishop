@@ -31,7 +31,7 @@ class ActionTrigger {
     ActionEvent? event,
     BishopState? state,
     BuiltVariant? variant,
-    Move? move,
+    NormalMove? move,
     int? piece,
   }) =>
       ActionTrigger(
