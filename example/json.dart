@@ -30,10 +30,7 @@ void main(List<String> args) {
             .toList();
     for (Variants v in variants) {
       String filename = 'json/${v.name}.json';
-      final file = File(filename);
-      final map = v.build().toJson(verbose: false);
-      final json = JsonEncoder.withIndent(' ').convert(map);
-      file.writeAsStringSync(json);
+      writeJson(filename, v.build().toJson(verbose: false));
       printMagenta('Wrote $filename');
     }
     return;
