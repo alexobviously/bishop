@@ -20,6 +20,7 @@ class NormalMove extends Move {
   final int? promoSource; // the piece type that got promoted
 
   /// The piece (type only) that is being promoted to.
+  @override
   final int? promoPiece; // this piece type that was promoted to
 
   /// If this is a castling move, in which direction is castling happening?
@@ -29,12 +30,15 @@ class NormalMove extends Move {
   final int? castlingPieceSquare;
 
   /// If this move is en passant.
+  @override
   final bool enPassant;
 
   /// If this move sets the en passant flag.
+  @override
   final bool setEnPassant;
 
   /// The piece (type only) that is being dropped, if one is.
+  @override
   final int? dropPiece;
 
   /// For gating drops that are also castling moves - should we gate on square
