@@ -13,6 +13,9 @@ extension MoveListExtension<T extends Move> on Iterable<T> {
   /// All moves that involve a hand drop.
   List<Move> get handDropMoves => where((e) => e.handDrop).toList();
 
+  /// All moves that involve a capture.
+  List<Move> get captures => where((e) => e.capture).toList();
+
   /// Moves that are a pass. Usually should only be 0 or 1 of these.
   List<PassMove> get passMoves =>
       where((e) => e is PassMove).map((e) => e as PassMove).toList();

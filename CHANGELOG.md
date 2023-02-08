@@ -5,6 +5,7 @@
   - Piece type has 8 bits instead of 7, increasing piece limit to 255.
   - A secondary piece type ('internal') is now encoded, also with 8 bits. The primary use case for this is storing the type a piece had before its promotion.
   - 12 bits for flags instead of 4.
+- `ActionImmortality` allows for pieces of certain types, or with certain flags, to be uncapturable.
 
 ### 1.1.3
 - Variants:

@@ -82,4 +82,11 @@ void main() {
     );
     expect(g.makeMoveString('d4d5'), false);
   });
+  test('Immortality (piece type)', () {
+    final v = Variant.standard()
+        .copyWith(actions: [ActionImmortality(pieceType: 'B')]);
+    final g = Game(variant: v, fen: '7k/8/3b4/8/4N3/8/8/7K w - - 0 1');
+    final moves = g.generateLegalMoves();
+    expect(moves.captures.length, 0);
+  });
 }

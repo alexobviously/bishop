@@ -61,6 +61,14 @@ class Conditions {
         return trigger.piece.type == type;
       };
 
+  /// Returns true if the moving piece has a [flag].
+  static ActionCondition movingPieceHasFlag(int flag) =>
+      (trigger) => trigger.piece.hasFlag(flag);
+
+  /// Returns true if the captured piece has a [flag]. Returns false if
+  static ActionCondition capturedPieceHasFlag(int flag) =>
+      (trigger) => trigger.move.capturedPiece?.hasFlag(flag) ?? false;
+
   /// Returns true if the royal pieces are not facing, or if they are facing
   /// with no pieces between them.
   static ActionCondition get royalsNotFacing => (ActionTrigger trigger) {

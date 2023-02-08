@@ -41,6 +41,14 @@ class BoardRegion implements Region {
   factory BoardRegion.file(int file) =>
       BoardRegion(startFile: file, endFile: file);
 
+  /// A board region consisting of a single square.
+  factory BoardRegion.square(int file, int rank) => BoardRegion(
+        startFile: file,
+        endFile: file,
+        startRank: rank,
+        endRank: rank,
+      );
+
   factory BoardRegion.fromJson(Map<String, dynamic> json) => BoardRegion(
         startRank: json['startRank'],
         endRank: json['endRank'],

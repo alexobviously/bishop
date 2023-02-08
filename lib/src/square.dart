@@ -22,6 +22,9 @@ extension SquareLogic on int {
   int get flags => (this >> 18) & 4095; // flags only
   bool get isEmpty => type == 0;
   bool get isNotEmpty => type != 0;
+  int setFlag(int flag) => this | (1 << (18 + flag));
+  int unsetFlag(int flag) => this & ~(1 << (18 + flag));
+  int toggleFlag(int flag) => this ^ (1 << (18 + flag));
   bool hasFlag(int flag) => (this & (flag << 18)) != 0;
   int get flipColour => this ^ 1;
 }

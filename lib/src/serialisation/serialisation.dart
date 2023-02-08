@@ -41,6 +41,7 @@ class BishopSerialisation {
         ExplodeOnCaptureAdapter(),
         ExplosionRadiusAdapter(),
         FlyingGeneralsAdapter(),
+        ImmortalityAdapter(),
         RemoveFromHandAdapter(),
       ];
 
