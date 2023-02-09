@@ -5,7 +5,7 @@ import 'variant/variant.dart';
 // [00-01]    2 bit:    colour    (0: white, 1: black)
 // [02-09]    8 bits:   piece type
 // [10-17]    8 bits:   internal piece type
-// [18-29]    12 bits:  flags
+// [18-31]    14 bits:  flags     in reality probably 46 bits
 
 typedef Square = int;
 
@@ -19,7 +19,7 @@ extension SquareLogic on int {
   int get type => (this >> 2) & 255; // piece type only
   int get internalType => (this >> 10) & 255; // internal type only
   int get piece => this & 1023; // colour & type
-  int get flags => (this >> 18) & 4095; // flags only
+  int get flags => this >> 18; // flags only
   bool get isEmpty => type == 0;
   bool get isNotEmpty => type != 0;
   int setFlag(int flag) => this | (1 << (18 + flag));

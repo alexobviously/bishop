@@ -41,4 +41,11 @@ class ActionTrigger {
         move: move ?? this.move,
         piece: piece ?? this.piece,
       );
+
+  BoardSize get size => variant.boardSize;
+  List<int> get board => state.board;
+
+  /// Retrieves the value of the custom state variable [i].
+  int getCustomState(int i) =>
+      state.board[variant.boardSize.secretSquare(i)] >> Bishop.flagsStartBit;
 }

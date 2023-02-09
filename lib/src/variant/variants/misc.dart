@@ -49,4 +49,35 @@ class MiscVariants {
       ).withPieces({
         'K': PieceType.fromBetza('K', promoOptions: PiecePromoOptions.none),
       });
+
+  // https://www.chessvariants.com/diffobjective.dir/utchess.html#domination
+  // todo: make this serialisable, break action down
+  static Variant domination() {
+    final region = BoardRegion(
+      startFile: Bishop.fileD,
+      endFile: Bishop.fileE,
+      startRank: Bishop.rank4,
+      endRank: Bishop.rank5,
+    );
+    final a = Action(
+      action: (trigger) {
+        List<ActionEffect> effects = [];
+        List<int> incs = [0, 0];
+        for (int sq in trigger.size.squaresForBoardRegion(region)) {
+          int content = trigger.board[sq];
+          if (content.isNotEmpty) {
+            incs[content.colour]++;
+          }
+        }
+        for (int i = 0; i < incs.length; i++) {
+          if (incs[i] > 0) {
+            int value = trigger.getCustomState(i) + incs[i];
+            effects.add(EffectSetCustomState(i, value));
+          }
+        }
+        return effects;
+      },
+    );
+    return Variant.standard().copyWith(name: 'Domination', actions: [a]);
+  }
 }

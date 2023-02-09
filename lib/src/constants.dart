@@ -35,6 +35,8 @@ class Bishop {
   static const int mateUpper = 100000;
   static const int defaultPieceValue = 200;
 
+  static const int flagsStartBit = 18;
+
   // Just shorthands for building variants
   static const int fileA = 0;
   static const int fileB = 1;
@@ -186,6 +188,7 @@ enum Variants {
   hoppelPoppel(MiscVariants.hoppelPoppel),
   kinglet(MiscVariants.kinglet),
   threeKings(MiscVariants.threeKings),
+  domination(MiscVariants.domination),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 

@@ -4,7 +4,10 @@
   - Colour now has two bits, supporting up to 4 players.
   - Piece type has 8 bits instead of 7, increasing piece limit to 255.
   - A secondary piece type ('internal') is now encoded, also with 8 bits. The primary use case for this is storing the type a piece had before its promotion.
-  - 12 bits for flags instead of 4.
+  - 14 bits for flags instead of 4. (46 if you assume your code won't execute on 32 bit vm).
+- It's now possible to store custom state variables in the invisible squares outside the board. Technically, it was always possible, but it's now easier to do, and supported.
+  - In actions, return an `EffectSetCustomState` to change a state variable. You can define a number of variables equal to the amount of squares on your board, so 64 for a standard chess board.
+  - Read these from `trigger.getCustomState()` in triggers, or `Game.getCustomState()` otherwise.
 - `ActionImmortality` allows for pieces of certain types, or with certain flags, to be uncapturable.
 
 ### 1.1.3

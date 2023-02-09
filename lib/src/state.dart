@@ -141,7 +141,11 @@ class BishopState {
     final action = actions.first;
     BishopState state = this;
     if (action.condition?.call(trigger) ?? true) {
-      state = applyEffects(effects: action.action(trigger), zobrist: zobrist);
+      state = applyEffects(
+        effects: action.action(trigger),
+        size: trigger.variant.boardSize,
+        zobrist: zobrist,
+      );
     }
     return actions.length > 1
         ? state.executeActions(
@@ -154,6 +158,7 @@ class BishopState {
 
   BishopState applyEffects({
     required Iterable<ActionEffect> effects,
+    required BoardSize size,
     Zobrist? zobrist,
   }) {
     if (invalidMove) return this;
@@ -182,6 +187,8 @@ class BishopState {
         if (effect.content.isNotEmpty) {
           pieces[effect.content.piece]++;
         }
+      } else if (effect is EffectSetCustomState) {
+        board[effect.variable + size.h] = effect.value << Bishop.flagsStartBit;
       } else if (effect is EffectSetGameResult) {
         result = effect.result;
       } else if (effect is EffectAddToHand) {

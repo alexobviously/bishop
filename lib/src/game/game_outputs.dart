@@ -402,4 +402,8 @@ extension GameOutputs on Game {
         checkSq:
             inCheck ? size.squareName(state.royalSquares[state.turn]) : null,
       );
+
+  /// Retrieves the value of the custom state variable [i].
+  int getCustomState(int i) =>
+      state.board[size.secretSquare(i)] >> Bishop.flagsStartBit;
 }

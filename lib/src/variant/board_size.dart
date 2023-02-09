@@ -82,8 +82,12 @@ class BoardSize {
     return x < h;
   }
 
+  /// Returns all the squares in [area], translated to [centre] - a square id.
   List<int> squaresForArea(int centre, Area area) =>
       area.translate(file(centre), rank(centre)).squares(this);
+
+  /// Returns all of the squares in [region].
+  List<int> squaresForBoardRegion(BoardRegion region) => region.squares(this);
 
   /// Returns the name for a square, according to chess conventions, e.g. c6, b1.
   String squareName(int square) {
@@ -107,6 +111,9 @@ class BoardSize {
     int square = rankNum * h * 2 + fileNum;
     return square;
   }
+
+  /// Gets the secret (off-board) square [i], for storing flags in.
+  int secretSquare(int i) => ((i ~/ h) * 2 * h) + (i % h) + h;
 
   @override
   String toString() => 'BoardSize($h, $v)';
