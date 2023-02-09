@@ -78,6 +78,12 @@ class MiscVariants {
         return effects;
       },
     );
-    return Variant.standard().copyWith(name: 'Domination', actions: [a]);
+    return Variant.standard().copyWith(
+      name: 'Domination',
+      actions: [
+        a,
+        ActionPointsEnding(limits: [15, 15]),
+      ],
+    );
   }
 }

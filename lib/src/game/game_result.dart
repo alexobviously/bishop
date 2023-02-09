@@ -74,6 +74,14 @@ class WonGameStalemate extends WonGame {
   String toString() => 'WonGameStalemate($winner)';
 }
 
+class WonGamePoints extends WonGame {
+  final int points;
+  const WonGamePoints({required super.winner, required this.points});
+
+  @override
+  String toString() => 'WonGamePoints($winner, $points)';
+}
+
 class DrawnGameStalemate extends DrawnGame {
   const DrawnGameStalemate();
 
@@ -116,4 +124,12 @@ class DrawnGameElimination extends DrawnGame {
 
   @override
   String toString() => 'DrawnGameElimination';
+}
+
+class DrawnGamePoints extends DrawnGame {
+  final int points;
+  const DrawnGamePoints(this.points);
+
+  @override
+  String toString() => 'DrawnGamePoints($points)';
 }
