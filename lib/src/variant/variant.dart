@@ -239,7 +239,8 @@ class Variant {
       'startPosition': startPosition,
       // 'startPosBuilder': startPosBuilder,
       'enPassant': enPassant,
-      'firstMoveRanks': firstMoveRanks,
+      if (verbose || firstMoveRanks.expand((e) => e).isNotEmpty)
+        'firstMoveRanks': firstMoveRanks,
       if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
       if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
       if (verbose || forbidChecks) 'forbidChecks': forbidChecks,

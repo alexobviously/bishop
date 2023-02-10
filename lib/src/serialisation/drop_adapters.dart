@@ -24,3 +24,16 @@ class UnrestrictedDropAdapter
   @override
   Map<String, dynamic>? export(UnrestrictedDropBuilder e) => null;
 }
+
+class RegionDropAdapter extends BishopTypeAdapter<RegionDropBuilder> {
+  @override
+  String get id => 'bishop.drops.region';
+
+  @override
+  RegionDropBuilder build(Map<String, dynamic>? params) =>
+      RegionDropBuilder(BoardRegion.fromJson(params!['region']));
+
+  @override
+  Map<String, dynamic> export(RegionDropBuilder e) =>
+      {'region': e.region.toJson()};
+}

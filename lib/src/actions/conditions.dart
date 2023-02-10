@@ -4,12 +4,14 @@ part of 'actions.dart';
 class Conditions {
   /// Merges multiple [conditions] into one.
   static ActionCondition merge(List<ActionCondition> conditions) =>
-      (ActionTrigger trigger) {
-        for (final c in conditions) {
-          if (!c(trigger)) return false;
-        }
-        return true;
-      };
+      conditions.length == 1
+          ? conditions.first
+          : (ActionTrigger trigger) {
+              for (final c in conditions) {
+                if (!c(trigger)) return false;
+              }
+              return true;
+            };
 
   /// Inverts the result of a condition.
   static ActionCondition invert(ActionCondition condition) =>
@@ -38,6 +40,17 @@ class Conditions {
           return false;
         }
         return trigger.variant.pieceIndexLookup[piece] == trigger.piece.type;
+      };
+
+  /// Returns true if the captured piece is of type [type].
+  /// See `capturedPieceIs` to do this with a string piece type.
+  static ActionCondition capturedPieceType(int type, {int? colour}) =>
+      (ActionTrigger trigger) {
+        if (trigger.move.capturedPiece == null) return false;
+        if (colour != null && trigger.move.capturedPiece!.colour != colour) {
+          return false;
+        }
+        return trigger.move.capturedPiece!.type == type;
       };
 
   /// Returns true if the captured piece is of type [piece].

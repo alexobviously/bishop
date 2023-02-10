@@ -60,6 +60,7 @@ abstract class DropBuilder {
 
   static const standard = StandardDropBuilder();
   static const unrestricted = UnrestrictedDropBuilder();
+  factory DropBuilder.region(BoardRegion region) => RegionDropBuilder(region);
 }
 
 class StandardDropBuilder extends DropBuilder {
@@ -75,4 +76,12 @@ class UnrestrictedDropBuilder extends DropBuilder {
   @override
   DropBuilderFunction build(BuiltVariant variant) =>
       Drops.standard(restrictPromoPieces: false);
+}
+
+class RegionDropBuilder extends DropBuilder {
+  final BoardRegion region;
+  const RegionDropBuilder(this.region);
+
+  @override
+  DropBuilderFunction build(BuiltVariant variant) => Drops.region(region);
 }

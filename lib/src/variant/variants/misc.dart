@@ -59,7 +59,7 @@ class MiscVariants {
       startRank: Bishop.rank4,
       endRank: Bishop.rank5,
     );
-    final a = Action(
+    final action = Action(
       action: (trigger) {
         List<ActionEffect> effects = [];
         List<int> incs = [0, 0];
@@ -81,9 +81,37 @@ class MiscVariants {
     return Variant.standard().copyWith(
       name: 'Domination',
       actions: [
-        a,
+        action,
         ActionPointsEnding(limits: [15, 15]),
       ],
+    );
+  }
+
+  static Variant dart() {
+    final dropRegion = BoardRegion(
+      startFile: Bishop.fileB,
+      endFile: Bishop.fileE,
+      startRank: Bishop.rank2,
+      endRank: Bishop.rank5,
+    );
+    return Variant(
+      name: 'Dart',
+      boardSize: BoardSize(6, 6),
+      startPosition: 'knrppp/nbp3/rp3P/p3PR/3PBN/PPPRNK[XXXxxx] w - - 0 1',
+      enPassant: false,
+      castlingOptions: CastlingOptions.none,
+      handOptions: HandOptions(
+        enableHands: true,
+        dropBuilder: DropBuilder.region(dropRegion),
+      ),
+      pieceTypes: {
+        'P': PieceType.simplePawn(),
+        'N': PieceType.knight(),
+        'B': PieceType.bishop(),
+        'R': PieceType.rook(),
+        'K': PieceType.king(),
+        'X': PieceType.blocker(), // a 'dart'
+      },
     );
   }
 }

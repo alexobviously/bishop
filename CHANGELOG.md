@@ -10,10 +10,11 @@
   - Read these from `trigger.getCustomState()` in triggers, or `Game.getCustomState()` otherwise.
 - `ActionPointsEnding` leverages custom state to define a game end condition based on points.
 - `ActionImmortality` allows for pieces of certain types, or with certain flags, to be uncapturable.
-
-### 1.1.3
+- `RegionDropBuilder`: define drop rules that only allow drops within a specified region.
 - Variants:
   - Orda (`Orda.orda()`) and Orda Mirror (`Orda.ordaMirror()`).
+  - Domination (`MiscVariants.domination()`): keeping pieces in the centre of the board accumulates points for their owner.
+  - Dart Chess (`MiscVariants.dart()`): cramped variant on a 6x6 board. Each player has 3 'darts' they can drop onto the board, which block movement and cannot be moved or captured.
 
 ### 1.1.2
 - `ActionCheckPieceCount`: allows for win conditions based on elimination of arbitrary pieces.

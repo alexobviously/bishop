@@ -12,6 +12,7 @@ class PieceType {
   /// Royal pieces can be checkmated, and can castle.
   final bool royal;
 
+  /// Defines the promotion behaviour of this piece type.
   final PiecePromoOptions promoOptions;
 
   /// Whether this piece can set the en passant flag.
@@ -142,6 +143,9 @@ class PieceType {
   /// Returns a copy of the piece type with [value].
   PieceType withValue(int value) => copyWith(value: value);
 
+  PieceType withImmortality() =>
+      copyWith(actions: [...actions, ActionImmortality()]);
+
   factory PieceType.empty() => PieceType(
         moves: [],
         promoOptions: PiecePromoOptions.none,
@@ -214,6 +218,11 @@ class PieceType {
   factory PieceType.chancellor() => PieceType.fromBetza('RN', value: 900);
   factory PieceType.amazon() => PieceType.fromBetza('QN', value: 1200);
   factory PieceType.grasshopper() => PieceType.fromBetza('gQ');
+  factory PieceType.blocker({bool immortal = true}) => PieceType.fromBetza(
+        '',
+        value: 0,
+        actions: immortal ? [ActionImmortality()] : [],
+      );
 }
 
 /// A definition of a `PieceType`, specific to a `Variant`.

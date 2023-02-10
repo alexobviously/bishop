@@ -25,6 +25,7 @@ class BishopSerialisation {
       ];
 
   static List<BishopTypeAdapter> get baseDropAdapters => [
+        RegionDropAdapter(),
         StandardDropAdapter(),
         UnrestrictedDropAdapter(),
       ];

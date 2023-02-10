@@ -1,0 +1,66 @@
+{
+ "name": "Dart",
+ "description": "",
+ "bishopVersion": "1.2.0",
+ "boardSize": "6x6",
+ "pieceTypes": {
+  "P": {
+   "betza": "fmWfcF",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "noSanSymbol": true,
+   "value": 100
+  },
+  "N": {
+   "betza": "N",
+   "value": 300
+  },
+  "B": {
+   "betza": "B",
+   "value": 300
+  },
+  "R": {
+   "betza": "R",
+   "value": 500
+  },
+  "K": {
+   "betza": "K",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   }
+  },
+  "X": {
+   "betza": "",
+   "value": 0,
+   "actions": [
+    "bishop.action.immortality"
+   ]
+  }
+ },
+ "castlingOptions": {
+  "enabled": false
+ },
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {
+  "enabled": false
+ },
+ "startPosition": "knrppp/nbp3/rp3P/p3PR/3PBN/PPPRNK[XXXxxx] w - - 0 1",
+ "enPassant": false,
+ "handOptions": {
+  "enableHands": true,
+  "addCapturesToHand": false,
+  "dropBuilder": {
+   "id": "bishop.drops.region",
+   "region": {
+    "startRank": 1,
+    "endRank": 4,
+    "startFile": 1,
+    "endFile": 4
+   }
+  }
+ }
+}

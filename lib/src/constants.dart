@@ -189,6 +189,7 @@ enum Variants {
   kinglet(MiscVariants.kinglet),
   threeKings(MiscVariants.threeKings),
   domination(MiscVariants.domination),
+  dart(MiscVariants.dart),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 
