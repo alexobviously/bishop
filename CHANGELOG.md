@@ -13,6 +13,7 @@
   - In actions, return an `EffectSetCustomState` to change a state variable. You can define a number of variables equal to the amount of squares on your board, so 64 for a standard chess board.
   - Read these from `trigger.getCustomState()` in triggers, or `Game.getCustomState()` otherwise.
 - Support for 'teleport' moves, i.e. moves where the piece can move anywhere on the board. These are built with the Betza atom '*', and support 'c'/'m' modifiers.
+- Experimental support for neutral pieces, i.e. pieces that can moved by either player, like the duck in duck chess. Currently the only way to use these is to define a piece with the key '*'.
 - `Variant.passOptions`: allow pass moves, where the turn changes but nothing happens. Allows for custom conditions.
 - `ActionPointsEnding`: leverages custom state to define a game end condition based on points.
 - `ActionImmortality`: allows for pieces of certain types, or with certain flags, to be uncapturable.

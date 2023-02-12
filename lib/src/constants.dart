@@ -29,8 +29,10 @@ class Bishop {
   static const int promoFlag = 1;
   static const defaultSeed = 7363661891;
 
-  static const List<int> playerDirection = [-1, 1];
+  static const List<int> playerDirection = [-1, 1, -1, -1];
   static const List<String> playerName = ['White', 'Black'];
+  // temporary, this will be controllable/generative eventually
+  static const numPlayers = 4;
 
   static const int asciiA = 97;
   static const int mateLower = 90000;

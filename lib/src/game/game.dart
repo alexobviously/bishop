@@ -135,17 +135,16 @@ class Game {
     // Parse hands for variants with drops
     List<List<int>>? hands;
     List<List<int>>? gates;
-    // 4 is the number of players
-    List<int> pieces = List.filled((variant.pieces.length + 1) * 4, 0);
+    List<int> pieces =
+        List.filled((variant.pieces.length + 1) * Bishop.numPlayers, 0);
     List<int> checks = [0, 0];
     if (variant.handsEnabled || variant.gatingMode == GatingMode.flex) {
-      List<List<int>> temp = [[], []];
+      List<List<int>> temp = List.filled(Bishop.numPlayers, []);
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
       RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
       if (handMatch != null) {
         sections[0] = sections[0].substring(0, handMatch.start);
         String hand = handMatch.group(1)!;
-        temp = [[], []];
         for (String c in hand.split('')) {
           String upper = c.toUpperCase();
           if (pieceLookup.containsKey(upper)) {
@@ -222,7 +221,7 @@ class Game {
 
     int sq = 0;
     int emptySquares = 0;
-    List<int> royalSquares = [Bishop.invalid, Bishop.invalid];
+    List<int> royalSquares = List.filled(Bishop.numPlayers, Bishop.invalid);
 
     for (String c in boardSymbols) {
       if (c == '~') {
@@ -247,6 +246,7 @@ class Game {
         // it's a piece
         int pieceIndex = pieceLookup[symbol]!;
         Colour colour = c == symbol ? Bishop.white : Bishop.black;
+        if (symbol == '*') colour = Bishop.neutralPassive; // todo: not this
         Square piece = makePiece(pieceIndex, colour);
         board[sq] = piece;
         pieces[piece]++;
@@ -324,7 +324,8 @@ class Game {
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
       Square target = board[i];
-      if (target.isNotEmpty && target.colour == colour) {
+      if (target.isNotEmpty &&
+          (target.colour == colour || target.colour == Bishop.neutralPassive)) {
         List<Move> pieceMoves = generatePieceMoves(i, options);
         moves.addAll(pieceMoves);
       }

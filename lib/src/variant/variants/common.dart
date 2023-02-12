@@ -90,4 +90,10 @@ class CommonVariants {
         whiteRank: -1,
         blackRank: -1,
       ); // TODO: racing kings should be a draw if black reaches right after white - depends on deferred actions
+
+  /// Not production ready yet. Work in progress.
+  static Variant duck() =>
+      Variant.standard().withPieces({'*': PieceType.duck()}).copyWith(
+        name: 'Duck Chess',
+      );
 }

@@ -106,7 +106,11 @@ extension GameMovement on Game {
     int fromRank = size.rank(move.from);
     int fromFile = size.file(move.from);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
-    if (fromSq != Bishop.empty && fromSq.colour != state.turn) return null;
+    if (fromSq != Bishop.empty &&
+        (fromSq.colour != state.turn &&
+            fromSq.colour != Bishop.neutralPassive)) {
+      return null;
+    }
     int colour = turn;
     // Remove the moved piece, if this piece came from on the board.
     if (move.from >= Bishop.boardStart) {
@@ -167,7 +171,8 @@ extension GameMovement on Game {
           : makePiece(move.dropPiece!, colour);
       hash ^= zobrist.table[move.to][putPiece.piece];
       board[move.to] = putPiece;
-      if (move.from == Bishop.hand) hands![colour].remove(move.dropPiece!);
+      // note that it's possible to have a drop move without hands (e.g. duck chess)
+      if (move.from == Bishop.hand) hands?[colour].remove(move.dropPiece!);
     } else if (move.promotion) {
       // Place the promoted piece
       board[move.to] =
