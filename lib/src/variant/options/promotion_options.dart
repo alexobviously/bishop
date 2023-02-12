@@ -1,4 +1,4 @@
-part of 'variant.dart';
+part of '../variant.dart';
 
 abstract class PromotionOptions {
   /// If specified, this will not allow promotion to specified piece types

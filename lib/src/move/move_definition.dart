@@ -1,7 +1,40 @@
 import 'package:bishop/bishop.dart';
 
+abstract class MoveDefinition {
+  /// Modality indicates whether the move is quiet move, capture, or both.
+  final Modality modality;
+
+  /// If true, this move is only possible as the piece's first move.
+  /// Moves of this type will also set the en passant square.
+  /// For example, a standard pawn's double move.
+  final bool firstOnly;
+
+  const MoveDefinition({
+    this.modality = Modality.both,
+    this.firstOnly = false,
+  });
+
+  factory MoveDefinition.fromBetza(Atom atom, Direction d) {
+    if (atom.base == '*') {
+      return TeleportMoveDefinition(modality: atom.modality);
+    }
+    return StandardMoveDefinition.fromBetza(atom, d);
+  }
+
+  MoveDefinition normalise(BoardSize size);
+
+  bool get quiet => modality == Modality.both || modality == Modality.quiet;
+  bool get capture => modality == Modality.both || modality == Modality.capture;
+}
+
+class TeleportMoveDefinition extends MoveDefinition {
+  const TeleportMoveDefinition({super.modality});
+  @override
+  TeleportMoveDefinition normalise(BoardSize size) => this;
+}
+
 /// Specifies a group of moves.
-class MoveDefinition {
+class StandardMoveDefinition extends MoveDefinition {
   /// Where does this move go?
   /// Analogous to a basic directional atom in Betza notation.
   final Direction direction;
@@ -10,16 +43,8 @@ class MoveDefinition {
   /// Set this to 0 for infinite (to the edge of the board).
   final int range;
 
-  /// Modality indicates whether the move is quiet move, capture, or both.
-  final Modality modality;
-
   /// Whether this move an enact en passant.
   final bool enPassant;
-
-  /// If true, this move is only possible as the piece's first move.
-  /// Moves of this type will also set the en passant square.
-  /// For example, a standard pawn's double move.
-  final bool firstOnly;
 
   /// If true, these moves can be blocked by a piece standing in the path.
   /// For example, a Xiangqi horse's move or a standard pawn's double move.
@@ -42,15 +67,13 @@ class MoveDefinition {
   bool get slider => range != 1;
   bool get hopper => slider && hopDistance > -1;
   bool get limitedHopper => slider && hopDistance > 0;
-  bool get quiet => modality == Modality.both || modality == Modality.quiet;
-  bool get capture => modality == Modality.both || modality == Modality.capture;
 
-  const MoveDefinition({
+  const StandardMoveDefinition({
     required this.direction,
     this.range = 1,
-    this.modality = Modality.both,
+    super.modality = Modality.both,
     this.enPassant = false,
-    this.firstOnly = false,
+    super.firstOnly = false,
     this.lame = false,
     this.hopDistance = -1,
     this.normalised = 0,
@@ -59,8 +82,8 @@ class MoveDefinition {
   });
 
   /// Build a move definition from a betza [atom] and a [direction].
-  factory MoveDefinition.fromBetza(Atom atom, Direction direction) =>
-      MoveDefinition(
+  factory StandardMoveDefinition.fromBetza(Atom atom, Direction direction) =>
+      StandardMoveDefinition(
         direction: direction,
         range: atom.range,
         modality: atom.modality,
@@ -74,7 +97,7 @@ class MoveDefinition {
                 : -1,
       );
 
-  MoveDefinition copyWith({
+  StandardMoveDefinition copyWith({
     Direction? direction,
     int? range,
     Modality? modality,
@@ -86,7 +109,7 @@ class MoveDefinition {
     Direction? lameDirection,
     int? lameNormalised,
   }) =>
-      MoveDefinition(
+      StandardMoveDefinition(
         direction: direction ?? this.direction,
         range: range ?? this.range,
         modality: modality ?? this.modality,
@@ -100,7 +123,8 @@ class MoveDefinition {
       );
 
   /// Calculates the values needed to use this on a board of [size].
-  MoveDefinition normalise(BoardSize size) {
+  @override
+  StandardMoveDefinition normalise(BoardSize size) {
     int normalised = direction.v * size.h * 2 + direction.h;
     Direction? lameDirection = this.lameDirection;
     int? lameNormalised = this.lameNormalised;
@@ -142,6 +166,8 @@ class Direction {
     final parts = str.split(',');
     return Direction(int.parse(parts.first), int.parse(parts.last));
   }
+
+  static const none = Direction(0, 0);
 
   String get simpleString => '$h,$v';
 

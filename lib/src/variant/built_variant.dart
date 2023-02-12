@@ -355,8 +355,8 @@ class BuiltVariant {
     return promoPieces;
   }
 
-  List<NormalMove>? generatePromotionMoves({
-    required NormalMove base,
+  List<StandardMove>? generatePromotionMoves({
+    required StandardMove base,
     required BishopState state,
     PieceType? pieceType,
   }) {
@@ -375,7 +375,7 @@ class BuiltVariant {
         pieceIndex: piece,
       ),
     );
-    List<NormalMove>? moves = promotionBuilder!(params);
+    List<StandardMove>? moves = promotionBuilder!(params);
     return moves;
   }
 

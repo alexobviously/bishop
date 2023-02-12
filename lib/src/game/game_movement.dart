@@ -20,14 +20,14 @@ extension GameMovement on Game {
         zobrist: zobrist,
       );
     }
-    if (move is! NormalMove && move is! DropMove && move is! PassMove) {
+    if (move is! StandardMove && move is! DropMove && move is! PassMove) {
       return false;
     }
 
     if (state.invalidMove) return false;
 
     BishopState? newState;
-    if (move is NormalMove || move is DropMove) {
+    if (move is StandardMove || move is DropMove) {
       newState = makeNormalMove(state, move);
     } else if (move is PassMove) {
       newState = makePassMove(state, move);
@@ -73,7 +73,7 @@ extension GameMovement on Game {
   }
 
   BishopState? makeNormalMove(BishopState state, Move move) {
-    if (move is! NormalMove && move is! DropMove) {
+    if (move is! StandardMove && move is! DropMove) {
       return null;
     }
     Square fromSq =
@@ -115,7 +115,7 @@ extension GameMovement on Game {
         pieces[fromSq.piece]--;
       }
       if (move.gate) {
-        move = move as NormalMove;
+        move = move as StandardMove;
         if (!(move.castling && move.dropOnRookSquare)) {
           // Move piece from gate to board.
           if (variant.gatingMode == GatingMode.flex) {
@@ -150,7 +150,7 @@ extension GameMovement on Game {
 
     // Remove gated piece from gate
     if (move.gate) {
-      gates![colour].remove((move as NormalMove).dropPiece!);
+      gates![colour].remove((move as StandardMove).dropPiece!);
     }
 
     // Remove captured piece from hash and pieces list
@@ -210,7 +210,7 @@ extension GameMovement on Game {
     }
 
     if (move.castling) {
-      move = move as NormalMove;
+      move = move as StandardMove;
       bool kingside = move.castlingDir == Castling.k;
       int castlingFile = kingside
           ? variant.castlingOptions.kTarget!

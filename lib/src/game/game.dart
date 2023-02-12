@@ -387,21 +387,57 @@ class Game {
     int from = square;
     int fromRank = size.rank(from);
     bool exit = false;
+
+    void generateTeleportMoves(TeleportMoveDefinition md) {
+      for (int to = 0; to < size.numIndices; to++) {
+        if (!size.onBoard(square)) {
+          to += size.h;
+          if (!size.onBoard(square)) break;
+        }
+        if (to == square) continue;
+        // todo: md.firstMove, when better first move logic is built
+        if (options.ignorePieces) {
+          moves.add(StandardMove(from: from, to: to));
+          continue;
+        }
+        Square target = board[to];
+        if (target.isEmpty && md.quiet) {
+          moves.add(StandardMove(from: from, to: to));
+          continue;
+        }
+        if (target.isNotEmpty && target.colour != colour && md.capture) {
+          final targetPieceType = variant.pieceType(target, to);
+          if (targetPieceType.royal) {
+            // doesn't make sense for teleports to be able to capture royals
+            // unless we later implement region restricted teleport moves
+            continue;
+          }
+          moves.add(StandardMove(from: from, to: to, capturedPiece: target));
+        }
+      }
+    }
+
     // Generate normal moves
     for (MoveDefinition md in pieceType.moves) {
       if (exit) break;
       if (!md.capture && !options.quiet) continue;
       if (!md.quiet && !options.captures) continue;
+      if (md is TeleportMoveDefinition) {
+        generateTeleportMoves(md);
+        continue;
+      }
+
       if (md.firstOnly && !variant.firstMoveRanks[colour].contains(fromRank)) {
         continue;
       }
+      if (md is! StandardMoveDefinition) continue;
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       int squaresSinceHop = -1;
 
       for (int i = 0; i < range; i++) {
         if (exit) break;
         int to = square + md.normalised * (i + 1) * dirMult;
-        if (!variant.boardSize.onBoard(to)) break;
+        if (!size.onBoard(to)) break;
         if (variant.hasRegions) {
           if (!variant.allowMovement(piece, to)) break;
         }
@@ -436,7 +472,7 @@ class Game {
           }
         }
 
-        void addMove(NormalMove m) {
+        void addMove(StandardMove m) {
           final mm = variant.generatePromotionMoves(
             base: m,
             state: state,
@@ -467,15 +503,15 @@ class Game {
           // TODO: prioritise ep? for moves that could be both ep and quiet
           if (md.quiet) {
             if (!options.quiet && options.onlySquare == null) continue;
-            NormalMove m =
-                NormalMove(to: to, from: from, setEnPassant: setEnPassant);
+            StandardMove m =
+                StandardMove(to: to, from: from, setEnPassant: setEnPassant);
             addMove(m);
           } else if (variant.enPassant &&
               md.enPassant &&
               (state.epSquare == to || options.ignorePieces) &&
               options.captures) {
             // en passant
-            NormalMove m = NormalMove(
+            StandardMove m = StandardMove(
               to: to,
               from: from,
               capturedPiece: makePiece(variant.epPiece, colour.opponent),
@@ -484,7 +520,7 @@ class Game {
             );
             addMove(m);
           } else if (options.onlySquare != null && to == options.onlySquare) {
-            NormalMove m = NormalMove(
+            StandardMove m = StandardMove(
               to: to,
               from: from,
             );
@@ -497,18 +533,18 @@ class Game {
                 break;
               }
             }
-            NormalMove m = NormalMove(from: from, to: to);
+            StandardMove m = StandardMove(from: from, to: to);
             addMove(m);
           }
         } else if (target.colour == colour) {
           if (!options.ignorePieces) break;
-          NormalMove m = NormalMove(from: from, to: to);
+          StandardMove m = StandardMove(from: from, to: to);
           addMove(m);
         } else {
           if (md.capture) {
             if (!options.captures) break;
             if (options.onlyPiece && target.type != options.pieceType) break;
-            NormalMove m = NormalMove(
+            StandardMove m = StandardMove(
               to: to,
               from: from,
               capturedPiece: target,
@@ -516,7 +552,7 @@ class Game {
             );
             addMove(m);
           } else if (options.ignorePieces) {
-            NormalMove m = NormalMove(
+            StandardMove m = StandardMove(
               to: to,
               from: from,
               setEnPassant: setEnPassant,
@@ -602,7 +638,7 @@ class Game {
         }
         if (valid) {
           int castlingDir = i == 0 ? Castling.k : Castling.q;
-          NormalMove m = NormalMove(
+          StandardMove m = StandardMove(
             from: from,
             to: targetSq,
             castlingDir: castlingDir,
@@ -648,19 +684,19 @@ class Game {
 
   /// Generates a move for each gating possibility for the [base] move.
   /// Doesn't include the option where a piece is not gated.
-  List<NormalMove> generateGatingMoves(NormalMove base) {
+  List<StandardMove> generateGatingMoves(StandardMove base) {
     if (state.gates == null || state.gates!.isEmpty) return [];
     int gFile = size.file(base.from);
     Square piece = board[base.from];
     Colour colour = piece.colour;
     if (piece.isEmpty) return [];
     if (!(state.virginFiles[colour].contains(gFile))) return [];
-    List<NormalMove> moves = [];
+    List<StandardMove> moves = [];
     void addGatingMove(int p) {
-      NormalMove m = base.copyWith(dropPiece: p);
+      StandardMove m = base.copyWith(dropPiece: p);
       moves.add(m);
       if (m.castling) {
-        NormalMove m2 = base.copyWith(dropPiece: p, dropOnRookSquare: true);
+        StandardMove m2 = base.copyWith(dropPiece: p, dropOnRookSquare: true);
         moves.add(m2);
       }
     }

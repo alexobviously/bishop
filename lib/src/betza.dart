@@ -1,6 +1,4 @@
-import 'constants.dart';
-import 'move_definition.dart';
-import 'utils.dart';
+import 'package:bishop/bishop.dart';
 
 class Betza {
   static const Map<String, Direction> atomMap = {
@@ -13,6 +11,7 @@ class Betza {
     'Z': Direction(3, 2),
     'H': Direction(3, 0),
     'G': Direction(3, 3),
+    '*': Direction.none,
   };
   static const List<String> shorthands = ['B', 'R', 'Q', 'K'];
   static const List<String> dirModifiers = ['f', 'b', 'r', 'l', 'v', 's', 'h'];
@@ -97,6 +96,7 @@ class Atom {
     this.modality = Modality.both,
   });
 
+  bool get teleport => base == '*';
   bool get firstOnly => funcMods.contains('i');
   bool get enPassant => funcMods.contains('e');
   bool get lame => funcMods.contains('n');
@@ -106,6 +106,7 @@ class Atom {
   bool get capture => modality == Modality.both || modality == Modality.capture;
 
   List<Direction> get directions {
+    if (teleport) return [Direction.none];
     Direction baseDir = Betza.atomMap[base]!;
     int h = baseDir.h;
     int v = baseDir.v;

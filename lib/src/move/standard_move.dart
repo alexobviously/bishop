@@ -3,7 +3,7 @@ part of 'move.dart';
 /// A representation of a single move.
 /// This is a move that is made in a game, not a definition of a type of move
 /// that can be made by a piece. For that, see `MoveDefinition`.
-class NormalMove extends Move {
+class StandardMove implements Move {
   /// The board location this move starts at.
   @override
   final int from;
@@ -80,7 +80,7 @@ class NormalMove extends Move {
     return 'Move(${params.join(', ')})';
   }
 
-  const NormalMove({
+  const StandardMove({
     required this.from,
     required this.to,
     this.capturedPiece,
@@ -94,7 +94,7 @@ class NormalMove extends Move {
     this.dropOnRookSquare = false,
   });
 
-  NormalMove copyWith({
+  StandardMove copyWith({
     int? from,
     int? to,
     int? capturedPiece,
@@ -107,7 +107,7 @@ class NormalMove extends Move {
     int? dropPiece,
     bool? dropOnRookSquare,
   }) {
-    return NormalMove(
+    return StandardMove(
       from: from ?? this.from,
       to: to ?? this.to,
       capturedPiece: capturedPiece ?? this.capturedPiece,
@@ -122,8 +122,8 @@ class NormalMove extends Move {
     );
   }
 
-  factory NormalMove.drop({required int to, required int dropPiece}) =>
-      NormalMove(from: Bishop.hand, to: to, dropPiece: dropPiece);
+  factory StandardMove.drop({required int to, required int dropPiece}) =>
+      StandardMove(from: Bishop.hand, to: to, dropPiece: dropPiece);
 
   /// Provides the most basic algebraic form of the move.
   /// This is not entirely descriptive, and doesn't provide information on promo

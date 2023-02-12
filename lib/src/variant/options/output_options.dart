@@ -1,4 +1,4 @@
-part of 'variant.dart';
+part of '../variant.dart';
 
 /// Allows output options (FEN, PGN) to be specified for variants.
 /// This will become more significant when we support variants with more complex FENs.

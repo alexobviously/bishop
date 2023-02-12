@@ -34,7 +34,7 @@ extension MoveListExtension<T extends Move> on Iterable<T> {
           .toList();
 }
 
-extension NormalMoveListExtenion on Iterable<NormalMove> {
+extension NormalMoveListExtenion on Iterable<StandardMove> {
   /// All moves that involve a promotion.
   List<Move> get promoMoves => where((e) => e.promotion).toList();
 

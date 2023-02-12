@@ -1,4 +1,4 @@
-part of 'variant.dart';
+part of '../variant.dart';
 
 abstract class PassOptions {
   const PassOptions();

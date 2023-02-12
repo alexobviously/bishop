@@ -2,7 +2,7 @@ import 'package:bishop/bishop.dart';
 
 part 'drop_move.dart';
 part 'multi_move.dart';
-part 'normal_move.dart';
+part 'standard_move.dart';
 part 'pass_move.dart';
 
 abstract class Move {

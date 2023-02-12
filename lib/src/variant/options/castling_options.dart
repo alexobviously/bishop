@@ -1,4 +1,4 @@
-part of 'variant.dart';
+part of '../variant.dart';
 
 class CastlingOptions {
   final bool enabled;

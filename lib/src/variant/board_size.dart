@@ -77,7 +77,7 @@ class BoardSize {
   /// Determines whether a square is on the board.
   bool onBoard(int square) {
     if (square < 0) return false;
-    if (square >= numSquares * 2) return false;
+    if (square >= numIndices) return false;
     int x = square % (h * 2);
     return x < h;
   }

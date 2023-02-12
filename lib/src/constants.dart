@@ -18,6 +18,8 @@ class Bishop {
   static const Colour white = 0;
   static const Colour black = 1;
   static const List<Colour> colours = [white, black];
+  static const Colour neutralHostile = 2;
+  static const Colour neutralPassive = 3;
 
   static const int boardStart = 0;
   static const int invalid = -1;

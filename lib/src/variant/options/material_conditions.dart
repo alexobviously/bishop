@@ -1,4 +1,4 @@
-part of 'variant.dart';
+part of '../variant.dart';
 
 /// Specifies the minimum sets of pieces required for the game not to be a draw.
 /// [T] should be `String` for definitions, and is converted to `int` when the `Variant` is built.

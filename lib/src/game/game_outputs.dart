@@ -18,7 +18,7 @@ extension GameOutputs on Game {
     if (move is DropMove) {
       return '${variant.pieces[move.piece].symbol.toLowerCase()}${move.algebraic(size)}';
     }
-    if (move is! NormalMove) return '';
+    if (move is! StandardMove) return '';
     String alg = move.algebraic(
       size: size,
       useRookForCastling: variant.castlingOptions.useRookAsTarget,
@@ -48,10 +48,10 @@ extension GameOutputs on Game {
   /// generated the list of moves elsewhere.
   String toSan(Move move, [List<Move>? moves]) {
     if (move is PassMove) return move.algebraic();
-    if (move is! NormalMove && move is! DropMove) return '';
+    if (move is! StandardMove && move is! DropMove) return '';
     String san = '';
     if (move.castling) {
-      move = move as NormalMove;
+      move = move as StandardMove;
       // if queenside is the only castling option, render it as 'O-O'
       String kingside = 'O-O';
       String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
@@ -66,7 +66,7 @@ extension GameOutputs on Game {
           san = '${pieceDef.symbol.toUpperCase()}$san';
         }
       } else {
-        move = move as NormalMove;
+        move = move as StandardMove;
         int piece = board[move.from].type;
         PieceDefinition pieceDef = variant.pieces[piece];
         String disambiguator = getDisambiguator(move, moves);
@@ -90,7 +90,7 @@ extension GameOutputs on Game {
     if (move.gate) {
       san = '$san/${variant.pieces[move.dropPiece!].symbol}';
       if (move.castling) {
-        move = move as NormalMove;
+        move = move as StandardMove;
         String dropSq = move.dropOnRookSquare
             ? size.squareName(move.castlingPieceSquare!)
             : size.squareName(move.from);
@@ -109,7 +109,7 @@ extension GameOutputs on Game {
   /// one possible move. For example, in 'Nbxa4', this function provides the 'b'.
   /// Optionally, provide [moves] - a list of legal moves. This will be generated
   /// if it is not specified.
-  String getDisambiguator(NormalMove move, [List<Move>? moves]) {
+  String getDisambiguator(StandardMove move, [List<Move>? moves]) {
     // provide a list of moves to make this more efficient
     moves ??= generateLegalMoves();
 
@@ -119,7 +119,7 @@ extension GameOutputs on Game {
     bool needRank = false;
     bool needFile = false;
     for (Move m in moves) {
-      if (m is! NormalMove) continue;
+      if (m is! StandardMove) continue;
       if (m.handDrop) continue;
       if (m.drop && m.dropPiece != move.dropPiece) continue;
       if (m.from == move.from) continue;

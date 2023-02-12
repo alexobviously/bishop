@@ -1,4 +1,4 @@
-part of 'variant.dart';
+part of '../variant.dart';
 
 /// Defines behaviour of hands in a variant.
 class HandOptions {

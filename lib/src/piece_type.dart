@@ -223,6 +223,8 @@ class PieceType {
         value: 0,
         actions: immortal ? [ActionImmortality()] : [],
       );
+  factory PieceType.duck() =>
+      PieceType.fromBetza('m*').withNoPromotion().withImmortality();
 }
 
 /// A definition of a `PieceType`, specific to a `Variant`.

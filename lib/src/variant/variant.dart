@@ -4,15 +4,14 @@ import 'package:bishop/bishop.dart';
 
 part 'board_size.dart';
 part 'built_variant.dart';
-part 'castling_options.dart';
+part 'options/castling_options.dart';
 part 'chess_960.dart';
-part 'game_end_conditions.dart';
-part 'hand_options.dart';
-part 'output_options.dart';
-part 'pass_options.dart';
-part 'promotion_options.dart';
-part 'material_conditions.dart';
-
+part 'options/game_end_conditions.dart';
+part 'options/hand_options.dart';
+part 'options/output_options.dart';
+part 'options/pass_options.dart';
+part 'options/promotion_options.dart';
+part 'options/material_conditions.dart';
 part 'variants/asymmetric.dart';
 part 'variants/common.dart';
 part 'variants/large.dart';

@@ -11,7 +11,7 @@ export 'src/drops.dart';
 export 'src/engine.dart';
 export 'src/first_where_extension.dart';
 export 'src/game/game.dart';
-export 'src/move_definition.dart';
+export 'src/move/move_definition.dart';
 export 'src/move/move_list_extension.dart';
 export 'src/move_gen_params.dart';
 export 'src/move/move.dart';
