@@ -8,6 +8,7 @@ abstract class BishopTypeAdapter<T> {
   const BishopTypeAdapter();
 }
 
+/// A simplified adapter for types that don't take any parameters.
 class BasicAdapter<T> implements BishopTypeAdapter<T> {
   @override
   final String id;

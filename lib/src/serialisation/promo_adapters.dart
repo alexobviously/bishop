@@ -1,12 +1,7 @@
 part of 'serialisation.dart';
 
-class NoPromotionAdapter extends BishopTypeAdapter<NoPromotion> {
-  @override
-  String get id => 'bishop.promo.none';
-  @override
-  NoPromotion build(Map<String, dynamic>? params) => NoPromotion();
-  @override
-  Map<String, dynamic>? export(NoPromotion e) => null;
+class NoPromotionAdapter extends BasicAdapter<NoPromotion> {
+  const NoPromotionAdapter() : super('bishop.promo.none', NoPromotion.new);
 }
 
 class StandardPromotionAdapter extends BishopTypeAdapter<StandardPromotion> {
