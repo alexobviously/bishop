@@ -8,8 +8,8 @@
 - It's now possible to store custom state variables in the invisible squares outside the board. Technically, it was always possible, but it's now easier to do, and supported.
   - In actions, return an `EffectSetCustomState` to change a state variable. You can define a number of variables equal to the amount of squares on your board, so 64 for a standard chess board.
   - Read these from `trigger.getCustomState()` in triggers, or `Game.getCustomState()` otherwise.
-- `ActionPointsEnding` leverages custom state to define a game end condition based on points.
-- `ActionImmortality` allows for pieces of certain types, or with certain flags, to be uncapturable.
+- `ActionPointsEnding`: leverages custom state to define a game end condition based on points.
+- `ActionImmortality`: allows for pieces of certain types, or with certain flags, to be uncapturable.
 - `RegionDropBuilder`: define drop rules that only allow drops within a specified region.
 - Variants:
   - Orda (`Orda.orda()`) and Orda Mirror (`Orda.ordaMirror()`).
