@@ -3,6 +3,7 @@
   - `Move` is now an interface that other more specific move types implement.
   - `StandardMove` implements most of the behaviour that the previous `Move` object did.
   - `DropMove` for drops. `PassMove` for the new passing move.
+  - Similarly, `MoveDefinition` has been abstracted in the same way, though the implementations don't directly match `Move` implementations.
 - Slightly changed the encoding for squares:
   - Colour now has two bits, supporting up to 4 players.
   - Piece type has 8 bits instead of 7, increasing piece limit to 255.
@@ -11,6 +12,7 @@
 - It's now possible to store custom state variables in the invisible squares outside the board. Technically, it was always possible, but it's now easier to do, and supported.
   - In actions, return an `EffectSetCustomState` to change a state variable. You can define a number of variables equal to the amount of squares on your board, so 64 for a standard chess board.
   - Read these from `trigger.getCustomState()` in triggers, or `Game.getCustomState()` otherwise.
+- Support for 'teleport' moves, i.e. moves where the piece can move anywhere on the board. These are built with the Betza atom '*', and support 'c'/'m' modifiers.
 - `Variant.passOptions`: allow pass moves, where the turn changes but nothing happens. Allows for custom conditions.
 - `ActionPointsEnding`: leverages custom state to define a game end condition based on points.
 - `ActionImmortality`: allows for pieces of certain types, or with certain flags, to be uncapturable.
