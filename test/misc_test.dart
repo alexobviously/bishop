@@ -25,4 +25,9 @@ void main() {
     expect(g.makeMoveString('e6c5'), false);
     expect(g.makeMoveString('e6d4'), true);
   });
+  test('Hand count from FEN (dart chess)', () {
+    final g = Game(variant: MiscVariants.dart());
+    expect(g.state.hands![Bishop.white].length, 3);
+    expect(g.state.hands![Bishop.black].length, 3);
+  });
 }

@@ -1,3 +1,6 @@
+### 1.2.1
+- Fixed a bug that would cause hands parsed from FEN strings to be incorrect.
+
 ### 1.2.0
 - Refactored `Move` objects, and the logic responsible for making moves in `Game`.
   - `Move` is now an interface that other more specific move types implement.

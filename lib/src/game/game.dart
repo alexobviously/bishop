@@ -139,7 +139,7 @@ class Game {
         List.filled((variant.pieces.length + 1) * Bishop.numPlayers, 0);
     List<int> checks = [0, 0];
     if (variant.handsEnabled || variant.gatingMode == GatingMode.flex) {
-      List<List<int>> temp = List.filled(Bishop.numPlayers, []);
+      List<List<int>> temp = List.generate(Bishop.numPlayers, (_) => []);
       RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
       RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
       if (handMatch != null) {
@@ -147,11 +147,12 @@ class Game {
         String hand = handMatch.group(1)!;
         for (String c in hand.split('')) {
           String upper = c.toUpperCase();
+          int colour = c == upper ? Bishop.white : Bishop.black;
+          if (c == '*') colour = Bishop.neutralPassive;
           if (pieceLookup.containsKey(upper)) {
-            bool white = c == upper;
             int piece = pieceLookup[upper]!;
-            temp[white ? 0 : 1].add(piece);
-            pieces[makePiece(piece, white ? 0 : 1)]++;
+            temp[colour].add(piece);
+            pieces[makePiece(piece, colour)]++;
           }
         }
       }
