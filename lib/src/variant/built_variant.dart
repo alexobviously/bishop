@@ -248,6 +248,9 @@ class BuiltVariant {
   /// Symbols are single uppercase letters, such as 'P' (pawn) or 'N' (knight).
   Map<String, PieceType> get pieceTypes => data.pieceTypes;
 
+  /// The first piece type in the piece map that's promotable.
+  int get defaultPromotablePiece => promotablePieces.first;
+
   /// The castling rules for this VariantData.
   CastlingOptions get castlingOptions => data.castlingOptions;
 

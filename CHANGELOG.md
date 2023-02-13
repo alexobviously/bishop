@@ -1,5 +1,8 @@
 ### 1.2.1
 - Fixed a bug that would cause hands parsed from FEN strings to be incorrect.
+- Fixed a bug with side-specific oblique moves (e.g. lfN) being mirrored.
+- Capturing promoted pieces now behaves as expected, the internal piece type is added to hand, as in Shogi.
+- Betza shorthands f, b, l and r are now allowed for oblique moves (behaving as ff, bb, ll, rr).
 
 ### 1.2.0
 - Refactored `Move` objects, and the logic responsible for making moves in `Game`.

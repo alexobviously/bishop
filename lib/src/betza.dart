@@ -172,28 +172,40 @@ class Atom {
         bool rh = hasDir('rh');
         bool vv = hasDir('v');
         bool s = hasDir('s');
-        if (hasDir('fr') || fh || rr || hl || rh || fs || s) {
+        bool fr = hasDir('fr') || fh || rr || hl || rh || fs || s;
+        bool fl = hasDir('fl') || fh || ll || hr || lh || fs || s;
+        bool br = hasDir('br') || bh || rr || hr || rh || bs || s;
+        bool bl = hasDir('bl') || bh || ll || hl || lh || bs || s;
+        bool rf = hasDir('rf') || fh || rv || hr || rh || ff || vv;
+        bool rb = hasDir('rb') || bh || rv || hl || rh || bb || vv;
+        bool lf = hasDir('lf') || fh || lv || hl || lh || ff || vv;
+        bool lb = hasDir('lb') || bh || lv || hr || lh || bb || vv;
+        bool f = hasDir('f');
+        bool b = hasDir('b');
+        bool l = hasDir('l');
+        bool r = hasDir('r');
+        if (fr || r) {
           dirs.add(Direction(h, v)); // fr
         }
-        if (hasDir('fl') || fh || ll || hr || lh || fs || s) {
+        if (fl || l) {
           dirs.add(Direction(-h, v)); // fl
         }
-        if (hasDir('br') || bh || rr || hr || rh || bs || s) {
+        if (br || r) {
           dirs.add(Direction(h, -v)); // br
         }
-        if (hasDir('bl') || bh || ll || hl || lh || bs || s) {
+        if (bl || l) {
           dirs.add(Direction(-h, -v)); // bl
         }
-        if (hasDir('rf') || fh || rv || hr || rh || ff || vv) {
+        if (rf | f) {
           dirs.add(Direction(v, h)); // rf
         }
-        if (hasDir('rb') || bh || rv || hl || rh || bb || vv) {
+        if (rb | b) {
           dirs.add(Direction(v, -h)); // rb
         }
-        if (hasDir('lf') || fh || lv || hl || lh || ff || vv) {
+        if (lf | f) {
           dirs.add(Direction(-v, h)); // lf
         }
-        if (hasDir('lb') || bh || lv || hr || lh || bb || vv) {
+        if (lb | b) {
           dirs.add(Direction(-v, -h)); // lb
         }
       }

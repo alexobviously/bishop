@@ -226,7 +226,8 @@ class Game {
 
     for (String c in boardSymbols) {
       if (c == '~') {
-        board[sq - 1] = board[sq - 1] + Bishop.promoFlag;
+        board[sq - 1] =
+            board[sq - 1].setInternalType(variant.defaultPromotablePiece);
         continue;
       }
       String symbol = c.toUpperCase();

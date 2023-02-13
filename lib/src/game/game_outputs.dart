@@ -232,8 +232,7 @@ extension GameOutputs on Game {
         } else {
           if (empty > 0) addEmptySquares();
           String char = variant.pieces[sq.type].char(sq.colour);
-          if (variant.outputOptions.showPromoted &&
-              sq.hasFlag(Bishop.promoFlag)) {
+          if (variant.outputOptions.showPromoted && sq.hasInternalType) {
             char += '~';
           }
           fen = '$fen$char';

@@ -29,5 +29,20 @@ void main() {
       final m = g.generateLegalMoves().from(grand.boardSize.squareNumber('h9'));
       expect(m.length, 4);
     });
+    test('Internal type', () {
+      final g = Game(
+        variant: Shogi.shogi(),
+        fen: '3gk2g1/9/1N7/9/9/9/9/9/1N2K3L[] w - - 0 1',
+      );
+      g.makeMoveString('i1i9g');
+      g.makeMoveString('h9i9');
+      g.makeMoveString('b7c9g');
+      g.makeMoveString('d9c9');
+      print(g.ascii());
+      print(g.state.hands);
+      print(g.generateLegalMoves().map((e) => g.toAlgebraic(e)).toList());
+      print(g.handSymbols[Bishop.black]);
+      expect(g.handSymbols[Bishop.black], unorderedEquals(['n', 'l']));
+    });
   });
 }

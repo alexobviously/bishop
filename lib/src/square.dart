@@ -11,8 +11,6 @@ typedef Square = int;
 
 @Deprecated('Use Bishop.empty')
 const Square empty = 0;
-@Deprecated('Use Bishop.promoFlag')
-const int promoFlag = 1;
 
 extension SquareLogic on int {
   int get colour => this & 3; // colour only
@@ -22,10 +20,13 @@ extension SquareLogic on int {
   int get flags => this >> 18; // flags only
   bool get isEmpty => type == 0;
   bool get isNotEmpty => type != 0;
+  bool get hasInternalType => internalType != 0;
   int setFlag(int flag) => this | (1 << (18 + flag));
   int unsetFlag(int flag) => this & ~(1 << (18 + flag));
   int toggleFlag(int flag) => this ^ (1 << (18 + flag));
   bool hasFlag(int flag) => (this & (flag << 18)) != 0;
+  int setInternalType(int type) =>
+      makePiece(piece, colour, internalType: type, flags: flags);
   int get flipColour => this ^ 1;
 }
 

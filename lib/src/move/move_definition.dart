@@ -125,7 +125,7 @@ class StandardMoveDefinition extends MoveDefinition {
   /// Calculates the values needed to use this on a board of [size].
   @override
   StandardMoveDefinition normalise(BoardSize size) {
-    int normalised = direction.v * size.h * 2 + direction.h;
+    int normalised = direction.v * size.h * 2 - direction.h;
     Direction? lameDirection = this.lameDirection;
     int? lameNormalised = this.lameNormalised;
     if (lame) {
@@ -141,7 +141,7 @@ class StandardMoveDefinition extends MoveDefinition {
 
   @override
   String toString() {
-    String string = '$direction [${modality.name}]';
+    String string = '$direction [${modality.name}] [$normalised]';
     List<String> mods = [];
     if (slider) mods.add(range.toString());
     if (enPassant) mods.add('ep');

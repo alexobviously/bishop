@@ -145,8 +145,8 @@ extension GameMovement on Game {
 
     // Add captured piece to hand
     if (variant.addCapturesToHand && move.capture) {
-      int piece = move.capturedPiece!.hasFlag(Bishop.promoFlag)
-          ? variant.promotablePieces.first
+      int piece = move.capturedPiece!.hasInternalType
+          ? move.capturedPiece!.internalType
           : move.capturedPiece!.type;
       hands![colour].add(piece);
       pieces[makePiece(piece, colour)]++;
@@ -176,7 +176,7 @@ extension GameMovement on Game {
     } else if (move.promotion) {
       // Place the promoted piece
       board[move.to] =
-          makePiece(move.promoPiece!, state.turn, flags: Bishop.promoFlag);
+          makePiece(move.promoPiece!, state.turn, internalType: fromSq.type);
       hash ^= zobrist.table[move.to][board[move.to].piece];
       pieces[board[move.to].piece]++;
     }
