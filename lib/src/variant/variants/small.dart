@@ -18,7 +18,7 @@ class SmallVariants {
     Variant mini = Variant.mini();
     return mini.copyWith(
       name: 'Mini Random',
-      startPosBuilder: () => buildRandomPosition(size: BoardSize.mini),
+      startPosBuilder: RandomChessStartPosBuilder(size: BoardSize.mini),
       castlingOptions: CastlingOptions.miniRandom,
       outputOptions: OutputOptions.chess960,
     );

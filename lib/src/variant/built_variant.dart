@@ -262,7 +262,7 @@ class BuiltVariant {
   String? get startPosition => data.startPosition;
 
   /// A builder function for variants with variable start positions, such as Chess 960.
-  FenBuilder? get startPosBuilder => data.startPosBuilder;
+  StartPositionBuilder? get startPosBuilder => data.startPosBuilder;
 
   /// Is promotion enabled?
   bool get promotion => promotionBuilder != null;

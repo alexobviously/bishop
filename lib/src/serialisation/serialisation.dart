@@ -11,6 +11,7 @@ class BishopSerialisation {
       ...basePromoAdapters,
       ...baseDropAdapters,
       ...basePassAdapters,
+      ...baseStartPosAdapters,
       ...baseActionAdapters,
     ];
     return _baseAdapters!;
@@ -33,6 +34,11 @@ class BishopSerialisation {
   static List<BishopTypeAdapter> get basePassAdapters => [
         NoPassAdapter(),
         StandardPassAdapter(),
+      ];
+
+  static List<BishopTypeAdapter> get baseStartPosAdapters => [
+        Chess960StartPosAdapter(),
+        RandomChessStartPosAdapter(),
       ];
 
   static List<BishopTypeAdapter> get baseActionAdapters => [

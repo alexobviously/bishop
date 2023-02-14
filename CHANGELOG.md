@@ -1,3 +1,6 @@
+### 1.2.2
+- `Variant.startPosBuilder` changes: now is a class (`StartPositionBuilder`), so it can be serialised, and start position build functions now take an optional seed.
+
 ### 1.2.1
 - Fixed a bug that would cause hands parsed from FEN strings to be incorrect.
 - Fixed a bug with side-specific oblique moves (e.g. lfN) being mirrored.

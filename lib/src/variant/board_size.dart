@@ -117,4 +117,11 @@ class BoardSize {
 
   @override
   String toString() => 'BoardSize($h, $v)';
+
+  @override
+  int get hashCode => h.hashCode << 8 + v.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      other is BoardSize && other.h == h && other.v == v;
 }

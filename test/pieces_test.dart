@@ -29,7 +29,7 @@ void main() {
     MoveTest('vN', ['c2', 'c6', 'e2', 'e6']),
     MoveTest('fslbC', ['a5', 'g5', 'c1']),
   ];
-  group('Betza - Count Moves', () {
+  group('Pieces', () {
     for (CountMovesTest t in countMoveTests) {
       test('Count Moves - ${t.betza}', () {
         PieceType pt = PieceType.fromBetza(t.betza);

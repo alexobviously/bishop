@@ -4,7 +4,7 @@ part of '../variant.dart';
 class CommonVariants {
   static Variant chess960() => Variant.standard().copyWith(
         name: 'Chess960',
-        startPosBuilder: build960Position,
+        startPosBuilder: Chess960StartPosBuilder(),
         castlingOptions: CastlingOptions.chess960,
         outputOptions: OutputOptions.chess960,
       );

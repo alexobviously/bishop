@@ -1,7 +1,7 @@
 {
  "name": "Mini Random",
  "description": "",
- "bishopVersion": "1.1.1",
+ "bishopVersion": "1.2.2",
  "boardSize": "6x6",
  "pieceTypes": {
   "P": {
@@ -75,6 +75,10 @@
   "virginFiles": false
  },
  "startPosition": "rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1",
+ "startPosBuilder": {
+  "id": "bishop.start.randomChess",
+  "size": "6x6"
+ },
  "enPassant": false,
  "firstMoveRanks": [
   [

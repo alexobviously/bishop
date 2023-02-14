@@ -5,7 +5,6 @@ import 'package:bishop/bishop.dart';
 part 'board_size.dart';
 part 'built_variant.dart';
 part 'options/castling_options.dart';
-part 'chess_960.dart';
 part 'options/game_end_conditions.dart';
 part 'options/hand_options.dart';
 part 'options/output_options.dart';
@@ -55,7 +54,7 @@ class Variant {
 
   /// If this variant can start in a number of different positions, such as Chess960,
   /// provide a function that does this. See [VariantData.chess960()] for an example.
-  final FenBuilder? startPosBuilder;
+  final StartPositionBuilder? startPosBuilder;
 
   /// Is en passant allowed in this variant?
   final bool enPassant;
@@ -173,6 +172,12 @@ class Variant {
           ? OutputOptions.fromJson(json['outputOptions'])
           : OutputOptions.standard,
       startPosition: json['startPosition'],
+      startPosBuilder: json.containsKey('startPosBuilder')
+          ? BishopSerialisation.build<StartPositionBuilder>(
+              json['startPosBuilder'],
+              adapters: adapters,
+            )
+          : null,
       enPassant: json['enPassant'],
       firstMoveRanks: (json['firstMoveRanks'] as List<dynamic>?)
               ?.map((e) => (e as List<dynamic>).map((e) => e as int).toList())
@@ -236,7 +241,11 @@ class Variant {
       if (verbose || outputOptions != OutputOptions.standard)
         'outputOptions': outputOptions.toJson(),
       'startPosition': startPosition,
-      // 'startPosBuilder': startPosBuilder,
+      if (startPosBuilder != null)
+        'startPosBuilder': BishopSerialisation.export<StartPositionBuilder>(
+          startPosBuilder!,
+          adapters: allAdapters,
+        ),
       'enPassant': enPassant,
       if (verbose || firstMoveRanks.expand((e) => e).isNotEmpty)
         'firstMoveRanks': firstMoveRanks,
@@ -278,7 +287,7 @@ class Variant {
     GameEndConditionSet? gameEndConditions,
     OutputOptions? outputOptions,
     String? startPosition,
-    FenBuilder? startPosBuilder,
+    StartPositionBuilder? startPosBuilder,
     bool? enPassant,
     List<List<int>>? firstMoveRanks,
     int? halfMoveDraw,

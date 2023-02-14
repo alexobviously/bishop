@@ -1,7 +1,7 @@
 {
  "name": "Chess960",
  "description": "",
- "bishopVersion": "1.1.1",
+ "bishopVersion": "1.2.2",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -76,6 +76,7 @@
   "virginFiles": false
  },
  "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+ "startPosBuilder": "bishop.start.chess960",
  "enPassant": true,
  "firstMoveRanks": [
   [

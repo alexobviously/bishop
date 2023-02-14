@@ -18,6 +18,7 @@ export 'src/move/move.dart';
 export 'src/piece_type.dart';
 export 'src/promotion.dart';
 export 'src/serialisation/serialisation.dart';
+export 'src/start_pos_builder.dart';
 export 'src/square.dart';
 export 'src/state.dart';
 export 'src/utils.dart';

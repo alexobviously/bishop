@@ -17,8 +17,10 @@ class Game {
 
   /// A random number generator seed.
   /// Used by the Zobrist hash table.
-  final int seed;
+  final int zobristSeed;
   late Zobrist zobrist;
+
+  final int? startPosSeed;
   List<int> get board => state.board;
   late String startPosition;
   List<BishopState> history = [];
@@ -43,7 +45,8 @@ class Game {
     Variant? variant,
     String? fen,
     FenBuilder? fenBuilder,
-    this.seed = Bishop.defaultSeed,
+    this.zobristSeed = Bishop.defaultSeed,
+    this.startPosSeed,
   }) {
     this.variant = BuiltVariant.fromData(variant ?? Variant.standard());
     setup(fen: fen, fenBuilder: fenBuilder);
@@ -52,9 +55,9 @@ class Game {
   void setup({String? fen, FenBuilder? fenBuilder}) {
     // Order of precedence: fen, fenBuilder, variant.startPosBuilder,
     // variant.startPosition.
-    fenBuilder ??= variant.startPosBuilder;
+    fenBuilder ??= variant.startPosBuilder?.build;
     startPosition =
-        fen ?? (fenBuilder != null ? fenBuilder() : variant.startPosition!);
+        fen ?? fenBuilder?.call(seed: startPosSeed) ?? variant.startPosition!;
     loadFen(startPosition);
     royalCaptureOptions = MoveGenParams.pieceCaptures(variant.royalPiece);
   }
@@ -126,7 +129,7 @@ class Game {
   /// If [strict] is enabled, a full string must be provided, including turn,
   /// ep square, etc.
   void loadFen(String fen, [bool strict = false]) {
-    zobrist = Zobrist(variant, seed);
+    zobrist = Zobrist(variant, zobristSeed);
     final pieceLookup = variant.pieceIndexLookup;
 
     List<int> board = List.filled(variant.boardSize.numSquares * 2, 0);
