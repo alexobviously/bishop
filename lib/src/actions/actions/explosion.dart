@@ -1,5 +1,6 @@
 part of '../base_actions.dart';
 
+/// Creates an explosion in [area] whenever a piece is captured.
 class ActionExplodeOnCapture extends Action {
   final Area area;
   ActionExplodeOnCapture(this.area)
@@ -10,6 +11,7 @@ class ActionExplodeOnCapture extends Action {
         );
 }
 
+/// Creates an explosion with [radius] whenever a piece is captured.
 class ActionExplosionRadius extends ActionExplodeOnCapture {
   final int radius;
   ActionExplosionRadius(this.radius) : super(Area.radius(radius));

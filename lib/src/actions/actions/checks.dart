@@ -1,5 +1,9 @@
 part of '../base_actions.dart';
 
+/// Checks if either side's royal pieces are alive and ends the game if one
+/// or both is dead.
+/// If [allowDraw] is true, both royals being dead will be a draw. If false,
+/// the move will be invalidated.
 class ActionCheckRoyalsAlive extends Action {
   final bool allowDraw;
 
@@ -15,7 +19,7 @@ class ActionCheckRoyalsAlive extends Action {
                 .map(
                   (e) =>
                       trigger
-                          .state.board[trigger.state.royalSquares[e].piece] ==
+                          .state.board[trigger.state.royalSquares[e]].piece ==
                       makePiece(king, e),
                 )
                 .toList();
@@ -138,6 +142,10 @@ class CheckPieceCountAdapter extends BishopTypeAdapter<ActionCheckPieceCount> {
   }
 }
 
+/// The flying generals rule from Xiangqi. If the generals/kings are facing
+/// each other, with no pieces between, the move will be invalidated.
+/// Set [activeCondition] to true if you have other actions that might modify
+/// the board before this.
 class ActionFlyingGenerals extends Action {
   final bool activeCondition;
   ActionFlyingGenerals({this.activeCondition = false})

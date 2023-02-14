@@ -56,19 +56,6 @@ class Action {
   factory Action.explodeOnCapture(Area area) => ActionExplodeOnCapture(area);
   factory Action.explosionRadius(int radius) => ActionExplosionRadius(radius);
 
-  factory Action.checkRoyalsAlive({
-    bool allowDraw = false,
-    ActionEvent event = ActionEvent.afterMove,
-    ActionCondition? precondition,
-    ActionCondition? condition,
-  }) =>
-      ActionCheckRoyalsAlive(
-        allowDraw: allowDraw,
-        event: event,
-        precondition: precondition,
-        condition: condition,
-      );
-
   /// The flying generals rule from Xiangqi. If the generals/kings are facing
   /// each other, with no pieces between, the move will be invalidated.
   /// Set [activeCondition] to true if you have other actions that might modify
@@ -82,11 +69,10 @@ class Action {
   Action forPieceType(int type) => Action(
         event: event,
         action: action,
-        precondition: precondition != null
-            ? Conditions.merge(
-                [Conditions.movingPieceType(type), precondition!],
-              )
-            : Conditions.movingPieceType(type),
+        precondition: Conditions.merge([
+          Conditions.movingPieceType(type),
+          if (precondition != null) precondition!
+        ]),
         condition: condition,
       );
 

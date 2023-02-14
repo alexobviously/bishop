@@ -13,13 +13,28 @@ typedef Square = int;
 const Square empty = 0;
 
 extension SquareLogic on int {
-  int get colour => this & 3; // colour only
-  int get type => (this >> 2) & 255; // piece type only
-  int get internalType => (this >> 10) & 255; // internal type only
-  int get piece => this & 1023; // colour & type
-  int get flags => this >> 18; // flags only
+  /// Colour only.
+  int get colour => this & 3;
+
+  /// Piece type only.
+  int get type => (this >> 2) & 255;
+
+  /// Internal type only.
+  int get internalType => (this >> 10) & 255;
+
+  /// Colour and piece type.
+  int get piece => this & 1023;
+
+  /// Flags only.
+  int get flags => this >> 18;
+
+  /// Whether there is a piece.
   bool get isEmpty => type == 0;
+
+  /// Whether there isn't a piece.
   bool get isNotEmpty => type != 0;
+
+  /// Whether there is an internal type.
   bool get hasInternalType => internalType != 0;
   int setFlag(int flag) => this | (1 << (18 + flag));
   int unsetFlag(int flag) => this & ~(1 << (18 + flag));

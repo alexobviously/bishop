@@ -14,6 +14,7 @@ extension GameEndings on Game {
 
   bool get eliminated => state.pieceCount(state.turn) < 1;
 
+  /// The result of the game. If null, the game has not ended yet.
   GameResult? get result {
     if (state.result != null) return state.result;
     if (checkmate) return WonGameCheckmate(winner: state.turn.opponent);

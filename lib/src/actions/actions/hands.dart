@@ -1,5 +1,7 @@
 part of '../base_actions.dart';
 
+/// Adds [count] of [piece] to the acting player's hand. If [forOpponent] is
+/// true, the piece(s) will be added to the other player's hand.
 class ActionAddToHand extends Action {
   final String piece;
   final int count;
@@ -21,6 +23,8 @@ class ActionAddToHand extends Action {
         );
 }
 
+/// Removes [count] of [piece] from the acting player's hand. If [forOpponent] is
+/// true, the piece(s) will be removed from the other player's hand.
 class ActionRemoveFromHand extends Action {
   final String piece;
   final int count;

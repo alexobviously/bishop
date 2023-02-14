@@ -1,5 +1,13 @@
 part of '../base_actions.dart';
 
+/// Prevents pieces from being captured (or otherwise destroyed by actions that
+/// occur before this one). For example, if [pieceType] is 'Q', queens will not
+/// be capturable.
+/// It's also possible to specify a [flag], which will make any pieces with that
+/// flag immortal. [flag] and [pieceType] can be combined.
+/// If adding this action to a piece type's actions field, it is not necessary
+/// to specify the piece type, as it will be added when `BuiltVariant` is
+/// created.
 class ActionImmortality extends Action {
   final String? pieceType;
   final int? pieceIndex;
