@@ -11,7 +11,8 @@ class BuiltVariant {
   final Map<int, int>? promoLimits;
   final Map<int, List<int>>? promoMap;
   final PromotionBuilder? promotionBuilder;
-  final DropBuilderFunction? dropBuilder;
+  final MoveBuilderFunction? dropBuilder;
+  final List<MoveBuilderFunction> customMoveBuilders;
   final MoveChecker? passChecker;
   final int epPiece;
   final int castlingPiece;
@@ -32,6 +33,7 @@ class BuiltVariant {
     this.promoMap,
     this.promotionBuilder,
     this.dropBuilder,
+    this.customMoveBuilders = const [],
     this.passChecker,
     required this.epPiece,
     required this.castlingPiece,
@@ -52,7 +54,8 @@ class BuiltVariant {
     Map<int, int>? promoLimits,
     Map<int, List<int>>? promoMap,
     PromotionBuilder? promotionBuilder,
-    DropBuilderFunction? dropBuilder,
+    MoveBuilderFunction? dropBuilder,
+    List<MoveBuilderFunction>? customMoveBuilders,
     MoveChecker? passChecker,
     int? epPiece,
     int? castlingPiece,
@@ -73,6 +76,7 @@ class BuiltVariant {
         promoMap: promoMap ?? this.promoMap,
         promotionBuilder: promotionBuilder ?? this.promotionBuilder,
         dropBuilder: dropBuilder ?? this.dropBuilder,
+        customMoveBuilders: customMoveBuilders ?? this.customMoveBuilders,
         passChecker: passChecker ?? this.passChecker,
         epPiece: epPiece ?? this.epPiece,
         castlingPiece: castlingPiece ?? this.castlingPiece,
@@ -169,6 +173,10 @@ class BuiltVariant {
     return bv
         .copyWith(promotionBuilder: data.promotionOptions.build(bv))
         .copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv))
+        .copyWith(
+          customMoveBuilders:
+              data.customMoveBuilders.map((e) => e.build(bv)).toList(),
+        )
         .copyWith(passChecker: data.passOptions.build(bv));
   }
 
@@ -382,15 +390,51 @@ class BuiltVariant {
     return moves;
   }
 
-  List<Move>? generateDrops({required BishopState state, required int colour}) {
+  List<Move>? generateDrops({
+    required BishopState state,
+    required int colour,
+    required MoveGenParams params,
+  }) {
     if (dropBuilder == null) return null;
-    final params = MoveParams(colour: colour, state: state, variant: this);
-    return dropBuilder!(params);
+    final p = MoveParams(
+      colour: colour,
+      state: state,
+      variant: this,
+      genParams: params,
+    );
+    return dropBuilder!(p);
   }
 
-  bool canPass({required BishopState state, required int colour}) =>
-      passChecker
-          ?.call(MoveParams(colour: colour, state: state, variant: this)) ??
+  bool get hasCustomMoves => customMoveBuilders.isNotEmpty;
+
+  List<Move>? generateCustomMoves({
+    required BishopState state,
+    required int colour,
+    required MoveGenParams params,
+  }) {
+    if (customMoveBuilders.isEmpty) return null;
+    final p = MoveParams(
+      colour: colour,
+      state: state,
+      variant: this,
+      genParams: params,
+    );
+    return customMoveBuilders.map((e) => e(p)).expand((e) => e).toList();
+  }
+
+  bool canPass({
+    required BishopState state,
+    required int colour,
+    required MoveGenParams params,
+  }) =>
+      passChecker?.call(
+        MoveParams(
+          colour: colour,
+          state: state,
+          variant: this,
+          genParams: params,
+        ),
+      ) ??
       false;
 
   @override

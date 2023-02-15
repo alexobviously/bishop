@@ -1,4 +1,3 @@
-
 class MoveGenParams {
   final bool captures;
   final bool quiet;
@@ -68,4 +67,10 @@ class MoveGenParams {
   @override
   String toString() =>
       'MoveGenOptions($captures, $quiet, $castling, $legal, $ignorePieces, $pieceType, $onlySquare)';
+}
+
+class MoveOptions {
+  final List<int>? pieceTypes;
+
+  const MoveOptions({this.pieceTypes});
 }

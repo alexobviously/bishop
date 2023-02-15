@@ -93,6 +93,8 @@ class Variant {
 
   final List<Action> actions;
 
+  final List<MoveBuilder> customMoveBuilders;
+
   final List<BishopTypeAdapter> adapters;
 
   /// Whether this variant involves castling.
@@ -136,6 +138,7 @@ class Variant {
     this.passOptions = PassOptions.none,
     this.regions = const {},
     this.actions = const [],
+    this.customMoveBuilders = const [],
     this.adapters = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
@@ -299,6 +302,7 @@ class Variant {
     Map<String, int>? pieceValues,
     Map<String, BoardRegion>? regions,
     List<Action>? actions,
+    List<MoveBuilder>? customMoveBuilders,
     List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
@@ -324,6 +328,7 @@ class Variant {
       pieceValues: pieceValues ?? this.pieceValues,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
+      customMoveBuilders: customMoveBuilders ?? this.customMoveBuilders,
       adapters: adapters ?? this.adapters,
     );
   }

@@ -315,43 +315,59 @@ class Game {
   }
 
   /// Generates all legal moves for the player whose turn it is.
-  List<Move> generateLegalMoves() =>
-      generatePlayerMoves(state.turn, MoveGenParams.normal);
+  List<Move> generateLegalMoves() => generatePlayerMoves(
+        state.turn,
+        params: MoveGenParams.normal,
+        // options: state.chain == 0 ? null : MoveOptions(pieceTypes: [1]),
+      );
 
   /// Generates all possible moves that could be played by the other player next turn,
   /// not respecting blocking pieces or checks.
   List<Move> generatePremoves() =>
-      generatePlayerMoves(state.turn.opponent, MoveGenParams.premoves);
+      generatePlayerMoves(state.turn.opponent, params: MoveGenParams.premoves);
 
   /// Generates all moves for the specified [colour]. See [MoveGenParams] for possibilities.
-  List<Move> generatePlayerMoves(int colour, [MoveGenParams? options]) {
-    options ??= MoveGenParams.normal;
+  List<Move> generatePlayerMoves(
+    int colour, {
+    MoveGenParams params = MoveGenParams.normal,
+    MoveOptions? options,
+  }) {
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
       Square target = board[i];
       if (target.isNotEmpty &&
           (target.colour == colour || target.colour == Bishop.neutralPassive)) {
-        List<Move> pieceMoves = generatePieceMoves(i, options);
+        List<Move> pieceMoves = generatePieceMoves(i, params);
         moves.addAll(pieceMoves);
       }
     }
-    if (variant.handsEnabled && options.quiet && !options.onlyPiece) {
-      moves.addAll(generateDrops(colour));
+    if (variant.handsEnabled && params.quiet && !params.onlyPiece) {
+      moves.addAll(generateDrops(colour, params));
     }
-    if (variant.hasPass && options.quiet) {
-      final pass = generatePass(colour);
+    if (variant.hasCustomMoves) {
+      moves.addAll(generateCustomMoves(colour, params));
+    }
+    if (variant.hasPass && params.quiet) {
+      final pass = generatePass(colour, params);
       if (pass != null) moves.insert(0, pass);
     }
     return moves;
   }
 
-  PassMove? generatePass(int colour, [bool legal = true]) {
+  PassMove? generatePass(
+    int colour, [
+    MoveGenParams params = MoveGenParams.normal,
+  ]) {
     if (state.move is PassMove) return null;
-    if (!variant.canPass(state: state, colour: colour)) {
+    if (!variant.canPass(
+      state: state,
+      colour: colour,
+      params: params,
+    )) {
       return null;
     }
     PassMove m = PassMove();
-    if (legal) {
+    if (params.legal) {
       bool valid = makeMove(m);
       if (lostBy(colour) || kingAttacked(colour)) valid = false;
       undo();
@@ -361,11 +377,20 @@ class Game {
   }
 
   /// Generates drop moves for [colour]. Used for variants with hands, e.g. Crazyhouse.
-  List<Move> generateDrops(int colour, [bool legal = true]) {
-    List<Move> drops =
-        variant.generateDrops(state: state, colour: colour) ?? [];
-
-    if (legal) {
+  List<Move> generateDrops(
+    int colour, [
+    MoveGenParams params = MoveGenParams.normal,
+  ]) {
+    List<Move> drops = variant.generateDrops(
+          state: state,
+          colour: colour,
+          params: params,
+        ) ??
+        [];
+    if (params.onlySquare != null) {
+      drops.removeWhere((e) => e.to != params.onlySquare!);
+    }
+    if (params.legal) {
       List<Move> remove = [];
       for (Move m in drops) {
         bool valid = makeMove(m);
@@ -377,6 +402,36 @@ class Game {
       }
     }
     return drops;
+  }
+
+  List<Move> generateCustomMoves(
+    int colour, [
+    MoveGenParams params = MoveGenParams.normal,
+  ]) {
+    List<Move> moves = variant.generateCustomMoves(
+          state: state,
+          colour: colour,
+          params: params,
+        ) ??
+        [];
+    if (params.onlySquare != null) {
+      moves.removeWhere((e) => e.to != params.onlySquare!);
+    }
+    if (params.legal) {
+      List<Move> remove = [];
+      for (Move m in moves) {
+        int i = history.length;
+        bool valid = makeMove(m);
+        if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
+        if (valid) undo();
+        int j = history.length;
+        if (i != j) print(':::::::::::::::history length mismatch $i vs $j');
+      }
+      for (Move m in remove) {
+        moves.remove(m);
+      }
+    }
+    return moves;
   }
 
   /// Generates all moves for the piece on [square] in accordance with [options].
@@ -434,7 +489,7 @@ class Game {
       }
 
       if (md.firstOnly && !variant.firstMoveRanks[colour].contains(fromRank)) {
-        continue;
+        continue; // todo: more flexible first move defs
       }
       if (md is! StandardMoveDefinition) continue;
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
@@ -678,8 +733,10 @@ class Game {
       List<Move> remove = [];
       for (Move m in moves) {
         bool valid = makeMove(m);
-        if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
-        undo();
+        if (!valid || lostBy(colour) || kingAttacked(colour)) {
+          remove.add(m);
+        }
+        if (valid) undo();
       }
       for (Move m in remove) {
         moves.remove(m);
@@ -767,8 +824,10 @@ class Game {
   /// Checks if [square] is attacked by [colour].
   /// Works by generating all legal moves for the other player, and therefore is slow.
   bool isAttacked(int square, Colour colour) {
-    List<Move> attacks =
-        generatePlayerMoves(colour, MoveGenParams.squareAttacks(square));
+    List<Move> attacks = generatePlayerMoves(
+      colour,
+      params: MoveGenParams.squareAttacks(square),
+    );
     return attacks.isNotEmpty;
   }
 

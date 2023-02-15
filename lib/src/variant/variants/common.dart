@@ -95,5 +95,11 @@ class CommonVariants {
   static Variant duck() =>
       Variant.standard().withPieces({'*': PieceType.duck()}).copyWith(
         name: 'Duck Chess',
+        customMoveBuilders: [
+          MissingPieceDropBuilder(
+            type: '*',
+            colour: Bishop.neutralPassive,
+          )
+        ],
       );
 }

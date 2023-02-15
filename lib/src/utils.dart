@@ -40,3 +40,16 @@ bool validateFen({
 Variant? variantFromString(String name) => Variants.values
     .firstWhereOrNull((e) => e.name.toLowerCase() == name.toLowerCase())
     ?.build();
+
+Map<int, List<int>> compareBoards(List<int> before, List<int> after) {
+  if (before.length != after.length) {
+    throw BishopException('Board lengths don\'t match');
+  }
+  Map<int, List<int>> res = {};
+  for (int i = 0; i < before.length; i++) {
+    if (before[i] != after[i]) {
+      res[i] = [before[i], after[i]];
+    }
+  }
+  return res;
+}

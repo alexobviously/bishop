@@ -3,12 +3,16 @@ part of 'game.dart';
 extension GameMovement on Game {
   /// Make a move and modify the game state. Returns true if the move was valid
   /// and made successfully.
-  bool makeMove(Move move) {
+  bool makeMove(
+    Move move, {
+    bool beforeActions = true,
+    bool afterActions = true,
+  }) {
     BishopState state = this.state;
     Square fromSq =
         move.from >= Bishop.boardStart ? state.board[move.from] : Bishop.empty;
 
-    if (variant.hasActionsForEvent(ActionEvent.beforeMove)) {
+    if (beforeActions && variant.hasActionsForEvent(ActionEvent.beforeMove)) {
       state = state.executeActions(
         trigger: ActionTrigger(
           event: ActionEvent.beforeMove,
@@ -24,17 +28,17 @@ extension GameMovement on Game {
       return false;
     }
 
-    if (state.invalidMove) return false;
+    bool changeTurn = state.chain == 0;
 
     BishopState? newState;
     if (move is StandardMove || move is DropMove) {
-      newState = makeNormalMove(state, move);
+      newState = makeNormalMove(state, move, changeTurn: changeTurn);
     } else if (move is PassMove) {
       newState = makePassMove(state, move);
     }
     if (newState == null) return false;
 
-    if (variant.hasActionsForEvent(ActionEvent.afterMove)) {
+    if (afterActions && variant.hasActionsForEvent(ActionEvent.afterMove)) {
       newState = newState.executeActions(
         trigger: ActionTrigger(
           event: ActionEvent.afterMove,
@@ -47,7 +51,6 @@ extension GameMovement on Game {
       );
     }
 
-    history.add(newState);
     if (newState.invalidMove) return false;
 
     // kind of messy doing it like this, but inCheck depends on the current state
@@ -68,11 +71,16 @@ extension GameMovement on Game {
       }
     }
 
+    history.add(newState);
     zobrist.incrementHash(newState.hash);
     return true;
   }
 
-  BishopState? makeNormalMove(BishopState state, Move move) {
+  BishopState? makeNormalMove(
+    BishopState state,
+    Move move, {
+    bool changeTurn = true,
+  }) {
     if (move is! StandardMove && move is! DropMove) {
       return null;
     }
@@ -166,13 +174,18 @@ extension GameMovement on Game {
 
     if (!move.castling && !move.promotion) {
       // Move the piece to the new square
+      int dropColour = ((move is DropMove) ? move.colour : null) ?? colour;
       int putPiece = move.from >= Bishop.boardStart
           ? fromSq
-          : makePiece(move.dropPiece!, colour);
+          : makePiece(move.dropPiece!, dropColour);
+
       hash ^= zobrist.table[move.to][putPiece.piece];
       board[move.to] = putPiece;
       // note that it's possible to have a drop move without hands (e.g. duck chess)
       if (move.from == Bishop.hand) hands?[colour].remove(move.dropPiece!);
+      if (move is DropMove && move.newPiece) {
+        pieces[putPiece.piece]++;
+      }
     } else if (move.promotion) {
       // Place the promoted piece
       board[move.to] =
@@ -304,7 +317,8 @@ extension GameMovement on Game {
     BishopState newState = BishopState(
       board: board,
       move: move,
-      turn: 1 - state.turn,
+      turn: changeTurn ? 1 - state.turn : state.turn,
+      chain: changeTurn ? 0 : state.chain + 1,
       halfMoves: halfMoves,
       fullMoves:
           state.turn == Bishop.black ? state.fullMoves + 1 : state.fullMoves,

@@ -192,7 +192,8 @@ enum Variants {
   domination(MiscVariants.domination),
   dart(MiscVariants.dart),
   orda(Orda.orda),
-  ordaMirror(Orda.ordaMirror);
+  ordaMirror(Orda.ordaMirror),
+  duck(CommonVariants.duck);
 
   final Variant Function() builder;
   const Variants(this.builder);
@@ -216,9 +217,13 @@ class MoveParams {
   final int colour;
   final BishopState state;
   final BuiltVariant variant;
+  final MoveGenParams genParams;
   const MoveParams({
     required this.colour,
     required this.state,
     required this.variant,
+    required this.genParams,
   });
+
+  BoardSize get size => variant.boardSize;
 }

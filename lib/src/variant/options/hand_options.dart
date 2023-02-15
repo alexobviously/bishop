@@ -52,36 +52,3 @@ class HandOptions {
       HandOptions(enableHands: true, addCapturesToHand: true);
   static const enabledOnly = HandOptions(enableHands: true);
 }
-
-abstract class DropBuilder {
-  const DropBuilder();
-
-  DropBuilderFunction build(BuiltVariant variant);
-
-  static const standard = StandardDropBuilder();
-  static const unrestricted = UnrestrictedDropBuilder();
-  factory DropBuilder.region(BoardRegion region) => RegionDropBuilder(region);
-}
-
-class StandardDropBuilder extends DropBuilder {
-  const StandardDropBuilder();
-
-  @override
-  DropBuilderFunction build(BuiltVariant variant) => Drops.standard();
-}
-
-class UnrestrictedDropBuilder extends DropBuilder {
-  const UnrestrictedDropBuilder();
-
-  @override
-  DropBuilderFunction build(BuiltVariant variant) =>
-      Drops.standard(restrictPromoPieces: false);
-}
-
-class RegionDropBuilder extends DropBuilder {
-  final BoardRegion region;
-  const RegionDropBuilder(this.region);
-
-  @override
-  DropBuilderFunction build(BuiltVariant variant) => Drops.region(region);
-}

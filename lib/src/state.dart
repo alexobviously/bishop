@@ -11,6 +11,8 @@ class BishopState {
   /// The player who can make the next move.
   final Colour turn;
 
+  final int chain;
+
   /// How many half moves have been played since the last capture or pawn move.
   final int halfMoves;
 
@@ -81,6 +83,7 @@ class BishopState {
     required this.board,
     this.move,
     required this.turn,
+    this.chain = 0,
     required this.halfMoves,
     required this.fullMoves,
     required this.castlingRights,
@@ -99,6 +102,7 @@ class BishopState {
     List<int>? board,
     Move? move,
     Colour? turn,
+    int? chain,
     int? halfMoves,
     int? fullMoves,
     CastlingRights? castlingRights,
@@ -116,6 +120,7 @@ class BishopState {
         board: board ?? this.board,
         move: move ?? this.move,
         turn: turn ?? this.turn,
+        chain: chain ?? this.chain,
         halfMoves: halfMoves ?? this.halfMoves,
         fullMoves: fullMoves ?? this.fullMoves,
         castlingRights: castlingRights ?? this.castlingRights,

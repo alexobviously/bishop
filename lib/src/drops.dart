@@ -1,9 +1,7 @@
 import 'package:bishop/bishop.dart';
 
-typedef DropBuilderFunction = List<Move> Function(MoveParams params);
-
 class Drops {
-  static DropBuilderFunction standard({bool restrictPromoPieces = true}) =>
+  static MoveBuilderFunction standard({bool restrictPromoPieces = true}) =>
       (MoveParams params) {
         final state = params.state;
         Set<int> hand = state.handPieceTypes(params.colour);
@@ -31,7 +29,7 @@ class Drops {
         return drops;
       };
 
-  static DropBuilderFunction region(BoardRegion region) => (MoveParams params) {
+  static MoveBuilderFunction region(BoardRegion region) => (MoveParams params) {
         Set<int> hand = params.state.handPieceTypes(params.colour);
         if (hand.isEmpty) return [];
         final size = params.variant.boardSize;
@@ -40,6 +38,24 @@ class Drops {
           if (!size.onBoard(i)) continue;
           if (params.state.board[i].isNotEmpty) continue;
           drops.addAll(hand.map((e) => DropMove(to: i, piece: e)));
+        }
+        return drops;
+      };
+
+  static MoveBuilderFunction missingPiece(String type, {int? colour}) =>
+      (MoveParams params) {
+        colour ??= params.colour;
+        int p = params.variant.pieceIndex(type);
+        int piece = makePiece(p, colour!);
+        if (params.state.pieces[piece] > 0) return [];
+        final size = params.size;
+        final state = params.state;
+        List<Move> drops = [];
+        for (int i = 0; i < size.numIndices; i++) {
+          if (!size.onBoard(i)) continue;
+          if (state.board[i].isNotEmpty) continue;
+          final m = DropMove(to: i, piece: p, colour: colour, newPiece: true);
+          drops.add(m);
         }
         return drops;
       };
