@@ -1,5 +1,7 @@
 part of 'serialisation.dart';
 
+/// An adapter to allow serialisation of class-based variant parameters, such
+/// as actions, or promotion options.
 abstract class BishopTypeAdapter<T> {
   String get id;
   Map<String, dynamic>? export(T e);

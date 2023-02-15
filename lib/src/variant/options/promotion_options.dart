@@ -22,6 +22,9 @@ abstract class PromotionOptions {
         pieceLimits: pieceLimits,
       );
 
+  /// Rules where pieces can optionally promote on [ranks], and if [forced] is
+  /// true, then they will be forced to promote on [forcedRanks].
+  /// This allows for rules such as those in Shogi or Grand Chess.
   factory PromotionOptions.optional({
     List<int>? ranks,
     bool forced = true,
@@ -47,6 +50,7 @@ abstract class PromotionOptions {
       CustomPromotion(builder: builder, pieceLimits: pieceLimits);
 }
 
+/// No pieces are ever promoted.
 class NoPromotion extends PromotionOptions {
   const NoPromotion();
 
@@ -54,6 +58,10 @@ class NoPromotion extends PromotionOptions {
   PromotionBuilder? build(BuiltVariant variant) => null;
 }
 
+/// The standard chess promotion rules.
+/// If [ranks] are specified (white, black), these will be used, otherwise the
+/// final ranks of the board will be used.
+/// Pieces will be able to promote on the promotion rank, or anything past it.
 class StandardPromotion extends PromotionOptions {
   final List<int>? ranks;
   const StandardPromotion({this.ranks, super.pieceLimits});
@@ -66,6 +74,9 @@ class StandardPromotion extends PromotionOptions {
   }
 }
 
+/// Rules where pieces can optionally promote on [ranks], and if [forced] is
+/// true, then they will be forced to promote on [forcedRanks].
+/// This allows for rules such as those in Shogi or Grand Chess.
 class OptionalPromotion extends PromotionOptions {
   final List<int>? ranks;
   final bool forced;
