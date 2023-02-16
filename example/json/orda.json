@@ -1,7 +1,7 @@
 {
  "name": "Orda",
  "description": "",
- "bishopVersion": "1.1.2",
+ "bishopVersion": "1.2.3",
  "boardSize": "8x8",
  "pieceTypes": {
   "K": {
@@ -53,10 +53,7 @@
    },
    "value": 500
   },
-  "Q": {
-   "betza": "Q",
-   "value": 900
-  },
+  "Q": {"betza": "Q", "value": 900},
   "L": {
    "betza": "mNcR",
    "promoOptions": {
@@ -65,10 +62,7 @@
    },
    "value": 400
   },
-  "H": {
-   "betza": "KN",
-   "value": 700
-  },
+  "H": {"betza": "KN", "value": 700},
   "A": {
    "betza": "mNcB",
    "promoOptions": {
@@ -96,29 +90,14 @@
   "useRookAsTarget": false
  },
  "promotionOptions": "bishop.promo.standard",
- "materialConditions": {
-  "enabled": false
- },
+ "materialConditions": {"enabled": false},
  "startPosition": "lhaykahl/8/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1",
  "enPassant": true,
- "firstMoveRanks": [
-  [
-   1
-  ],
-  [
-   6
-  ]
- ],
+ "firstMoveRanks": [[1], [6]],
  "halfMoveDraw": 100,
  "repetitionDraw": 3,
  "regions": {
-  "whiteCamp": {
-   "startRank": 0,
-   "endRank": 0
-  },
-  "blackCamp": {
-   "startRank": 7,
-   "endRank": 7
-  }
+  "whiteCamp": {"startRank": 0, "endRank": 0},
+  "blackCamp": {"startRank": 7, "endRank": 7}
  }
 }

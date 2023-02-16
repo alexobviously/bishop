@@ -1,7 +1,7 @@
 {
  "name": "Three Kings Chess",
  "description": "Each player has three kings, but only one has to be captured for them to win.",
- "bishopVersion": "1.1.2",
+ "bishopVersion": "1.2.3",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -14,22 +14,10 @@
    "noSanSymbol": true,
    "value": 100
   },
-  "N": {
-   "betza": "N",
-   "value": 300
-  },
-  "B": {
-   "betza": "B",
-   "value": 300
-  },
-  "R": {
-   "betza": "R",
-   "value": 500
-  },
-  "Q": {
-   "betza": "Q",
-   "value": 900
-  },
+  "N": {"betza": "N", "value": 300},
+  "B": {"betza": "B", "value": 300},
+  "R": {"betza": "R", "value": 500},
+  "Q": {"betza": "Q", "value": 900},
   "K": {
    "betza": "K",
    "promoOptions": {
@@ -38,42 +26,18 @@
    }
   }
  },
- "castlingOptions": {
-  "enabled": false
- },
+ "castlingOptions": {"enabled": false},
  "promotionOptions": "bishop.promo.standard",
  "materialConditions": {
   "enabled": true,
-  "soloMaters": [
-   "P",
-   "Q",
-   "R",
-   "A",
-   "C"
-  ],
-  "pairMaters": [
-   "N"
-  ],
-  "combinedPairMaters": [
-   "B"
-  ],
-  "specialCases": [
-   [
-    "B",
-    "N"
-   ]
-  ]
+  "soloMaters": ["P", "Q", "R", "A", "C"],
+  "pairMaters": ["N"],
+  "combinedPairMaters": ["B"],
+  "specialCases": [["B", "N"]]
  },
  "startPosition": "knbqkbnk/pppppppp/8/8/8/8/PPPPPPPP/KNBQKBNK w - - 0 1",
  "enPassant": true,
- "firstMoveRanks": [
-  [
-   1
-  ],
-  [
-   6
-  ]
- ],
+ "firstMoveRanks": [[1], [6]],
  "halfMoveDraw": 100,
  "repetitionDraw": 3,
  "actions": [

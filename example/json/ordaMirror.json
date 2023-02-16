@@ -1,7 +1,7 @@
 {
  "name": "Orda Mirror",
  "description": "",
- "bishopVersion": "1.1.2",
+ "bishopVersion": "1.2.3",
  "boardSize": "8x8",
  "pieceTypes": {
   "K": {
@@ -29,50 +29,21 @@
    "noSanSymbol": true,
    "value": 100
   },
-  "L": {
-   "betza": "mNcR",
-   "value": 400
-  },
-  "H": {
-   "betza": "KN",
-   "value": 700
-  },
-  "A": {
-   "betza": "mNcB",
-   "value": 400
-  },
-  "F": {
-   "betza": "mQcN",
-   "value": 500
-  }
+  "L": {"betza": "mNcR", "value": 400},
+  "H": {"betza": "KN", "value": 700},
+  "A": {"betza": "mNcB", "value": 400},
+  "F": {"betza": "mQcN", "value": 500}
  },
- "castlingOptions": {
-  "enabled": false
- },
+ "castlingOptions": {"enabled": false},
  "promotionOptions": "bishop.promo.standard",
- "materialConditions": {
-  "enabled": false
- },
+ "materialConditions": {"enabled": false},
  "startPosition": "lhafkahl/8/pppppppp/8/8/PPPPPPPP/8/LHAFKAHL w - - 0 1",
  "enPassant": true,
- "firstMoveRanks": [
-  [
-   1
-  ],
-  [
-   6
-  ]
- ],
+ "firstMoveRanks": [[1], [6]],
  "halfMoveDraw": 100,
  "repetitionDraw": 3,
  "regions": {
-  "whiteCamp": {
-   "startRank": 0,
-   "endRank": 0
-  },
-  "blackCamp": {
-   "startRank": 7,
-   "endRank": 7
-  }
+  "whiteCamp": {"startRank": 0, "endRank": 0},
+  "blackCamp": {"startRank": 7, "endRank": 7}
  }
 }

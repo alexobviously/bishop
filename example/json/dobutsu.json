@@ -1,7 +1,7 @@
 {
  "name": "Dobutsu Shogi",
  "description": "A simple Shogi variant aimed at children.",
- "bishopVersion": "1.1.1",
+ "bishopVersion": "1.2.3",
  "boardSize": "3x4",
  "pieceTypes": {
   "L": {
@@ -40,9 +40,7 @@
     "canPromoteTo": false
    }
   },
-  "H": {
-   "betza": "WfF"
-  }
+  "H": {"betza": "WfF"}
  },
  "castlingOptions": {
   "enabled": true,
@@ -55,28 +53,16 @@
   "useRookAsTarget": false
  },
  "promotionOptions": "bishop.promo.standard",
- "materialConditions": {
-  "enabled": false
- },
+ "materialConditions": {"enabled": false},
  "startPosition": "gle/1c1/1C1/ELG[-] w - - 0 1",
  "enPassant": false,
- "firstMoveRanks": [
-  [],
-  []
- ],
  "handOptions": {
   "enableHands": true,
   "addCapturesToHand": true,
   "dropBuilder": "bishop.drops.unrestricted"
  },
  "regions": {
-  "whiteCamp": {
-   "startRank": 0,
-   "endRank": 0
-  },
-  "blackCamp": {
-   "startRank": 3,
-   "endRank": 3
-  }
+  "whiteCamp": {"startRank": 0, "endRank": 0},
+  "blackCamp": {"startRank": 3, "endRank": 3}
  }
 }

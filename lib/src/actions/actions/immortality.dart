@@ -44,8 +44,8 @@ class ImmortalityAdapter extends BishopTypeAdapter<ActionImmortality> {
   @override
   ActionImmortality build(Map<String, dynamic>? params) => ActionImmortality(
         event: ActionEvent.import(params?['event']),
-        pieceType: params!['pieceType'],
-        flag: params['flag'],
+        pieceType: params?['pieceType'],
+        flag: params?['flag'],
       );
 
   @override

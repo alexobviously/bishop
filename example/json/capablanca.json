@@ -1,7 +1,7 @@
 {
  "name": "Capablanca Chess",
  "description": "",
- "bishopVersion": "1.1.1",
+ "bishopVersion": "1.2.3",
  "boardSize": "10x8",
  "pieceTypes": {
   "P": {
@@ -14,22 +14,10 @@
    "noSanSymbol": true,
    "value": 100
   },
-  "N": {
-   "betza": "N",
-   "value": 300
-  },
-  "B": {
-   "betza": "B",
-   "value": 300
-  },
-  "R": {
-   "betza": "R",
-   "value": 500
-  },
-  "Q": {
-   "betza": "Q",
-   "value": 900
-  },
+  "N": {"betza": "N", "value": 300},
+  "B": {"betza": "B", "value": 300},
+  "R": {"betza": "R", "value": 500},
+  "Q": {"betza": "Q", "value": 900},
   "K": {
    "betza": "K",
    "royal": true,
@@ -38,14 +26,8 @@
     "canPromoteTo": false
    }
   },
-  "A": {
-   "betza": "BN",
-   "value": 900
-  },
-  "C": {
-   "betza": "RN",
-   "value": 900
-  }
+  "A": {"betza": "BN", "value": 900},
+  "C": {"betza": "RN", "value": 900}
  },
  "castlingOptions": {
   "enabled": true,
@@ -60,36 +42,14 @@
  "promotionOptions": "bishop.promo.standard",
  "materialConditions": {
   "enabled": true,
-  "soloMaters": [
-   "P",
-   "Q",
-   "R",
-   "A",
-   "C"
-  ],
-  "pairMaters": [
-   "N"
-  ],
-  "combinedPairMaters": [
-   "B"
-  ],
-  "specialCases": [
-   [
-    "B",
-    "N"
-   ]
-  ]
+  "soloMaters": ["P", "Q", "R", "A", "C"],
+  "pairMaters": ["N"],
+  "combinedPairMaters": ["B"],
+  "specialCases": [["B", "N"]]
  },
  "startPosition": "rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1",
  "enPassant": true,
- "firstMoveRanks": [
-  [
-   1
-  ],
-  [
-   6
-  ]
- ],
+ "firstMoveRanks": [[1], [6]],
  "halfMoveDraw": 100,
  "repetitionDraw": 3
 }

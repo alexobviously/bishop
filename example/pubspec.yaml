@@ -10,3 +10,4 @@ dependencies:
   colorize: ^3.0.0
   bishop:
     path: ../
+  nice_json: ^1.0.0

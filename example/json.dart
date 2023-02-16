@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:bishop/bishop.dart';
+import 'package:nice_json/nice_json.dart';
 
 import 'play.dart';
 
@@ -10,10 +11,10 @@ Map<String, dynamic> readJson(String filename) {
   return jsonDecode(data);
 }
 
-void writeJson(String filename, Map<String, dynamic> json) {
+void writeJson(String filename, Map<String, dynamic> data) {
   final file = File(filename);
-  final data = JsonEncoder.withIndent(' ').convert(json);
-  file.writeAsStringSync(data);
+  final json = niceJson(data);
+  file.writeAsStringSync(json);
 }
 
 void main(List<String> args) {
