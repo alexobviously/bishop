@@ -12,6 +12,13 @@ extension GameOutputs on Game {
     return match;
   }
 
+  /// Gets a move from a SAN string, e.g. 'Nxf3', 'e4', 'O-O-O'.
+  Move? getMoveSan(String san) {
+    List<Move> moves = generateLegalMoves();
+    Move? match = moves.firstWhereOrNull((m) => toSan(m, moves) == san);
+    return match;
+  }
+
   /// Returns the algebraic representation of [move], with respect to the board size.
   String toAlgebraic(Move move, {bool simplifyFixedGating = true}) {
     if (move is PassMove) return move.algebraic();

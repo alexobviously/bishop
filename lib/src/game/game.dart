@@ -742,6 +742,14 @@ class Game {
     return makeMove(m);
   }
 
+  /// Makes a move from a SAN string, e.g. 'Nxf3', 'e4', 'O-O-O'.
+  /// Return value indicates whether the move was valid.
+  bool makeMoveSan(String move) {
+    Move? m = getMoveSan(move);
+    if (m == null) return false;
+    return makeMove(m);
+  }
+
   /// Checks whether an algebraic move string (e.g. e2e4, f7f8q) is a valid move.
   bool isMoveValid(String move) => getMove(move) != null;
 
