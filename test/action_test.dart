@@ -9,7 +9,16 @@ void main() {
         fen: '4k3/8/1nn5/2pp4/4P3/8/8/4K3 w - - 0 1',
       );
       g.makeMoveString('e4d5');
-      expect(g.state.pieceCount(Bishop.black), 2);
+      expect(g.state.blackPieceCount, 3);
+      expect(g.state.whitePieceCount, 1);
+    });
+    test('Explosion - Don\'t explode pawn', () {
+      final g = Game(
+        variant: Variant.atomic(),
+        fen: 'r1bk3r/pp3ppp/n1pppq1n/4N3/7Q/4P3/PP1P1PPP/RNBK3R w - - 2 10',
+      );
+      g.makeMoveString('e5f7');
+      expect(g.fen, 'r1bk3r/pp4pp/n1ppp2n/8/7Q/4P3/PP1P1PPP/RNBK3R b - - 0 10');
     });
     test('Add to Hand', () {
       final g = Game(

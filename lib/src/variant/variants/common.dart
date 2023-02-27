@@ -60,7 +60,7 @@ class CommonVariants {
       Variant.standard().copyWith(
         name: 'Atomic Chess',
         actions: [
-          ActionExplosionRadius(1),
+          ActionExplosionRadius(1, immunePieces: ['P']),
           ActionCheckRoyalsAlive(allowDraw: allowExplosionDraw),
         ],
       );

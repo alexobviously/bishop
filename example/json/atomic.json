@@ -53,7 +53,8 @@
  "actions": [
   {
    "id": "bishop.action.explosionRadius",
-   "radius": 1
+   "radius": 1,
+   "immunePieces": ["P"]
   },
   "bishop.action.checkRoyalsAlive"
  ]

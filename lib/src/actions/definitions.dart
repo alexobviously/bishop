@@ -16,10 +16,27 @@ class ActionDefinitions {
 
   /// An action that removes every piece in [area] around the destination
   /// square of a move.
-  static ActionDefinition explosion(Area area) =>
+  static ActionDefinition explosion(
+    Area area, {
+    List<String>? immunePieces,
+    bool alwaysSuicide = true,
+  }) =>
       (ActionTrigger trigger) => trigger.variant.boardSize
           .squaresForArea(trigger.move.to, area)
-          .where((e) => trigger.state.board[e] != Bishop.empty)
+          .where((e) {
+            int sq = trigger.state.board[e];
+            if (sq == Bishop.empty) return false;
+            if (e == trigger.move.to && alwaysSuicide) {
+              return true;
+            }
+            if (immunePieces != null) {
+              if (immunePieces
+                  .contains(trigger.variant.pieces[sq.type].symbol)) {
+                return false;
+              }
+            }
+            return true;
+          })
           .map((e) => EffectModifySquare(e, Bishop.empty))
           .toList();
 
