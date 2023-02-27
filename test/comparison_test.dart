@@ -91,11 +91,13 @@ class CompareTest {
   final String pos1;
   final String pos2;
   final List<String> moves;
+  final bool san;
 
   const CompareTest({
     required this.variant,
     required this.pos1,
     required this.pos2,
     this.moves = const [],
+    this.san = false,
   });
 }

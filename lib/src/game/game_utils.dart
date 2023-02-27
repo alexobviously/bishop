@@ -6,7 +6,7 @@ extension GameUtils on Game {
     List<Move> moves = generateLegalMoves();
     Map<String, int> perfts = {};
     for (Move m in moves) {
-      makeMove(m);
+      makeMove(m, false);
       perfts[toAlgebraic(m)] = perft(depth - 1);
       undo();
     }

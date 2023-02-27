@@ -10,4 +10,5 @@ dependencies:
   colorize: ^3.0.0
   bishop:
     path: ../
+  dart_console: ^1.1.2
   nice_json: ^1.0.0

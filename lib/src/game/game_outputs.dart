@@ -104,7 +104,7 @@ extension GameOutputs on Game {
         san = '$san$dropSq';
       }
     }
-    makeMove(move);
+    makeMove(move, false);
     if (inCheck || won) {
       san = '$san${won ? '#' : '+'}';
     }
@@ -156,7 +156,7 @@ extension GameOutputs on Game {
     List<Move> moves = generateLegalMoves();
     int nodes = 0;
     for (Move m in moves) {
-      makeMove(m);
+      makeMove(m, false);
       if (depth - 1 > 0) {
         int childNodes = perft(depth - 1);
         nodes += childNodes;
@@ -184,16 +184,20 @@ extension GameOutputs on Game {
 
   /// Get the history of the game (i.e. all moves played) in SAN format.
   List<String> get moveHistorySan {
-    List<Move> moveStack = [];
+    final sans = history.skip(1).map((e) => e.meta?.prettyName).toList();
+    if (!sans.contains(null)) {
+      return sans.map((e) => e as String).toList();
+    }
+    List<BishopState> stateStack = [];
     while (canUndo) {
-      Move? m = undo();
-      if (m == null) break;
-      moveStack.add(m);
+      stateStack.add(state);
+      undo();
     }
     List<String> moves = [];
-    while (moveStack.isNotEmpty) {
-      Move m = moveStack.removeLast();
-      String san = toSan(m);
+    while (stateStack.isNotEmpty) {
+      BishopState s = stateStack.removeLast();
+      Move m = s.move!;
+      String san = s.meta?.prettyName ?? toSan(m);
       moves.add(san);
       makeMove(m);
     }
@@ -321,31 +325,8 @@ extension GameOutputs on Game {
   }
 
   /// Generates an ASCII representation of the board.
-  String ascii([bool unicode = false]) {
-    String border = '   +${'-' * (variant.boardSize.h * 3)}+';
-    String output = '$border\n';
-    for (int i in Iterable<int>.generate(variant.boardSize.v).toList()) {
-      int rank = variant.boardSize.v - i;
-      String rankStr = rank > 9 ? '$rank |' : ' $rank |';
-      output = '$output$rankStr';
-      for (int j in Iterable<int>.generate(variant.boardSize.h).toList()) {
-        Square sq = board[i * variant.boardSize.h * 2 + j];
-        String char = variant.pieces[sq.type].char(sq.colour);
-        if (unicode && Bishop.unicodePieces.containsKey(char)) {
-          char = Bishop.unicodePieces[char]!;
-        }
-        output = '$output $char ';
-      }
-      output = '$output|\n';
-    }
-    output = '$output$border\n     ';
-    for (String i in Iterable<int>.generate(variant.boardSize.h)
-        .map((e) => String.fromCharCode(e + 97))
-        .toList()) {
-      output = '$output$i  ';
-    }
-    return output;
-  }
+  String ascii([bool unicode = false]) =>
+      state.ascii(unicode: unicode, variant: variant);
 
   /// Converts the internal board representation to a list of piece symbols (e.g. 'P', 'q').
   /// You probably need this for interopability with other applications (such as the Squares package).

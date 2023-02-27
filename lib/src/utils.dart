@@ -38,5 +38,39 @@ bool validateFen({
 
 /// Looks up a built in variant by name.
 Variant? variantFromString(String name) => Variants.values
-    .firstWhereOrNull((e) => e.name.toLowerCase() == name.toLowerCase())
+    .firstWhereOrNull(
+      (e) => e.name.toLowerCase() == name.toLowerCase().replaceAll(' ', ''),
+    )
     ?.build();
+
+/// Generates an ASCII representation of the board.
+String boardToAscii(
+  List<int> board, {
+  bool unicode = false,
+  BuiltVariant? variant,
+}) {
+  variant ??= BuiltVariant.standard();
+  String border = '   +${'-' * (variant.boardSize.h * 3)}+';
+  String output = '$border\n';
+  for (int i in Iterable<int>.generate(variant.boardSize.v).toList()) {
+    int rank = variant.boardSize.v - i;
+    String rankStr = rank > 9 ? '$rank |' : ' $rank |';
+    output = '$output$rankStr';
+    for (int j in Iterable<int>.generate(variant.boardSize.h).toList()) {
+      Square sq = board[i * variant.boardSize.h * 2 + j];
+      String char = variant.pieces[sq.type].char(sq.colour);
+      if (unicode && Bishop.unicodePieces.containsKey(char)) {
+        char = Bishop.unicodePieces[char]!;
+      }
+      output = '$output $char ';
+    }
+    output = '$output|\n';
+  }
+  output = '$output$border\n     ';
+  for (String i in Iterable<int>.generate(variant.boardSize.h)
+      .map((e) => String.fromCharCode(e + 97))
+      .toList()) {
+    output = '$output$i  ';
+  }
+  return output;
+}

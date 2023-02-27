@@ -172,6 +172,8 @@ class BuiltVariant {
         .copyWith(passChecker: data.passOptions.build(bv));
   }
 
+  factory BuiltVariant.standard() => BuiltVariant.fromData(Variant.standard());
+
   PieceType pieceType(int piece, [int? square]) {
     // TODO: make this more efficient by building some of these values in advance
     final pd = pieces[piece.type];

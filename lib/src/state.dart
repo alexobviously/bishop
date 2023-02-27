@@ -8,12 +8,19 @@ class BishopState {
   /// The previous move that was played. If null, the game has just started.
   final Move? move;
 
+  /// Contains the string representations of [move], and the variant.
+  /// Since these can be expensive to calculate, this will only be present in
+  /// mainline moves, i.e. moves actually made by a player, rather than ones
+  /// being generated for move legalisation.
+  final StateMeta? meta;
+
   /// The player who can make the next move.
   final Colour turn;
 
   /// How many half moves have been played since the last capture or pawn move.
   final int halfMoves;
 
+  // todo: refactor so we store number of half moves instead
   /// How many full moves have been played in the entire game.
   final int fullMoves;
 
@@ -57,6 +64,7 @@ class BishopState {
   /// updated in `Game.makeMove()`.
   final int hash;
 
+  int get moveNumber => fullMoves - (turn == Bishop.white ? 1 : 0);
   bool get invalidMove => result is InvalidMoveResult;
 
   /// The total number of pieces currently in play belonging to [player].
@@ -80,6 +88,7 @@ class BishopState {
   const BishopState({
     required this.board,
     this.move,
+    this.meta,
     required this.turn,
     required this.halfMoves,
     required this.fullMoves,
@@ -98,6 +107,7 @@ class BishopState {
   BishopState copyWith({
     List<int>? board,
     Move? move,
+    StateMeta? meta,
     Colour? turn,
     int? halfMoves,
     int? fullMoves,
@@ -115,6 +125,7 @@ class BishopState {
       BishopState(
         board: board ?? this.board,
         move: move ?? this.move,
+        meta: meta ?? this.meta,
         turn: turn ?? this.turn,
         halfMoves: halfMoves ?? this.halfMoves,
         fullMoves: fullMoves ?? this.fullMoves,
@@ -214,4 +225,17 @@ class BishopState {
       hands: hands,
     );
   }
+
+  /// Generates an ASCII representation of the board.
+  String ascii({bool unicode = false, BuiltVariant? variant}) =>
+      boardToAscii(board, variant: variant ?? meta?.variant);
+}
+
+class StateMeta {
+  final BuiltVariant variant;
+  final MoveMeta? moveMeta;
+  const StateMeta({required this.variant, this.moveMeta});
+
+  String? get algebraic => moveMeta?.algebraic;
+  String? get prettyName => moveMeta?.prettyName;
 }

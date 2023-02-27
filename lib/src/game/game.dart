@@ -13,7 +13,7 @@ part 'game_utils.dart';
 /// and generates output.
 class Game {
   /// The variant that specifies the gameplay rules for this game.
-  late final BuiltVariant variant;
+  final BuiltVariant variant;
 
   /// A random number generator seed.
   /// Used by the Zobrist hash table.
@@ -47,10 +47,11 @@ class Game {
     FenBuilder? fenBuilder,
     this.zobristSeed = Bishop.defaultSeed,
     this.startPosSeed,
-  }) {
-    this.variant = BuiltVariant.fromData(variant ?? Variant.standard());
+  }) : variant = BuiltVariant.fromData(variant ?? Variant.standard()) {
     setup(fen: fen, fenBuilder: fenBuilder);
   }
+
+  factory Game.fromPgn(String pgn) => parsePgn(pgn).buildGame();
 
   void setup({String? fen, FenBuilder? fenBuilder}) {
     // Order of precedence: fen, fenBuilder, variant.startPosBuilder,
@@ -308,6 +309,7 @@ class Game {
       gates: gates,
       pieces: pieces,
       checks: checks,
+      meta: StateMeta(variant: variant),
     );
     newState = newState.copyWith(hash: zobrist.compute(newState));
     zobrist.incrementHash(newState.hash);
@@ -352,7 +354,7 @@ class Game {
     }
     PassMove m = PassMove();
     if (legal) {
-      bool valid = makeMove(m);
+      bool valid = makeMove(m, false);
       if (lostBy(colour) || kingAttacked(colour)) valid = false;
       undo();
       return valid ? m : null;
@@ -368,7 +370,7 @@ class Game {
     if (legal) {
       List<Move> remove = [];
       for (Move m in drops) {
-        bool valid = makeMove(m);
+        bool valid = makeMove(m, false);
         if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
         undo();
       }
@@ -677,7 +679,7 @@ class Game {
     if (options.legal) {
       List<Move> remove = [];
       for (Move m in moves) {
-        bool valid = makeMove(m);
+        bool valid = makeMove(m, false);
         if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
         undo();
       }
@@ -757,10 +759,14 @@ class Game {
   /// Returns the number of moves that were successfully made. If everything
   /// went fine, this should be equal to [moves.length].
   /// If [undoOnError] is true, all moves made before the error will be undone.
-  int makeMultipleMoves(List<String> moves, [bool undoOnError = true]) {
+  int makeMultipleMoves(
+    List<String> moves, {
+    bool undoOnError = true,
+    bool san = false,
+  }) {
     int movesMade = 0;
     for (String move in moves) {
-      bool ok = makeMoveString(move);
+      bool ok = san ? makeMoveSan(move) : makeMoveString(move);
       if (!ok) break;
       movesMade++;
     }

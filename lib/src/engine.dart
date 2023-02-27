@@ -29,7 +29,7 @@ class Engine {
     for (int depth = 1; depth < maxDepth; depth++) {
       if (debug > 0) print('----- DEPTH $depth -----');
       for (Move m in moves) {
-        game.makeMove(m);
+        game.makeMove(m, false);
         int eval = -negamax(
           depth,
           -Bishop.mateUpper,
@@ -81,7 +81,7 @@ class Engine {
     if (moves.isNotEmpty) {
       int a = alpha;
       for (Move m in moves) {
-        game.makeMove(m);
+        game.makeMove(m, false);
         int v = -negamax(depth - 1, -beta, -a, player.opponent, debug - 1);
         game.undo();
         value = max(v, value);

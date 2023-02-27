@@ -3,7 +3,9 @@ part of 'game.dart';
 extension GameMovement on Game {
   /// Make a move and modify the game state. Returns true if the move was valid
   /// and made successfully.
-  bool makeMove(Move move) {
+  /// [generateMeta] determines whether to generate the `BishopState.moveMeta`
+  /// field. Set this to false for more efficient calculations.
+  bool makeMove(Move move, [bool generateMeta = true]) {
     BishopState state = this.state;
     Square fromSq =
         move.from >= Bishop.boardStart ? state.board[move.from] : Bishop.empty;
@@ -44,6 +46,18 @@ extension GameMovement on Game {
           piece: move.dropPiece ?? fromSq,
         ),
         zobrist: zobrist,
+      );
+    }
+
+    if (generateMeta) {
+      newState = newState.copyWith(
+        meta: StateMeta(
+          variant: variant,
+          moveMeta: MoveMeta(
+            algebraic: toAlgebraic(move),
+            prettyName: toSan(move),
+          ),
+        ),
       );
     }
 

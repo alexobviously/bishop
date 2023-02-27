@@ -163,6 +163,7 @@ const defaultSeed = 7363661891;
 
 /// All built in variants.
 enum Variants {
+  chess(Variant.standard),
   standard(Variant.standard),
   chess960(CommonVariants.chess960),
   crazyhouse(CommonVariants.crazyhouse),

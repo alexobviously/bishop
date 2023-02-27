@@ -1,6 +1,7 @@
 import 'package:bishop/bishop.dart';
 
 part 'drop_move.dart';
+part 'move_meta.dart';
 part 'multi_move.dart';
 part 'standard_move.dart';
 part 'pass_move.dart';
@@ -44,4 +45,32 @@ abstract class Move {
 
   /// The piece (type only) that is being dropped, if one is.
   int? get dropPiece => null;
+
+  @override
+  int get hashCode =>
+      from.hashCode ^
+      to.hashCode ^
+      capturedPiece.hashCode ^
+      promoPiece.hashCode ^
+      enPassant.hashCode ^
+      setEnPassant.hashCode ^
+      castling.hashCode ^
+      gate.hashCode ^
+      gate.hashCode ^
+      dropPiece.hashCode;
+
+  @override
+  bool operator ==(Object other) {
+    if (other is! Move) return false;
+    if (other.runtimeType != runtimeType) return false;
+    return from == other.from &&
+        to == other.to &&
+        capturedPiece == other.capturedPiece &&
+        promoPiece == other.promoPiece &&
+        enPassant == other.enPassant &&
+        setEnPassant == other.setEnPassant &&
+        castling == other.castling &&
+        gate == other.gate &&
+        dropPiece == other.dropPiece;
+  }
 }

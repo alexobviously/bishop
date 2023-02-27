@@ -1,3 +1,8 @@
+### 1.2.3
+- `GameNavigator`: a helper class that simplifies navigating through a completed game. This is still an early form.
+- PGN parsing functionality: `parsePgn()`, `gameFromPgnData()`, `Game.fromPgn()`, `GameNavigator.fromPgn()`.
+- `State` now contains a `StateMeta? meta` field: this contains a reference to the variant as well as string representations of moves. This will only be added to mainline moves (i.e. normal calls to `makeMove`, not legality check moves), so it doesn't affect speed, and improves usability.
+
 ### 1.2.2
 - `Variant.startPosBuilder` changes: now is a class (`StartPositionBuilder`), so it can be serialised, and start position build functions now take an optional seed.
 
