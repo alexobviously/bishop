@@ -55,7 +55,7 @@ extension GameMovement on Game {
           variant: variant,
           moveMeta: MoveMeta(
             algebraic: toAlgebraic(move),
-            prettyName: toSan(move),
+            formatted: toSan(move),
           ),
         ),
       );

@@ -80,7 +80,7 @@ class NavigatorNode {
 
   MoveMeta? get moveMeta => gameState.meta?.moveMeta;
   String? get moveString => moveMeta != null
-      ? '${gameState.moveNumber}. ${gameState.turn == Bishop.white ? '..' : ''}${moveMeta!.prettyName}'
+      ? '${gameState.moveNumber}. ${gameState.turn == Bishop.white ? '..' : ''}${moveMeta!.formatted}'
       : null;
 
   NavigatorNode({

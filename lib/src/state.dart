@@ -237,5 +237,5 @@ class StateMeta {
   const StateMeta({required this.variant, this.moveMeta});
 
   String? get algebraic => moveMeta?.algebraic;
-  String? get prettyName => moveMeta?.prettyName;
+  String? get prettyName => moveMeta?.formatted;
 }
