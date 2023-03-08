@@ -1,5 +1,5 @@
 ### 1.2.4
-- `PieceType.withAction()`, `PieceType.withRegionEffect()`, `Variant.withAction()`, `Variant.withRegion()` helpers.
+- `PieceType.withAction()`, `PieceType.withRegionEffect()`, `Variant.withAction()`, `Variant.withRegion()` fluent helpers.
 - `MoveMeta.prettyName` is now `MoveMeta.formatted`.
 
 ### 1.2.3
