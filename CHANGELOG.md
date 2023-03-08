@@ -1,3 +1,6 @@
+### 1.2.5
+- Improved efficiency when making moves from SAN strings or parsing PGNs: the check component of the SAN string can now be skipped.
+
 ### 1.2.4
 - `PieceType.withAction()`, `PieceType.withRegionEffect()`, `Variant.withAction()`, `Variant.withRegion()` fluent helpers.
 - `MoveMeta.prettyName` is now `MoveMeta.formatted`.

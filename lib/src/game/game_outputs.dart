@@ -13,9 +13,15 @@ extension GameOutputs on Game {
   }
 
   /// Gets a move from a SAN string, e.g. 'Nxf3', 'e4', 'O-O-O'.
-  Move? getMoveSan(String san) {
+  /// If [checks] is false, the '+' or '#' part of the SAN string will not be
+  /// computed, which vastly increases efficiency in cases like PGN parsing.\
+  Move? getMoveSan(String san, {bool checks = false}) {
+    if (!checks) {
+      san = san.replaceAll('#', '').replaceAll('+', '');
+    }
     List<Move> moves = generateLegalMoves();
-    Move? match = moves.firstWhereOrNull((m) => toSan(m, moves) == san);
+    Move? match = moves
+        .firstWhereOrNull((m) => toSan(m, moves: moves, checks: checks) == san);
     return match;
   }
 
@@ -53,7 +59,9 @@ extension GameOutputs on Game {
   /// Optionally, provide [moves] - a list of legal moves in the current position, which
   /// is used to determine the disambiguator. Use this if you need speed and have already
   /// generated the list of moves elsewhere.
-  String toSan(Move move, [List<Move>? moves]) {
+  /// If [checks] is false, the '+' or '#' part of the SAN string will not be
+  /// computed, which vastly increases efficiency in cases like PGN parsing.
+  String toSan(Move move, {List<Move>? moves, bool checks = true}) {
     if (move is PassMove) return move.algebraic();
     if (move is! StandardMove && move is! DropMove) return '';
     String san = '';
@@ -104,11 +112,13 @@ extension GameOutputs on Game {
         san = '$san$dropSq';
       }
     }
-    makeMove(move, false);
-    if (inCheck || won) {
-      san = '$san${won ? '#' : '+'}';
+    if (checks) {
+      makeMove(move, false);
+      if (inCheck || won) {
+        san = '$san${won ? '#' : '+'}';
+      }
+      undo();
     }
-    undo();
     return san;
   }
 

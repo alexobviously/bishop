@@ -746,8 +746,10 @@ class Game {
 
   /// Makes a move from a SAN string, e.g. 'Nxf3', 'e4', 'O-O-O'.
   /// Return value indicates whether the move was valid.
-  bool makeMoveSan(String move) {
-    Move? m = getMoveSan(move);
+  /// If [checks] is false, the '+' or '#' part of the SAN string will not be
+  /// computed, which vastly increases efficiency in cases like PGN parsing.
+  bool makeMoveSan(String move, {bool checks = false}) {
+    Move? m = getMoveSan(move, checks: checks);
     if (m == null) return false;
     return makeMove(m);
   }
