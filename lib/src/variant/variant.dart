@@ -343,6 +343,15 @@ class Variant {
         pieceTypes: {...pieceTypes}..removeWhere((k, _) => pieces.contains(k)),
       );
 
+  /// Returns a copy of the variant with [action] added.
+  /// If [first] is true, it will be added to the start of the list.
+  Variant withAction(Action action, {bool first = false}) =>
+      copyWith(actions: first ? [action, ...actions] : [...actions, action]);
+
+  /// Returns a copy of the variant with [region] added, using [key] as its name.
+  Variant withRegion(String key, BoardRegion region) =>
+      copyWith(regions: {...regions, key: region});
+
   /// Copies the variant with the 'campmate' end condition:
   /// When a royal piece enters the opposite rank, that player wins the game.
   /// Setting [whiteRank] or [blackRank] to a negative number will count in

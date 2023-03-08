@@ -18,9 +18,7 @@ class MiscVariants {
           'B': PieceType.fromBetza('B2'),
           'R': PieceType.fromBetza('R3'),
           'Q': PieceType.queen(),
-          'K': PieceType.king().copyWith(
-            actions: [ActionAddToHand('P')],
-          ),
+          'K': PieceType.king().withAction(ActionAddToHand('P')),
         },
       );
 

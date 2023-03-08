@@ -35,26 +35,20 @@ class CommonVariants {
         gameEndConditions: GameEndConditionSet.threeCheck,
       );
 
-  static Variant kingOfTheHill() {
-    final standard = Variant.standard();
-    return standard.copyWith(
-      name: 'King of the Hill',
-      pieceTypes: {
-        ...standard.pieceTypes,
-        'K': PieceType.king().copyWith(
-          regionEffects: [RegionEffect.winGame(white: 'hill', black: 'hill')],
+  static Variant kingOfTheHill() =>
+      Variant.standard().copyWith(name: 'King of the Hill').withPieces({
+        'K': PieceType.king().withRegionEffect(
+          RegionEffect.winGame(white: 'hill', black: 'hill'),
         ),
-      },
-      regions: {
-        'hill': BoardRegion(
+      }).withRegion(
+        'hill',
+        BoardRegion(
           startFile: Bishop.fileD,
           endFile: Bishop.fileE,
           startRank: Bishop.rank4,
           endRank: Bishop.rank5,
         ),
-      },
-    );
-  }
+      );
 
   static Variant atomic({bool allowExplosionDraw = false}) =>
       Variant.standard().copyWith(

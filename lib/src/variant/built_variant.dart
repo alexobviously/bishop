@@ -133,7 +133,7 @@ class BuiltVariant {
     }
     if (promoMap.isEmpty) promoMap = null;
 
-    final bv = BuiltVariant(
+    BuiltVariant bv = BuiltVariant(
       data: data,
       pieces: pieces,
       pieceLookup: pieceLookup,
@@ -166,10 +166,12 @@ class BuiltVariant {
       actionsByEvent: actionsByEvent,
     );
 
-    return bv
-        .copyWith(promotionBuilder: data.promotionOptions.build(bv))
-        .copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv))
-        .copyWith(passChecker: data.passOptions.build(bv));
+    // It's like this so the drop builder can depend on the promotion builder.
+    bv = bv.copyWith(promotionBuilder: data.promotionOptions.build(bv));
+    bv = bv.copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv));
+    bv = bv.copyWith(passChecker: data.passOptions.build(bv));
+
+    return bv;
   }
 
   factory BuiltVariant.standard() => BuiltVariant.fromData(Variant.standard());

@@ -143,8 +143,17 @@ class PieceType {
   /// Returns a copy of the piece type with [value].
   PieceType withValue(int value) => copyWith(value: value);
 
-  PieceType withImmortality() =>
-      copyWith(actions: [...actions, ActionImmortality()]);
+  /// Returns a copy of the piece type with [effect] added.
+  PieceType withRegionEffect(RegionEffect effect) =>
+      copyWith(regionEffects: [...regionEffects, effect]);
+
+  /// Returns a copy of the piece type with [action] added.
+  /// If [first] is true, it will be added to the start of the list.
+  PieceType withAction(Action action, {bool first = false}) =>
+      copyWith(actions: first ? [action, ...actions] : [...actions, action]);
+
+  /// Returns a copy of the piece type with immortality.
+  PieceType withImmortality() => withAction(ActionImmortality());
 
   factory PieceType.empty() => PieceType(
         moves: [],

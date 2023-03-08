@@ -85,16 +85,14 @@ void main() {
     test('Check Piece Count (Three Kings x Atomic - invalid)', () {
       final tk = MiscVariants.threeKings();
       final g = Game(
-        variant: tk.copyWith(
-          actions: [ActionExplosionRadius(1), ...tk.actions],
-        ),
+        variant: tk.withAction(ActionExplosionRadius(1), first: true),
         fen: '1k5r/2k4r/8/3k4/3K4/R7/R7/RK5K w - - 0 1',
       );
       expect(g.makeMoveString('d4d5'), false);
     });
     test('Immortality (piece type)', () {
-      final v = Variant.standard()
-          .copyWith(actions: [ActionImmortality(pieceType: 'B')]);
+      final v =
+          Variant.standard().withAction(ActionImmortality(pieceType: 'B'));
       final g = Game(variant: v, fen: '7k/8/3b4/8/4N3/8/8/7K w - - 0 1');
       final moves = g.generateLegalMoves();
       expect(moves.captures.length, 0);

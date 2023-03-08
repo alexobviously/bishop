@@ -172,28 +172,20 @@ A good simple example is the King of the Hill variant, in which a single region 
 The definition is below:
 
 ```dart
-factory Variant.kingOfTheHill() {
-  final standard = Variant.standard();
-  Map<String, PieceType> pieceTypes = {...standard.pieceTypes};
-  pieceTypes['K'] = PieceType.fromBetza(
-    'K',
-    royal: true,
-    promoOptions: PiecePromoOptions.none,
-    regionEffects: [RegionEffect.winGame(white: 'hill', black: 'hill')],
-  );
-  return standard.copyWith(
-    name: 'King of the Hill',
-    pieceTypes: pieceTypes,
-    regions: {
-      'hill': BoardRegion(
-        startFile: Bishop.fileD,
-        endFile: Bishop.fileE,
-        startRank: Bishop.rank4,
-        endRank: Bishop.rank5,
-      ),
-    },
-  );
-}
+static Variant kingOfTheHill() =>
+      Variant.standard().copyWith(name: 'King of the Hill').withPieces({
+        'K': PieceType.king().withRegionEffect(
+          RegionEffect.winGame(white: 'hill', black: 'hill'),
+        ),
+      }).withRegion(
+        'hill',
+        BoardRegion(
+          startFile: Bishop.fileD,
+          endFile: Bishop.fileE,
+          startRank: Bishop.rank4,
+          endRank: Bishop.rank5,
+        ),
+      );
 ```
 
 Here is a more complex definition of a variant in which bishops cannot leave their side of the board, and knights turn into kniroos (pieces with knight+rook movement) when they cross to the opponent's side:
@@ -289,7 +281,7 @@ Let's say we want a pawn to be added to the player's hand as defined above, but 
 ```dart
 Variant v = Variant.standard().copyWith(
   pieceTypes: {
-    'N': PieceType.knight().copyWith(actions: [pawnAdder]),
+    'N': PieceType.knight().withAction(pawnAdder),
     /// ...all other piece types
   },
   handOptions: HandOptions.enabledOnly,
@@ -317,9 +309,8 @@ It's possible to import and export Bishop variants in JSON format, simply use th
 There are some parameters, namely `PromotionOptions` and `Action` classes, that require type adapters to be registered if custom implementations are built. Note that this isn't necessary if you don't want to use serialisation, and most likely only the most complex apps with user-generated variants will need this. This is relatively straightforward though - simply create a `BishopTypeAdapter` that implements the JSON import and export functionality and include it in either `Variant.adapters` or the `adapters` parameter in `fromJson`/`toJson`. See [example/json.dart](https://github.com/alexobviously/bishop/blob/master/example/json.dart) for a demonstration of how to do this. Also, all built-in variants are included in JSON form in [example/json](https://github.com/alexobviously/bishop/blob/master/example/json) for reference.
 
 Serialisation currently has a few limitations:
-* `Variant.startPosBuilder` is not supported. This will most likely result in the position builder functionality being refactored soon.
 * Piece types that aren't built with `PieceType.fromBetza()` aren't supported yet.
-* Parameterised conditions in Actions currently cannot be exported, because they are just function closures. For example, `ActionCheckRoyalsAlive` optionally takes a `condition`; if this condition is set, then the action will not be exported with the variant. If it isn't set, then there will be no problems. Similarly to `startPosBuilder`, this will probably result in conditions being refactored into a form that works with type adapters.
+* Parameterised conditions in Actions currently cannot be exported, because they are just function closures. For example, `ActionCheckRoyalsAlive` optionally takes a `condition`; if this condition is set, then the action will not be exported with the variant. If it isn't set, then there will be no problems. This will probably result in conditions being refactored into a form that works with type adapters.
 
 ***
 
