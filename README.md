@@ -13,6 +13,8 @@ Bishop is written in pure dart with no dependencies.
 Take a look at the [Squares](https://pub.dev/packages/squares) package for a Flutter chessboard widget
 designed to be interoperable with Bishop.
 
+Feel free to request variants or rules - just [create an issue](https://github.com/alexobviously/bishop/issues).
+
 
 ## Contents
 [Feature Overview](#features)
