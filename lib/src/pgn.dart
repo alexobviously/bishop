@@ -24,7 +24,7 @@ class PgnData {
 
 PgnData parsePgn(String pgn) {
   Map<String, String> metadata = {};
-  final r = RegExp(r'(\[(.+)\])+');
+  final r = RegExp(r'((?<!\{)\[(.+)\])+');
   final matches = r.allMatches(pgn);
   for (final m in matches) {
     String entry = m.group(1)!;
