@@ -24,13 +24,11 @@ class PgnData {
 
 PgnData parsePgn(String pgn) {
   Map<String, String> metadata = {};
-  final r = RegExp(r'((?<!\{)\[(.+)\])+');
+  final r = RegExp(r'(\[(.+)\s"(.+)"\])+');
   final matches = r.allMatches(pgn);
   for (final m in matches) {
-    String entry = m.group(1)!;
-    int splitIndex = entry.indexOf('"');
-    String key = entry.substring(1, splitIndex - 1).trim();
-    String value = entry.substring(splitIndex + 1, entry.length - 2).trim();
+    String key = m.group(2)!;
+    String value = m.group(3)!;
     metadata[key] = value;
   }
   int metaEnd = matches.last.end;
@@ -38,7 +36,7 @@ PgnData parsePgn(String pgn) {
   int i = 0;
   List<String> moves = [];
   Map<int, String> comments = {};
-  final numRegex = RegExp(r'([0-9]+\. )');
+  final numRegex = RegExp(r'([0-9]+\.+ )');
   while (i < game.length) {
     String substr = game.substring(i);
     if (substr[0] == ' ') {

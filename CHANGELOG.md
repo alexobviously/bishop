@@ -1,3 +1,6 @@
+### 1.2.6
+- Fixed an issue with parsing PGNs containing clock annotations (thanks @deathcoder).
+
 ### 1.2.5
 - Improved efficiency when making moves from SAN strings or parsing PGNs: the check component of the SAN string can now be skipped.
 
