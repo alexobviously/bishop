@@ -35,12 +35,15 @@ class CommonVariants {
         gameEndConditions: GameEndConditionSet.threeCheck,
       );
 
-  static Variant kingOfTheHill() =>
-      Variant.standard().copyWith(name: 'King of the Hill').withPieces({
-        'K': PieceType.king().withRegionEffect(
+  static Variant kingOfTheHill() => Variant.standard()
+      .copyWith(name: 'King of the Hill')
+      .withPiece(
+        'K',
+        PieceType.king().withRegionEffect(
           RegionEffect.winGame(white: 'hill', black: 'hill'),
         ),
-      }).withRegion(
+      )
+      .withRegion(
         'hill',
         BoardRegion(
           startFile: Bishop.fileD,
@@ -76,6 +79,7 @@ class CommonVariants {
             'The first player to run their king to the finish line wins.',
         startPosition: '8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1',
         castlingOptions: CastlingOptions.none,
+        materialConditions: MaterialConditions.none,
         forbidChecks: true,
       )
       .withCampMate(
@@ -84,6 +88,18 @@ class CommonVariants {
         whiteRank: -1,
         blackRank: -1,
       ); // TODO: racing kings should be a draw if black reaches right after white - depends on deferred actions
+
+  static Variant antichess() => Variant.standard()
+      .copyWith(
+        name: 'Antichess',
+        description: 'Lose all your pieces to win.',
+        gameEndConditions: GameEndConditionSet.antichess,
+        forcedCapture: ForcedCapture.any,
+        castlingOptions: CastlingOptions.none,
+        materialConditions: MaterialConditions.none,
+      )
+      .withPiece('K', PieceType.fromBetza('K', value: 400))
+      .invertPieceValues();
 
   /// Not production ready yet. Work in progress.
   static Variant duck() =>

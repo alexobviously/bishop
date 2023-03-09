@@ -287,6 +287,10 @@ class BuiltVariant {
   /// If this is true, it is impossible to make a move that checks anyone.
   bool get forbidChecks => data.forbidChecks;
 
+  /// If this is set, non-capturing moves cannot be played while capturing
+  /// moves are available. Examples are Antichess and Draughts.
+  ForcedCapture? get forcedCapture => data.forcedCapture;
+
   /// Are hands enabled in this variant? For example, Crazyhouse.
   bool get handsEnabled => data.handOptions.enableHands;
 

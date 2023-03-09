@@ -180,6 +180,7 @@ enum Variants {
   atomic(CommonVariants.atomic),
   horde(CommonVariants.horde),
   racingKings(CommonVariants.racingKings),
+  antichess(CommonVariants.antichess),
   musketeer(Musketeer.variant),
   xiangqi(Xiangqi.xiangqi),
   miniXiangqi(Xiangqi.mini),
@@ -222,4 +223,16 @@ class MoveParams {
     required this.state,
     required this.variant,
   });
+}
+
+/// Defines forced capture behaviour.
+/// Currently only [any] is supported, meaning that any capture move is allowed
+/// if there are capture moves, but no non-capturing (quiet) moves.
+enum ForcedCapture {
+  any;
+  // todo: support 'most pieces' option like draughts, and highest value
+
+  const ForcedCapture();
+  static ForcedCapture fromName(String name) =>
+      values.firstWhere((e) => e.name == name);
 }

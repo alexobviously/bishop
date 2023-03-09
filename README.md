@@ -52,17 +52,19 @@ designed to be interoperable with Bishop.
   * Invalidating moves based on arbitrary conditions, e.g. Xiangqi's flying generals rule
 * Flex gating (e.g. Seirawan)
 * Fixed gating (e.g. Musketeer)
-* Different game end conditions for variants like three-check
+* Forced captures (e.g. Antichess)
+* Different game end conditions for variants like Three-Check, Racing Kings or King of the Hill
 * Board regions for piece movement restriction (e.g. Xiangqi palaces), piece behaviour changes (e.g. Xiangqi soldier) and win conditions (e.g. King of the Hill)
 * A basic engine that works with any definable variant (not strong but fine for testing)
 
 ### Planned Features
 * Janggi, Shogi and their variants
+* Draughts, and chained moves in general
 * Support for Bughouse, and similar games
 * Chasing rules, such as those Xiangqi has
 
 ### Built-in Variants
-Chess, Chess960/Fischer Random, Crazyhouse, Atomic, Horde, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi, and a variety of small board versions of chess.
+Chess, Chess960, Crazyhouse, Atomic, Horde, Racing Kings, Antichess, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi (+ Mini Xiangqi & Manchu), Three Kings, Kinglet, Hoppel-Poppel, Orda (+ Mirror), Shako, Dobutsu, a variety of small board variants, and many more.
 
 ***
 

@@ -344,6 +344,12 @@ class Game {
       final pass = generatePass(colour);
       if (pass != null) moves.insert(0, pass);
     }
+    if (variant.forcedCapture != null && !options.ignorePieces) {
+      final captures = moves.captures;
+      if (captures.isNotEmpty) {
+        return captures;
+      }
+    }
     return moves;
   }
 

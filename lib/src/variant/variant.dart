@@ -72,6 +72,10 @@ class Variant {
   /// If this is true, it is impossible to make a move that checks anyone.
   final bool forbidChecks;
 
+  /// If this is set, non-capturing moves cannot be played while capturing
+  /// moves are available. Examples are Antichess and Draughts.
+  final ForcedCapture? forcedCapture;
+
   /// Are hands enabled in this variant? For example, Crazyhouse.
   final HandOptions handOptions;
 
@@ -130,6 +134,7 @@ class Variant {
     this.halfMoveDraw,
     this.repetitionDraw,
     this.forbidChecks = false,
+    this.forcedCapture,
     this.handOptions = HandOptions.disabled,
     this.gatingMode = GatingMode.none,
     this.pieceValues,
@@ -186,6 +191,9 @@ class Variant {
       halfMoveDraw: json['halfMoveDraw'],
       repetitionDraw: json['repetitionDraw'],
       forbidChecks: json['forbidChecks'] ?? false,
+      forcedCapture: json['forcedCapture'] != null
+          ? ForcedCapture.fromName(json['forcedCapture'])
+          : null,
       handOptions: json.containsKey('handOptions')
           ? HandOptions.fromJson(json['handOptions'])
           : HandOptions.disabled,
@@ -252,6 +260,8 @@ class Variant {
       if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
       if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
       if (verbose || forbidChecks) 'forbidChecks': forbidChecks,
+      if (verbose || forcedCapture != null)
+        'forcedCapture': forcedCapture?.name,
       if (verbose || handOptions.enableHands)
         'handOptions': handOptions.toJson(
           verbose: verbose,
@@ -293,6 +303,7 @@ class Variant {
     int? halfMoveDraw,
     int? repetitionDraw,
     bool? forbidChecks,
+    ForcedCapture? forcedCapture,
     HandOptions? handOptions,
     GatingMode? gatingMode,
     PassOptions? passOptions,
@@ -318,6 +329,7 @@ class Variant {
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
       repetitionDraw: repetitionDraw ?? this.repetitionDraw,
       forbidChecks: forbidChecks ?? this.forbidChecks,
+      forcedCapture: forcedCapture ?? this.forcedCapture,
       handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
       passOptions: passOptions ?? this.passOptions,
@@ -343,6 +355,10 @@ class Variant {
         pieceTypes: {...pieceTypes}..removeWhere((k, _) => pieces.contains(k)),
       );
 
+  /// Copies the variant with a single piece added/updated.
+  Variant withPiece(String key, PieceType pieceType) =>
+      withPieces({key: pieceType});
+
   /// Returns a copy of the variant with [action] added.
   /// If [first] is true, it will be added to the start of the list.
   Variant withAction(Action action, {bool first = false}) =>
@@ -351,6 +367,13 @@ class Variant {
   /// Returns a copy of the variant with [region] added, using [key] as its name.
   Variant withRegion(String key, BoardRegion region) =>
       copyWith(regions: {...regions, key: region});
+
+  /// Inverts the value of all piece types. Useful for variants like Antichess
+  /// where the goal is to lose your pieces.
+  Variant invertPieceValues() => copyWith(
+        pieceTypes:
+            pieceTypes.map((k, v) => MapEntry(k, v.copyWith(value: -v.value))),
+      );
 
   /// Copies the variant with the 'campmate' end condition:
   /// When a royal piece enters the opposite rank, that player wins the game.
