@@ -1,7 +1,7 @@
 {
  "name": "Three Check",
  "description": "",
- "bishopVersion": "1.2.3",
+ "bishopVersion": "1.2.6",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -46,8 +46,8 @@
   "specialCases": [["B", "N"]]
  },
  "gameEndConditions": {
-  "stalemate": true,
-  "elimination": true,
+  "stalemate": "draw",
+  "elimination": "lose",
   "checkLimit": 3
  },
  "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",

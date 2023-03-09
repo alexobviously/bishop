@@ -34,6 +34,11 @@ class GameEndConditionSet {
     GameEndConditions.threeCheck,
   );
 
+  static const antichess = GameEndConditionSet(
+    GameEndConditions.antichess,
+    GameEndConditions.antichess,
+  );
+
   bool get isSymmetric => white == black;
 
   bool get hasCheckLimit =>
@@ -56,40 +61,43 @@ class GameEndConditionSet {
 }
 
 class GameEndConditions {
-  /// If true, when this player has no legal moves the game will be stalemate.
-  /// If false, it will be a loss for them.
-  final bool stalemate;
+  /// Occurs when a player has no legal moves.
+  final EndType stalemate;
 
-  /// If true, this player loses when they have no pieces on the board.
-  final bool elimination;
+  /// Occurs when a player has no pieces on the board (or hand).
+  final EndType elimination;
 
   /// If not null, this player can lose by being checked this many times.
   final int? checkLimit;
+  // todo: when dart 3 comes out, make this an (EndType, int?)
 
   const GameEndConditions({
-    this.stalemate = true,
-    this.elimination = true,
+    this.stalemate = EndType.draw,
+    this.elimination = EndType.lose,
     this.checkLimit,
   });
 
   Map<String, dynamic> toJson() => {
-        'stalemate': stalemate,
-        'elimination': elimination,
+        'stalemate': stalemate.name,
+        'elimination': elimination.name,
         if (checkLimit != null) 'checkLimit': checkLimit,
       };
 
   factory GameEndConditions.fromJson(Map<String, dynamic> json) =>
       GameEndConditions(
-        stalemate: json['stalemate'],
-        elimination: json['elimination'],
+        stalemate: EndType.fromName(json['stalemate']),
+        elimination: EndType.fromName(json['elimination']),
         checkLimit: json['checkLimit'],
       );
 
   static const GameEndConditions standard = GameEndConditions();
   static const GameEndConditions threeCheck = GameEndConditions(checkLimit: 3);
+  static const GameEndConditions antichess =
+      GameEndConditions(stalemate: EndType.win, elimination: EndType.win);
 
   @override
-  String toString() => 'GameEndConditions(checkLimit: $checkLimit)';
+  String toString() => 'GameEndConditions(elimination: ${elimination.name},'
+      'stalemate: ${stalemate.name}, checkLimit: $checkLimit)';
 
   @override
   int get hashCode =>
@@ -103,4 +111,27 @@ class GameEndConditions {
       checkLimit == other.checkLimit;
 }
 
-// TODO: make a shortcut for ActionCheckPieceCount here 
+// TODO: make a shortcut for ActionCheckPieceCount here
+
+/// What happens when a game end condition is met.
+/// This is from the perspective of the player the condition happens to.
+/// i.e. if a player has no legal moves and thus enters the stalemate condition,
+/// with EndType.win, the player with no moves will win.
+/// EndType.none disables a condition.
+enum EndType {
+  win,
+  lose,
+  draw,
+  none;
+
+  const EndType();
+  static EndType fromName(String name) =>
+      values.firstWhere((e) => e.name == name);
+
+  bool get isNone => this == EndType.none;
+  bool get isNotNone => !isNone;
+  bool get isWinLose => this == EndType.win || this == EndType.lose;
+  bool get isDraw => this == EndType.draw;
+  bool get isWin => this == EndType.win;
+  bool get isLose => this == EndType.lose;
+}

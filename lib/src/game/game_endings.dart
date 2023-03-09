@@ -24,13 +24,22 @@ extension GameEndings on Game {
         numChecks: state.checks[state.turn.opponent],
       );
     }
-    if (variant.gameEndConditions[state.turn].elimination) {
-      if (eliminated) return WonGameElimination(winner: state.turn.opponent);
+    final elimCond = variant.gameEndConditions[state.turn].elimination;
+    if (elimCond.isNotNone) {
+      if (eliminated) {
+        if (elimCond.isDraw) return DrawnGameElimination();
+        return WonGameElimination(
+          winner: elimCond.isWin ? state.turn : state.turn.opponent,
+        );
+      }
     }
-    if (stalemate) {
-      return variant.gameEndConditions[state.turn].stalemate
+    final stalemateCond = variant.gameEndConditions[state.turn].stalemate;
+    if (stalemateCond.isNotNone && stalemate) {
+      return stalemateCond.isDraw
           ? DrawnGameStalemate()
-          : WonGameStalemate(winner: state.turn.opponent);
+          : WonGameStalemate(
+              winner: stalemateCond.isWin ? state.turn : state.turn.opponent,
+            );
     }
     if (insufficientMaterial) return DrawnGameInsufficientMaterial();
     if (repetition) return DrawnGameRepetition(repeats: hashHits);
