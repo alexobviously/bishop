@@ -88,5 +88,14 @@ void main() {
       expect(g.result, isA<WonGameElimination>());
       expect(g.winner, Bishop.black);
     });
+    test('WonGameElimination (Antichess)', () {
+      final g = Game(
+        variant: CommonVariants.antichess(),
+        fen: '8/3r4/8/8/8/8/3R4/8 w - - 0 1',
+      );
+      g.makeMoveString('d2d7');
+      expect(g.result, isA<WonGameElimination>());
+      expect(g.winner, Bishop.black);
+    });
   });
 }

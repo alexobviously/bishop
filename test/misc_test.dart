@@ -30,4 +30,20 @@ void main() {
     expect(g.state.hands![Bishop.white].length, 3);
     expect(g.state.hands![Bishop.black].length, 3);
   });
+  test('Forced Captures (Antichess)', () {
+    final g = Game(
+      variant: CommonVariants.antichess(),
+      fen: '8/3r4/8/8/8/8/r2R3r/8 w - - 0 1',
+    );
+    final moves = g.generateLegalMoves();
+    expect(moves.length, 3);
+  });
+  test('Forced Captures (Antichess - no captures)', () {
+    final g = Game(
+      variant: CommonVariants.antichess(),
+      fen: '8/4r3/8/8/8/r7/3R4/7r w - - 0 1',
+    );
+    final moves = g.generateLegalMoves();
+    expect(moves.length, 14);
+  });
 }
