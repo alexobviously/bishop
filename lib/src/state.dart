@@ -229,6 +229,20 @@ class BishopState {
   /// Generates an ASCII representation of the board.
   String ascii({bool unicode = false, BuiltVariant? variant}) =>
       boardToAscii(board, variant: variant ?? meta?.variant);
+
+  /// Returns a map of all captured pieces.
+  /// This assumes that the game started with the same number of pieces as
+  /// are present in the start position of the variant.
+  /// NOTE: this function will crash for states with no [meta], so only use
+  /// this on the mainline.
+  Map<String, int> capturedPieces() => meta!.variant.capturedPiecesStr(this);
+
+  /// Returns a list of all captured pieces.
+  /// /// This assumes that the game started with the same number of pieces as
+  /// are present in the start position of the variant.
+  /// NOTE: this function will crash for states with no [meta], so only use
+  /// this on the mainline.
+  List<String> capturedPiecesList() => expandCountMap(capturedPieces());
 }
 
 class StateMeta {

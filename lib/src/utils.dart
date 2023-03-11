@@ -74,3 +74,19 @@ String boardToAscii(
   }
   return output;
 }
+
+Map<String, int> countPiecesInFen(String pos) {
+  pos = pos.split(' ').first;
+  final r = RegExp(r'([A-Za-z])');
+  Map<String, int> pieces = {};
+  void increment(String piece) => pieces[piece] = (pieces[piece] ?? 0) + 1;
+  for (String c in r.allMatches(pos).map((e) => e.group(0)!)) {
+    increment(c);
+  }
+  return pieces;
+}
+
+/// Converts a map where the values are counts to a list.
+/// For example, `{'P': 3, 'B': 1} => ['P', 'P', 'P', 'B']`.
+List<T> expandCountMap<T>(Map<T, int> input) =>
+    input.entries.expand((e) => List.filled(e.value, e.key)).toList();

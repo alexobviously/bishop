@@ -255,6 +255,7 @@ class PieceDefinition {
   factory PieceDefinition.empty() =>
       PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
 
+  /// The symbol of this piece definition, respecting its [colour].
   String char(Colour colour) =>
       colour == Bishop.white ? symbol.toUpperCase() : symbol.toLowerCase();
 }

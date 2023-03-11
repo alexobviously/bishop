@@ -114,6 +114,15 @@ class Variant {
       .map((e) => e.key)
       .toList();
 
+  /// Returns a start position for this variant.
+  /// [startPosBuilder] takes precedence over [startPosition].
+  String getStartPosition({int? seed}) =>
+      startPosBuilder?.build(seed: seed) ?? startPosition!;
+
+  /// The initial piece counts in the starting position of this variant.
+  Map<String, int> initialPieces({int? seed}) =>
+      countPiecesInFen(getStartPosition(seed: seed));
+
   @override
   String toString() => name;
 

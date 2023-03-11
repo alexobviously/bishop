@@ -22,6 +22,8 @@ class PgnData {
   Game buildGame() => gameFromPgnData(this);
 }
 
+/// Parses a [pgn].
+/// Supports metadata tags and comments, but not sub-lines (yet).
 PgnData parsePgn(String pgn) {
   Map<String, String> metadata = {};
   final r = RegExp(r'(\[(.+)\s"(.+)"\])+');
@@ -67,6 +69,9 @@ PgnData parsePgn(String pgn) {
   return PgnData(metadata: metadata, moves: moves, comments: comments);
 }
 
+/// Builds a game from already parsed [data].
+/// If [variant] or [startPosition] are not supplied, tags will be used, if
+/// they exist.
 Game gameFromPgnData(PgnData data, {Variant? variant, String? startPosition}) {
   variant ??= data.variant;
   startPosition ??= data.fen;
@@ -77,5 +82,11 @@ Game gameFromPgnData(PgnData data, {Variant? variant, String? startPosition}) {
   return g;
 }
 
-Game gameFromPgn(String pgn, {Variant? variant}) =>
-    gameFromPgnData(parsePgn(pgn), variant: variant);
+/// Parses a [pgn] and builds a game from it.
+/// If [variant] is not supplied, the parser will look for a variant tag.
+Game gameFromPgn(String pgn, {Variant? variant, String? startPosition}) =>
+    gameFromPgnData(
+      parsePgn(pgn),
+      variant: variant,
+      startPosition: startPosition,
+    );

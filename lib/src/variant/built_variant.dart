@@ -242,6 +242,16 @@ class BuiltVariant {
   List<int> pieceIndices(List<String> symbols) =>
       symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
 
+  String pieceSymbol(int type, [int colour = Bishop.white]) =>
+      pieces[type].char(colour);
+
+  int pieceFromSymbol(String symbol) {
+    String upper = symbol.toUpperCase();
+    int type = pieceIndex(upper);
+    int colour = symbol == upper ? Bishop.white : Bishop.black;
+    return makePiece(type, colour);
+  }
+
   /// A human-friendly name.
   String get name => data.name;
 
@@ -308,17 +318,26 @@ class BuiltVariant {
   /// but you still want to use the normal pawn definition.
   Map<String, int>? get pieceValues => data.pieceValues;
 
+  /// Whether this variant supports castling.
   bool get castling => data.castling;
+
+  /// Whether this variant involves gating.
   bool get gating => data.gating;
+
+  /// Whether this variant has any region definitions.
   bool get hasRegions => data.regions.isNotEmpty;
+
+  /// Whether this variant has any win regions.
   bool get hasWinRegions => winRegions.isNotEmpty;
 
   /// [piece] should contain its colour.
   bool pieceHasWinRegions(int piece) => winRegions.containsKey(piece);
 
+  /// Whether this variant has actions for [event].
   bool hasActionsForEvent(ActionEvent event) =>
       actionsByEvent[event]!.isNotEmpty;
 
+  /// Generates all actions for [trigger].
   Iterable<Action> actionsForTrigger(
     ActionTrigger trigger, {
     bool checkPrecondition = true,
@@ -328,6 +347,7 @@ class BuiltVariant {
               .where((e) => e.precondition?.call(trigger) ?? true)
           : actionsByEvent[trigger.event]!;
 
+  /// Generates all effects for all actions triggered by [trigger].
   List<ActionEffect> executeActions(ActionTrigger trigger) {
     List<ActionEffect> effects = [];
     for (Action action in actionsByEvent[trigger.event]!) {
@@ -366,6 +386,8 @@ class BuiltVariant {
     return promoPieces;
   }
 
+  /// Generates all possible moves for the [base] move,
+  /// given [state] and [pieceType].
   List<StandardMove>? generatePromotionMoves({
     required StandardMove base,
     required BishopState state,
@@ -390,16 +412,68 @@ class BuiltVariant {
     return moves;
   }
 
+  /// Generate all drop moves for player [colour] in [state].
   List<Move>? generateDrops({required BishopState state, required int colour}) {
     if (dropBuilder == null) return null;
     final params = MoveParams(colour: colour, state: state, variant: this);
     return dropBuilder!(params);
   }
 
+  /// Determines whether player [colour] can pass their turn in [state].
   bool canPass({required BishopState state, required int colour}) =>
       passChecker
           ?.call(MoveParams(colour: colour, state: state, variant: this)) ??
       false;
+
+  Map<int, int> capturedPieces(
+    BishopState state, {
+    String? startPos,
+    int? seed,
+  }) {
+    final pieces = pieceMapStrToInt(
+      countPiecesInFen(startPos ?? data.getStartPosition(seed: seed)),
+      fullPiece: true,
+    );
+    final currentPieces = state.pieces.asMap();
+    for (final p in currentPieces.entries) {
+      if (p.value == 0) continue;
+      pieces[p.key] = pieces[p.key]! - p.value;
+    }
+    pieces.removeWhere((k, v) => v < 1);
+    return pieces;
+  }
+
+  Map<String, int> capturedPiecesStr(
+    BishopState state, {
+    String? startPos,
+    int? seed,
+  }) =>
+      pieceMapIntToStr(
+        capturedPieces(state, startPos: startPos, seed: seed),
+        fullPiece: true,
+      );
+
+  Map<int, T> pieceMapStrToInt<T>(
+    Map<String, T> input, {
+    bool fullPiece = false,
+  }) =>
+      input.map(
+        (k, v) => MapEntry<int, T>(
+          fullPiece ? pieceFromSymbol(k) : pieceIndex(k.toUpperCase()),
+          v,
+        ),
+      );
+
+  Map<String, T> pieceMapIntToStr<T>(
+    Map<int, T> input, {
+    bool fullPiece = false,
+  }) =>
+      input.map(
+        (k, v) => MapEntry<String, T>(
+          fullPiece ? pieceSymbol(k.type, k.colour) : pieces[k].symbol,
+          v,
+        ),
+      );
 
   @override
   String toString() => name;

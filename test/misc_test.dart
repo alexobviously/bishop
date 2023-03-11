@@ -46,4 +46,24 @@ void main() {
     final moves = g.generateLegalMoves();
     expect(moves.length, 14);
   });
+  test('Captured Pieces (static)', () {
+    final g = Game(
+      fen: 'rnbqkbnr/ppppp2p/8/8/8/8/PPPPPPPP/RNBQKB1R w KQkq - 0 1',
+    );
+    expect(g.state.capturedPiecesList(), unorderedEquals(['p', 'p', 'N']));
+  });
+  test('Captured Pieces (after sequence)', () {
+    final g = Game();
+    g.makeMultipleMoves(
+      ['e2e4', 'd7d5', 'e4d5', 'd8d5', 'b1c3', 'c8e6', 'c3d5', 'e6d5'],
+    );
+    expect(g.state.capturedPiecesList(), unorderedEquals(['P', 'p', 'N', 'q']));
+  });
+  test('Captured Pieces (crazyhouse)', () {
+    final g = Game(
+      variant: CommonVariants.crazyhouse(),
+      fen: 'rnbqkbnr/p3pppp/2p5/8/8/8/PPPP1PPP/RNBQKBNR[PPp] w KQkq - 0 4',
+    );
+    expect(g.state.capturedPiecesList(), unorderedEquals(['p']));
+  });
 }
