@@ -210,8 +210,8 @@ extension GameMovement on Game {
       int captureSq =
           move.to + Bishop.playerDirection[colour.opponent] * size.north;
       hash ^= zobrist.table[captureSq][board[captureSq].piece];
-      board[captureSq] = Bishop.empty;
       pieces[board[captureSq].piece]--;
+      board[captureSq] = Bishop.empty;
     }
 
     int? epSquare;

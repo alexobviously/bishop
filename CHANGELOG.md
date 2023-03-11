@@ -1,3 +1,6 @@
+### 1.2.8
+- Fixed a bug where en passant captured pieces wouldn't increment in `BishopState.pieces`.
+
 ### 1.2.7
 - `BishopState.capturedPieces()`: used to get the captured pieces in a given state, by comparing to the initial state.
 
