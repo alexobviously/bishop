@@ -27,7 +27,12 @@ class Bishop {
   static const defaultSeed = 7363661891;
 
   static const List<int> playerDirection = [-1, 1, -1, -1];
-  static const List<String> playerName = ['White', 'Black'];
+  static const List<String> playerName = [
+    'White',
+    'Black',
+    'Neutral',
+    'Neutral',
+  ];
   // temporary, this will be controllable/generative eventually
   static const numPlayers = 4;
 

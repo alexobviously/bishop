@@ -3,6 +3,8 @@ part of 'game.dart';
 abstract class GameResult {
   const GameResult();
 
+  String get readable;
+
   @override
   String toString() => 'GameResult';
 }
@@ -13,6 +15,9 @@ class InvalidMoveResult extends GameResult {
 
   @override
   String toString() => 'InvalidMoveResult';
+
+  @override
+  String get readable => 'Invalid Move';
 }
 
 class WonGame extends GameResult {
@@ -21,6 +26,9 @@ class WonGame extends GameResult {
 
   @override
   String toString() => 'WonGame($winner)';
+
+  @override
+  String get readable => '${Bishop.playerName[winner]} won';
 }
 
 class DrawnGame extends GameResult {
@@ -28,6 +36,9 @@ class DrawnGame extends GameResult {
 
   @override
   String toString() => 'DrawnGame';
+
+  @override
+  String get readable => 'Drawn';
 }
 
 class WonGameCheckmate extends WonGame {
@@ -35,6 +46,9 @@ class WonGameCheckmate extends WonGame {
 
   @override
   String toString() => 'WonGameCheckmate($winner)';
+
+  @override
+  String get readable => '${super.readable} by checkmate';
 }
 
 class WonGameCheckLimit extends WonGame {
@@ -43,6 +57,9 @@ class WonGameCheckLimit extends WonGame {
 
   @override
   String toString() => 'WonGameCheckLimit($winner, $numChecks)';
+
+  @override
+  String get readable => '${super.readable} by checking $numChecks times';
 }
 
 class WonGameEnteredRegion extends WonGame {
@@ -51,6 +68,9 @@ class WonGameEnteredRegion extends WonGame {
 
   @override
   String toString() => 'WonGameEnteredRegion($winner, $square)';
+
+  @override
+  String get readable => '${super.readable} by entering region';
 }
 
 class WonGameRoyalDead extends WonGame {
@@ -65,6 +85,9 @@ class WonGameElimination extends WonGame {
 
   @override
   String toString() => 'WonGameElimination($winner)';
+
+  @override
+  String get readable => '${super.readable} by elimination';
 }
 
 class WonGameStalemate extends WonGame {
@@ -72,6 +95,9 @@ class WonGameStalemate extends WonGame {
 
   @override
   String toString() => 'WonGameStalemate($winner)';
+
+  @override
+  String get readable => '${super.readable} by stalemate';
 }
 
 class WonGamePoints extends WonGame {
@@ -80,6 +106,9 @@ class WonGamePoints extends WonGame {
 
   @override
   String toString() => 'WonGamePoints($winner, $points)';
+
+  @override
+  String get readable => '${super.readable} on points: $points';
 }
 
 class DrawnGameStalemate extends DrawnGame {
@@ -87,6 +116,9 @@ class DrawnGameStalemate extends DrawnGame {
 
   @override
   String toString() => 'DrawnGameStalemate';
+
+  @override
+  String get readable => '${super.readable} by stalemate';
 }
 
 class DrawnGameInsufficientMaterial extends DrawnGame {
@@ -94,6 +126,9 @@ class DrawnGameInsufficientMaterial extends DrawnGame {
 
   @override
   String toString() => 'DrawnGameInsufficientMaterial';
+
+  @override
+  String get readable => '${super.readable} by insufficient material';
 }
 
 class DrawnGameRepetition extends DrawnGame {
@@ -102,6 +137,9 @@ class DrawnGameRepetition extends DrawnGame {
 
   @override
   String toString() => 'DrawnGameRepetition($repeats)';
+
+  @override
+  String get readable => '${super.readable} by repetition';
 }
 
 class DrawnGameLength extends DrawnGame {
@@ -110,6 +148,9 @@ class DrawnGameLength extends DrawnGame {
 
   @override
   String toString() => 'DrawnGameLength($halfMoves)';
+
+  @override
+  String get readable => '${super.readable} by half move rule';
 }
 
 class DrawnGameBothRoyalsDead extends DrawnGame {
@@ -117,6 +158,9 @@ class DrawnGameBothRoyalsDead extends DrawnGame {
 
   @override
   String toString() => 'DrawnGameBothRoyalsDead';
+
+  @override
+  String get readable => '${super.readable} by mutual destruction';
 }
 
 class DrawnGameElimination extends DrawnGame {
@@ -124,6 +168,9 @@ class DrawnGameElimination extends DrawnGame {
 
   @override
   String toString() => 'DrawnGameElimination';
+
+  @override
+  String get readable => '${super.readable} by elimination';
 }
 
 class DrawnGamePoints extends DrawnGame {
@@ -132,4 +179,7 @@ class DrawnGamePoints extends DrawnGame {
 
   @override
   String toString() => 'DrawnGamePoints($points)';
+
+  @override
+  String get readable => '${super.readable} on points: $points';
 }

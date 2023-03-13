@@ -1,5 +1,6 @@
 ### 1.2.9
 - Fixed a bug with lame leaper squares being calculated incorrectly.
+- `GameResult.readable`: human-readable string describing the result (e.g. 'White won by checkmate').
 
 ### 1.2.8
 - Fixed a bug where en passant captured pieces wouldn't increment in `BishopState.pieces`.
