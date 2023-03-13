@@ -125,11 +125,15 @@ extension GameEndings on Game {
   /// True if the game state is any kind of win/loss.
   bool get won => result is WonGame;
 
-  bool wonBy(int colour) =>
-      (state.result is WonGame && (state.result as WonGame).winner == colour);
+  bool wonBy(int colour, {bool ignoreSoftResults = false}) =>
+      ((!ignoreSoftResults || !(state.result?.soft ?? false)) &&
+          state.result is WonGame &&
+          (state.result as WonGame).winner == colour);
 
-  bool lostBy(int colour) =>
-      (state.result is WonGame && (state.result as WonGame).winner != colour);
+  bool lostBy(int colour, {bool ignoreSoftResults = false}) =>
+      ((!ignoreSoftResults || !(state.result?.soft ?? false)) &&
+          state.result is WonGame &&
+          (state.result as WonGame).winner != colour);
 
   /// True if the game has ended in any way. See `result` for how it ended.
   bool get gameOver => result != null;

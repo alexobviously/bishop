@@ -98,4 +98,17 @@ void main() {
       expect(g.winner, Bishop.black);
     });
   });
+  test('Soft result - no draw on points in domination', () {
+    final g = Game(variant: MiscVariants.domination(scoreLimit: 15));
+    String moves =
+        'c3 Nc6 Nh3 g6 e4 Ne5 Nf4 e6 h3 c6 g4 Nc4 Qc2 Ba3 Ne2 Ne3 d4';
+    g.makeMultipleMoves(moves.split(' '), san: true);
+    // white score
+    expect(g.getCustomState(0), 14);
+    // before soft moves, this was a `DrawnGameStalemate`
+    expect(g.result, null);
+    g.makeRandomMove();
+    expect(g.result, isA<WonGamePoints>());
+    expect(g.winner, Bishop.white);
+  });
 }

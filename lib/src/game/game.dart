@@ -361,7 +361,9 @@ class Game {
     PassMove m = PassMove();
     if (legal) {
       bool valid = makeMove(m, false);
-      if (lostBy(colour) || kingAttacked(colour)) valid = false;
+      if (lostBy(colour, ignoreSoftResults: true) || kingAttacked(colour)) {
+        valid = false;
+      }
       undo();
       return valid ? m : null;
     }
@@ -377,7 +379,11 @@ class Game {
       List<Move> remove = [];
       for (Move m in drops) {
         bool valid = makeMove(m, false);
-        if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
+        if (!valid ||
+            lostBy(colour, ignoreSoftResults: true) ||
+            kingAttacked(colour)) {
+          remove.add(m);
+        }
         undo();
       }
       for (Move m in remove) {
@@ -686,7 +692,11 @@ class Game {
       List<Move> remove = [];
       for (Move m in moves) {
         bool valid = makeMove(m, false);
-        if (!valid || lostBy(colour) || kingAttacked(colour)) remove.add(m);
+        if (!valid ||
+            lostBy(colour, ignoreSoftResults: true) ||
+            kingAttacked(colour)) {
+          remove.add(m);
+        }
         undo();
       }
       for (Move m in remove) {

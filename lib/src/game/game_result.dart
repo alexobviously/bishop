@@ -3,7 +3,14 @@ part of 'game.dart';
 abstract class GameResult {
   const GameResult();
 
+  /// A human-readable string describing the result.
   String get readable;
+
+  /// 'Soft' results will not delegalise moves.
+  /// This is useful for cases like points-based wins, where if the opponent
+  /// is going to win next move no matter what, the current player should still
+  /// be able to make a move.
+  bool get soft => false;
 
   @override
   String toString() => 'GameResult';
@@ -109,6 +116,9 @@ class WonGamePoints extends WonGame {
 
   @override
   String get readable => '${super.readable} on points: $points';
+
+  @override
+  bool get soft => true;
 }
 
 class DrawnGameStalemate extends DrawnGame {

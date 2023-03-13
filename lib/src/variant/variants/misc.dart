@@ -50,7 +50,7 @@ class MiscVariants {
 
   // https://www.chessvariants.com/diffobjective.dir/utchess.html#domination
   // todo: make this serialisable, break action down
-  static Variant domination() {
+  static Variant domination({int scoreLimit = 15}) {
     final region = BoardRegion(
       startFile: Bishop.fileD,
       endFile: Bishop.fileE,
@@ -80,7 +80,7 @@ class MiscVariants {
       name: 'Domination',
       actions: [
         action,
-        ActionPointsEnding(limits: [15, 15]),
+        ActionPointsEnding(limits: [scoreLimit, scoreLimit]),
       ],
     );
   }

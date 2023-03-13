@@ -1,5 +1,6 @@
 ### 1.2.9
 - Fixed a bug with lame leaper squares being calculated incorrectly.
+- Fixed a bug where points-based games could result in draws when the opponent would win regardless next round. `GameResult.soft` defines result types that won't delegalise moves.
 - `GameResult.readable`: human-readable string describing the result (e.g. 'White won by checkmate').
 
 ### 1.2.8
