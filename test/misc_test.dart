@@ -66,4 +66,12 @@ void main() {
     );
     expect(g.state.capturedPiecesList(), unorderedEquals(['p']));
   });
+  test('Lame Leaper Block (Xiangqi Elephant)', () {
+    final g = Game(
+      variant: Xiangqi.variant(),
+      fen: '2baka2r/C2R5/4R4/2p5p/1n2n1p2/9/P1P3P1P/4C1N2/9/2BAKAB2 b - - 0 1',
+    );
+    final moves = g.generateLegalMoves().from(g.size.squareNumber('c10'));
+    expect(moves.length, 0);
+  });
 }

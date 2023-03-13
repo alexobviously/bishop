@@ -130,7 +130,7 @@ class StandardMoveDefinition extends MoveDefinition {
     int? lameNormalised = this.lameNormalised;
     if (lame) {
       lameDirection = Direction(direction.h ~/ 2, direction.v ~/ 2);
-      lameNormalised = lameDirection.v * size.north + lameDirection.h;
+      lameNormalised = lameDirection.v * size.north - lameDirection.h;
     }
     return copyWith(
       normalised: normalised,
