@@ -66,7 +66,7 @@ Feel free to request variants or rules - just [create an issue](https://github.c
 * Chasing rules, such as those Xiangqi has
 
 ### Built-in Variants
-Chess, Chess960, Crazyhouse, Atomic, Horde, Racing Kings, Antichess, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi (+ Mini Xiangqi & Manchu), Three Kings, Kinglet, Hoppel-Poppel, Orda (+ Mirror), Shako, Dobutsu, a variety of small board variants, and many more.
+Chess, Chess960, Crazyhouse, Atomic, Horde, Racing Kings, Antichess, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi (+ Mini Xiangqi & Manchu), Three Kings, Kinglet, Hoppel-Poppel, Orda (+ Mirror), Shako, Dobutsu, Andernach, a variety of small board variants, and many more.
 
 ***
 

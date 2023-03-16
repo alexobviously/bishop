@@ -50,6 +50,7 @@ class BishopSerialisation {
         FlyingGeneralsAdapter(),
         ImmortalityAdapter(),
         RemoveFromHandAdapter(),
+        TransferOwnershipAdapter(),
       ];
 
   static List<T> buildMany<T>(

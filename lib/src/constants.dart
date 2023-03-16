@@ -12,7 +12,7 @@ typedef Hand = List<int>;
 
 // TODO: there's a lot of stuff here now, maybe refactor and not call this constants?
 class Bishop {
-  static const version = '1.2.9';
+  static const version = '1.2.10';
 
   static const Colour white = 0;
   static const Colour black = 1;
@@ -198,6 +198,7 @@ enum Variants {
   threeKings(MiscVariants.threeKings),
   domination(MiscVariants.domination),
   dart(MiscVariants.dart),
+  andernach(MiscVariants.andernach),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 

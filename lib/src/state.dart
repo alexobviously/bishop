@@ -243,6 +243,11 @@ class BishopState {
   /// NOTE: this function will crash for states with no [meta], so only use
   /// this on the mainline.
   List<String> capturedPiecesList() => expandCountMap(capturedPieces());
+
+  String pieceOnSquare(String square) {
+    int sq = meta!.variant.boardSize.squareNumber(square);
+    return meta!.variant.pieceSymbol(board[sq].type, board[sq].colour);
+  }
 }
 
 class StateMeta {

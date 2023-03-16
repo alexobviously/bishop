@@ -33,6 +33,10 @@ class Conditions {
   static ActionCondition get isNotPromotion =>
       (ActionTrigger trigger) => !trigger.move.promotion;
 
+  /// Returns true if the moving piece was royal.
+  static ActionCondition get movingPieceIsRoyal =>
+      (trigger) => trigger.variant.pieces[trigger.piece.type].type.royal;
+
   /// Returns true if the moving piece is of type [piece].
   static ActionCondition movingPieceIs(String piece, {int? colour}) =>
       (ActionTrigger trigger) {
@@ -110,4 +114,9 @@ class Conditions {
         int piece = trigger.variant.pieceIndexLookup[pieceType]!;
         return trigger.state.pieces[makePiece(piece, player)] >= count;
       };
+}
+
+extension ConditionExtension on ActionCondition {
+  /// Inverts the result of a condition.
+  ActionCondition invert() => (trigger) => !this(trigger);
 }

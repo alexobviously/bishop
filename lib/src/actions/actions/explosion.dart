@@ -13,7 +13,11 @@ class ActionExplodeOnCapture extends Action {
   }) : super(
           event: ActionEvent.afterMove,
           precondition: Conditions.isCapture,
-          action: ActionDefinitions.explosion(area, immunePieces: immunePieces),
+          action: ActionDefinitions.explosion(
+            area,
+            immunePieces: immunePieces,
+            alwaysSuicide: alwaysSuicide,
+          ),
         );
 }
 

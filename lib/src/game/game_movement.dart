@@ -43,7 +43,7 @@ extension GameMovement on Game {
           variant: variant,
           state: newState,
           move: move,
-          piece: move.dropPiece ?? fromSq,
+          piece: move.promoPiece ?? move.dropPiece ?? fromSq,
         ),
         zobrist: zobrist,
       );

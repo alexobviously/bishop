@@ -112,4 +112,13 @@ class MiscVariants {
       },
     );
   }
+
+  /// Capturing pieces, except for kings, change colour.
+  /// https://en.wikipedia.org/wiki/Andernach_chess
+  static Variant andernach() => Variant.standard()
+      .copyWith(
+        name: 'Andernach Chess',
+        description: 'Capturing pieces, except for kings, change colour.',
+      )
+      .withAction(ActionTransferOwnership(quiet: false));
 }

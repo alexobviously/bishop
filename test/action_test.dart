@@ -97,5 +97,22 @@ void main() {
       final moves = g.generateLegalMoves();
       expect(moves.captures.length, 0);
     });
+    test('Transfer Ownership (Andernach)', () {
+      final g = Game(variant: MiscVariants.andernach());
+      g.makeMultipleMoves(['e2e4', 'd7d5', 'e4d5']);
+      expect(g.state.pieceOnSquare('d5'), 'p');
+      g.makeMultipleMoves(['c8g4', 'd1g4']);
+      expect(g.state.pieceOnSquare('g4'), 'q');
+      g.makeMultipleMoves(['b8a6', 'b2b4', 'a6b4']);
+      expect(g.state.pieceOnSquare('b4'), 'N');
+    });
+    test('Transfer Ownership (quiet, promo)', () {
+      final g = Game(
+        variant: Variant.standard().withAction(ActionTransferOwnership()),
+        fen: '8/1k3P2/8/8/8/8/3K4/8 w - - 0 1',
+      );
+      g.makeMoveString('f7f8b');
+      expect(g.state.pieceOnSquare('f8'), 'b');
+    });
   });
 }
