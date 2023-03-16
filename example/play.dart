@@ -46,8 +46,6 @@ void main(List<String> args) async {
         break;
       }
     }
-    printRed('${game.state.capturedPieces()}');
-    printRed('${game.state.capturedPiecesList()}');
   }
 
   printMagenta(game.ascii());

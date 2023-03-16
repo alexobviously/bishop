@@ -121,4 +121,24 @@ class MiscVariants {
         description: 'Capturing pieces, except for kings, change colour.',
       )
       .withAction(ActionTransferOwnership(quiet: false));
+
+  /// Knights only. Move a knight onto the central square and off it again
+  /// to win.
+  /// https://en.wikipedia.org/wiki/Jeson_Mor
+  static Variant jesonMor() => Variant(
+        name: 'Jeson Mor',
+        description:
+            'Knights only. Move a knight onto the central square and off'
+            ' it again to win.',
+        boardSize: BoardSize(9, 9),
+        startPosition: 'nnnnnnnnn/9/9/9/9/9/9/9/NNNNNNNNN w - - 0 1',
+        pieceTypes: {'N': PieceType.knight()},
+        castlingOptions: CastlingOptions.none,
+        promotionOptions: PromotionOptions.none,
+        actions: [
+          ActionExitRegionEnding(
+            region: BoardRegion.square(Bishop.fileE, Bishop.rank5),
+          )
+        ],
+      );
 }

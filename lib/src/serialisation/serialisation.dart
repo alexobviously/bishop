@@ -45,6 +45,7 @@ class BishopSerialisation {
         AddToHandAdapter(),
         CheckPieceCountAdapter(),
         CheckRoyalsAliveAdapter(),
+        ExitRegionEndingAdapter(),
         ExplodeOnCaptureAdapter(),
         ExplosionRadiusAdapter(),
         FlyingGeneralsAdapter(),

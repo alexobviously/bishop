@@ -199,6 +199,7 @@ enum Variants {
   domination(MiscVariants.domination),
   dart(MiscVariants.dart),
   andernach(MiscVariants.andernach),
+  jesonMor(MiscVariants.jesonMor),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 

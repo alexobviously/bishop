@@ -39,8 +39,13 @@ class TransferOwnershipAdapter
       );
 
   @override
-  Map<String, dynamic>? export(ActionTransferOwnership e) => {
-        if (!e.capture) 'capture': e.capture,
-        if (!e.quiet) 'quiet': e.quiet,
-      };
+  Map<String, dynamic>? export(ActionTransferOwnership e) {
+    if (e.condition != null) {
+      throw BishopException('Unsupported export of condition');
+    }
+    return {
+      if (!e.capture) 'capture': e.capture,
+      if (!e.quiet) 'quiet': e.quiet,
+    };
+  }
 }

@@ -80,6 +80,17 @@ class WonGameEnteredRegion extends WonGame {
   String get readable => '${super.readable} by entering region';
 }
 
+class WonGameExitedRegion extends WonGame {
+  final int square;
+  const WonGameExitedRegion({required super.winner, required this.square});
+
+  @override
+  String toString() => 'WonGameExitedRegion($winner, $square)';
+
+  @override
+  String get readable => '${super.readable} by exiting region';
+}
+
 class WonGameRoyalDead extends WonGame {
   const WonGameRoyalDead({required super.winner});
 
@@ -192,4 +203,30 @@ class DrawnGamePoints extends DrawnGame {
 
   @override
   String get readable => '${super.readable} on points: $points';
+}
+
+class DrawnGameEnteredRegion extends DrawnGame {
+  final int player;
+  final int square;
+  const DrawnGameEnteredRegion({required this.player, required this.square});
+
+  @override
+  String toString() => 'DrawnGameEnteredRegion($square)';
+
+  @override
+  String get readable =>
+      '${super.readable} by ${Bishop.playerName[player]} entering region';
+}
+
+class DrawnGameExitedRegion extends DrawnGame {
+  final int player;
+  final int square;
+  const DrawnGameExitedRegion({required this.player, required this.square});
+
+  @override
+  String toString() => 'DrawnGameExitedRegion($square)';
+
+  @override
+  String get readable =>
+      '${super.readable} by ${Bishop.playerName[player]} exiting region';
 }

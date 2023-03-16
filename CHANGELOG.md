@@ -1,6 +1,9 @@
 ### 1.2.10
-- Variant: Andernach Chess (capturing pieces change colour).
+- Variants:
+  - Andernach Chess (`MiscVariants.andernach()`): capturing pieces change colour.
+  - Jeson Mor (`MiscVariants.jesonMor()`): knights only, win by entering the central square and leaving it again.
 - `ActionTransferOwnership`: changes the colour of the moving piece.
+- `ActionExitRegionEnding`: end the game when a piece leaves a region.
 
 ### 1.2.9
 - Fixed a bug with lame leaper squares being calculated incorrectly.
