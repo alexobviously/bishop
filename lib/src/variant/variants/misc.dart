@@ -138,7 +138,15 @@ class MiscVariants {
         actions: [
           ActionExitRegionEnding(
             region: BoardRegion.square(Bishop.fileE, Bishop.rank5),
-          )
+          ),
         ],
       );
+
+  static Variant grasshopper() =>
+      Variant.standard().withPiece('G', PieceType.grasshopper()).copyWith(
+            name: 'Grasshopper Chess',
+            startPosition:
+                'rnbqkbnr/gggggggg/pppppppp/8/8/PPPPPPPP/GGGGGGGG/RNBQKBNR'
+                ' w KQkq - 0 1',
+          );
 }

@@ -200,6 +200,7 @@ enum Variants {
   dart(MiscVariants.dart),
   andernach(MiscVariants.andernach),
   jesonMor(MiscVariants.jesonMor),
+  grasshopper(MiscVariants.grasshopper),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 
