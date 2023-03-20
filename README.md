@@ -64,9 +64,12 @@ Feel free to request variants or rules - just [create an issue](https://github.c
 * Draughts, and chained moves in general
 * Support for Bughouse, and similar games
 * Chasing rules, such as those Xiangqi has
+* Pieces with multi-leg moves
+* Variants with multiple moves per turn (e.g. double move, Duck Chess)
+* A lot more: see the [issue tracker](https://github.com/alexobviously/bishop/issues) and feel free to submit your own requests
 
 ### Built-in Variants
-Chess, Chess960, Crazyhouse, Atomic, Horde, Racing Kings, Antichess, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi (+ Mini Xiangqi & Manchu), Three Kings, Kinglet, Hoppel-Poppel, Orda (+ Mirror), Shako, Dobutsu, Andernach, a variety of small board variants, and many more.
+Chess, Chess960, Crazyhouse, Atomic, Horde, Racing Kings, Antichess, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi (+ Mini Xiangqi & Manchu), Three Kings, Kinglet, Hoppel-Poppel, Orda (+ Mirror), Shako, Dobutsu, Andernach, Jeson Mor, a variety of small board variants, and many more.
 
 ***
 
@@ -144,17 +147,15 @@ Variant chess = Variant(
 ```
 Of course there is a default `Variant.standard()` constructor for this, and other variants can be built based on this too using `Variant.copyWith()`. For example, Capablanca Chess can be defined like this:
 ```dart
-Variant capablanca = Variant.standard().copyWith(
+Variant capablanca = Variant.standard().withPieces({
+    'A': PieceType.archbishop(),
+    'C': PieceType.chancellor(),
+  }).copyWith(
     name: 'Capablanca Chess',
     boardSize: BoardSize(10, 8),
     startPosition:
         'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP/RNABQKBCNR w KQkq - 0 1',
     castlingOptions: CastlingOptions.capablanca,
-    pieceTypes: {
-      ...standard.pieceTypes,
-      'A': PieceType.archbishop(),
-      'C': PieceType.chancellor(),
-    },
   );
 }
 ```
