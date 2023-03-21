@@ -1,3 +1,12 @@
+### 1.3.0
+- Region changes (**breaking**):
+  - What used to be `BoardRegion` is now `RectRegion`.
+  - `BoardRegion` is now a parent class for `RectRegion` and other board region types.
+  - `UnionRegion` and `IntersectRegion` combine multiple `BoardRegions` with union and intersection respectively.
+- Variants:
+  - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
+  - Grasshopper Chess (`MiscVariants.grasshopper()`): chess with some extra grasshopper pieces.
+
 ### 1.2.10
 - Variants:
   - Andernach Chess (`MiscVariants.andernach()`): capturing pieces change colour.
