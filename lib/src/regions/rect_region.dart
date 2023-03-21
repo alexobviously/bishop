@@ -25,7 +25,7 @@ class RectRegion implements BoardRegion {
     this.endFile,
   });
 
-  factory RectRegion.lrtb(int? l, int? r, int? t, int? b) =>
+  factory RectRegion.lrbt(int? l, int? r, int? b, int? t) =>
       RectRegion(startFile: l, endFile: r, startRank: b, endRank: t);
 
   /// A board region consisting of the entirety of a single rank.

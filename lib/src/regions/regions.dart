@@ -23,8 +23,8 @@ abstract class BoardRegion extends Region {
   @override
   BoardRegion translate(int x, int y);
 
-  factory BoardRegion.lrtb(int? l, int? r, int? t, int? b) =>
-      RectRegion.lrtb(l, r, t, b);
+  factory BoardRegion.lrbt(int? l, int? r, int? b, int? t) =>
+      RectRegion.lrbt(l, r, b, t);
 
   factory BoardRegion.square(int file, int rank) =>
       RectRegion.square(file, rank);

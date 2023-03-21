@@ -162,13 +162,13 @@ class MiscVariants {
         promotionOptions: RegionPromotion(whiteRegion: 'wp', blackRegion: 'bp'),
         regions: {
           'wp': UnionRegion([
-            RectRegion.lrtb(
+            RectRegion.lrbt(
               Bishop.fileA,
               Bishop.fileA,
-              Bishop.rank8,
               Bishop.rank5,
+              Bishop.rank8,
             ),
-            RectRegion.lrtb(
+            RectRegion.lrbt(
               Bishop.fileA,
               Bishop.fileD,
               Bishop.rank8,
@@ -176,13 +176,13 @@ class MiscVariants {
             ),
           ]),
           'bp': UnionRegion([
-            RectRegion.lrtb(
+            RectRegion.lrbt(
               Bishop.fileH,
               Bishop.fileH,
-              Bishop.rank4,
               Bishop.rank1,
+              Bishop.rank4,
             ),
-            RectRegion.lrtb(
+            RectRegion.lrbt(
               Bishop.fileE,
               Bishop.fileH,
               Bishop.rank1,
