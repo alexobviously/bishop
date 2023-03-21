@@ -84,7 +84,7 @@ void handlePlayerInput() {
     return;
   }
   Move? m;
-  if (input == 'random') {
+  if (input == 'random' || input == 'r') {
     m = game.getRandomMove();
   } else {
     m = game.getMove(input);

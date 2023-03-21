@@ -412,9 +412,9 @@ class Variant {
       pieceTypes: pieces,
       regions: {
         ...regions,
-        whiteRegionName: BoardRegion.rank(whiteRank ?? Bishop.rank1),
+        whiteRegionName: RectRegion.rank(whiteRank ?? Bishop.rank1),
         if (whiteRegionName != blackRegionName)
-          blackRegionName: BoardRegion.rank(blackRank ?? boardSize.maxRank),
+          blackRegionName: RectRegion.rank(blackRank ?? boardSize.maxRank),
       },
     );
   }

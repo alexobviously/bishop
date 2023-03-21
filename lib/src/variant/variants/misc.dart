@@ -51,7 +51,7 @@ class MiscVariants {
   // https://www.chessvariants.com/diffobjective.dir/utchess.html#domination
   // todo: make this serialisable, break action down
   static Variant domination({int scoreLimit = 15}) {
-    final region = BoardRegion(
+    final region = RectRegion(
       startFile: Bishop.fileD,
       endFile: Bishop.fileE,
       startRank: Bishop.rank4,
@@ -61,7 +61,7 @@ class MiscVariants {
       action: (trigger) {
         List<ActionEffect> effects = [];
         List<int> incs = [0, 0];
-        for (int sq in trigger.size.squaresForBoardRegion(region)) {
+        for (int sq in trigger.size.squaresForRegion(region)) {
           int content = trigger.board[sq];
           if (content.isNotEmpty) {
             incs[content.colour]++;
@@ -86,7 +86,7 @@ class MiscVariants {
   }
 
   static Variant dart() {
-    final dropRegion = BoardRegion(
+    final dropRegion = RectRegion(
       startFile: Bishop.fileB,
       endFile: Bishop.fileE,
       startRank: Bishop.rank2,
@@ -137,7 +137,7 @@ class MiscVariants {
         promotionOptions: PromotionOptions.none,
         actions: [
           ActionExitRegionEnding(
-            region: BoardRegion.square(Bishop.fileE, Bishop.rank5),
+            region: RectRegion.square(Bishop.fileE, Bishop.rank5),
           ),
         ],
       );
@@ -149,4 +149,46 @@ class MiscVariants {
                 'rnbqkbnr/gggggggg/pppppppp/8/8/PPPPPPPP/GGGGGGGG/RNBQKBNR'
                 ' w KQkq - 0 1',
           );
+
+  static Variant legan() => Variant(
+        name: 'Legan Chess',
+        startPosition:
+            'knbrp3/bqpp4/npp5/rp1p3P/p3P1PR/5PPN/4PPQB/3PRBNK w - - 0 1',
+        pieceTypes: {
+          ...Variant.standard().pieceTypes,
+          'P': PieceType.fromBetza('mlfFcflW', noSanSymbol: true).promotable(),
+        },
+        castlingOptions: CastlingOptions.none,
+        promotionOptions: RegionPromotion(whiteRegion: 'wp', blackRegion: 'bp'),
+        regions: {
+          'wp': UnionRegion([
+            RectRegion.lrtb(
+              Bishop.fileA,
+              Bishop.fileA,
+              Bishop.rank8,
+              Bishop.rank5,
+            ),
+            RectRegion.lrtb(
+              Bishop.fileA,
+              Bishop.fileD,
+              Bishop.rank8,
+              Bishop.rank8,
+            ),
+          ]),
+          'bp': UnionRegion([
+            RectRegion.lrtb(
+              Bishop.fileH,
+              Bishop.fileH,
+              Bishop.rank4,
+              Bishop.rank1,
+            ),
+            RectRegion.lrtb(
+              Bishop.fileE,
+              Bishop.fileH,
+              Bishop.rank1,
+              Bishop.rank1,
+            ),
+          ]),
+        },
+      );
 }

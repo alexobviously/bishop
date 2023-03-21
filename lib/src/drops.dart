@@ -31,12 +31,12 @@ class Drops {
         return drops;
       };
 
-  static DropBuilderFunction region(BoardRegion region) => (MoveParams params) {
+  static DropBuilderFunction region(Region region) => (MoveParams params) {
         Set<int> hand = params.state.handPieceTypes(params.colour);
         if (hand.isEmpty) return [];
         final size = params.variant.boardSize;
         List<Move> drops = [];
-        for (int i in size.squaresForBoardRegion(region)) {
+        for (int i in size.squaresForRegion(region)) {
           if (!size.onBoard(i)) continue;
           if (params.state.board[i].isNotEmpty) continue;
           drops.addAll(hand.map((e) => DropMove(to: i, piece: e)));

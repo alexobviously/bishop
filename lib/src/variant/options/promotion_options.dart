@@ -64,12 +64,19 @@ class NoPromotion extends PromotionOptions {
 /// Pieces will be able to promote on the promotion rank, or anything past it.
 class StandardPromotion extends PromotionOptions {
   final List<int>? ranks;
-  const StandardPromotion({this.ranks, super.pieceLimits});
+  final bool optional;
+
+  const StandardPromotion({
+    this.ranks,
+    super.pieceLimits,
+    this.optional = false,
+  });
 
   @override
-  PromotionBuilder? build(BuiltVariant variant) {
+  PromotionBuilder build(BuiltVariant variant) {
     return Promotion.standard(
       ranks: ranks ?? [variant.boardSize.maxRank, Bishop.rank1],
+      optional: optional,
     );
   }
 }
@@ -90,7 +97,7 @@ class OptionalPromotion extends PromotionOptions {
   });
 
   @override
-  PromotionBuilder? build(BuiltVariant variant) {
+  PromotionBuilder build(BuiltVariant variant) {
     return Promotion.optional(
       ranks: ranks ?? [variant.boardSize.maxRank, Bishop.rank1],
       forcedRanks: forced
@@ -98,6 +105,22 @@ class OptionalPromotion extends PromotionOptions {
           : null,
     );
   }
+}
+
+class RegionPromotion extends PromotionOptions {
+  final String? whiteRegion;
+  final String? blackRegion;
+  final bool optional;
+
+  const RegionPromotion({
+    this.whiteRegion,
+    this.blackRegion,
+    this.optional = false,
+  });
+
+  @override
+  PromotionBuilder build(BuiltVariant variant) =>
+      Promotion.regions(whiteRegion, blackRegion, optional: optional);
 }
 
 class CustomPromotion extends PromotionOptions {

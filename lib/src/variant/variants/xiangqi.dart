@@ -58,21 +58,21 @@ class Xiangqi {
         promotionOptions: PromotionOptions.none,
         startPosition: defaultFen,
         regions: {
-          'redSide': const BoardRegion(
+          'redSide': const RectRegion(
             startRank: Bishop.rank1,
             endRank: Bishop.rank5,
           ),
-          'blackSide': const BoardRegion(
+          'blackSide': const RectRegion(
             startRank: Bishop.rank6,
             endRank: Bishop.rank10,
           ),
-          'redPalace': const BoardRegion(
+          'redPalace': const RectRegion(
             startRank: Bishop.rank1,
             endRank: Bishop.rank3,
             startFile: Bishop.fileD,
             endFile: Bishop.fileF,
           ),
-          'blackPalace': const BoardRegion(
+          'blackPalace': const RectRegion(
             startRank: Bishop.rank8,
             endRank: Bishop.rank10,
             startFile: Bishop.fileD,
@@ -99,13 +99,13 @@ class Xiangqi {
         materialConditions: MaterialConditions.none,
         promotionOptions: PromotionOptions.none,
         regions: {
-          'redPalace': const BoardRegion(
+          'redPalace': const RectRegion(
             startRank: Bishop.rank1,
             endRank: Bishop.rank3,
             startFile: Bishop.fileC,
             endFile: Bishop.fileE,
           ),
-          'blackPalace': const BoardRegion(
+          'blackPalace': const RectRegion(
             startRank: Bishop.rank5,
             endRank: Bishop.rank7,
             startFile: Bishop.fileC,

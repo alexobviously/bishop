@@ -45,7 +45,7 @@ class CommonVariants {
       )
       .withRegion(
         'hill',
-        BoardRegion(
+        RectRegion(
           startFile: Bishop.fileD,
           endFile: Bishop.fileE,
           startRank: Bishop.rank4,

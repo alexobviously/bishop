@@ -37,11 +37,33 @@ bool validateFen({
 }
 
 /// Looks up a built in variant by name.
-Variant? variantFromString(String name) => Variants.values
-    .firstWhereOrNull(
-      (e) => e.name.toLowerCase() == name.toLowerCase().replaceAll(' ', ''),
-    )
-    ?.build();
+/// If [allowIncomplete], partial matches are allowed.
+Variant? variantFromString(String name, {bool allowIncomplete = true}) {
+  Variants? v = Variants.values.firstWhereOrNull(
+    (e) => e.name.toLowerCase() == name.toLowerCase().replaceAll(' ', ''),
+  );
+  if (v == null && allowIncomplete) {
+    final vs = Variants.values
+        .where((e) => e.name.toLowerCase().startsWith(name.toLowerCase()));
+    if (vs.length == 1) {
+      v = vs.first;
+    }
+  }
+  return v?.build();
+}
+
+// Variant? variantFromString(String name, {bool allowIncomplete = true}) =>
+//     (Variants.values.firstWhereOrNull(
+//               (e) =>
+//                   e.name.toLowerCase() ==
+//                   name.toLowerCase().replaceAll(' ', ''),
+//             ) ??
+//             (allowIncomplete
+//                 ? Variants.values.firstWhereOrNull(
+//                     (e) => e.name.toLowerCase().startsWith(name.toLowerCase()),
+//                   )
+//                 : null))
+//         ?.build();
 
 /// Generates an ASCII representation of the board.
 String boardToAscii(

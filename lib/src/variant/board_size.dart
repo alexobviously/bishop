@@ -83,11 +83,12 @@ class BoardSize {
   }
 
   /// Returns all the squares in [area], translated to [centre] - a square id.
-  List<int> squaresForArea(int centre, Area area) =>
+  Iterable<int> squaresForArea(int centre, Area area) =>
       area.translate(file(centre), rank(centre)).squares(this);
 
   /// Returns all of the squares in [region].
-  List<int> squaresForBoardRegion(BoardRegion region) => region.squares(this);
+  /// If you want to find the squares for an `Area`, use `squaresForArea()`.
+  Iterable<int> squaresForRegion(Region region) => region.squares(this);
 
   /// Returns the name for a square, according to chess conventions, e.g. c6, b1.
   String squareName(int square) {

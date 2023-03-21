@@ -140,6 +140,10 @@ class PieceType {
   /// Returns a copy of the piece type with `PiecePromoOptions.none`.
   PieceType withNoPromotion() => copyWith(promoOptions: PiecePromoOptions.none);
 
+  /// Returns a copy of the piece type with `PiecePromoOptions.promotable`.
+  PieceType promotable() =>
+      copyWith(promoOptions: PiecePromoOptions.promotable);
+
   /// Returns a copy of the piece type with [value].
   PieceType withValue(int value) => copyWith(value: value);
 

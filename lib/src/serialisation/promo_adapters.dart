@@ -14,12 +14,14 @@ class StandardPromotionAdapter extends BishopTypeAdapter<StandardPromotion> {
           (k, e) => MapEntry(k, e as int),
         ),
         ranks: params?['ranks']?.cast<int>(),
+        optional: params?['optional'] ?? false,
       );
 
   @override
   Map<String, dynamic>? export(StandardPromotion e) => {
         if (e.pieceLimits != null) 'pieceLimits': e.pieceLimits,
         if (e.ranks != null) 'ranks': e.ranks,
+        if (e.optional != false) 'optional': e.optional,
       };
 }
 

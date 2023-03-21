@@ -85,7 +85,7 @@ class Promotion {
   /// Generates a move for each piece in [variant.promotionPieces] for the [move] move.
   static PromotionBuilder standard({
     required List<int> ranks,
-    bool includeBaseMove = false,
+    bool optional = false,
   }) =>
       (PromotionParams params) {
         if (!params.pieceType.promoOptions.canPromote) return null;
@@ -109,7 +109,7 @@ class Promotion {
           );
           moves.add(m);
         }
-        if (includeBaseMove) moves.add(params.move);
+        if (optional) moves.add(params.move);
         return moves;
       };
 
@@ -148,4 +148,48 @@ class Promotion {
         if (!forcedPromo) moves.add(params.move);
         return moves;
       };
+
+  static PromotionBuilder pair(
+    PromotionBuilder white,
+    PromotionBuilder black,
+  ) =>
+      (params) {
+        int piece = params.state.board[params.move.from];
+        if (piece.isEmpty) return null;
+        return piece.colour == Bishop.white ? white(params) : black(params);
+      };
+
+  static PromotionBuilder region(String regionId, {bool optional = false}) =>
+      (params) {
+        if (!params.pieceType.promoOptions.canPromote) return null;
+
+        Square piece = params.state.board[params.move.from];
+        if (piece.isEmpty) return null;
+        Region region = params.variant.data.regions[regionId]!;
+        if (!params.variant.boardSize.inRegion(params.move.to, region)) {
+          return null;
+        }
+
+        return [
+          ...params.promoPieces.map(
+            (e) => params.move.copyWith(
+              promoSource: params.state.board[params.move.from].type,
+              promoPiece: e,
+            ),
+          ),
+          if (optional) params.move,
+        ];
+      };
+
+  static PromotionBuilder regions(
+    String? whiteRegion,
+    String? blackRegion, {
+    bool optional = false,
+  }) =>
+      pair(
+        whiteRegion == null ? none() : region(whiteRegion, optional: optional),
+        blackRegion == null ? none() : region(blackRegion, optional: optional),
+      );
+
+  static PromotionBuilder none() => (_) => null;
 }
