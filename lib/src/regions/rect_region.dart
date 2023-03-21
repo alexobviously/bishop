@@ -53,7 +53,6 @@ class RectRegion implements BoardRegion {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'rect',
         if (startRank != null) 'b': startRank,
         if (endRank != null) 't': endRank,
         if (startFile != null) 'l': startFile,

@@ -21,6 +21,7 @@ class BishopSerialisation {
 
   static List<BishopTypeAdapter> get basePromoAdapters => [
         NoPromotionAdapter(),
+        RegionPromotionAdapter(),
         StandardPromotionAdapter(),
         OptionalPromotionAdapter(),
       ];

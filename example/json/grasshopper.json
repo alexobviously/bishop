@@ -1,5 +1,5 @@
 {
- "name": "Domination",
+ "name": "Grasshopper Chess",
  "description": "",
  "bishopVersion": "1.3.0",
  "boardSize": "8x8",
@@ -25,7 +25,8 @@
     "canPromote": false,
     "canPromoteTo": false
    }
-  }
+  },
+  "G": {"betza": "gQ"}
  },
  "castlingOptions": {
   "enabled": true,
@@ -38,17 +39,10 @@
   "useRookAsTarget": false
  },
  "promotionOptions": "bishop.promo.standard",
- "materialConditions": {
-  "enabled": true,
-  "soloMaters": ["P", "Q", "R", "A", "C"],
-  "pairMaters": ["N"],
-  "combinedPairMaters": ["B"],
-  "specialCases": [["B", "N"]]
- },
- "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+ "materialConditions": {"enabled": false},
+ "startPosition": "rnbqkbnr/gggggggg/pppppppp/8/8/PPPPPPPP/GGGGGGGG/RNBQKBNR w KQkq - 0 1",
  "enPassant": true,
  "firstMoveRanks": [[1], [6]],
  "halfMoveDraw": 100,
- "repetitionDraw": 3,
- "actions": []
+ "repetitionDraw": 3
 }

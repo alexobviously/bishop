@@ -47,3 +47,22 @@ class OptionalPromotionAdapter extends BishopTypeAdapter<OptionalPromotion> {
         if (e.forced && e.forcedRanks != null) 'forcedRanks': e.forcedRanks,
       };
 }
+
+class RegionPromotionAdapter extends BishopTypeAdapter<RegionPromotion> {
+  @override
+  RegionPromotion build(Map<String, dynamic>? params) => RegionPromotion(
+        whiteRegion: params?['white'],
+        blackRegion: params?['black'],
+        optional: params?['optional'] ?? false,
+      );
+
+  @override
+  Map<String, dynamic>? export(RegionPromotion e) => {
+        if (e.whiteRegion != null) 'white': e.whiteRegion,
+        if (e.blackRegion != null) 'black': e.blackRegion,
+        if (e.optional) 'optional': e.optional,
+      };
+
+  @override
+  String get id => 'bishop.promo.region';
+}

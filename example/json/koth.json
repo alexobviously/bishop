@@ -1,7 +1,7 @@
 {
  "name": "King of the Hill",
  "description": "",
- "bishopVersion": "1.2.3",
+ "bishopVersion": "1.3.0",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -58,11 +58,6 @@
  "halfMoveDraw": 100,
  "repetitionDraw": 3,
  "regions": {
-  "hill": {
-   "startRank": 3,
-   "endRank": 4,
-   "startFile": 3,
-   "endFile": 4
-  }
+  "hill": {"b": 3, "t": 4, "l": 3, "r": 4}
  }
 }

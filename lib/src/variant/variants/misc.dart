@@ -148,6 +148,7 @@ class MiscVariants {
             startPosition:
                 'rnbqkbnr/gggggggg/pppppppp/8/8/PPPPPPPP/GGGGGGGG/RNBQKBNR'
                 ' w KQkq - 0 1',
+            materialConditions: MaterialConditions.none,
           );
 
   static Variant legan() => Variant(

@@ -1,7 +1,7 @@
 {
  "name": "Dart",
  "description": "",
- "bishopVersion": "1.2.3",
+ "bishopVersion": "1.3.0",
  "boardSize": "6x6",
  "pieceTypes": {
   "P": {
@@ -40,12 +40,7 @@
   "addCapturesToHand": false,
   "dropBuilder": {
    "id": "bishop.drops.region",
-   "region": {
-    "startRank": 1,
-    "endRank": 4,
-    "startFile": 1,
-    "endFile": 4
-   }
+   "region": {"b": 1, "t": 4, "l": 1, "r": 4}
   }
  }
 }
