@@ -3,6 +3,7 @@
   - What used to be `BoardRegion` is now `RectRegion`.
   - `BoardRegion` is now a parent class for `RectRegion` and other board region types.
   - `UnionRegion` and `IntersectRegion` combine multiple `BoardRegions` with union and intersection respectively.
+- `RegionPromotion` (`PromotionOptions`): piece can promote in specific regions, defined in `Variant.regions`.
 - Variants:
   - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
   - Grasshopper Chess (`MiscVariants.grasshopper()`): chess with some extra grasshopper pieces.
