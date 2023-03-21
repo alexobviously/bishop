@@ -5,6 +5,10 @@ class UnionRegion implements BoardRegion {
 
   const UnionRegion(this.regions);
 
+  factory UnionRegion.fromJson(Map<String, dynamic> json) => UnionRegion(
+        (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
+      );
+
   @override
   bool contains(int file, int rank) =>
       regions.firstWhereOrNull((e) => e.contains(file, rank)) != null;

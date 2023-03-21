@@ -25,7 +25,7 @@ void main() {
       pieceTypes: {'B': PieceType.bishop()},
       regions: {
         'union': UnionRegion([r1, r2]),
-        'inter': IntersectionRegion([r1, r2]),
+        'inter': IntersectRegion([r1, r2]),
       },
     );
     List<InRegionTest> tests = [
@@ -81,7 +81,6 @@ void main() {
         BoardRegion region = v.regions[t.region]!;
         int square = size.squareNumber(t.square);
         bool inRegion = size.inRegion(square, region);
-        print(region.squares(size).map((e) => e).toList());
         expect(inRegion, t.inRegion);
       });
     }

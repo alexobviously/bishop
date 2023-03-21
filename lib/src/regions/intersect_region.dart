@@ -1,9 +1,14 @@
 part of 'regions.dart';
 
-class IntersectionRegion implements BoardRegion {
+class IntersectRegion implements BoardRegion {
   final List<BoardRegion> regions;
 
-  const IntersectionRegion(this.regions);
+  const IntersectRegion(this.regions);
+
+  factory IntersectRegion.fromJson(Map<String, dynamic> json) =>
+      IntersectRegion(
+        (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
+      );
 
   @override
   bool contains(int file, int rank) =>
@@ -16,12 +21,12 @@ class IntersectionRegion implements BoardRegion {
       );
 
   @override
-  IntersectionRegion translate(int x, int y) =>
-      IntersectionRegion(regions.map((e) => e.translate(x, y)).toList());
+  IntersectRegion translate(int x, int y) =>
+      IntersectRegion(regions.map((e) => e.translate(x, y)).toList());
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'intersection',
+        'type': 'intersect',
         'regions': [...regions.map((e) => e.toJson())],
       };
 

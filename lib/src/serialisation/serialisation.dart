@@ -69,6 +69,7 @@ class BishopSerialisation {
     dynamic input, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
+    T? Function(dynamic input)? fallback,
   }) {
     adapters = [...adapters, ...baseAdapters];
     String? id;
@@ -79,6 +80,9 @@ class BishopSerialisation {
       params = input;
     }
     if (id == null) {
+      if (fallback != null) {
+        return fallback(input);
+      }
       throw BishopException('Invalid adapter ($input)');
     }
     final adapter = adapters.firstWhereOrNull((e) => e.id == id);

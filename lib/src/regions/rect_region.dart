@@ -45,17 +45,19 @@ class RectRegion implements BoardRegion {
       );
 
   factory RectRegion.fromJson(Map<String, dynamic> json) => RectRegion(
-        startRank: json['startRank'],
-        endRank: json['endRank'],
-        startFile: json['startFile'],
-        endFile: json['endFile'],
+        startRank: json['b'] ?? json['startRank'],
+        endRank: json['t'] ?? json['endRank'],
+        startFile: json['l'] ?? json['startFile'],
+        endFile: json['r'] ?? json['endFile'],
       );
 
+  @override
   Map<String, dynamic> toJson() => {
-        if (startRank != null) 'startRank': startRank,
-        if (endRank != null) 'endRank': endRank,
-        if (startFile != null) 'startFile': startFile,
-        if (endFile != null) 'endFile': endFile,
+        'type': 'rect',
+        if (startRank != null) 'b': startRank,
+        if (endRank != null) 't': endRank,
+        if (startFile != null) 'l': startFile,
+        if (endFile != null) 'r': endFile,
       };
 
   RectRegion finalise(BoardSize size) => RectRegion(

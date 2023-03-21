@@ -3,7 +3,7 @@ import 'package:bishop/bishop.dart';
 
 part 'area.dart';
 part 'rect_region.dart';
-part 'intersection_region.dart';
+part 'intersect_region.dart';
 part 'region_effect.dart';
 part 'union_region.dart';
 
@@ -15,8 +15,18 @@ abstract class Region {
 
 abstract class BoardRegion extends Region {
   factory BoardRegion.fromJson(Map<String, dynamic> json) {
+    String? type = json['type'];
+    if (type != null) {
+      return _builders[json['type']]!(json);
+    }
     return RectRegion.fromJson(json);
   }
+
+  static const _builders = {
+    'rect': RectRegion.fromJson,
+    'union': UnionRegion.fromJson,
+    'intersect': IntersectRegion.fromJson
+  };
 
   Map<String, dynamic> toJson();
 
@@ -31,4 +41,16 @@ abstract class BoardRegion extends Region {
 
   factory BoardRegion.rank(int rank) => RectRegion.rank(rank);
   factory BoardRegion.file(int file) => RectRegion.file(file);
+}
+
+class BoardRegionAdapter extends BishopTypeAdapter<BoardRegion> {
+  @override
+  BoardRegion build(Map<String, dynamic>? params) =>
+      BoardRegion.fromJson(params!);
+
+  @override
+  Map<String, dynamic> export(BoardRegion e) => e.toJson();
+
+  @override
+  String get id => 'bishop.region.board';
 }
