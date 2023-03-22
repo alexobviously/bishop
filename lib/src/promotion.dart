@@ -183,7 +183,6 @@ class Promotion {
 
   /// A promotion builder pair for region promotion, where white and black
   /// have different regions.
-  ///
   static PromotionBuilder regions(
     Region? whiteRegion,
     Region? blackRegion, {

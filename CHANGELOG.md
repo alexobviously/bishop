@@ -4,6 +4,7 @@
   - `BoardRegion` is now a parent class for `RectRegion` and other board region types.
   - `UnionRegion` and `IntersectRegion` combine multiple `BoardRegions` with union and intersection respectively.
 - `RegionPromotion` (`PromotionOptions`): pieces can promote in specific regions.
+- `RegionDropBuilder` now allows using region IDs from variant, and separate regions per player (same API as `RegionPromotion`).
 - Variants:
   - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
   - Grasshopper Chess (`MiscVariants.grasshopper()`): chess with some extra grasshopper pieces.

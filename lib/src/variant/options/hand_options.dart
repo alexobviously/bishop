@@ -60,7 +60,11 @@ abstract class DropBuilder {
 
   static const standard = StandardDropBuilder();
   static const unrestricted = UnrestrictedDropBuilder();
-  factory DropBuilder.region(BoardRegion region) => RegionDropBuilder(region);
+
+  /// Drops only in a single [region] for both players.
+  /// Use `RegionDropBuilder` for separate regions or region IDs.
+  factory DropBuilder.region(BoardRegion region) =>
+      RegionDropBuilder.single(region);
 }
 
 class StandardDropBuilder extends DropBuilder {
@@ -78,10 +82,30 @@ class UnrestrictedDropBuilder extends DropBuilder {
       Drops.standard(restrictPromoPieces: false);
 }
 
+/// Allows drops only within specified regions.
+/// It is possible to specify `BoardRegions` ([whiteRegion], [blackRegion]),
+/// or reference regions in `Variant.regions` with [whiteId] and [blackId].
 class RegionDropBuilder extends DropBuilder {
-  final BoardRegion region;
-  const RegionDropBuilder(this.region);
+  final BoardRegion? whiteRegion;
+  final BoardRegion? blackRegion;
+  final String? whiteId;
+  final String? blackId;
+
+  const RegionDropBuilder({
+    this.whiteRegion,
+    this.blackRegion,
+    this.whiteId,
+    this.blackId,
+  });
+
+  factory RegionDropBuilder.single(BoardRegion region) =>
+      RegionDropBuilder(whiteRegion: region, blackRegion: region);
+  factory RegionDropBuilder.singleId(String id) =>
+      RegionDropBuilder(whiteId: id, blackId: id);
 
   @override
-  DropBuilderFunction build(BuiltVariant variant) => Drops.region(region);
+  DropBuilderFunction build(BuiltVariant variant) => Drops.regions(
+        whiteRegion ?? (whiteId != null ? variant.regions[whiteId] : null),
+        blackRegion ?? (blackId != null ? variant.regions[blackId] : null),
+      );
 }

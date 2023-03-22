@@ -51,21 +51,29 @@ class OptionalPromotionAdapter extends BishopTypeAdapter<OptionalPromotion> {
 class RegionPromotionAdapter extends BishopTypeAdapter<RegionPromotion> {
   @override
   RegionPromotion build(Map<String, dynamic>? params) => RegionPromotion(
-        whiteRegion: params?['wRegion'],
-        blackRegion: params?['bRegion'],
+        whiteRegion: params?['wRegion'] != null || params?['region'] != null
+            ? BoardRegion.fromJson(params?['wRegion'] ?? params?['region'])
+            : null,
+        blackRegion: params?['bRegion'] != null || params?['region'] != null
+            ? BoardRegion.fromJson(params?['bRegion'] ?? params?['region'])
+            : null,
         whiteId: params?['wId'],
         blackId: params?['bId'],
         optional: params?['optional'] ?? false,
       );
 
   @override
-  Map<String, dynamic>? export(RegionPromotion e) => {
-        if (e.whiteRegion != null) 'wRegion': e.whiteRegion,
-        if (e.blackRegion != null) 'bRegion': e.blackRegion,
-        if (e.whiteId != null && e.whiteRegion == null) 'wId': e.whiteId,
-        if (e.blackId != null && e.blackRegion == null) 'bId': e.blackId,
-        if (e.optional) 'optional': e.optional,
-      };
+  Map<String, dynamic>? export(RegionPromotion e) {
+    bool same = e.whiteRegion == e.blackRegion && e.whiteRegion != null;
+    return {
+      if (same) 'region': e.whiteRegion!.toJson(),
+      if (e.whiteRegion != null && !same) 'wRegion': e.whiteRegion!.toJson(),
+      if (e.blackRegion != null && !same) 'bRegion': e.blackRegion!.toJson(),
+      if (e.whiteId != null && e.whiteRegion == null) 'wId': e.whiteId,
+      if (e.blackId != null && e.blackRegion == null) 'bId': e.blackId,
+      if (e.optional) 'optional': e.optional,
+    };
+  }
 
   @override
   String get id => 'bishop.promo.region';

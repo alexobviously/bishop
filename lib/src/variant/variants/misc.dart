@@ -100,7 +100,7 @@ class MiscVariants {
       castlingOptions: CastlingOptions.none,
       handOptions: HandOptions(
         enableHands: true,
-        dropBuilder: DropBuilder.region(dropRegion),
+        dropBuilder: RegionDropBuilder.single(dropRegion),
       ),
       pieceTypes: {
         'P': PieceType.simplePawn(),

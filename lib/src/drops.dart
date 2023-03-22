@@ -31,6 +31,14 @@ class Drops {
         return drops;
       };
 
+  static DropBuilderFunction pair(
+    DropBuilderFunction white,
+    DropBuilderFunction black,
+  ) =>
+      (params) => params.colour == Bishop.white ? white(params) : black(params);
+
+  static DropBuilderFunction none() => (_) => [];
+
   static DropBuilderFunction region(Region region) => (MoveParams params) {
         Set<int> hand = params.state.handPieceTypes(params.colour);
         if (hand.isEmpty) return [];
@@ -43,4 +51,9 @@ class Drops {
         }
         return drops;
       };
+
+  static DropBuilderFunction regions(Region? white, Region? black) => pair(
+        white == null ? none() : region(white),
+        black == null ? none() : region(black),
+      );
 }
