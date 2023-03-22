@@ -237,6 +237,8 @@ class PieceType {
         value: 100,
       );
 
+  // Values are pretty approximate and based on wikipedia/things Betza says.
+
   /// Moves like a knight, captures like a bishop.
   factory PieceType.knibis() => PieceType.fromBetza('mNcB', value: 400);
 
@@ -266,7 +268,25 @@ class PieceType {
 
   /// Moves and captures like a queen, but *must* jump over exactly one piece,
   /// and land on the square directly after it.
-  factory PieceType.grasshopper() => PieceType.fromBetza('gQ');
+  factory PieceType.grasshopper() => PieceType.fromBetza('gQ', value: 180);
+
+  /// Moves one square orthogonally in any direction.
+  factory PieceType.wazir() => PieceType.fromBetza('W', value: 120);
+
+  /// Moves one square diagonally in any direction.
+  factory PieceType.ferz() => PieceType.fromBetza('F', value: 140);
+
+  /// Jumps two squares diagonally in any direction.
+  factory PieceType.alfil() => PieceType.fromBetza('A', value: 120);
+
+  /// Jumps two squares orthogonally in any direction.
+  factory PieceType.dabbaba() => PieceType.fromBetza('D', value: 130);
+
+  /// Jumps 3 squares in one direction, 1 in the other. Like a long knight.
+  factory PieceType.camel() => PieceType.fromBetza('C', value: 200);
+
+  /// Jumps 3 squares in one direction, 2 in the other.
+  factory PieceType.zebra() => PieceType.fromBetza('Z', value: 180);
 
   factory PieceType.blocker({bool immortal = true}) => PieceType.fromBetza(
         '',
