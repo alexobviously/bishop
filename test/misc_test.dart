@@ -74,4 +74,13 @@ void main() {
     final moves = g.generateLegalMoves().from(g.size.squareNumber('c10'));
     expect(moves.length, 0);
   });
+  test('Berolina En Passant', () {
+    final g = Game(
+      variant: FairyVariants.berolina(),
+      fen: 'k7/5p2/8/4P3/8/8/8/K7 b - - 0 1',
+    );
+    g.makeMultipleMoves(['f7d5', 'e5e6'], undoOnError: false);
+    expect(g.state.pieceCount(Bishop.black), 1);
+    expect(g.state.move?.enPassant, true);
+  });
 }

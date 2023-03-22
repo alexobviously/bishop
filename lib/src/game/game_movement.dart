@@ -207,8 +207,8 @@ extension GameMovement on Game {
 
     if (move.enPassant) {
       // Remove the captured ep piece
-      int captureSq =
-          move.to + Bishop.playerDirection[colour.opponent] * size.north;
+      int captureSq = state.move?.to ??
+          (move.to + Bishop.playerDirection[colour.opponent] * size.north);
       hash ^= zobrist.table[captureSq][board[captureSq].piece];
       pieces[board[captureSq].piece]--;
       board[captureSq] = Bishop.empty;
