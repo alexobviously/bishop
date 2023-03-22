@@ -109,6 +109,7 @@ class PieceType {
     };
   }
 
+  /// Returns a copy of this piece type with some properties changed.
   PieceType copyWith({
     String? betza,
     List<MoveDefinition>? moves,
@@ -201,19 +202,25 @@ class PieceType {
         royal: true,
         promoOptions: PiecePromoOptions.none,
       );
+
+  /// A king that cannot move.
   factory PieceType.staticKing() => PieceType.fromBetza(
         '',
         royal: true,
         promoOptions: PiecePromoOptions.none,
       );
+
   factory PieceType.pawn() => PieceType.fromBetza(
-        'fmWfceFifmnD', // seriously
+        'fmW' // moves forward one square
+        'fceF' // captures diagonally forward one square
+        'ifmnD', // on the first move, moves forward two squares
         promoOptions: PiecePromoOptions.promotable,
         enPassantable: true,
         noSanSymbol: true,
         value: 100,
       );
 
+  /// An 'inverted' pawn that moves diagonally and captures fowards.
   factory PieceType.berolinaPawn() => PieceType.fromBetza(
         'mfFcfWifmnA',
         promoOptions: PiecePromoOptions.promotable,
@@ -229,21 +236,45 @@ class PieceType {
         noSanSymbol: true,
         value: 100,
       );
+
+  /// Moves like a knight, captures like a bishop.
   factory PieceType.knibis() => PieceType.fromBetza('mNcB', value: 400);
+
+  /// Moves like a bishop, captures like a knight.
   factory PieceType.biskni() => PieceType.fromBetza('mBcN');
+
+  /// Moves like a knight, captures like a rook.
   factory PieceType.kniroo() => PieceType.fromBetza('mNcR', value: 400);
+
+  /// Moves like a rook, captures like a knight.
   factory PieceType.rookni() => PieceType.fromBetza('mRcN');
+
+  /// Moves like a bishop, captures like a rook.
   factory PieceType.bisroo() => PieceType.fromBetza('mBcR');
+
+  /// Moves like a rook, captures like a bishop.
   factory PieceType.roobis() => PieceType.fromBetza('mRcB');
+
+  /// Moves and captures like a bishop or a knight.
   factory PieceType.archbishop() => PieceType.fromBetza('BN', value: 900);
+
+  /// Moves and captures like a rook or a knight.
   factory PieceType.chancellor() => PieceType.fromBetza('RN', value: 900);
+
+  /// Moves and captures like a queen or a knight.
   factory PieceType.amazon() => PieceType.fromBetza('QN', value: 1200);
+
+  /// Moves and captures like a queen, but *must* jump over exactly one piece,
+  /// and land on the square directly after it.
   factory PieceType.grasshopper() => PieceType.fromBetza('gQ');
+
   factory PieceType.blocker({bool immortal = true}) => PieceType.fromBetza(
         '',
         value: 0,
         actions: immortal ? [ActionImmortality()] : [],
       );
+
+  /// Can move to any empty square on the board.
   factory PieceType.duck() =>
       PieceType.fromBetza('m*').withNoPromotion().withImmortality();
 }
