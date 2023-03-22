@@ -222,7 +222,7 @@ class PieceType {
 
   /// An 'inverted' pawn that moves diagonally and captures fowards.
   factory PieceType.berolinaPawn() => PieceType.fromBetza(
-        'mfFcfWifmnA',
+        'fmFfceWifmnA',
         promoOptions: PiecePromoOptions.promotable,
         enPassantable: true,
         noSanSymbol: true,
@@ -288,6 +288,10 @@ class PieceType {
   /// Jumps 3 squares in one direction, 2 in the other.
   factory PieceType.zebra() => PieceType.fromBetza('Z', value: 180);
 
+  /// Jumps 4 squares in one direction, 1 in the other.
+  factory PieceType.giraffe() => PieceType.fromBetza('(4,1)', value: 180);
+
+  /// A piece that does nothing but blocks. Can optionally be [immortal].
   factory PieceType.blocker({bool immortal = true}) => PieceType.fromBetza(
         '',
         value: 0,

@@ -9,6 +9,7 @@
   - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
   - Grasshopper Chess (`FairyVariants.grasshopper()`): chess with some extra grasshopper pieces.
   - Berolina Chess (`FairyVariants.berolina()`): chess with the Berolina pawn (`PieceType.berolinaPawn()`).
+- Betza parsing now supports `(x,y)` atoms, allowing for pieces jumping more than 3 squares in each direction. For example, the 'Giraffe' is `(4,1)`, and the Knight could be rewritten as `(2,1)` (or `(1,2)`).
 - A lot of old deprecated constants and functions have been removed.
 - `play.dart` example: move filtering commands - `moves from x`, `moves to x`, `moves captures`, `moves quiet`.
 - `BoardSize.isValidSquareName()`: check if a square name is valid.

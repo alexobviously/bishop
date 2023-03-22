@@ -28,10 +28,23 @@ class Betza {
     'c': Modality.capture,
   };
 
+  static final _dirAtomRegex = RegExp(r'^(\(([0-9]{1,2}),([0-9]{1,2})\))');
+
+  static Direction? atomDirection(String atom) {
+    if (atomMap.containsKey(atom)) {
+      return atomMap[atom]!;
+    }
+    final m = _matchLongDirAtom(atom);
+    if (m == null) return null;
+    return Direction(int.parse(m.group(2)!), int.parse(m.group(3)!));
+  }
+
+  static RegExpMatch? _matchLongDirAtom(String substring) =>
+      _dirAtomRegex.firstMatch(substring);
+
   static List<Atom> parse(String string) {
     List<Atom> atoms = [];
 
-    List<String> chars = string.split('');
     List<String> atomsStr = [];
     List<String> dirs = [];
     List<String> funcs = [];
@@ -56,7 +69,8 @@ class Betza {
       modality = Modality.both;
     }
 
-    for (String c in chars) {
+    for (int i = 0; i < string.length; i++) {
+      String c = string[i];
       if (isNumeric(c)) {
         range = int.parse(c);
       }
@@ -64,14 +78,25 @@ class Betza {
         add();
       }
 
-      if (dirModifiers.contains(c)) dirs.add(c);
-      if (funcModifiers.contains(c)) funcs.add(c);
-      if (modalities.containsKey(c)) modality = modalities[c]!;
-      if (atomMap.containsKey(c)) atomsStr.add(c);
-      if (shorthands.contains(c)) {
+      if (dirModifiers.contains(c)) {
+        dirs.add(c);
+      } else if (funcModifiers.contains(c)) {
+        funcs.add(c);
+      } else if (modalities.containsKey(c)) {
+        modality = modalities[c]!;
+      } else if (shorthands.contains(c)) {
         if (c != 'K') range = 0;
         if (c != 'R') atomsStr.add('F');
         if (c != 'B') atomsStr.add('W');
+      } else if (atomMap.containsKey(c)) {
+        atomsStr.add(c);
+      } else {
+        final m = _matchLongDirAtom(string.substring(i));
+        if (m != null) {
+          String a = m.group(0)!;
+          atomsStr.add(a);
+          i += a.length - 1;
+        }
       }
     }
 
@@ -107,7 +132,7 @@ class Atom {
 
   List<Direction> get directions {
     if (teleport) return [Direction.none];
-    Direction baseDir = Betza.atomMap[base]!;
+    Direction baseDir = Betza.atomDirection(base)!;
     int h = baseDir.h;
     int v = baseDir.v;
     bool allDirs = dirMods.isEmpty;
