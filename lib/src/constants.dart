@@ -193,15 +193,16 @@ enum Variants {
   shogi(Shogi.shogi),
   dobutsu(Dobutsu.dobutsu),
   spawn(MiscVariants.spawn),
-  hoppelPoppel(MiscVariants.hoppelPoppel),
   kinglet(MiscVariants.kinglet),
   threeKings(MiscVariants.threeKings),
   domination(MiscVariants.domination),
   dart(MiscVariants.dart),
   andernach(MiscVariants.andernach),
   jesonMor(MiscVariants.jesonMor),
-  grasshopper(MiscVariants.grasshopper),
   legan(MiscVariants.legan),
+  hoppelPoppel(FairyVariants.hoppelPoppel),
+  grasshopper(FairyVariants.grasshopper),
+  berolina(FairyVariants.berolina),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 

@@ -207,12 +207,20 @@ class PieceType {
         promoOptions: PiecePromoOptions.none,
       );
   factory PieceType.pawn() => PieceType.fromBetza(
-        'fmWfceFifmnD',
+        'fmWfceFifmnD', // seriously
         promoOptions: PiecePromoOptions.promotable,
         enPassantable: true,
         noSanSymbol: true,
         value: 100,
-      ); // seriously
+      );
+
+  factory PieceType.berolinaPawn() => PieceType.fromBetza(
+        'mfFcfWifmnA',
+        promoOptions: PiecePromoOptions.promotable,
+        enPassantable: true,
+        noSanSymbol: true,
+        value: 125, // idk exactly but seems better than a normal pawn
+      );
 
   /// A pawn with no double move and no en passant.
   factory PieceType.simplePawn() => PieceType.fromBetza(

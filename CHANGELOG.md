@@ -7,7 +7,8 @@
 - `RegionDropBuilder` now allows using region IDs from variant, and separate regions per player (same API as `RegionPromotion`).
 - Variants:
   - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
-  - Grasshopper Chess (`MiscVariants.grasshopper()`): chess with some extra grasshopper pieces.
+  - Grasshopper Chess (`FairyVariants.grasshopper()`): chess with some extra grasshopper pieces.
+  - Berolina Chess (`FairyVariants.berolina()`): chess with the Berolina pawn (`PieceType.berolinaPawn()`).
 
 ### 1.2.10
 - Variants:
@@ -91,7 +92,7 @@
 
 ### 1.1.1
 - Custom drop move generation is now possible with `Variant.handOptions.dropBuilder`.
-- Added variant definitions: Mini Xiangqi (`Xiangqi.mini()`), Manchu (`Xiangqi.manchu()`), Hoppel-Poppel (`MiscVariants.hoppelPoppel()`), Shako (`LargeVariants.shako()`), Dobutsu (`Dobutsu.dobutsu()`).
+- Added variant definitions: Mini Xiangqi (`Xiangqi.mini()`), Manchu (`Xiangqi.manchu()`), Hoppel-Poppel (`FairyVariants.hoppelPoppel()`), Shako (`LargeVariants.shako()`), Dobutsu (`Dobutsu.dobutsu()`).
 - Fixed a bug in serialisation of pieces with limited promo options.
 - Experimental (incomplete) Shogi support.
 - `Variant.withCampMate()`: helper method to add the campmate end condition to a variant.

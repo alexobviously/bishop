@@ -13,6 +13,7 @@ part 'options/promotion_options.dart';
 part 'options/material_conditions.dart';
 part 'variants/asymmetric.dart';
 part 'variants/common.dart';
+part 'variants/fairy.dart';
 part 'variants/large.dart';
 part 'variants/misc.dart';
 part 'variants/musketeer.dart';
