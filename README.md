@@ -170,8 +170,10 @@ Currently supported:
 * Winning the game on entering a region. For example, King of the Hill where the game ends when a player's king enters the centre.
 * Changing the behaviour of a piece if it's in a region. For example, soldiers in Xiangqi behave differently depending on which side of the river they're on.
 * Restricting the movement of pieces. For example, the advisors and generals in Xiangqi that cannot move out of their palace, and elephants that can't cross the river.
+* Allowing promotion only in a specific area (use `Variant.promotionOptions: RegionPromotion()`).
+* Allowing drops only in a specific area.
 
-To define region behaviour, you need one or more `BoardRegion` defintions in `Variant.regions`, and `RegionEffect`s in the pieces you want to use them, using the keys used to define them.
+To define region behaviour, you need one or more `BoardRegion` defintions in `Variant.regions`, and `RegionEffect`s in the pieces you want to use them, using the keys used to define them. For simple rectangular regions, you will usually want `RectRegion` (which also has factory constructors for common cases, e.g. a whole rank, a whole file). There are also `UnionRegion` and `IntersectRegion`, which allow combining multiple regions into one.
 
 A good simple example is the King of the Hill variant, in which a single region is defined in the centre of the board, and when a player moves their king into it, they win.
 The definition is below:
@@ -184,7 +186,7 @@ static Variant kingOfTheHill() =>
         ),
       }).withRegion(
         'hill',
-        BoardRegion(
+        RectRegion(
           startFile: Bishop.fileD,
           endFile: Bishop.fileE,
           startRank: Bishop.rank4,
@@ -214,9 +216,9 @@ pieceTypes['N'] = PieceType.knight().copyWith(
 final v = Variant.standard().copyWith(
   regions: {
     'whiteSide':
-        BoardRegion(startRank: Bishop.rank1, endRank: Bishop.rank4),
+        RectRegion(startRank: Bishop.rank1, endRank: Bishop.rank4),
     'blackSide':
-        BoardRegion(startRank: Bishop.rank5, endRank: Bishop.rank8),
+        RectRegion(startRank: Bishop.rank5, endRank: Bishop.rank8),
   },
   pieceTypes: pieceTypes,
 );

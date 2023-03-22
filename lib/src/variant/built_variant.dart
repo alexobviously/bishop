@@ -324,6 +324,11 @@ class BuiltVariant {
   /// Whether this variant involves gating.
   bool get gating => data.gating;
 
+  /// A map of region definitions for the board, for use with `RegionEffects`
+  /// in piece definitions. The keys used here are used to reference the regions
+  /// in effects.
+  Map<String, BoardRegion> get regions => data.regions;
+
   /// Whether this variant has any region definitions.
   bool get hasRegions => data.regions.isNotEmpty;
 

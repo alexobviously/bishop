@@ -159,13 +159,13 @@ class Promotion {
         return piece.colour == Bishop.white ? white(params) : black(params);
       };
 
-  static PromotionBuilder region(String regionId, {bool optional = false}) =>
+  /// Promotes only within [region].
+  static PromotionBuilder region(Region region, {bool optional = false}) =>
       (params) {
         if (!params.pieceType.promoOptions.canPromote) return null;
 
         Square piece = params.state.board[params.move.from];
         if (piece.isEmpty) return null;
-        Region region = params.variant.data.regions[regionId]!;
         if (!params.variant.boardSize.inRegion(params.move.to, region)) {
           return null;
         }
@@ -181,9 +181,12 @@ class Promotion {
         ];
       };
 
+  /// A promotion builder pair for region promotion, where white and black
+  /// have different regions.
+  ///
   static PromotionBuilder regions(
-    String? whiteRegion,
-    String? blackRegion, {
+    Region? whiteRegion,
+    Region? blackRegion, {
     bool optional = false,
   }) =>
       pair(

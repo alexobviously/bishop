@@ -107,20 +107,30 @@ class OptionalPromotion extends PromotionOptions {
   }
 }
 
+/// Allows promotion only within specified regions.
+/// It is possible to specify `BoardRegions` ([whiteRegion], [blackRegion]),
+/// or reference regions in `Variant.regions` with [whiteId] and [blackId].
 class RegionPromotion extends PromotionOptions {
-  final String? whiteRegion;
-  final String? blackRegion;
+  final BoardRegion? whiteRegion;
+  final BoardRegion? blackRegion;
+  final String? whiteId;
+  final String? blackId;
   final bool optional;
 
   const RegionPromotion({
     this.whiteRegion,
     this.blackRegion,
+    this.whiteId,
+    this.blackId,
     this.optional = false,
   });
 
   @override
-  PromotionBuilder build(BuiltVariant variant) =>
-      Promotion.regions(whiteRegion, blackRegion, optional: optional);
+  PromotionBuilder build(BuiltVariant variant) => Promotion.regions(
+        whiteRegion ?? (whiteId != null ? variant.regions[whiteId] : null),
+        blackRegion ?? (blackId != null ? variant.regions[blackId] : null),
+        optional: optional,
+      );
 }
 
 class CustomPromotion extends PromotionOptions {

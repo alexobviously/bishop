@@ -51,15 +51,19 @@ class OptionalPromotionAdapter extends BishopTypeAdapter<OptionalPromotion> {
 class RegionPromotionAdapter extends BishopTypeAdapter<RegionPromotion> {
   @override
   RegionPromotion build(Map<String, dynamic>? params) => RegionPromotion(
-        whiteRegion: params?['white'],
-        blackRegion: params?['black'],
+        whiteRegion: params?['wRegion'],
+        blackRegion: params?['bRegion'],
+        whiteId: params?['wId'],
+        blackId: params?['bId'],
         optional: params?['optional'] ?? false,
       );
 
   @override
   Map<String, dynamic>? export(RegionPromotion e) => {
-        if (e.whiteRegion != null) 'white': e.whiteRegion,
-        if (e.blackRegion != null) 'black': e.blackRegion,
+        if (e.whiteRegion != null) 'wRegion': e.whiteRegion,
+        if (e.blackRegion != null) 'bRegion': e.blackRegion,
+        if (e.whiteId != null && e.whiteRegion == null) 'wId': e.whiteId,
+        if (e.blackId != null && e.blackRegion == null) 'bId': e.blackId,
         if (e.optional) 'optional': e.optional,
       };
 

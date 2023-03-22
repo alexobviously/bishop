@@ -160,7 +160,7 @@ class MiscVariants {
           'P': PieceType.fromBetza('mlfFcflW', noSanSymbol: true).promotable(),
         },
         castlingOptions: CastlingOptions.none,
-        promotionOptions: RegionPromotion(whiteRegion: 'wp', blackRegion: 'bp'),
+        promotionOptions: RegionPromotion(whiteId: 'wp', blackId: 'bp'),
         regions: {
           'wp': UnionRegion([
             RectRegion.lrbt(

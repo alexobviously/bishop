@@ -28,8 +28,8 @@
  "castlingOptions": {"enabled": false},
  "promotionOptions": {
   "id": "bishop.promo.region",
-  "white": "wp",
-  "black": "bp"
+  "wId": "wp",
+  "bId": "bp"
  },
  "materialConditions": {"enabled": false},
  "startPosition": "knbrp3/bqpp4/npp5/rp1p3P/p3P1PR/5PPN/4PPQB/3PRBNK w - - 0 1",
