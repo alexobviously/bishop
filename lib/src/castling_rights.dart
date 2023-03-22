@@ -44,32 +44,3 @@ class Castling {
     'q': bq,
   };
 }
-
-@Deprecated('Use Castling.k')
-const int CASTLING_K = 1;
-@Deprecated('Use Castling.q')
-const int CASTLING_Q = 2;
-@Deprecated('Use Castling.black')
-const int CASTLING_BLACK = 4;
-@Deprecated('Use Castling.bk')
-const int CASTLING_BK = 4;
-@Deprecated('Use Castling.bq')
-const int CASTLING_BQ = 8;
-@Deprecated('Use Castling.whiteMask')
-const int CASTLING_WHITE_MASK = 12;
-@Deprecated('Use Castling.blackMask')
-const int CASTLING_BLACK_MASK = 3;
-@Deprecated('Use Castling.mask')
-const int CASTLING_MASK = 15;
-@Deprecated('Use Castling.bothK')
-const int CASTLING_BOTH_K = 5;
-@Deprecated('Use Castling.bothQ')
-const int CASTLING_BOTH_Q = 10;
-
-@Deprecated('Use Castling.symbols')
-const Map<String, int> CASTLING_SYMBOLS = {
-  'K': CASTLING_K,
-  'Q': CASTLING_Q,
-  'k': CASTLING_BK,
-  'q': CASTLING_BQ,
-};

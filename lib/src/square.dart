@@ -9,9 +9,6 @@ import 'variant/variant.dart';
 
 typedef Square = int;
 
-@Deprecated('Use Bishop.empty')
-const Square empty = 0;
-
 extension SquareLogic on int {
   /// Colour only.
   int get colour => this & 3;
@@ -53,18 +50,6 @@ int makePiece(
 }) =>
     (flags << 18) + (internalType << 10) + (piece << 2) + colour;
 
-@Deprecated('Use BoardSize.squareName or Bishop.squareName')
-String squareName(int square, [BoardSize size = const BoardSize(8, 8)]) =>
-    size.squareName(square);
-
-@Deprecated('Use BoardSize.squareNumber or Bishop.squareNumber')
-int squareNumber(String name, [BoardSize size = const BoardSize(8, 8)]) =>
-    size.squareNumber(name);
-
 String fileSymbol(int file) => String.fromCharCode(Bishop.asciiA + file);
 int fileFromSymbol(String symbol) =>
     symbol.toLowerCase().codeUnits[0] - Bishop.asciiA;
-
-@Deprecated('Use BoardSize.onBoard or Bishop.onBoard')
-bool onBoard(int square, [BoardSize boardSize = const BoardSize(8, 8)]) =>
-    boardSize.onBoard(square);

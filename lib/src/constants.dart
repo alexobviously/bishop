@@ -129,18 +129,6 @@ class Bishop {
       size.squareNumber(name);
 }
 
-@Deprecated('Use Bishop.white')
-const Colour WHITE = Bishop.white;
-@Deprecated('Use Bishop.black')
-const Colour BLACK = Bishop.black;
-
-@Deprecated('Use Bishop.boardStart')
-const int BOARD_START = Bishop.boardStart;
-@Deprecated('Use Bishop.invalid')
-const int INVALID = Bishop.invalid;
-@Deprecated('Use Bishop.hand')
-const int HAND = Bishop.hand;
-
 enum Modality {
   quiet('m'),
   capture('c'),
@@ -162,9 +150,6 @@ enum GatingMode {
   bool operator >=(GatingMode other) => index >= other.index;
   bool operator <=(GatingMode other) => index <= other.index;
 }
-
-@Deprecated('Use Bishop.defaultSeed')
-const defaultSeed = 7363661891;
 
 /// All built in variants.
 enum Variants {
