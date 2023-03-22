@@ -1,5 +1,4 @@
 import 'constants.dart';
-import 'variant/variant.dart';
 
 // Square anatomy
 // [00-01]    2 bit:    colour    (0: white, 1: black)

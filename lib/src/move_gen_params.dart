@@ -1,4 +1,3 @@
-
 class MoveGenParams {
   final bool captures;
   final bool quiet;
@@ -66,6 +65,6 @@ class MoveGenParams {
   );
 
   @override
-  String toString() =>
-      'MoveGenOptions($captures, $quiet, $castling, $legal, $ignorePieces, $pieceType, $onlySquare)';
+  String toString() => 'MoveGenOptions($captures, $quiet, $castling, $legal'
+      ' $ignorePieces, $pieceType, $onlySquare)';
 }
