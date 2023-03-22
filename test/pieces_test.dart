@@ -30,6 +30,7 @@ void main() {
     MoveTest('fslbC', ['a5', 'g5', 'c1']),
     MoveTest('(4,1)', ['c8', 'e8', 'h3', 'h5']),
     MoveTest('r(4,3)', ['h1', 'h7']),
+    MoveTest('frN2rfN', ['f5', 'h6', 'e6']),
   ];
   group('Pieces', () {
     for (CountMovesTest t in countMoveTests) {

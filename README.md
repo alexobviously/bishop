@@ -110,9 +110,82 @@ Game game = Game(fen: 'rnbq1bnr/ppppkppp/8/4p3/4P3/8/PPPPKPPP/RNBQ1BNR w - - 2 3
 ***
 
 ## Piece Definition
-[Fairy piece types](https://en.wikipedia.org/wiki/Fairy_chess_piece) can be easily defined using [Betza notation](https://www.gnu.org/software/xboard/Betza.html), for example the [Amazon](https://en.wikipedia.org/wiki/Amazon_%28chess%29) can be defined like: `PieceType amazon = PieceType.fromBetza('QN');`. More complicated pieces such as [Musketeer Chess](https://musketeerchess.net/games/musketeer/rules/rules-short.php)'s Fortress can also be easily configured: `PieceType fortress = PieceType.fromBetza('B3vND')`.
+[Fairy piece types](https://en.wikipedia.org/wiki/Fairy_chess_piece) can be easily defined using [Betza notation](https://www.gnu.org/software/xboard/Betza.html), for example the [Amazon](https://en.wikipedia.org/wiki/Amazon_%28chess%29) can be defined like: `PieceType amazon = PieceType.fromBetza('QN');`. More complicated pieces such as [Musketeer Chess](https://musketeerchess.net/games/musketeer/rules/rules-short.php)'s Fortress can also be easily configured: `PieceType fortress = PieceType.fromBetza('B3vND')`. 
 
 If you're feeling particularly adventurous, you can also define a `List<MoveDefinition>` manually and build a `PieceType` with the default constructor.
+
+There are lots of examples in [piece_type.dart](https://github.com/alexobviously/bishop/blob/master/lib/src/piece_type.dart) to learn from, but here's a basic rundown.
+
+### Movement Atoms
+
+Single capital letters represent a basic movement direction. Here are the basic directions:
+
+```
+G Z C H C Z G     W = Wazir     (1,0)
+Z A N D N A Z     F = Ferz      (1,1)
+C N F W F N C     D = Dabbaba   (2,0)
+H D W * W D H     N = Knight    (2,1)
+C N F W F N C     A = Alfil     (2,2)
+Z A N D N A Z     C = Camel     (3,1)
+G Z C H C Z G     Z = Zebra     (3,2)
+```
+
+These can be combined like `NC`, which would define the Unicorn from Musketeer Chess, which moves as either a Knight or a Camel. There is also the `K` (king) shorthand, which is equal to `WF`.
+
+Bishop's implementation of Betza parsing also supports directional atoms in parentheses like `(4,1)` (the 'Giraffe'), so a Knight could also be defined as `PieceType.fromBetza('(2,1)')` (or `(1,2)`).
+
+Bishop also implements a special movement atom `*`, which means movement to any square on the board is allowed. This is not part of any Betza standard, but I hereby propose it! It allows defining the Duck from [Duck Chess](https://www.chess.com/terms/duck-chess) as `m*`.
+
+### Move Modality
+
+By default, any atoms specified will produce both quiet (non-capturing) and capturing moves. The modifiers `m` and `c` specify moves that either only capture or never capture. For example, `mNcB` defines a 'Knibis', a piece that moves like a knight but captures like a bishop.
+
+### Range
+
+The range of a movement atom is specified by a number after it. For example, `F2` means a piece that can move two squares diagonally.  
+* The range is taken to be 1 by default, so `W` is the same as `W1`.  
+* 0 means infinite range, so `W0` is a rook.  
+* This works for any atom! So `N0` is a 'Nightrider', a piece that can make many Knight moves in the same direction. `(4,1)2` makes one or two Giraffe moves (although you would need a huge board for this to be useful).  
+* Pieces with range are known as 'sliders', and they can be blocked, i.e. they can't jump over pieces.  
+* Shorthands `R`, `B` and `Q` (rook, bishop and queen) are equal to `W0`, `F0` and `W0F0` (or `RB`) respectively.  
+* The old Betza repeated atom shorthand, e.g. `WW` meaning `W0` is _considered obsolete and does not work in Bishop_.  
+
+### Directional Modifiers
+
+What if you want a knight that can only move forward, like the [Shogi Knight](https://en.wikipedia.org/wiki/Shogi#Movement)? That can be defined with `fN`. A rook that only moves horizontally is `sR`. A bishop that only moves right is `rB`.
+
+More complex directional modifiers are available, like `fsN` - a knight that only moves forwards but only on the horizontal moves, or `rbN`, a knight that only moves to one square behind it on the right (from d4 to e2).\
+
+I won't go through all of the modifiers here because there are a lot. See the Betza [reference](https://www.gnu.org/software/xboard/Betza.html).
+
+### Functional Modifiers
+
+* `n` (lame leaper/non-jumper): moves with this modifier cannot jump over pieces. For example, `nN` is the Xiangqi knight - it moves like a chess knight, but if there is a piece in the way in the longer direction, it cannot make the move.
+* `i` (first move only): atoms with this modifier can only be made if it is the piece's first move.
+* `e` (en-passant): atoms with this modifier can capture en-passant. This modifier doesn't exclude normal captures.
+* `p` (unlimited hopper): applied to sliding moves to change them so that they must jump over a piece. Pieces making these moves can land anywhere after the jump, but _must_ jump over a piece. The most well known example is probably the Xiangqi cannon: `mRcpR` (moves as a rook, captures as a rook but must jump a piece first).
+* `g` (limited hopper): like `p`, but the piece can only land on the square directly after the piece it jumps over, like the Grasshopper: `gQ`.
+
+### Combining Modifiers / Example
+
+Modifiers only apply to the atom directly following them. Other than that, the order of operations is unimportant; `igfrR` is the same as `gfriR`. Bear in mind that some of the directional modifiers are two characters long - `fr` is not the same as `rf` (for oblique pieces).
+
+Let's break down the standard chess pawn, since it is surprisingly complicated and probably the inspiration for half of these modifiers.
+
+`'fmWfceFifmnD'`:
+* `fmW`: moves orthogonally forward exactly one square (`fW`), doesn't capture this way (`m`).
+* `fceF`: captures diagonally forward exactly one square (`fF`), doesn't move this way (`c`), can en-passant (`e`).
+* `ifmnD`: moves forward exactly two squares (`fD`), doesn't capture this way (`m`), can be blocked by a piece halfway through the move (`n`), can only make this move as the piece's first move (`i`).
+
+### Things Bishop doesn't support (yet)
+
+Some of the modern Betza notation extensions allow specifying a whole load of other behaviour. Some of these are planned for the relatively near future for Bishop.
+
+Most importantly, chained/multi-leg moves will be included soon.
+
+Some features like the 'destroy own piece' modifier or drop restrictions aren't a priority since Bishop has more flexible ways to define these with things like actions and drop builders. It is possible that some of these will be included as 'shortcuts' that are compiled to actions etc in the variant building process.
+
+As usual, if you're reading this and wishing some specific modifier was included, feel free to file an issue or start a discussion on the repo page.
 
 ***
 
