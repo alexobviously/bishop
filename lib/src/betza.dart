@@ -16,12 +16,12 @@ class Betza {
   static const List<String> shorthands = ['B', 'R', 'Q', 'K'];
   static const List<String> dirModifiers = ['f', 'b', 'r', 'l', 'v', 's', 'h'];
   static const List<String> funcModifiers = [
-    'n', // 'lame'/blockable move, e.g. xiangqi knight
+    'n', // 'lame'/blockable move, e.g. Xiangqi knight
     'j',
     'i', // only allowed for first move of the piece, e.g. pawn double move
     'e', // en-passant
     'p', // unlimited hopper (Xiangqi cannon)
-    'g', // limited hopper
+    'g', // limited hopper (Grasshopper)
   ];
   static const Map<String, Modality> modalities = {
     'm': Modality.quiet,
@@ -106,6 +106,7 @@ class Betza {
   }
 }
 
+/// A single component of a piece's move set.
 class Atom {
   final String base;
   final List<String> dirMods;
@@ -130,6 +131,7 @@ class Atom {
   bool get quiet => modality == Modality.both || modality == Modality.quiet;
   bool get capture => modality == Modality.both || modality == Modality.capture;
 
+  /// Generates all of the directions for this atom.
   List<Direction> get directions {
     if (teleport) return [Direction.none];
     Direction baseDir = Betza.atomDirection(base)!;
@@ -238,10 +240,12 @@ class Atom {
     return dirs;
   }
 
+  /// Generates all the move definitions for this atom.
   List<MoveDefinition> get moveDefinitions =>
       directions.map((d) => MoveDefinition.fromBetza(this, d)).toList();
 
   @override
   String toString() =>
-      '${modality.betza}${dirMods.join('')}${funcMods.join('')}$base${range == 1 ? '' : range}';
+      '${modality.betza}${dirMods.join('')}${funcMods.join('')}'
+      '$base${range == 1 ? '' : range}';
 }

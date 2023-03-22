@@ -129,6 +129,7 @@ class Bishop {
       size.squareNumber(name);
 }
 
+/// Defines whether a move definition allows captures, quiet moves or both.
 enum Modality {
   quiet('m'),
   capture('c'),
@@ -140,6 +141,14 @@ enum Modality {
       values.firstWhere((e) => e.betza == betza);
 }
 
+/// Defines different types of gating for variants.
+///
+/// [flex] is like gating in Seirawan chess: any piece in the gate can be gated
+/// on any square.
+///
+/// [fixed] is like gating in Musketeer chess: pieces are fixed in a position
+/// in the gate, and only when the piece on the corresponding square is moved
+/// can a piece be gated.
 enum GatingMode {
   none,
   flex,

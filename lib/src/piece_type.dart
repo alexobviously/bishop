@@ -1,3 +1,4 @@
+
 import 'package:bishop/bishop.dart';
 
 /// Specifies a piece type, with all of its moves and attributes.
