@@ -98,6 +98,16 @@ class BoardSize {
     return '$fileName$rank';
   }
 
+  /// Check whether a square name is valid for this board size.
+  bool isValidSquareName(String name) {
+    try {
+      squareNumber(name);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
   /// Returns the square id for a square with [name].
   int squareNumber(String name) {
     name = name.toLowerCase();

@@ -17,6 +17,10 @@ void main(List<String> args) async {
   printYellow(
     '''Enter your moves as algebraic strings, e.g. b1c3, e7e8q, etc.
     \'moves\': list available moves.
+    \t'moves from [square]': list all moves starting at [square].
+    \t'moves to [square]': list all moves ending on [square].
+    \t'moves captures': list all capture moves.
+    \t'moves quiet': list all non-capture moves.
     \'resign\': resign.
     \'pgn\': prints the PGN so far.
     \'history\': prints move history in algebraic form.
@@ -61,6 +65,30 @@ bool resigned = false;
 void printPgn() => printYellow(game.pgn());
 void printHistory() => printYellow(game.moveHistoryAlgebraic.join(' '));
 void printMoves() => printYellow(game.algebraicMoves().join(', '));
+void printCaptures() => printYellow(
+      game.generateLegalMoves().captures.toAlgebraic(game).join(', '),
+    );
+void printQuiet() => printYellow(
+      game.generateLegalMoves().quiet.toAlgebraic(game).join(', '),
+    );
+void printMovesFrom(String sq) => variant!.boardSize.isValidSquareName(sq)
+    ? printYellow(
+        game
+            .generateLegalMoves()
+            .from(variant!.boardSize.squareNumber(sq))
+            .toAlgebraic(game)
+            .join(', '),
+      )
+    : printRed('Invalid square \'$sq\'');
+void printMovesTo(String sq) => variant!.boardSize.isValidSquareName(sq)
+    ? printYellow(
+        game
+            .generateLegalMoves()
+            .to(variant!.boardSize.squareNumber(sq))
+            .toAlgebraic(game)
+            .join(', '),
+      )
+    : printRed('Invalid square \'$sq\'');
 
 void handlePlayerInput() {
   final String input = (stdin.readLineSync() ?? '').toLowerCase();
@@ -78,6 +106,34 @@ void handlePlayerInput() {
     printState = false;
     printMoves();
     return;
+  }
+  if (input.startsWith('moves ')) {
+    printState = false;
+    final parts = input.split(' ');
+    final subcommands = ['from', 'to', 'captures', 'quiet'];
+    final subcommand = subcommands.contains(parts[1]) ? parts[1] : null;
+    final param = parts.length == 2 ? parts[1] : parts[2];
+    switch (subcommand) {
+      case 'from':
+        printMovesFrom(param);
+        return;
+      case 'to':
+        printMovesTo(param);
+        return;
+      case 'captures':
+        printCaptures();
+        return;
+      case 'quiet':
+        printQuiet();
+        return;
+      default:
+        if (parts.length == 2) {
+          printMovesFrom(param);
+          return;
+        }
+        printRed('Invalid subcommand \'${parts[1]}\'');
+        return;
+    }
   }
   if (input == 'resign') {
     resigned = true;
@@ -128,6 +184,9 @@ void selectVariant() {
     variant = Variant.fromJson(json);
   } else {
     variant = variantFromString(input);
+  }
+  if (input == 'random') {
+    variant = ([...Variants.values]..shuffle()).first.build();
   }
 
   if (variant == null) {
