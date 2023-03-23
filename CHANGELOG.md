@@ -5,12 +5,14 @@
   - `UnionRegion` and `IntersectRegion` combine multiple `BoardRegions` with union and intersection respectively.
 - `RegionPromotion` (`PromotionOptions`): pieces can promote in specific regions.
 - `RegionDropBuilder` now allows using region IDs from variant, and separate regions per player (same API as `RegionPromotion`).
+- `FirstMoveOptions` (**breaking**): replaces `Variant.firstMoveRanks`, supports more flexible first move options.
+- First move checking for most variants no longer uses the rank of the piece. Instead there is an 'initial state' property embedded in the square representation.
+  - `FirstMoveOptions.ranks` is still available, and is used by Horde Chess, for example, since not all horde pawns should be moveable in their initial state.
+- Betza parsing now supports `(x,y)` atoms, allowing for pieces jumping more than 3 squares in each direction. For example, the 'Giraffe' is `(4,1)`, and the Knight could be rewritten as `(2,1)` (or `(1,2)`).
 - Variants:
   - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
   - Grasshopper Chess (`FairyVariants.grasshopper()`): chess with some extra grasshopper pieces.
   - Berolina Chess (`FairyVariants.berolina()`): chess with the Berolina pawn (`PieceType.berolinaPawn()`).
-- Betza parsing now supports `(x,y)` atoms, allowing for pieces jumping more than 3 squares in each direction. For example, the 'Giraffe' is `(4,1)`, and the Knight could be rewritten as `(2,1)` (or `(1,2)`).
-- `FirstMoveOptions`: replaces `Variant.firstMoveRanks`, supports more flexible first move options.
 - A lot of old deprecated constants and functions have been removed.
 - The default value of `Variant.castlingOptions` is now `CastlingOptions.none`.
 - `play.dart` example: move filtering commands - `moves from x`, `moves to x`, `moves captures`, `moves quiet`.

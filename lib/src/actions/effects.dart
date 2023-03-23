@@ -14,7 +14,7 @@ class EffectModifySquare extends ActionEffect {
 /// Sets the custom state variable at index [variable] to [value].
 /// You can set a number of variables equal to the size of your board, so on an
 /// 8x8 board, the highest [variable] is 63.
-/// [value] can be up to 16383, or 2^46 if you assume your code will never
+/// [value] can be up to 8191, or 2^45 if you assume your code will never
 /// execute on a 32-bit vm.
 class EffectSetCustomState extends ActionEffect {
   final int variable;

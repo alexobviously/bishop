@@ -203,10 +203,6 @@ Variant chess = Variant(
     enPassant: true,
     halfMoveDraw: 100,
     repetitionDraw: 3,
-    firstMoveRanks: [
-      [Bishop.rank2], // white
-      [Bishop.rank7], // black
-    ],
     pieceTypes: {
       'P': PieceType.pawn(),
       'N': PieceType.knight(),
