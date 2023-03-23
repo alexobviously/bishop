@@ -32,10 +32,6 @@ class SmallVariants {
       boardSize: BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
       castlingOptions: CastlingOptions.micro,
-      firstMoveOptions: FirstMoveOptions.ranks(
-        [Bishop.rank2],
-        [Bishop.rank4],
-      ),
     );
   }
 
@@ -46,10 +42,6 @@ class SmallVariants {
       boardSize: BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
       castlingOptions: CastlingOptions.nano,
-      firstMoveOptions: FirstMoveOptions.ranks(
-        [Bishop.rank2],
-        [Bishop.rank4],
-      ),
     );
   }
 }

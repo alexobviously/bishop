@@ -169,7 +169,6 @@ enum GatingMode {
 /// All built in variants.
 enum Variants {
   chess(Variant.standard),
-  standard(Variant.standard),
   chess960(CommonVariants.chess960),
   crazyhouse(CommonVariants.crazyhouse),
   capablanca(LargeVariants.capablanca),

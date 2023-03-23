@@ -51,7 +51,7 @@ class PerftTest {
   final int nodes;
 
   PerftTest({
-    this.variant = Variants.standard,
+    this.variant = Variants.chess,
     required this.fen,
     required this.depth,
     required this.nodes,

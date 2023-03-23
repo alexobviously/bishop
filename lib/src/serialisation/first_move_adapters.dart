@@ -1,11 +1,5 @@
 part of 'serialisation.dart';
 
-/// This one is usually not exported.
-class StandardFirstMoveAdapter extends BasicAdapter<StandardFirstMoveOptions> {
-  const StandardFirstMoveAdapter()
-      : super('bishop.first.standard', StandardFirstMoveOptions.new);
-}
-
 class FirstMovePairAdapter extends DeepAdapter<FirstMoveOptionsPair> {
   @override
   String get id => 'bishop.first.pair';
@@ -71,6 +65,7 @@ class RanksFirstMoveAdapter extends BishopTypeAdapter<RanksFirstMoveOptions> {
   Map<String, dynamic> export(RanksFirstMoveOptions e) => {'ranks': e.ranks};
 }
 
+/// This one is not exported if it's at the top level (not in a pair/set).
 class InitialFirstMoveAdapter
     extends BasicAdapter<InitialStateFirstMoveOptions> {
   const InitialFirstMoveAdapter()

@@ -267,7 +267,7 @@ class Variant {
           adapters: allAdapters,
         ),
       'enPassant': enPassant,
-      if (verbose || firstMoveOptions is! StandardFirstMoveOptions)
+      if (verbose || firstMoveOptions is! InitialStateFirstMoveOptions)
         'firstMoveOptions': BishopSerialisation.export<FirstMoveOptions>(
           firstMoveOptions,
           adapters: allAdapters,

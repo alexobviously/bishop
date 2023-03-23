@@ -42,16 +42,7 @@
   },
   "H": {"betza": "WfF"}
  },
- "castlingOptions": {
-  "enabled": true,
-  "kTarget": 6,
-  "qTarget": 2,
-  "fixedRooks": true,
-  "kRook": 7,
-  "qRook": 0,
-  "rookPiece": "R",
-  "useRookAsTarget": false
- },
+ "castlingOptions": {"enabled": false},
  "promotionOptions": "bishop.promo.standard",
  "materialConditions": {"enabled": false},
  "startPosition": "gle/1c1/1C1/ELG[-] w - - 0 1",

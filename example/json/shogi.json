@@ -64,16 +64,7 @@
   },
   "H": {"betza": "WB"}
  },
- "castlingOptions": {
-  "enabled": true,
-  "kTarget": 6,
-  "qTarget": 2,
-  "fixedRooks": true,
-  "kRook": 7,
-  "qRook": 0,
-  "rookPiece": "R",
-  "useRookAsTarget": false
- },
+ "castlingOptions": {"enabled": false},
  "promotionOptions": {
   "id": "bishop.promo.optional",
   "ranks": [6, 2]

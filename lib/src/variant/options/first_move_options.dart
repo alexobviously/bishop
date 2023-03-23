@@ -20,18 +20,7 @@ abstract class FirstMoveOptions {
         RanksFirstMoveOptions(black),
       );
 
-  static const standard = FirstMoveOptionsPair(
-    InitialStateFirstMoveOptions(),
-    InitialStateFirstMoveOptions(),
-  );
-}
-
-class StandardFirstMoveOptions extends FirstMoveOptionsPair {
-  const StandardFirstMoveOptions()
-      : super(
-          const InitialStateFirstMoveOptions(),
-          const InitialStateFirstMoveOptions(),
-        );
+  static const standard = InitialStateFirstMoveOptions();
 }
 
 class FirstMoveOptionsPair implements FirstMoveOptions {
