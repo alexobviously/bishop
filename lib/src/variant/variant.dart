@@ -5,6 +5,7 @@ import 'package:bishop/bishop.dart';
 part 'board_size.dart';
 part 'built_variant.dart';
 part 'options/castling_options.dart';
+part 'options/first_move_options.dart';
 part 'options/game_end_conditions.dart';
 part 'options/hand_options.dart';
 part 'options/output_options.dart';
@@ -60,9 +61,7 @@ class Variant {
   /// Is en passant allowed in this variant?
   final bool enPassant;
 
-  /// The ranks for [WHITE, BLACK] that a piece with a 'first-only' move can make that
-  /// move from. For example, a pawn's double move.
-  final List<List<int>> firstMoveRanks;
+  final FirstMoveOptions? firstMoveOptions;
 
   /// Set this to 100 for the 50-move rule in standard chess.
   final int? halfMoveDraw;
@@ -140,7 +139,7 @@ class Variant {
     this.startPosition,
     this.startPosBuilder,
     this.enPassant = false,
-    this.firstMoveRanks = const [[], []],
+    this.firstMoveOptions,
     this.halfMoveDraw,
     this.repetitionDraw,
     this.forbidChecks = false,
@@ -194,10 +193,16 @@ class Variant {
             )
           : null,
       enPassant: json['enPassant'],
-      firstMoveRanks: (json['firstMoveRanks'] as List<dynamic>?)
-              ?.map((e) => (e as List<dynamic>).map((e) => e as int).toList())
-              .toList() ??
-          const [[], []],
+      firstMoveOptions: json.containsKey('firstMoveOptions')
+          ? BishopSerialisation.build<FirstMoveOptions>(
+              json['firstMoveOptions'],
+              adapters: adapters,
+            )
+          : null,
+      // firstMoveRanks: (json['firstMoveRanks'] as List<dynamic>?)
+      //         ?.map((e) => (e as List<dynamic>).map((e) => e as int).toList())
+      //         .toList() ??
+      //     const [[], []],
       halfMoveDraw: json['halfMoveDraw'],
       repetitionDraw: json['repetitionDraw'],
       forbidChecks: json['forbidChecks'] ?? false,
@@ -265,8 +270,11 @@ class Variant {
           adapters: allAdapters,
         ),
       'enPassant': enPassant,
-      if (verbose || firstMoveRanks.expand((e) => e).isNotEmpty)
-        'firstMoveRanks': firstMoveRanks,
+      if (firstMoveOptions != null)
+        'firstMoveOptions': BishopSerialisation.export<FirstMoveOptions>(
+          firstMoveOptions!,
+          adapters: allAdapters,
+        ),
       if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
       if (repetitionDraw != null) 'repetitionDraw': repetitionDraw,
       if (verbose || forbidChecks) 'forbidChecks': forbidChecks,
@@ -317,6 +325,7 @@ class Variant {
     HandOptions? handOptions,
     GatingMode? gatingMode,
     PassOptions? passOptions,
+    FirstMoveOptions? firstMoveOptions,
     Map<String, int>? pieceValues,
     Map<String, BoardRegion>? regions,
     List<Action>? actions,
@@ -335,7 +344,6 @@ class Variant {
       startPosition: startPosition ?? this.startPosition,
       startPosBuilder: startPosBuilder ?? this.startPosBuilder,
       enPassant: enPassant ?? this.enPassant,
-      firstMoveRanks: firstMoveRanks ?? this.firstMoveRanks,
       halfMoveDraw: halfMoveDraw ?? this.halfMoveDraw,
       repetitionDraw: repetitionDraw ?? this.repetitionDraw,
       forbidChecks: forbidChecks ?? this.forbidChecks,
@@ -343,6 +351,7 @@ class Variant {
       handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
       passOptions: passOptions ?? this.passOptions,
+      firstMoveOptions: firstMoveOptions ?? this.firstMoveOptions,
       pieceValues: pieceValues ?? this.pieceValues,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
@@ -432,10 +441,10 @@ class Variant {
       enPassant: true,
       halfMoveDraw: 100,
       repetitionDraw: 3,
-      firstMoveRanks: [
-        [Bishop.rank2], // white
-        [Bishop.rank7], // black
-      ],
+      firstMoveOptions: FirstMoveOptions.ranks(
+        [Bishop.rank2],
+        [Bishop.rank7],
+      ),
       pieceTypes: {
         'P': PieceType.pawn(),
         'N': PieceType.knight(),

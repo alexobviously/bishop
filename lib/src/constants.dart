@@ -223,15 +223,34 @@ class BishopException {
 }
 
 typedef MoveChecker = bool Function(MoveParams params);
+typedef PieceMoveChecker = bool Function(PieceMoveParams params);
 
 class MoveParams {
   final int colour;
   final BishopState state;
   final BuiltVariant variant;
+
+  BoardSize get size => variant.boardSize;
+
   const MoveParams({
     required this.colour,
     required this.state,
     required this.variant,
+  });
+}
+
+class PieceMoveParams extends MoveParams {
+  final int from;
+  final MoveDefinition moveDefinition;
+
+  int get piece => state.board[from];
+
+  const PieceMoveParams({
+    required super.colour,
+    required super.state,
+    required super.variant,
+    required this.from,
+    required this.moveDefinition,
   });
 }
 

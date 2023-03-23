@@ -13,6 +13,7 @@ class BuiltVariant {
   final PromotionBuilder? promotionBuilder;
   final DropBuilderFunction? dropBuilder;
   final MoveChecker? passChecker;
+  final PieceMoveChecker? firstMoveChecker;
   final int epPiece;
   final int castlingPiece;
   final int royalPiece;
@@ -33,6 +34,7 @@ class BuiltVariant {
     this.promotionBuilder,
     this.dropBuilder,
     this.passChecker,
+    this.firstMoveChecker,
     required this.epPiece,
     required this.castlingPiece,
     required this.royalPiece,
@@ -54,6 +56,7 @@ class BuiltVariant {
     PromotionBuilder? promotionBuilder,
     DropBuilderFunction? dropBuilder,
     MoveChecker? passChecker,
+    PieceMoveChecker? firstMoveChecker,
     int? epPiece,
     int? castlingPiece,
     int? royalPiece,
@@ -74,6 +77,7 @@ class BuiltVariant {
         promotionBuilder: promotionBuilder ?? this.promotionBuilder,
         dropBuilder: dropBuilder ?? this.dropBuilder,
         passChecker: passChecker ?? this.passChecker,
+        firstMoveChecker: firstMoveChecker ?? this.firstMoveChecker,
         epPiece: epPiece ?? this.epPiece,
         castlingPiece: castlingPiece ?? this.castlingPiece,
         royalPiece: royalPiece ?? this.royalPiece,
@@ -167,7 +171,10 @@ class BuiltVariant {
     );
 
     // It's like this so the drop builder can depend on the promotion builder.
-    bv = bv.copyWith(promotionBuilder: data.promotionOptions.build(bv));
+    bv = bv.copyWith(
+      firstMoveChecker: data.firstMoveOptions?.build(bv),
+      promotionBuilder: data.promotionOptions.build(bv),
+    );
     bv = bv.copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv));
     bv = bv.copyWith(passChecker: data.passOptions.build(bv));
 
@@ -283,10 +290,6 @@ class BuiltVariant {
 
   /// Is en passant allowed in this variant?
   bool get enPassant => data.enPassant;
-
-  /// The ranks for [WHITE, BLACK] that a piece with a 'first-only' move can make that
-  /// move from. For example, a pawn's double move.
-  List<List<int>> get firstMoveRanks => data.firstMoveRanks;
 
   /// Set this to 100 for the 50-move rule in standard chess.
   int? get halfMoveDraw => data.halfMoveDraw;
@@ -428,6 +431,23 @@ class BuiltVariant {
   bool canPass({required BishopState state, required int colour}) =>
       passChecker
           ?.call(MoveParams(colour: colour, state: state, variant: this)) ??
+      false;
+
+  bool canFirstMove({
+    required BishopState state,
+    required int from,
+    required int colour,
+    required MoveDefinition moveDefinition,
+  }) =>
+      firstMoveChecker?.call(
+        PieceMoveParams(
+          colour: colour,
+          state: state,
+          variant: this,
+          from: from,
+          moveDefinition: moveDefinition,
+        ),
+      ) ??
       false;
 
   Map<int, int> capturedPieces(

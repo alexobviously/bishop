@@ -1,6 +1,7 @@
 import 'package:bishop/bishop.dart';
 
 part 'drop_adapters.dart';
+part 'first_move_adapters.dart';
 part 'pass_adapters.dart';
 part 'promo_adapters.dart';
 part 'type_adapter.dart';

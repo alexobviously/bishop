@@ -447,9 +447,16 @@ class Game {
         continue;
       }
 
-      if (md.firstOnly && !variant.firstMoveRanks[colour].contains(fromRank)) {
+      if (md.firstOnly &&
+          !variant.canFirstMove(
+            state: state,
+            from: from,
+            colour: colour,
+            moveDefinition: md,
+          )) {
         continue;
       }
+
       if (md is! StandardMoveDefinition) continue;
       int range = md.range == 0 ? variant.boardSize.maxDim : md.range;
       int squaresSinceHop = -1;
