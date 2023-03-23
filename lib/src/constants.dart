@@ -39,9 +39,15 @@ class Bishop {
   static const int asciiA = 97;
   static const int mateLower = 90000;
   static const int mateUpper = 100000;
+
+  /// The value assigned to pieces that aren't explicitly valuated.
   static const int defaultPieceValue = 200;
 
-  static const int flagsStartBit = 18;
+  /// The bit that represents whether a piece is in its custom state.
+  static const int initialStateBit = 18;
+
+  /// The bit at which custom flags/state encoding starts in piece ints.
+  static const int flagsStartBit = 19;
 
   // Just shorthands for building variants
   static const int fileA = 0;

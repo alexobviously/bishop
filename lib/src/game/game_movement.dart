@@ -120,7 +120,7 @@ extension GameMovement on Game {
     int fromRank = size.rank(move.from);
     int fromFile = size.file(move.from);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
-    if (fromSq != Bishop.empty &&
+    if (fromSq.isNotEmpty &&
         (fromSq.colour != state.turn &&
             fromSq.colour != Bishop.neutralPassive)) {
       return null;

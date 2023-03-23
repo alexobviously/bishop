@@ -345,8 +345,7 @@ extension GameOutputs on Game {
     for (int i = 0; i < board.length; i++) {
       if (full || size.onBoard(i)) {
         int piece = board[i];
-        String symbol =
-            piece == Bishop.empty ? '' : variant.pieces[piece.type].symbol;
+        String symbol = piece.isEmpty ? '' : variant.pieces[piece.type].symbol;
         symbols.add(
           piece.colour == Bishop.white
               ? symbol.toUpperCase()

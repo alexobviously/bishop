@@ -25,7 +25,7 @@ class ActionDefinitions {
           .squaresForArea(trigger.move.to, area)
           .where((e) {
             int sq = trigger.state.board[e];
-            if (sq == Bishop.empty) return false;
+            if (sq.isEmpty) return false;
             if (e == trigger.move.to && alwaysSuicide) {
               return true;
             }

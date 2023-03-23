@@ -21,7 +21,7 @@ class ActionTransferOwnership extends Action {
           ]),
           action: (trigger) {
             final piece = trigger.board[trigger.move.to];
-            return [EffectModifySquare(trigger.move.to, piece.flipColour)];
+            return [EffectModifySquare(trigger.move.to, piece.flipColour())];
           },
         );
 }
