@@ -53,7 +53,6 @@ class Xiangqi {
           'C': cannon(),
           'P': soldier(),
         },
-        castlingOptions: CastlingOptions.none,
         materialConditions: MaterialConditions.none,
         promotionOptions: PromotionOptions.none,
         startPosition: defaultFen,

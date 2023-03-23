@@ -131,7 +131,7 @@ class Variant {
     this.description = '',
     this.boardSize = BoardSize.standard,
     required this.pieceTypes,
-    this.castlingOptions = CastlingOptions.standard,
+    this.castlingOptions = CastlingOptions.none,
     this.promotionOptions = PromotionOptions.standard,
     this.materialConditions = MaterialConditions.none,
     this.gameEndConditions = GameEndConditionSet.standard,
@@ -199,10 +199,6 @@ class Variant {
               adapters: adapters,
             )
           : null,
-      // firstMoveRanks: (json['firstMoveRanks'] as List<dynamic>?)
-      //         ?.map((e) => (e as List<dynamic>).map((e) => e as int).toList())
-      //         .toList() ??
-      //     const [[], []],
       halfMoveDraw: json['halfMoveDraw'],
       repetitionDraw: json['repetitionDraw'],
       forbidChecks: json['forbidChecks'] ?? false,

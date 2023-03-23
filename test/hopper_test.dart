@@ -53,7 +53,6 @@ void main() {
     Variant v = Variant(
       name: 'Cannon Test',
       startPosition: '4k3/8/8/8/8/8/8/4K3 w - - 0 1',
-      castlingOptions: CastlingOptions.none,
       materialConditions: MaterialConditions.none,
       pieceTypes: {
         'K': PieceType.staticKing(),

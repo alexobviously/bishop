@@ -96,7 +96,6 @@ class MiscVariants {
       boardSize: BoardSize(6, 6),
       startPosition: 'knrppp/nbp3/rp3P/p3PR/3PBN/PPPRNK[XXXxxx] w - - 0 1',
       enPassant: false,
-      castlingOptions: CastlingOptions.none,
       handOptions: HandOptions(
         enableHands: true,
         dropBuilder: RegionDropBuilder.single(dropRegion),
@@ -132,7 +131,6 @@ class MiscVariants {
         boardSize: BoardSize(9, 9),
         startPosition: 'nnnnnnnnn/9/9/9/9/9/9/9/NNNNNNNNN w - - 0 1',
         pieceTypes: {'N': PieceType.knight()},
-        castlingOptions: CastlingOptions.none,
         promotionOptions: PromotionOptions.none,
         actions: [
           ActionExitRegionEnding(
@@ -149,7 +147,6 @@ class MiscVariants {
           ...Variant.standard().pieceTypes,
           'P': PieceType.fromBetza('mlfFcflW', noSanSymbol: true).promotable(),
         },
-        castlingOptions: CastlingOptions.none,
         promotionOptions: RegionPromotion(whiteId: 'wp', blackId: 'bp'),
         regions: {
           'wp': UnionRegion([
