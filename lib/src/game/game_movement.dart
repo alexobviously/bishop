@@ -143,7 +143,7 @@ extension GameMovement on Game {
           }
           int dropPiece = move.dropPiece!;
           hash ^= zobrist.table[move.from][dropPiece.piece];
-          board[move.from] = makePiece(dropPiece, colour);
+          board[move.from] = makePiece(dropPiece, colour, initialState: true);
         } else {
           board[move.from] = Bishop.empty;
         }
@@ -181,7 +181,7 @@ extension GameMovement on Game {
     if (!move.castling && !move.promotion) {
       // Move the piece to the new square
       int putPiece = move.from >= Bishop.boardStart
-          ? fromSq
+          ? fromSq.setInitialState(false)
           : makePiece(move.dropPiece!, colour);
       hash ^= zobrist.table[move.to][putPiece.piece];
       board[move.to] = putPiece;
@@ -248,7 +248,7 @@ extension GameMovement on Game {
       }
       hash ^= zobrist.table[rookSq][rook.piece];
       board[move.castlingPieceSquare!] = Bishop.empty;
-      board[kingSq] = fromSq;
+      board[kingSq] = fromSq.setInitialState(false);
       board[rookSq] = rook;
       castlingRights = castlingRights.remove(colour);
       // refactor conditions?
@@ -257,7 +257,7 @@ extension GameMovement on Game {
       royalSquares[colour] = kingSq;
 
       if (move.gate && move.dropOnRookSquare) {
-        int dropPiece = makePiece(move.dropPiece!, colour);
+        int dropPiece = makePiece(move.dropPiece!, colour, initialState: true);
         board[move.castlingPieceSquare!] = dropPiece;
         hash ^= zobrist.table[move.castlingPieceSquare!][dropPiece.piece];
       }

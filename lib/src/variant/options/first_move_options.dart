@@ -5,9 +5,6 @@ abstract class FirstMoveOptions {
 
   PieceMoveChecker? build(BuiltVariant variant);
 
-  /// You can use this when erasing first move options in Variant.copyWith.
-  factory FirstMoveOptions.none() => NoFirstMoveOptions();
-
   factory FirstMoveOptions.pair(
     FirstMoveOptions? white,
     FirstMoveOptions? black,
@@ -22,14 +19,19 @@ abstract class FirstMoveOptions {
         RanksFirstMoveOptions(white),
         RanksFirstMoveOptions(black),
       );
+
+  static const standard = FirstMoveOptionsPair(
+    InitialStateFirstMoveOptions(),
+    InitialStateFirstMoveOptions(),
+  );
 }
 
-/// You can use this when erasing first move options in Variant.copyWith.
-class NoFirstMoveOptions implements FirstMoveOptions {
-  const NoFirstMoveOptions();
-
-  @override
-  PieceMoveChecker? build(BuiltVariant variant) => null;
+class StandardFirstMoveOptions extends FirstMoveOptionsPair {
+  const StandardFirstMoveOptions()
+      : super(
+          const InitialStateFirstMoveOptions(),
+          const InitialStateFirstMoveOptions(),
+        );
 }
 
 class FirstMoveOptionsPair implements FirstMoveOptions {

@@ -74,7 +74,7 @@ class Zobrist {
     List<int> board = state.board;
     int hash = 0;
     for (int i = 0; i < board.length; i++) {
-      if (board[i] != Bishop.empty) hash ^= table[i][board[i]];
+      if (board[i].isNotEmpty) hash ^= table[i][board[i].piece];
     }
     if (state.epSquare != null) hash ^= table[state.epSquare!][meta];
     hash ^= table[castling][state.castlingRights];

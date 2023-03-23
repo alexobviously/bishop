@@ -172,7 +172,7 @@ class BuiltVariant {
 
     // It's like this so the drop builder can depend on the promotion builder.
     bv = bv.copyWith(
-      firstMoveChecker: data.firstMoveOptions?.build(bv),
+      firstMoveChecker: data.firstMoveOptions.build(bv),
       promotionBuilder: data.promotionOptions.build(bv),
     );
     bv = bv.copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv));

@@ -61,7 +61,7 @@ class Variant {
   /// Is en passant allowed in this variant?
   final bool enPassant;
 
-  final FirstMoveOptions? firstMoveOptions;
+  final FirstMoveOptions firstMoveOptions;
 
   /// Set this to 100 for the 50-move rule in standard chess.
   final int? halfMoveDraw;
@@ -139,7 +139,7 @@ class Variant {
     this.startPosition,
     this.startPosBuilder,
     this.enPassant = false,
-    this.firstMoveOptions,
+    this.firstMoveOptions = FirstMoveOptions.standard,
     this.halfMoveDraw,
     this.repetitionDraw,
     this.forbidChecks = false,
@@ -193,12 +193,13 @@ class Variant {
             )
           : null,
       enPassant: json['enPassant'],
-      firstMoveOptions: json.containsKey('firstMoveOptions')
-          ? BishopSerialisation.build<FirstMoveOptions>(
-              json['firstMoveOptions'],
-              adapters: adapters,
-            )
-          : null,
+      firstMoveOptions: (json.containsKey('firstMoveOptions')
+              ? BishopSerialisation.build<FirstMoveOptions>(
+                  json['firstMoveOptions'],
+                  adapters: adapters,
+                )
+              : null) ??
+          FirstMoveOptions.standard,
       halfMoveDraw: json['halfMoveDraw'],
       repetitionDraw: json['repetitionDraw'],
       forbidChecks: json['forbidChecks'] ?? false,
@@ -266,9 +267,9 @@ class Variant {
           adapters: allAdapters,
         ),
       'enPassant': enPassant,
-      if (firstMoveOptions != null)
+      if (verbose || firstMoveOptions is! StandardFirstMoveOptions)
         'firstMoveOptions': BishopSerialisation.export<FirstMoveOptions>(
-          firstMoveOptions!,
+          firstMoveOptions,
           adapters: allAdapters,
         ),
       if (halfMoveDraw != null) 'halfMoveDraw': halfMoveDraw,
@@ -346,9 +347,7 @@ class Variant {
       handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
       passOptions: passOptions ?? this.passOptions,
-      firstMoveOptions: firstMoveOptions is NoFirstMoveOptions
-          ? null
-          : firstMoveOptions ?? this.firstMoveOptions,
+      firstMoveOptions: firstMoveOptions ?? this.firstMoveOptions,
       pieceValues: pieceValues ?? this.pieceValues,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
@@ -438,10 +437,6 @@ class Variant {
       enPassant: true,
       halfMoveDraw: 100,
       repetitionDraw: 3,
-      firstMoveOptions: FirstMoveOptions.ranks(
-        [Bishop.rank2],
-        [Bishop.rank7],
-      ),
       pieceTypes: {
         'P': PieceType.pawn(),
         'N': PieceType.knight(),

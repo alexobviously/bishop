@@ -1,5 +1,11 @@
 part of 'serialisation.dart';
 
+/// This one is usually not exported.
+class StandardFirstMoveAdapter extends BasicAdapter<StandardFirstMoveOptions> {
+  const StandardFirstMoveAdapter()
+      : super('bishop.first.standard', StandardFirstMoveOptions.new);
+}
+
 class FirstMovePairAdapter extends DeepAdapter<FirstMoveOptionsPair> {
   @override
   String get id => 'bishop.first.pair';
@@ -15,8 +21,10 @@ class FirstMovePairAdapter extends DeepAdapter<FirstMoveOptionsPair> {
       );
 
   @override
-  Map<String, dynamic>? export(FirstMoveOptionsPair e,
-          {List<BishopTypeAdapter> adapters = const []}) =>
+  Map<String, dynamic>? export(
+    FirstMoveOptionsPair e, {
+    List<BishopTypeAdapter> adapters = const [],
+  }) =>
       {
         'white': e.white != null
             ? serialise<FirstMoveOptions>(e.white!, adapters: adapters)

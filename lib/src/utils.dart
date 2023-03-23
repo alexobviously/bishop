@@ -28,7 +28,7 @@ bool validateFen({
 }) {
   try {
     Game g = Game(variant: variant);
-    g.loadFen(fen, strict);
+    g.loadFen(fen, strict: strict);
   } catch (e) {
     print('$e ($fen)');
     return false;

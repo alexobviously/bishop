@@ -11,7 +11,6 @@ class SmallVariants {
           startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
           castlingOptions: CastlingOptions.mini,
           enPassant: false,
-          firstMoveOptions: FirstMoveOptions.none(),
         )
         .withPiece('P', PieceType.simplePawn());
   }
