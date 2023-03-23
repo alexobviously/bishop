@@ -1,7 +1,7 @@
 {
  "name": "Mini Chess",
  "description": "",
- "bishopVersion": "1.2.3",
+ "bishopVersion": "1.3.0",
  "boardSize": "6x6",
  "pieceTypes": {
   "P": {
@@ -45,7 +45,6 @@
  },
  "startPosition": "rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1",
  "enPassant": false,
- "firstMoveRanks": [[1], [6]],
  "halfMoveDraw": 100,
  "repetitionDraw": 3
 }

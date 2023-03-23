@@ -33,10 +33,10 @@ class LargeVariants {
           'R': 2, 'N': 2, 'B': 2, //
         },
       ),
-      firstMoveRanks: [
+      firstMoveOptions: FirstMoveOptions.ranks(
         [Bishop.rank3],
         [Bishop.rank8],
-      ],
+      ),
       pieceTypes: {
         ...standard.pieceTypes,
         'C': PieceType.chancellor(), // marshal
@@ -57,10 +57,10 @@ class LargeVariants {
         'E': PieceType.fromBetza('FA'),
         'C': Xiangqi.cannon(),
       },
-      firstMoveRanks: [
-        [Bishop.rank3], // white
-        [Bishop.rank8], // black
-      ],
+      firstMoveOptions: FirstMoveOptions.ranks(
+        [Bishop.rank3],
+        [Bishop.rank8],
+      ),
       castlingOptions: CastlingOptions(
         enabled: true,
         kTarget: Bishop.fileH,

@@ -1,7 +1,7 @@
 {
  "name": "Example",
  "description": "An example variant for JSON serialisation",
- "bishopVersion": "1.1.1",
+ "bishopVersion": "1.3.0",
  "boardSize": "3x5",
  "pieceTypes": {
   "K": {
@@ -12,10 +12,7 @@
     "canPromoteTo": false
    }
   },
-  "N": {
-   "betza": "N",
-   "value": 300
-  },
+  "N": {"betza": "N", "value": 300},
   "P": {
    "betza": "fmWfcF",
    "promoOptions": {
@@ -26,19 +23,11 @@
    "value": 100
   }
  },
- "castlingOptions": {
-  "enabled": false
- },
+ "castlingOptions": {"enabled": false},
  "promotionOptions": "bishop.promo.standard",
- "materialConditions": {
-  "enabled": false
- },
+ "materialConditions": {"enabled": false},
  "startPosition": "nkn/ppp/3/PPP/NKN w - - 0 1",
  "enPassant": false,
- "firstMoveRanks": [
-  [],
-  []
- ],
  "actions": [
   "example.action.doesNothing",
   {

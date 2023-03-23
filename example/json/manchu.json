@@ -1,7 +1,7 @@
 {
  "name": "Manchu",
  "description": "An asymmetric variant of Xiangqi, where red exchanges most oftheir pieces for one very powerful piece.",
- "bishopVersion": "1.2.3",
+ "bishopVersion": "1.3.0",
  "boardSize": "9x10",
  "pieceTypes": {
   "K": {
@@ -64,20 +64,10 @@
  "startPosition": "rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/9/9/M1BAKAB2 w - - 0 1",
  "enPassant": false,
  "regions": {
-  "redSide": {"startRank": 0, "endRank": 4},
-  "blackSide": {"startRank": 5, "endRank": 9},
-  "redPalace": {
-   "startRank": 0,
-   "endRank": 2,
-   "startFile": 3,
-   "endFile": 5
-  },
-  "blackPalace": {
-   "startRank": 7,
-   "endRank": 9,
-   "startFile": 3,
-   "endFile": 5
-  }
+  "redSide": {"b": 0, "t": 4},
+  "blackSide": {"b": 5, "t": 9},
+  "redPalace": {"b": 0, "t": 2, "l": 3, "r": 5},
+  "blackPalace": {"b": 7, "t": 9, "l": 3, "r": 5}
  },
  "actions": ["bishop.action.flyingGenerals"]
 }

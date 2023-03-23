@@ -66,10 +66,10 @@ class CommonVariants {
         name: 'Horde Chess',
         startPosition:
             'rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1',
-        firstMoveRanks: [
+        firstMoveOptions: FirstMoveOptions.ranks(
           [Bishop.rank1, Bishop.rank2], // white
           [Bishop.rank7, Bishop.rank8], // black
-        ],
+        ),
       );
 
   static Variant racingKings() => Variant.standard()

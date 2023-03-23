@@ -26,3 +26,41 @@ class BasicAdapter<T> implements BishopTypeAdapter<T> {
   @override
   Type get type => T;
 }
+
+/// A type adapter that also takes a list of adapters, allowing deep
+/// serialisation. Use this for classes that contain other serialisable
+/// classes.
+abstract class DeepAdapter<T> extends BishopTypeAdapter<T> {
+  @override
+  T build(
+    Map<String, dynamic>? params, {
+    List<BishopTypeAdapter> adapters = const [],
+  });
+  @override
+  Map<String, dynamic>? export(
+    T e, {
+    List<BishopTypeAdapter> adapters = const [],
+  });
+
+  /// A shortcut for BishopSerialisation.export.
+  dynamic serialise<X>(
+    X object, {
+    List<BishopTypeAdapter> adapters = const [],
+    bool strict = true,
+  }) =>
+      BishopSerialisation.export<X>(object, adapters: adapters, strict: strict);
+
+  /// A shortcut for BishopSerialisation.build.
+  X? deserialise<X>(
+    dynamic input, {
+    List<BishopTypeAdapter> adapters = const [],
+    bool strict = true,
+    X? Function(dynamic input)? fallback,
+  }) =>
+      BishopSerialisation.build<X>(
+        input,
+        adapters: adapters,
+        strict: strict,
+        fallback: fallback,
+      );
+}

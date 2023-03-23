@@ -1,5 +1,5 @@
 {
- "name": "Musketeer Chess",
+ "name": "Chess",
  "description": "",
  "bishopVersion": "1.3.0",
  "boardSize": "8x8",
@@ -25,17 +25,7 @@
     "canPromote": false,
     "canPromoteTo": false
    }
-  },
-  "A": {"betza": "BN", "value": 900},
-  "C": {"betza": "RN", "value": 900},
-  "D": {"betza": "QN", "value": 1200},
-  "L": {"betza": "F2N"},
-  "H": {"betza": "ADGH"},
-  "U": {"betza": "NC"},
-  "S": {"betza": "B2ND"},
-  "F": {"betza": "B3vND"},
-  "E": {"betza": "FWDA"},
-  "O": {"betza": "FWDsN"}
+  }
  },
  "castlingOptions": {
   "enabled": true,
@@ -55,7 +45,7 @@
   "combinedPairMaters": ["B"],
   "specialCases": [["B", "N"]]
  },
- "startPosition": "8/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/8 w KQkq - 0 1",
+ "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
  "enPassant": true,
  "firstMoveOptions": {
   "id": "bishop.first.pair",
@@ -69,6 +59,5 @@
   }
  },
  "halfMoveDraw": 100,
- "repetitionDraw": 3,
- "gatingMode": "fixed"
+ "repetitionDraw": 3
 }

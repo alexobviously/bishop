@@ -405,7 +405,6 @@ class Game {
     List<Move> moves = [];
     PieceType pieceType = variant.pieceType(piece, square);
     int from = square;
-    int fromRank = size.rank(from);
     bool exit = false;
 
     void generateTeleportMoves(TeleportMoveDefinition md) {

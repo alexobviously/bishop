@@ -317,7 +317,6 @@ class Variant {
     String? startPosition,
     StartPositionBuilder? startPosBuilder,
     bool? enPassant,
-    List<List<int>>? firstMoveRanks,
     int? halfMoveDraw,
     int? repetitionDraw,
     bool? forbidChecks,
@@ -351,7 +350,9 @@ class Variant {
       handOptions: handOptions ?? this.handOptions,
       gatingMode: gatingMode ?? this.gatingMode,
       passOptions: passOptions ?? this.passOptions,
-      firstMoveOptions: firstMoveOptions ?? this.firstMoveOptions,
+      firstMoveOptions: firstMoveOptions is NoFirstMoveOptions
+          ? null
+          : firstMoveOptions ?? this.firstMoveOptions,
       pieceValues: pieceValues ?? this.pieceValues,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,

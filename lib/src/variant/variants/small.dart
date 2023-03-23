@@ -4,14 +4,16 @@ part of '../variant.dart';
 class SmallVariants {
   static Variant mini() {
     Variant standard = Variant.standard();
-    return standard.copyWith(
-      name: 'Mini Chess',
-      boardSize: BoardSize.mini,
-      startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
-      pieceTypes: standard.pieceTypes..['P'] = PieceType.simplePawn(),
-      castlingOptions: CastlingOptions.mini,
-      enPassant: false,
-    );
+    return standard
+        .copyWith(
+          name: 'Mini Chess',
+          boardSize: BoardSize.mini,
+          startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
+          castlingOptions: CastlingOptions.mini,
+          enPassant: false,
+          firstMoveOptions: FirstMoveOptions.none(),
+        )
+        .withPiece('P', PieceType.simplePawn());
   }
 
   static Variant miniRandom() {
@@ -31,10 +33,10 @@ class SmallVariants {
       boardSize: BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
       castlingOptions: CastlingOptions.micro,
-      firstMoveRanks: [
+      firstMoveOptions: FirstMoveOptions.ranks(
         [Bishop.rank2],
         [Bishop.rank4],
-      ],
+      ),
     );
   }
 
@@ -45,10 +47,10 @@ class SmallVariants {
       boardSize: BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
       castlingOptions: CastlingOptions.nano,
-      firstMoveRanks: [
+      firstMoveOptions: FirstMoveOptions.ranks(
         [Bishop.rank2],
         [Bishop.rank4],
-      ],
+      ),
     );
   }
 }

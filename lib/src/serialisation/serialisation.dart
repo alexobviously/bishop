@@ -14,6 +14,7 @@ class BishopSerialisation {
       ...basePassAdapters,
       ...baseStartPosAdapters,
       ...baseActionAdapters,
+      ...baseFirstMoveAdapters,
     ];
     return _baseAdapters!;
   }
@@ -56,6 +57,13 @@ class BishopSerialisation {
         TransferOwnershipAdapter(),
       ];
 
+  static List<BishopTypeAdapter> get baseFirstMoveAdapters => [
+        FirstMovePairAdapter(),
+        FirstMoveSetAdapter(),
+        RanksFirstMoveAdapter(),
+        InitialFirstMoveAdapter(),
+      ];
+
   static List<T> buildMany<T>(
     List input, {
     List<BishopTypeAdapter> adapters = const [],
@@ -67,12 +75,23 @@ class BishopSerialisation {
           .map((e) => e as T)
           .toList();
 
+  static Map<String, T> buildMap<T>(
+    Map<String, dynamic> input, {
+    List<BishopTypeAdapter> adapters = const [],
+    bool strict = true,
+  }) =>
+      (input.map(
+        (k, v) => MapEntry(k, build<T>(v, adapters: adapters, strict: strict)),
+      )..removeWhere((_, v) => v == null))
+          .map((k, v) => MapEntry(k, v as T));
+
   static T? build<T>(
     dynamic input, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
     T? Function(dynamic input)? fallback,
   }) {
+    if (input == null) return null;
     adapters = [...adapters, ...baseAdapters];
     String? id;
     Map<String, dynamic>? params;
@@ -94,7 +113,9 @@ class BishopSerialisation {
       }
       return null;
     }
-    final object = adapter.build(params);
+    final object = adapter is DeepAdapter
+        ? adapter.build(params, adapters: adapters)
+        : adapter.build(params);
     if (object is! T) {
       if (strict) {
         throw BishopException('Adapter $id of invalid type (not $T)');
@@ -114,6 +135,13 @@ class BishopSerialisation {
           .where((e) => e != null)
           .toList();
 
+  static Map<String, dynamic> exportMap<T>(
+    Map<String, T> objects, {
+    List<BishopTypeAdapter> adapters = const [],
+    bool strict = true,
+  }) =>
+      objects.map((k, v) => export<T>(v, adapters: adapters, strict: strict));
+
   static dynamic export<T>(
     T object, {
     List<BishopTypeAdapter> adapters = const [],
@@ -129,7 +157,9 @@ class BishopSerialisation {
         }
         return null;
       }
-      final params = adapter.export(object);
+      final params = adapter is DeepAdapter
+          ? adapter.export(object, adapters: adapters)
+          : adapter.export(object);
       if (params == null || params.isEmpty) {
         return adapter.id;
       }

@@ -1,7 +1,7 @@
 {
  "name": "Crazyhouse",
  "description": "",
- "bishopVersion": "1.2.3",
+ "bishopVersion": "1.3.0",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -47,7 +47,17 @@
  },
  "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
  "enPassant": true,
- "firstMoveRanks": [[1], [6]],
+ "firstMoveOptions": {
+  "id": "bishop.first.pair",
+  "white": {
+   "id": "bishop.first.ranks",
+   "ranks": [1]
+  },
+  "black": {
+   "id": "bishop.first.ranks",
+   "ranks": [6]
+  }
+ },
  "halfMoveDraw": 100,
  "repetitionDraw": 3,
  "handOptions": {
