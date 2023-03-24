@@ -1,3 +1,6 @@
+### 1.3.2
+- Fixed a castling bug (queenside allowed with piece on b1).
+
 ### 1.3.1
 - Further optimisation: excluding piece types early from attack checks (~20% performance boost).
 

@@ -7,7 +7,7 @@ import 'constants.dart';
 
 void main(List<String> args) async {
   bool showCorrect = true;
-  String fen = Positions.position5;
+  String fen = Positions.kiwiPete;
   int depth = 3;
   Game game = Game(variant: Variant.standard(), fen: fen);
   Map<String, dynamic> results = game.divide(depth);

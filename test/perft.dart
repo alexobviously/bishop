@@ -6,6 +6,7 @@ class Perfts {
   static List<PerftTest> standard = [
     PerftTest(fen: Positions.standardDefault, depth: 3, nodes: 8902),
     PerftTest(fen: Positions.kiwiPete, depth: 2, nodes: 2039),
+    // PerftTest(fen: Positions.kiwiPete, depth: 3, nodes: 97862),
     PerftTest(fen: Positions.rookPin, depth: 4, nodes: 43238),
     PerftTest(fen: Positions.position4, depth: 3, nodes: 9467),
     PerftTest(fen: Positions.position5, depth: 3, nodes: 62379),

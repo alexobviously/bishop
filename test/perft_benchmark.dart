@@ -2,6 +2,8 @@ import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:bishop/bishop.dart';
 import 'perft.dart';
 
+import 'dart:math';
+
 class PerftBenchmark extends BenchmarkBase {
   final PerftTest test;
   Game? game;
@@ -20,14 +22,30 @@ class PerftBenchmark extends BenchmarkBase {
 
   @override
   void run() {
+    int t1 = 0;
+    t1 = DateTime.now().millisecondsSinceEpoch;
+
     int result = game!.perft(test.depth);
+    int t2 = DateTime.now().millisecondsSinceEpoch;
+    num nps = result / ((t2 - t1) / 1000);
+    npsResults.add(nps);
+    if (_showNps) {
+      print('${nps.toStringAsFixed(2)}nps ($result nodes) (${test.fen})');
+    }
+
     if (result != test.nodes) {
       throw 'Wrong result: Expected <${test.nodes}> but got <$result>.';
     }
   }
 }
 
-void main() {
+bool _showNps = false;
+List<num> npsResults = [];
+
+void main(List<String> args) {
+  if (args.isNotEmpty && args.first == 'shownps') {
+    _showNps = true;
+  }
   List<PerftBenchmark> perfts = [
     ...Perfts.standard.map((e) => PerftBenchmark(e)),
   ];
@@ -40,9 +58,16 @@ void main() {
     total += time;
   }
   print('-- Total Runtime: ${(total / 1000).toStringAsFixed(2)}ms --');
+  num npsAvg = npsResults.reduce((p, e) => p + e) / npsResults.length;
+  num npsMin = npsResults.reduce(min);
+  num npsMax = npsResults.reduce(max);
+  print('-- Total Tests: ${npsResults.length}, '
+      'mean NPS: ${npsAvg.toStringAsFixed(2)}, '
+      'min: ${npsMin.toStringAsFixed(2)}, '
+      'max: ${npsMax.toStringAsFixed(2)} --');
 }
 
-// 12/01/23
+// 12/01/23, on windows machine
 // 263459.50us [rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1, standard]
 // 88322.57us [r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq - 0 1, standard]
 // 1158172.00us [8/2p5/3p4/KP5r/1R3p1k/8/4P1P1/8 w - - 0 1, standard]

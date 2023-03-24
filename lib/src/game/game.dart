@@ -392,6 +392,7 @@ class Game {
         // Conditions for castling:
         // * All squares between the king's start and end (inclusive) must be
         // free and not attacked
+        // * All squares between the rook and the king's target must be free.
         // * Obviously the king's start is occupied by the king, but it can't
         // be in check
         // * The square the rook lands on must be free (but can be attacked)
@@ -418,6 +419,17 @@ class Game {
         int numMidSqs = (targetFile - royalFile!).abs();
         bool valid = true;
         if (!options.ignorePieces) {
+          int numRookMidSquares = (targetFile - rookFile).abs();
+          if (numRookMidSquares > 1) {
+            for (int j = 1; j <= numRookMidSquares; j++) {
+              int midFile = rookFile + (i == 0 ? -j : j);
+              int midSq = size.square(midFile, royalRank);
+              if (board[midSq].isNotEmpty) {
+                valid = false;
+                break;
+              }
+            }
+          }
           for (int j = 1; j <= numMidSqs; j++) {
             int midFile = royalFile! + (i == 0 ? j : -j);
 
