@@ -1,4 +1,5 @@
 ### 1.3.0
+- **Bishop is now about 2x faster** thanks to significant optimisations in attack checking.
 - Region changes (**breaking**):
   - What used to be `BoardRegion` is now `RectRegion`.
   - `BoardRegion` is now a parent class for `RectRegion` and other board region types.
@@ -7,7 +8,7 @@
 - `RegionDropBuilder` now allows using region IDs from variant, and separate regions per player (same API as `RegionPromotion`).
 - `FirstMoveOptions` (**breaking**): replaces `Variant.firstMoveRanks`, supports more flexible first move options.
 - First move checking for most variants no longer uses the rank of the piece. Instead there is an 'initial state' property embedded in the square representation.
-  - `FirstMoveOptions.ranks` is still available, and is used by Horde Chess, for example, since not all horde pawns should be moveable in their initial state.
+  - `FirstMoveOptions.ranks` is still available, and is used by Horde Chess, for example, since not all horde pawns should be double moveable in their initial state.
 - Betza parsing now supports `(x,y)` atoms, allowing for pieces jumping more than 3 squares in each direction. For example, the 'Giraffe' is `(4,1)`, and the Knight could be rewritten as `(2,1)` (or `(1,2)`).
 - Variants:
   - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
