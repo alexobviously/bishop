@@ -34,7 +34,8 @@ PgnData parsePgn(String pgn) {
     metadata[key] = value;
   }
   int metaEnd = matches.last.end;
-  String game = pgn.substring(metaEnd).replaceAll('\n', ' ');
+  String game =
+      pgn.substring(metaEnd).replaceAll('\n', ' ').replaceAll('\r', ' ');
   int i = 0;
   List<String> moves = [];
   Map<int, String> comments = {};
@@ -62,7 +63,9 @@ PgnData parsePgn(String pgn) {
       end = substr.length;
     }
     String move = substr.substring(0, end);
-    moves.add(move);
+    if (!['1-0', '0-1', '1/2-1/2', '½-½'].contains(move)) {
+      moves.add(move);
+    }
     i += end + 1;
   }
 

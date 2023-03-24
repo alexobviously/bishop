@@ -14,6 +14,7 @@
   - Legan Chess (`MiscVariants.legan()`): a diagonally arranged chess variant.
   - Grasshopper Chess (`FairyVariants.grasshopper()`): chess with some extra grasshopper pieces.
   - Berolina Chess (`FairyVariants.berolina()`): chess with the Berolina pawn (`PieceType.berolinaPawn()`).
+- Fixed PGN parsing on Windows (`\r` related issues).
 - A lot of old deprecated constants and functions have been removed.
 - The default value of `Variant.castlingOptions` is now `CastlingOptions.none`.
 - `play.dart` example: move filtering commands - `moves from x`, `moves to x`, `moves captures`, `moves quiet`.

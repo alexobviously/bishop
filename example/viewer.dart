@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bishop/bishop.dart';
-
 import 'play.dart';
 
 late final GameNavigator navigator;
@@ -22,7 +21,7 @@ void main(List<String> args) async {
   );
   int dur = DateTime.now().millisecondsSinceEpoch - t1;
   printMagenta('Loaded PGN in ${dur}ms');
-  printYellow('Use the arrow keys to navigate. Press q to exit.');
+  printYellow('Use the arrow keys or WASD to navigate. Press q to exit.');
   navigator.stream.listen(_handleNavNode);
   _handleNavNode(navigator.current);
   loaded = true;
@@ -34,16 +33,16 @@ void _onKey(List<int> charCodes) {
   }
   if (!loaded) return;
   String charStr = charCodes.join(',');
-  if (charStr == '27,91,68') {
+  if (const ['27,91,68', '65', '97'].contains(charStr)) {
     navigator.previous();
   }
-  if (charStr == '27,91,67') {
+  if (const ['27,91,67', '68', '100'].contains(charStr)) {
     navigator.next();
   }
-  if (charStr == '27,91,65') {
+  if (const ['27,91,65', '87', '119'].contains(charStr)) {
     navigator.goToEnd();
   }
-  if (charStr == '27,91,66') {
+  if (const ['27,91,66', '83', '115'].contains(charStr)) {
     navigator.goToStart();
   }
 }
