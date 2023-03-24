@@ -81,8 +81,6 @@ class BoardSize {
     if (direction.h != 0 && fileDiff % direction.h != 0) return false;
     if (direction.v != 0 && rankDiff % direction.v != 0) return false;
     return true;
-    return ((file(b) - file(a)).abs() % direction.h == 0) &&
-        (rank(b) - rank(a)).abs() % direction.v == 0;
   }
 
   /// Get the first rank for player [colour].
