@@ -176,8 +176,16 @@ class Game {
     if (piece.isEmpty) return [];
     Colour colour = piece.colour;
     int dirMult = Bishop.playerDirection[piece.colour];
-    List<Move> moves = [];
+
     PieceType pieceType = variant.pieceType(piece, square);
+    if (options.onlySquare != null &&
+        pieceType.optimisationData != null &&
+        pieceType.optimisationData!
+            .excludePiece(square, options.onlySquare!, size)) {
+      return const [];
+    }
+
+    List<Move> moves = [];
     int from = square;
     bool exit = false;
 

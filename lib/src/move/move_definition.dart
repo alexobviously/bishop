@@ -194,7 +194,7 @@ class Direction {
   bool get orthogonal => h == 0 || v == 0;
 
   /// Bishops move diagonally.
-  bool get diagonal => h == v;
+  bool get diagonal => h.abs() == v.abs();
 
   /// Knights move obliquely.
   bool get oblique => !orthogonal && !diagonal;
@@ -269,4 +269,11 @@ enum DirectionType {
   orthogonal,
   diagonal,
   oblique;
+}
+
+extension MoveDefListExtension on Iterable<StandardMoveDefinition> {
+  bool get hasOrthogonal =>
+      firstWhereOrNull((e) => e.direction.orthogonal) != null;
+  bool get hasDiagonal => firstWhereOrNull((e) => e.direction.diagonal) != null;
+  bool get hasOblique => firstWhereOrNull((e) => e.direction.oblique) != null;
 }

@@ -70,7 +70,23 @@ class BoardSize {
 
   /// Whether [a] and [b] are connected by a bishop move.
   bool diagonallyConnected(int a, int b) =>
-      rank(b) - rank(a) == file(b) - file(a);
+      (rank(b) - rank(a)).abs() == (file(b) - file(a)).abs();
+
+  /// Gets a Direction between [a] and [b].
+  Direction directionBetween(int a, int b) =>
+      Direction(file(b) - file(a), rank(b) - rank(a));
+
+  /// [a] and [b] are square names like 'd4', 'h10'.
+  Direction directionBetweenString(String a, String b) =>
+      directionBetween(squareNumber(a), squareNumber(b));
+
+  /// Determine what sort of direction connects [a] and  [b].
+  DirectionType directionTypeBetween(int a, int b) =>
+      directionBetween(a, b).type;
+
+  /// [a] and [b] are square names like 'd4', 'h10'.
+  DirectionType directionTypeBetweenString(String a, String b) =>
+      directionTypeBetween(squareNumber(a), squareNumber(b));
 
   /// Whether [a] and [b] are connected by a move in [direction].
   bool connected(int a, int b, Direction direction) {

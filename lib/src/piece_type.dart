@@ -1,4 +1,3 @@
-
 import 'package:bishop/bishop.dart';
 
 /// Specifies a piece type, with all of its moves and attributes.
@@ -32,6 +31,10 @@ class PieceType {
 
   final List<Action> actions;
 
+  /// Contains precomputed flags that help move generation run faster.
+  /// You don't need to set this yourself, it is generated during `normalise()`.
+  final PieceOptimisationData? optimisationData;
+
   /// Region effects that change the piece type.
   List<RegionEffect> get changePieceRegionEffects =>
       regionEffects.where((e) => e.pieceType != null).toList();
@@ -54,6 +57,7 @@ class PieceType {
     this.value = Bishop.defaultPieceValue,
     this.regionEffects = const [],
     this.actions = const [],
+    this.optimisationData,
   });
 
   factory PieceType.fromJson(
@@ -121,6 +125,7 @@ class PieceType {
     int? value,
     List<RegionEffect>? regionEffects,
     List<Action>? actions,
+    PieceOptimisationData? optimisationData,
   }) =>
       PieceType(
         betza: betza ?? this.betza,
@@ -132,12 +137,27 @@ class PieceType {
         value: value ?? this.value,
         regionEffects: regionEffects ?? this.regionEffects,
         actions: actions ?? this.actions,
+        optimisationData: optimisationData ?? this.optimisationData,
       );
 
   PieceType normalise(BoardSize size) => copyWith(
         moves: moves.map((e) => e.normalise(size)).toList(),
         regionEffects: regionEffects.map((e) => e.normalise(size)).toList(),
+        optimisationData: _optimisationData,
       );
+
+  PieceOptimisationData? get _optimisationData {
+    if (moves.firstWhereOrNull((e) => e is! StandardMoveDefinition) != null) {
+      return null;
+    }
+    final sMoves =
+        moves.map<StandardMoveDefinition>((e) => e as StandardMoveDefinition);
+    return PieceOptimisationData(
+      hasOrthogonal: sMoves.hasOrthogonal,
+      hasDiagonal: sMoves.hasDiagonal,
+      hasOblique: sMoves.hasOblique,
+    );
+  }
 
   /// Returns a copy of the piece type with `PiecePromoOptions.none`.
   PieceType withNoPromotion() => copyWith(promoOptions: PiecePromoOptions.none);
@@ -326,4 +346,38 @@ class PieceDefinition {
   /// The symbol of this piece definition, respecting its [colour].
   String char(Colour colour) =>
       colour == Bishop.white ? symbol.toUpperCase() : symbol.toLowerCase();
+}
+
+/// Contains precomputed flags that help move generation run faster.
+class PieceOptimisationData {
+  final bool hasOrthogonal;
+  final bool hasDiagonal;
+  final bool hasOblique;
+
+  const PieceOptimisationData({
+    required this.hasOrthogonal,
+    required this.hasDiagonal,
+    required this.hasOblique,
+  });
+
+  /// Determines whether this piece should be excluded from move generation.
+  bool excludePiece(int from, int to, BoardSize size) {
+    final dirType = size.directionTypeBetween(from, to);
+    switch (dirType) {
+      case DirectionType.orthogonal:
+        if (!hasOrthogonal) return true;
+        break;
+      case DirectionType.diagonal:
+        if (!hasDiagonal) return true;
+        break;
+      case DirectionType.oblique:
+        if (!hasOblique) return true;
+        break;
+    }
+    return false;
+  }
+
+  @override
+  String toString() =>
+      'PieceOptimisationData($hasOrthogonal, $hasDiagonal, $hasOblique)';
 }
