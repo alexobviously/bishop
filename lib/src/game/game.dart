@@ -108,6 +108,7 @@ class Game {
           (target.colour == colour || target.colour == Bishop.neutralPassive)) {
         List<Move> pieceMoves = generatePieceMoves(i, options);
         moves.addAll(pieceMoves);
+        if (options.onlyOne && moves.isNotEmpty) return moves;
       }
     }
     if (variant.handsEnabled && options.quiet && !options.onlyPiece) {
@@ -209,11 +210,40 @@ class Game {
       }
     }
 
+    void addMove(StandardMove m) {
+      final mm = variant.generatePromotionMoves(
+        base: m,
+        state: state,
+        pieceType: pieceType,
+      );
+      if (mm != null) moves.addAll(mm);
+      if (mm == null) moves.add(m);
+      if (variant.gating) {
+        int gRank = size.rank(m.from);
+        if ((gRank == Bishop.rank1 && colour == Bishop.white) ||
+            (gRank == size.maxRank && colour == Bishop.black)) {
+          final gatingMoves = generateGatingMoves(m);
+          moves.addAll(gatingMoves);
+          if (gatingMoves.isNotEmpty &&
+              variant.gatingMode == GatingMode.fixed) {
+            moves.remove(m);
+          }
+        }
+      }
+      if (options.onlySquare != null && m.to == options.onlySquare) {
+        exit = true;
+      }
+    }
+
     // Generate normal moves
     for (MoveDefinition md in pieceType.moves) {
       if (exit) break;
       if (!md.capture && !options.quiet) continue;
       if (!md.quiet && !options.captures) continue;
+      if (options.onlySquare != null &&
+          md.excludeMove(square, options.onlySquare!, dirMult, size)) {
+        continue;
+      }
       if (md is TeleportMoveDefinition) {
         generateTeleportMoves(md);
         continue;
@@ -268,33 +298,6 @@ class Game {
             if (md.limitedHopper && squaresSinceHop != md.hopDistance) {
               break;
             }
-          }
-        }
-
-        void addMove(StandardMove m) {
-          final mm = variant.generatePromotionMoves(
-            base: m,
-            state: state,
-            pieceType: pieceType,
-          );
-          if (mm != null) moves.addAll(mm);
-          // bool removeBase = false;
-          if (mm == null) moves.add(m);
-          if (variant.gating) {
-            int gRank = size.rank(m.from);
-            if ((gRank == Bishop.rank1 && colour == Bishop.white) ||
-                (gRank == size.maxRank && colour == Bishop.black)) {
-              final gatingMoves = generateGatingMoves(m);
-              moves.addAll(gatingMoves);
-              if (gatingMoves.isNotEmpty &&
-                  variant.gatingMode == GatingMode.fixed) {
-                moves.remove(m);
-              }
-            }
-          }
-          // if (!addBase) moves.remove(m);
-          if (options.onlySquare != null && m.to == options.onlySquare) {
-            exit = true;
           }
         }
 

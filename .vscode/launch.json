@@ -13,7 +13,9 @@
             "name": "example",
             "cwd": "example",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "example.dart",
+            "args": []
         }
     ]
 }

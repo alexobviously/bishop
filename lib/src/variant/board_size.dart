@@ -64,6 +64,27 @@ class BoardSize {
   /// Returns true if [a] and [b] are on the same rank.
   bool squaresOnSameRank(int a, int b) => rank(a) == rank(b);
 
+  /// Whether [a] and [b] are connected by a rook move.
+  bool orthogonallyConnected(int a, int b) =>
+      squaresOnSameFile(a, b) || squaresOnSameRank(a, b);
+
+  /// Whether [a] and [b] are connected by a bishop move.
+  bool diagonallyConnected(int a, int b) =>
+      rank(b) - rank(a) == file(b) - file(a);
+
+  /// Whether [a] and [b] are connected by a move in [direction].
+  bool connected(int a, int b, Direction direction) {
+    int fileDiff = file(b) - file(a);
+    if (direction.h == 0 && fileDiff != 0) return false;
+    int rankDiff = rank(b) - rank(a);
+    if (direction.v == 0 && rankDiff != 0) return false;
+    if (direction.h != 0 && fileDiff % direction.h != 0) return false;
+    if (direction.v != 0 && rankDiff % direction.v != 0) return false;
+    return true;
+    return ((file(b) - file(a)).abs() % direction.h == 0) &&
+        (rank(b) - rank(a)).abs() % direction.v == 0;
+  }
+
   /// Get the first rank for player [colour].
   int firstRank(int colour) => colour == Bishop.white ? Bishop.rank1 : maxRank;
 

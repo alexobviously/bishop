@@ -25,6 +25,9 @@ abstract class MoveDefinition {
 
   bool get quiet => modality == Modality.both || modality == Modality.quiet;
   bool get capture => modality == Modality.both || modality == Modality.capture;
+
+  /// Used to rapidly exclude moves in cases where we're looking for attacks.
+  bool excludeMove(int from, int to, int dirMult, BoardSize size) => false;
 }
 
 class TeleportMoveDefinition extends MoveDefinition {
@@ -65,6 +68,8 @@ class StandardMoveDefinition extends MoveDefinition {
   final int? lameNormalised;
 
   bool get slider => range != 1;
+  bool get unlimitedSlider => range == 0;
+  bool get limitedSlider => range > 1;
   bool get hopper => slider && hopDistance > -1;
   bool get limitedHopper => slider && hopDistance > 0;
 
@@ -140,6 +145,19 @@ class StandardMoveDefinition extends MoveDefinition {
   }
 
   @override
+  bool excludeMove(int from, int to, int dirMult, BoardSize size) {
+    if (!slider) {
+      return from + (normalised * dirMult) != to;
+    }
+    final n = normalised * dirMult;
+    if (n > 0 != to > from) return true;
+    if (n == 0) return from == to; // idk could happen
+    // There might be optimisations for limited sliders that
+    // could go here, but this is pretty fast.
+    return (to - from) % n != 0;
+  }
+
+  @override
   String toString() {
     String string = '$direction [${modality.name}] [$normalised]';
     List<String> mods = [];
@@ -168,6 +186,7 @@ class Direction {
   }
 
   static const none = Direction(0, 0);
+  static const unit = Direction(1, 1);
 
   String get simpleString => '$h,$v';
 
@@ -214,6 +233,33 @@ class Direction {
   @override
   bool operator ==(Object other) =>
       other is Direction && h == other.h && v == other.v;
+
+  Direction operator +(Direction other) => Direction(h + other.h, v + other.v);
+  Direction operator -(Direction other) => Direction(h - other.h, v - other.v);
+
+  Direction operator *(Object other) {
+    if (other is Direction) {
+      return Direction(h * other.h, v * other.v);
+    }
+    if (other is int) {
+      return other == 1 ? this : Direction(h * other, v * other);
+    }
+    throw Exception('Direction can only be multiplied by an int or another'
+        'Direction (tried to use ${other.runtimeType}).');
+  }
+
+  Direction operator ~/(Object other) {
+    if (other is Direction) {
+      return Direction(h ~/ other.h, v ~/ other.v);
+    }
+    if (other is int) {
+      return other == 1 ? this : Direction(h ~/ other, v ~/ other);
+    }
+    throw Exception('Direction can only be divided by an int or another'
+        'Direction (tried to use ${other.runtimeType}).');
+  }
+
+  Direction operator -() => Direction(-h, -v);
 
   @override
   int get hashCode => (h << 8) + v;
