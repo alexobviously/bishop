@@ -1,5 +1,5 @@
 ### 1.3.1
-- Even more optimisations: excluding piece types early from attack checks (~20% performance boost).
+- Further optimisation: excluding piece types early from attack checks (~20% performance boost).
 
 ### 1.3.0
 - **Bishop is now about 2x faster** thanks to significant optimisations in attack checking.
