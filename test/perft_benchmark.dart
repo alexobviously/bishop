@@ -1,5 +1,6 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:bishop/bishop.dart';
+import 'constants.dart';
 import 'perft.dart';
 
 import 'dart:math';
@@ -25,22 +26,35 @@ class PerftBenchmark extends BenchmarkBase {
     int t1 = 0;
     t1 = DateTime.now().millisecondsSinceEpoch;
 
-    int result = game!.perft(test.depth);
+    int nodes = game!.perft(test.depth);
     int t2 = DateTime.now().millisecondsSinceEpoch;
-    num nps = result / ((t2 - t1) / 1000);
-    npsResults.add(nps);
+    final result = NpsResult(test.fen, nodes, (t2 - t1) / 1000);
+    npsResults.add(result);
     if (_showNps) {
-      print('${nps.toStringAsFixed(2)}nps ($result nodes) (${test.fen})');
+      print('${result.nps.toStringAsFixed(2)}nps ($nodes nodes) (${test.fen})');
     }
 
-    if (result != test.nodes) {
-      throw 'Wrong result: Expected <${test.nodes}> but got <$result>.';
+    if (nodes != test.nodes) {
+      throw 'Wrong result: Expected <${test.nodes}> but got <$nodes>.';
     }
   }
 }
 
+class NpsResult {
+  final String fen;
+  final int nodes;
+  final num seconds;
+  final num nps;
+
+  const NpsResult(this.fen, this.nodes, this.seconds) : nps = nodes / seconds;
+
+  @override
+  String toString() => '${nps.toStringAsFixed(2)}nps '
+      '($nodes/${seconds.toStringAsFixed(2)}s) [$fen]';
+}
+
 bool _showNps = false;
-List<num> npsResults = [];
+List<NpsResult> npsResults = [];
 
 void main(List<String> args) {
   if (args.isNotEmpty && args.first == 'shownps') {
@@ -58,13 +72,14 @@ void main(List<String> args) {
     total += time;
   }
   print('-- Total Runtime: ${(total / 1000).toStringAsFixed(2)}ms --');
-  num npsAvg = npsResults.reduce((p, e) => p + e) / npsResults.length;
-  num npsMin = npsResults.reduce(min);
-  num npsMax = npsResults.reduce(max);
-  print('-- Total Tests: ${npsResults.length}, '
-      'mean NPS: ${npsAvg.toStringAsFixed(2)}, '
-      'min: ${npsMin.toStringAsFixed(2)}, '
-      'max: ${npsMax.toStringAsFixed(2)} --');
+  npsResults.sort((a, b) => b.nps.compareTo(a.nps));
+  num npsAvg = npsResults.fold<num>(0, (p, e) => p + e.nps) / npsResults.length;
+  final npsMin = npsResults.last;
+  final npsMax = npsResults.first;
+  print('Total Tests: ${npsResults.length}, '
+      'mean NPS: ${npsAvg.toStringAsFixed(2)}');
+  print('Best: $npsMax');
+  print('Worst: $npsMin');
 }
 
 // 12/01/23, on windows machine
