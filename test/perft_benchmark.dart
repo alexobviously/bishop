@@ -1,9 +1,6 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:bishop/bishop.dart';
-import 'constants.dart';
 import 'perft.dart';
-
-import 'dart:math';
 
 class PerftBenchmark extends BenchmarkBase {
   final PerftTest test;
