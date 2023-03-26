@@ -1,7 +1,7 @@
 {
  "name": "Legan Chess",
  "description": "",
- "bishopVersion": "1.3.0",
+ "bishopVersion": "1.3.2",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -34,6 +34,7 @@
  "materialConditions": {"enabled": false},
  "startPosition": "knbrp3/bqpp4/npp5/rp1p3P/p3P1PR/5PPN/4PPQB/3PRBNK w - - 0 1",
  "enPassant": false,
+ "halfMoveDraw": 100,
  "regions": {
   "wp": {
    "type": "union",

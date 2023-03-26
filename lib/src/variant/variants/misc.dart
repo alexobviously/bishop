@@ -183,6 +183,7 @@ class MiscVariants {
         halfMoveDraw: 100,
       );
 
+  /// https://en.wikipedia.org/wiki/Clobber
   static Variant clobber() => Variant(
         name: 'Clobber',
         startPosition: 'PpPpP/pPpPp/PpPpP/pPpPp/PpPpP/pPpPp w - - 0 1',
@@ -193,6 +194,7 @@ class MiscVariants {
         ),
       );
 
+  /// https://en.wikipedia.org/wiki/Clobber#Variants
   static Variant clobber10() => clobber().copyWith(
         name: 'Clobber10',
         boardSize: BoardSize(10, 10),

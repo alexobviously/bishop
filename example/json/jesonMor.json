@@ -1,7 +1,7 @@
 {
  "name": "Jeson Mor",
  "description": "Knights only. Move a knight onto the central square and off it again to win.",
- "bishopVersion": "1.3.0",
+ "bishopVersion": "1.3.2",
  "boardSize": "9x9",
  "pieceTypes": {"N": {"betza": "N", "value": 300}},
  "castlingOptions": {"enabled": false},
@@ -9,6 +9,7 @@
  "materialConditions": {"enabled": false},
  "startPosition": "nnnnnnnnn/9/9/9/9/9/9/9/NNNNNNNNN w - - 0 1",
  "enPassant": false,
+ "halfMoveDraw": 100,
  "actions": [
   {
    "id": "bishop.action.exitRegionEnding",
