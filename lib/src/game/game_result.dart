@@ -14,6 +14,8 @@ abstract class GameResult {
 
   @override
   String toString() => 'GameResult';
+
+  String get scoreString => '1/2-1/2';
 }
 
 /// A special case to propagate invalidation through to makeMove.
@@ -36,6 +38,9 @@ class WonGame extends GameResult {
 
   @override
   String get readable => '${Bishop.playerName[winner]} won';
+
+  @override
+  String get scoreString => winner == Bishop.white ? '1-0' : '0-1';
 }
 
 class DrawnGame extends GameResult {
@@ -46,6 +51,9 @@ class DrawnGame extends GameResult {
 
   @override
   String get readable => 'Drawn';
+
+  @override
+  String get scoreString => '1/2-1/2';
 }
 
 class WonGameCheckmate extends WonGame {

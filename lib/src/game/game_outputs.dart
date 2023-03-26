@@ -217,7 +217,12 @@ extension GameOutputs on Game {
   @Deprecated('Use Game.moveHistorySan')
   List<String> sanMoves() => moveHistorySan;
 
-  String pgn() {
+  String pgn({
+    Map<String, String>? metadata,
+    bool includeVariant = false,
+    bool includeResult = true,
+  }) {
+    metadata ??= {};
     List<String> moves = moveHistorySan;
     int firstMove = state.fullMoves - (moves.length ~/ 2);
     int firstTurn = history.first.turn;
@@ -228,6 +233,21 @@ extension GameOutputs on Game {
       if (i == 0 && turn == Bishop.black) pgn = '$pgn..';
       pgn = '$pgn${moves[i]} ';
       turn = turn.opponent;
+    }
+    if (includeVariant &&
+        !metadata.containsKey('Variant') &&
+        variant.name != 'Chess') {
+      metadata['Variant'] = variant.name;
+    }
+
+    if (metadata.isNotEmpty) {
+      String meta =
+          metadata.entries.map((e) => '[${e.key} "${e.value}"]').join('\n');
+      pgn = '$meta\n\n$pgn';
+    }
+    if (gameOver) {
+      String comment = '{${result!.readable}} ${result!.scoreString}';
+      pgn = '$pgn $comment';
     }
     return pgn;
   }

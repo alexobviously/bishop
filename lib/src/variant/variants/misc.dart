@@ -108,6 +108,7 @@ class MiscVariants {
         'K': PieceType.king(),
         'X': PieceType.blocker(), // a 'dart'
       },
+      halfMoveDraw: 100,
     );
   }
 
@@ -137,6 +138,7 @@ class MiscVariants {
             region: RectRegion.square(Bishop.fileE, Bishop.rank5),
           ),
         ],
+        halfMoveDraw: 100,
       );
 
   static Variant legan() => Variant(
@@ -178,5 +180,24 @@ class MiscVariants {
             ),
           ]),
         },
+        halfMoveDraw: 100,
+      );
+
+  static Variant clobber() => Variant(
+        name: 'Clobber',
+        startPosition: 'PpPpP/pPpPp/PpPpP/pPpPp/PpPpP/pPpPp w - - 0 1',
+        boardSize: BoardSize(5, 6),
+        pieceTypes: {'P': PieceType.fromBetza('cW')},
+        gameEndConditions: GameEndConditionSet.symmetric(
+          GameEndConditions(stalemate: EndType.lose),
+        ),
+      );
+
+  static Variant clobber10() => clobber().copyWith(
+        name: 'Clobber10',
+        boardSize: BoardSize(10, 10),
+        startPosition: 'PpPpPpPpPp/pPpPpPpPpP/PpPpPpPpPp/pPpPpPpPpP/PpPpPpPpPp/'
+            'pPpPpPpPpP/PpPpPpPpPp/pPpPpPpPpP'
+            '/PpPpPpPpPp/pPpPpPpPpP w - - 0 1',
       );
 }

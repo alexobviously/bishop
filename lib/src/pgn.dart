@@ -11,6 +11,8 @@ class PgnData {
       ? variantFromString(metadata['Variant']!)
       : null;
 
+  bool get hasVariantTag => metadata.containsKey('Variant');
+
   String? get fen => metadata['FEN'];
 
   const PgnData({
@@ -33,7 +35,7 @@ PgnData parsePgn(String pgn) {
     String value = m.group(3)!;
     metadata[key] = value;
   }
-  int metaEnd = matches.last.end;
+  int metaEnd = matches.isEmpty ? 0 : matches.last.end;
   String game =
       pgn.substring(metaEnd).replaceAll('\n', ' ').replaceAll('\r', ' ');
   int i = 0;
@@ -75,8 +77,18 @@ PgnData parsePgn(String pgn) {
 /// Builds a game from already parsed [data].
 /// If [variant] or [startPosition] are not supplied, tags will be used, if
 /// they exist.
-Game gameFromPgnData(PgnData data, {Variant? variant, String? startPosition}) {
+Game gameFromPgnData(
+  PgnData data, {
+  Variant? variant,
+  String? startPosition,
+  bool strictVariantTag = true,
+}) {
   variant ??= data.variant;
+  if (strictVariantTag && data.hasVariantTag && variant == null) {
+    throw BishopException(
+      'Unrecognised Variant in PGN header: ${data.metadata['Variant']}',
+    );
+  }
   startPosition ??= data.fen;
   final g = Game(variant: variant, fen: startPosition);
   for (String move in data.moves) {
@@ -87,9 +99,15 @@ Game gameFromPgnData(PgnData data, {Variant? variant, String? startPosition}) {
 
 /// Parses a [pgn] and builds a game from it.
 /// If [variant] is not supplied, the parser will look for a variant tag.
-Game gameFromPgn(String pgn, {Variant? variant, String? startPosition}) =>
+Game gameFromPgn(
+  String pgn, {
+  Variant? variant,
+  String? startPosition,
+  bool strictVariantTag = true,
+}) =>
     gameFromPgnData(
       parsePgn(pgn),
       variant: variant,
       startPosition: startPosition,
+      strictVariantTag: strictVariantTag,
     );

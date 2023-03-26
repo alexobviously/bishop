@@ -190,23 +190,50 @@ enum Variants {
   miniXiangqi(Xiangqi.mini),
   manchu(Xiangqi.manchu),
   shogi(Shogi.shogi),
-  dobutsu(Dobutsu.dobutsu),
-  spawn(MiscVariants.spawn),
-  kinglet(MiscVariants.kinglet),
-  threeKings(MiscVariants.threeKings),
+  dobutsu(Dobutsu.dobutsu, alt: 'Dobutsu Shogi'),
+  spawn(MiscVariants.spawn, alt: 'Spawn Chess'),
+  kinglet(MiscVariants.kinglet, alt: 'Kinglet Chess'),
+  threeKings(MiscVariants.threeKings, alt: 'Three Kings Chess'),
   domination(MiscVariants.domination),
   dart(MiscVariants.dart),
   andernach(MiscVariants.andernach),
   jesonMor(MiscVariants.jesonMor),
   legan(MiscVariants.legan),
+  clobber(MiscVariants.clobber),
+  clobber10(MiscVariants.clobber10),
   hoppelPoppel(FairyVariants.hoppelPoppel),
-  grasshopper(FairyVariants.grasshopper),
-  berolina(FairyVariants.berolina),
+  grasshopper(FairyVariants.grasshopper, alt: 'Grasshopper Chess'),
+  berolina(FairyVariants.berolina, alt: 'Berolina Chess'),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 
   final Variant Function() builder;
-  const Variants(this.builder);
+  final String? alt;
+  const Variants(this.builder, {this.alt});
+
+  String get _nameSimple => name.toLowerCase().replaceAll(' ', '');
+  String? get _altSimple => alt?.toLowerCase().replaceAll(' ', '');
+
+  bool matchName(String n) => [
+        _nameSimple,
+        if (alt != null) _altSimple,
+      ].contains(n.toLowerCase().replaceAll(' ', ''));
+
+  bool matchNamePartial(String n) =>
+      _nameSimple.startsWith(n) || (_altSimple?.startsWith(n) ?? false);
+
+  bool matchNamePartialInverse(String n) {
+    n = n.toLowerCase().replaceAll(' ', '');
+    return n.startsWith(_nameSimple) ||
+        (alt != null && n.startsWith(_altSimple!));
+  }
+
+  static Variants? match(String name, {bool allowIncomplete = true}) {
+    final v = values.firstWhereOrNull((e) => e.matchName(name));
+    if (v != null || !allowIncomplete) return v;
+    return values.firstWhereOrNull((e) => e.matchNamePartial(name)) ??
+        values.firstWhereOrNull((e) => e.matchNamePartialInverse(name));
+  }
 
   /// Builds a `Variant` for use with `Game`.
   Variant build() => builder();

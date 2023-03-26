@@ -31,7 +31,8 @@ class PerftBenchmark extends BenchmarkBase {
     final result = NpsResult(test.fen, nodes, (t2 - t1) / 1000);
     npsResults.add(result);
     if (_showNps) {
-      print('${result.nps.toStringAsFixed(2)}nps ($nodes nodes) (${test.fen})');
+      print('${result.nps.toStringAsFixed(2)}nps ($nodes nodes) '
+          '(${test.fen}) (${test.variant.name})');
     }
 
     if (nodes != test.nodes) {
@@ -62,6 +63,7 @@ void main(List<String> args) {
   }
   List<PerftBenchmark> perfts = [
     ...Perfts.standard.map((e) => PerftBenchmark(e)),
+    // ...Perfts.ruleVariants.map((e) => PerftBenchmark(e)),
   ];
   double total = 0;
   for (PerftBenchmark perft in perfts) {

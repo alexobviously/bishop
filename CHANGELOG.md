@@ -1,5 +1,8 @@
 ### 1.3.2
 - Fixed a castling bug (queenside allowed with piece on b1).
+- Various minor improvements to PGN import/export.
+- Improvements to `example.dart`: can export PGN and use the engine.
+- Fixed some variants not having the 100 half-move rule when they should.
 
 ### 1.3.1
 - Further optimisation: excluding piece types early from attack checks (~20% performance boost).
