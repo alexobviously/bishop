@@ -113,7 +113,8 @@ extension GameOutputs on Game {
       }
     }
     if (checks) {
-      makeMove(move, false);
+      bool ok = makeMove(move, false);
+      if (!ok) return 'invalid';
       if (inCheck || won) {
         san = '$san${won ? '#' : '+'}';
       }
