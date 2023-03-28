@@ -49,6 +49,10 @@ extension GameMovement on Game {
       );
     }
 
+    history.add(newState);
+    // todo: move this to before history.add (above) when move generation
+    // becomes part of state (i.e. not dependent on current state)
+    // probably after dart 3 cos records
     if (generateMeta) {
       newState = newState.copyWith(
         meta: StateMeta(
@@ -57,11 +61,14 @@ extension GameMovement on Game {
             algebraic: toAlgebraic(move),
             formatted: toSan(move),
           ),
+          checks: [
+            getKingAttackers(Bishop.white),
+            getKingAttackers(Bishop.black),
+          ],
         ),
       );
     }
-
-    history.add(newState);
+    history.last = newState;
     if (newState.invalidMove) return false;
 
     // kind of messy doing it like this, but inCheck depends on the current state

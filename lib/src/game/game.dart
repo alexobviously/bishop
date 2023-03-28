@@ -598,11 +598,11 @@ class Game {
     return movesMade;
   }
 
-  /// Checks if [square] is attacked by [colour].
+  /// Checks if [square] is attacked by [player].
   /// Works by generating all legal moves for the other player, and therefore is slow.
-  bool isAttacked(int square, Colour colour) {
+  bool isAttacked(int square, int player) {
     List<Move> attacks =
-        generatePlayerMoves(colour, MoveGenParams.squareAttacks(square));
+        generatePlayerMoves(player, MoveGenParams.squareAttacks(square));
     return attacks.isNotEmpty;
   }
 
@@ -610,6 +610,18 @@ class Game {
   bool kingAttacked(int player) => state.royalSquares[player] != Bishop.invalid
       ? isAttacked(state.royalSquares[player], player.opponent)
       : false;
+
+  /// Finds all the pieces for [player] attacking [square].
+  /// Returns a list of the squares those pieces are on.
+  Set<int> getAttackers(int square, int player) =>
+      generatePlayerMoves(player, MoveGenParams.squareAttacks(square, false))
+          .map((e) => e.from)
+          .toSet();
+
+  /// Finds all pieces attacking [player]'s king.
+  /// Returns a list of the squares those pieces are on.
+  Set<int> getKingAttackers(int player) =>
+      getAttackers(state.royalSquares[player], player.opponent);
 
   /// Check the number of times the current position has occurred in the hash table.
   int get hashHits => zobrist.hashHits(state.hash);

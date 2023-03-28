@@ -90,4 +90,14 @@ void main() {
     );
     expect(g.generateLegalMoves().castlingMoves.length, 1);
   });
+  test('King Attackers (discovered check)', () {
+    final g = Game(fen: '3k4/8/3N4/8/8/8/8/K2R4 w - - 0 1');
+    g.makeMoveString('d6b7');
+    expect(
+      g.state.meta?.checks?[Bishop.black],
+      unorderedEquals(
+        [g.size.squareNumber('d1'), g.size.squareNumber('b7')],
+      ),
+    );
+  });
 }

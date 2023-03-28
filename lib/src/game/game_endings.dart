@@ -2,7 +2,8 @@ part of 'game.dart';
 
 extension GameEndings on Game {
   /// Is the current player's king in check?
-  bool get inCheck => kingAttacked(state.turn);
+  bool get inCheck =>
+      state.meta?.inCheck[state.turn] ?? kingAttacked(state.turn);
 
   /// Is this checkmate?
   bool get checkmate => inCheck && generateLegalMoves().isEmpty;
