@@ -22,15 +22,20 @@ extension GameMovement on Game {
         zobrist: zobrist,
       );
     }
-    if (move is! StandardMove && move is! DropMove && move is! PassMove) {
+    if (move is! StandardMove &&
+        move is! DropMove &&
+        move is! PassMove &&
+        move is! GatingMove) {
       return false;
     }
 
     if (state.invalidMove) return false;
 
     BishopState? newState;
-    if (move is StandardMove || move is DropMove) {
-      newState = makeNormalMove(state, move);
+    if (move is GatingMove) {
+      newState = makeGatingMove(state, move);
+    } else if (move is StandardMove || move is DropMove) {
+      newState = makeStandardMove(state, move);
     } else if (move is PassMove) {
       newState = makePassMove(state, move);
     }
@@ -97,7 +102,48 @@ extension GameMovement on Game {
     return true;
   }
 
-  BishopState? makeNormalMove(BishopState state, Move move) {
+  BishopState? makeGatingMove(BishopState state, GatingMove move) {
+    BishopState? newState = makeStandardMove(state, move.child);
+    if (newState == null) return null;
+
+    List<int> board = [...newState.board];
+    List<Hand> gates = List.generate(
+      newState.gates!.length,
+      (i) => List.from(newState.gates![i]),
+    );
+    int hash = newState.hash;
+    int fromFile = size.file(move.from);
+    if (!(move.child.castling && move.dropOnRookSquare)) {
+      // Move piece from gate to board.
+      if (variant.gatingMode == GatingMode.flex) {
+        gates[turn].remove(move.dropPiece);
+      } else if (variant.gatingMode == GatingMode.fixed) {
+        gates[turn][fromFile] = Bishop.empty;
+      }
+      int dropPiece = move.dropPiece;
+      hash ^= zobrist.table[move.from][dropPiece.piece];
+      board[move.from] = makePiece(dropPiece, turn, initialState: true);
+    } else {
+      int dropPiece = makePiece(move.dropPiece, turn, initialState: true);
+      board[move.child.castlingPieceSquare!] = dropPiece;
+      hash ^= zobrist.table[move.child.castlingPieceSquare!][dropPiece.piece];
+    }
+
+    // Remove gated piece from gate
+    gates[turn].remove(move.dropPiece);
+
+    return newState.copyWith(
+      board: board,
+      gates: gates,
+      hash: hash,
+    );
+  }
+
+  @Deprecated('Use makeStandardMove')
+  BishopState? moveNormalMove(BishopState state, Move move) =>
+      makeStandardMove(state, move);
+
+  BishopState? makeStandardMove(BishopState state, Move move) {
     if (move is! StandardMove && move is! DropMove) {
       return null;
     }
@@ -115,9 +161,6 @@ extension GameMovement on Game {
     List<Hand>? hands = state.hands != null
         ? List.generate(state.hands!.length, (i) => List.from(state.hands![i]))
         : null;
-    List<Hand>? gates = state.gates != null
-        ? List.generate(state.gates!.length, (i) => List.from(state.gates![i]))
-        : null;
     List<List<int>> virginFiles = List.generate(
       state.virginFiles.length,
       (i) => List.from(state.virginFiles[i]),
@@ -126,10 +169,7 @@ extension GameMovement on Game {
     GameResult? result;
 
     // TODO: more validation?
-
-    // Square toSq = board[move.to];
     int fromRank = size.rank(move.from);
-    int fromFile = size.file(move.from);
     PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq.isNotEmpty &&
         (fromSq.colour != state.turn &&
@@ -143,24 +183,9 @@ extension GameMovement on Game {
       if (move.promotion) {
         pieces[fromSq.piece]--;
       }
-      if (move.gate) {
-        move = move as StandardMove;
-        if (!(move.castling && move.dropOnRookSquare)) {
-          // Move piece from gate to board.
-          if (variant.gatingMode == GatingMode.flex) {
-            gates![colour].remove(move.dropPiece!);
-          } else if (variant.gatingMode == GatingMode.fixed) {
-            gates![colour][fromFile] = Bishop.empty;
-          }
-          int dropPiece = move.dropPiece!;
-          hash ^= zobrist.table[move.from][dropPiece.piece];
-          board[move.from] = makePiece(dropPiece, colour, initialState: true);
-        } else {
-          board[move.from] = Bishop.empty;
-        }
-      } else {
-        board[move.from] = Bishop.empty;
-      }
+
+      board[move.from] = Bishop.empty;
+
       // Mark the file as touched.
       if ((fromRank == 0 && colour == Bishop.white) ||
           (fromRank == size.v - 1 && colour == Bishop.black)) {
@@ -175,11 +200,6 @@ extension GameMovement on Game {
           : move.capturedPiece!.type;
       hands![colour].add(piece);
       pieces[makePiece(piece, colour)]++;
-    }
-
-    // Remove gated piece from gate
-    if (move.gate) {
-      gates![colour].remove((move as StandardMove).dropPiece!);
     }
 
     // Remove captured piece from hash and pieces list
@@ -266,12 +286,6 @@ extension GameMovement on Game {
       hash ^= zobrist.table[zobrist.castling][state.castlingRights];
       hash ^= zobrist.table[zobrist.castling][castlingRights];
       royalSquares[colour] = kingSq;
-
-      if (move.gate && move.dropOnRookSquare) {
-        int dropPiece = makePiece(move.dropPiece!, colour, initialState: true);
-        board[move.castlingPieceSquare!] = dropPiece;
-        hash ^= zobrist.table[move.castlingPieceSquare!][dropPiece.piece];
-      }
     } else if (fromPiece.royal) {
       // king moved
       castlingRights = castlingRights.remove(colour);
@@ -339,7 +353,7 @@ extension GameMovement on Game {
       epSquare: epSquare,
       hash: hash,
       hands: hands,
-      gates: gates,
+      gates: state.gates,
       pieces: pieces,
       checks: List.from(state.checks),
       result: result,

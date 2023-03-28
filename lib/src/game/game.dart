@@ -510,20 +510,20 @@ class Game {
 
   /// Generates a move for each gating possibility for the [base] move.
   /// Doesn't include the option where a piece is not gated.
-  List<StandardMove> generateGatingMoves(StandardMove base) {
+  List<GatingMove> generateGatingMoves(StandardMove base) {
     if (state.gates == null || state.gates!.isEmpty) return [];
     int gFile = size.file(base.from);
     Square piece = board[base.from];
     Colour colour = piece.colour;
     if (piece.isEmpty) return [];
     if (!(state.virginFiles[colour].contains(gFile))) return [];
-    List<StandardMove> moves = [];
+    List<GatingMove> moves = [];
     void addGatingMove(int p) {
-      StandardMove m = base.copyWith(dropPiece: p);
-      moves.add(m);
-      if (m.castling) {
-        StandardMove m2 = base.copyWith(dropPiece: p, dropOnRookSquare: true);
-        moves.add(m2);
+      moves.add(GatingMove(child: base, dropPiece: p));
+      if (base.castling) {
+        moves.add(
+          GatingMove(child: base, dropPiece: p, dropOnRookSquare: true),
+        );
       }
     }
 

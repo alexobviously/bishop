@@ -31,6 +31,21 @@ extension GameOutputs on Game {
     if (move is DropMove) {
       return '${variant.pieces[move.piece].symbol.toLowerCase()}${move.algebraic(size)}';
     }
+    if (move is GatingMove) {
+      String alg =
+          toAlgebraic(move.child, simplifyFixedGating: simplifyFixedGating);
+      if (variant.gatingMode == GatingMode.fixed && simplifyFixedGating) {
+        return alg;
+      }
+      alg = '$alg/${variant.pieces[move.dropPiece].symbol.toLowerCase()}';
+      if (move.child.castling) {
+        String dropSq = move.dropOnRookSquare
+            ? size.squareName(move.child.castlingPieceSquare!)
+            : size.squareName(move.from);
+        alg = '$alg$dropSq';
+      }
+      return alg;
+    }
     if (move is! StandardMove) return '';
     String alg = move.algebraic(
       size: size,
@@ -41,16 +56,6 @@ extension GameOutputs on Game {
     }
     if (move.from == Bishop.hand) {
       alg = '${variant.pieces[move.dropPiece!].symbol.toLowerCase()}$alg';
-    }
-    if (move.gate &&
-        !(variant.gatingMode == GatingMode.fixed && simplifyFixedGating)) {
-      alg = '$alg/${variant.pieces[move.dropPiece!].symbol.toLowerCase()}';
-      if (move.castling) {
-        String dropSq = move.dropOnRookSquare
-            ? size.squareName(move.castlingPieceSquare!)
-            : size.squareName(move.from);
-        alg = '$alg$dropSq';
-      }
     }
     return alg;
   }
@@ -63,6 +68,24 @@ extension GameOutputs on Game {
   /// computed, which vastly increases efficiency in cases like PGN parsing.
   String toSan(Move move, {List<Move>? moves, bool checks = true}) {
     if (move is PassMove) return move.algebraic();
+    if (move is GatingMove) {
+      String san = '${toSan(move.child, checks: checks)}/'
+          '${variant.pieces[move.dropPiece].symbol}';
+      if (move.castling) {
+        String dropSq = move.dropOnRookSquare
+            ? size.squareName(move.child.castlingPieceSquare!)
+            : size.squareName(move.from);
+        san = '$san$dropSq';
+      }
+      // a hack, will be reworked eventually
+      if (san.contains('+')) {
+        san = '${san.replaceAll('+', '')}+';
+      }
+      if (san.contains('#')) {
+        san = '${san.replaceAll('#', '')}#';
+      }
+      return san;
+    }
     if (move is! StandardMove && move is! DropMove) return '';
     String san = '';
     if (move.castling) {
@@ -102,16 +125,6 @@ extension GameOutputs on Game {
         }
       }
     }
-    if (move.gate) {
-      san = '$san/${variant.pieces[move.dropPiece!].symbol}';
-      if (move.castling) {
-        move = move as StandardMove;
-        String dropSq = move.dropOnRookSquare
-            ? size.squareName(move.castlingPieceSquare!)
-            : size.squareName(move.from);
-        san = '$san$dropSq';
-      }
-    }
     if (checks) {
       bool ok = makeMove(move, false);
       if (!ok) return 'invalid';
@@ -139,7 +152,6 @@ extension GameOutputs on Game {
     for (Move m in moves) {
       if (m is! StandardMove) continue;
       if (m.handDrop) continue;
-      if (m.drop && m.dropPiece != move.dropPiece) continue;
       if (m.from == move.from) continue;
       if (m.to != move.to) continue;
       if (piece != board[m.from].type) continue;

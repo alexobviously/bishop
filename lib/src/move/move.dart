@@ -1,10 +1,12 @@
 import 'package:bishop/bishop.dart';
 
 part 'drop_move.dart';
+part 'gating_move.dart';
 part 'move_meta.dart';
 part 'multi_move.dart';
 part 'standard_move.dart';
 part 'pass_move.dart';
+part 'wrapper_move.dart';
 
 abstract class Move {
   const Move();

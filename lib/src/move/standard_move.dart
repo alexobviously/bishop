@@ -3,7 +3,7 @@ part of 'move.dart';
 /// A representation of a single move.
 /// This is a move that is made in a game, not a definition of a type of move
 /// that can be made by a piece. For that, see `MoveDefinition`.
-class StandardMove implements Move {
+class StandardMove extends Move {
   /// The board location this move starts at.
   @override
   final int from;
@@ -37,14 +37,6 @@ class StandardMove implements Move {
   @override
   final bool setEnPassant;
 
-  /// The piece (type only) that is being dropped, if one is.
-  @override
-  final int? dropPiece;
-
-  /// For gating drops that are also castling moves - should we gate on square
-  /// that the king came from (false) or the rook (true).
-  final bool dropOnRookSquare;
-
   /// Whether a piece is captured as a result of this move.
   @override
   bool get capture => capturedPiece != null;
@@ -57,24 +49,11 @@ class StandardMove implements Move {
   @override
   bool get castling => castlingDir != null;
 
-  /// Whether this is a drop move (any type, including gating).
-  bool get drop => dropPiece != null;
-
-  /// Whether this is a drop move where the piece came from the hand to an empty
-  /// square, e.g. the drops in Crazyhouse.
-  @override
-  bool get handDrop => drop && from == Bishop.hand;
-
-  /// Whether this is a gated drop, e.g. the drops in Seirawan chess.
-  @override
-  bool get gate => drop && from >= Bishop.boardStart;
-
   @override
   String toString() {
     List<String> params = ['from: $from', 'to: $to'];
     if (promotion) params.add('promo: $promoPiece');
     if (castling) params.add('castling: $castlingDir');
-    if (drop) params.add('drop: $dropPiece');
     if (enPassant) params.add('enPassant');
     if (setEnPassant) params.add('setEnPassant');
     return 'Move(${params.join(', ')})';
@@ -90,8 +69,6 @@ class StandardMove implements Move {
     this.castlingPieceSquare,
     this.enPassant = false,
     this.setEnPassant = false,
-    this.dropPiece,
-    this.dropOnRookSquare = false,
   });
 
   StandardMove copyWith({
@@ -104,8 +81,6 @@ class StandardMove implements Move {
     int? castlingPieceSquare,
     bool? enPassant,
     bool? setEnPassant,
-    int? dropPiece,
-    bool? dropOnRookSquare,
   }) {
     return StandardMove(
       from: from ?? this.from,
@@ -117,13 +92,8 @@ class StandardMove implements Move {
       castlingPieceSquare: castlingPieceSquare ?? this.castlingPieceSquare,
       enPassant: enPassant ?? this.enPassant,
       setEnPassant: setEnPassant ?? this.setEnPassant,
-      dropPiece: dropPiece ?? this.dropPiece,
-      dropOnRookSquare: dropOnRookSquare ?? this.dropOnRookSquare,
     );
   }
-
-  factory StandardMove.drop({required int to, required int dropPiece}) =>
-      StandardMove(from: Bishop.hand, to: to, dropPiece: dropPiece);
 
   /// Provides the most basic algebraic form of the move.
   /// This is not entirely descriptive, and doesn't provide information on promo
