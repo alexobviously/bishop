@@ -21,6 +21,7 @@ class BuiltVariant {
   final Map<int, List<String>> winRegions;
   final List<Action> actions;
   final Map<ActionEvent, List<Action>> actionsByEvent;
+  final StateTransformFunction? stateTransformer;
 
   const BuiltVariant({
     required this.data,
@@ -42,6 +43,7 @@ class BuiltVariant {
     required this.winRegions,
     required this.actions,
     required this.actionsByEvent,
+    this.stateTransformer,
   });
 
   BuiltVariant copyWith({
@@ -64,6 +66,7 @@ class BuiltVariant {
     Map<int, List<String>>? winRegions,
     List<Action>? actions,
     Map<ActionEvent, List<Action>>? actionsByEvent,
+    StateTransformFunction? stateTransform,
   }) =>
       BuiltVariant(
         data: data ?? this.data,
@@ -85,6 +88,7 @@ class BuiltVariant {
         winRegions: winRegions ?? this.winRegions,
         actions: actions ?? this.actions,
         actionsByEvent: actionsByEvent ?? this.actionsByEvent,
+        stateTransformer: stateTransform ?? this.stateTransformer,
       );
 
   factory BuiltVariant.fromData(Variant data) {
@@ -173,6 +177,7 @@ class BuiltVariant {
     // It's like this so the drop builder can depend on the promotion builder.
     bv = bv.copyWith(
       firstMoveChecker: data.firstMoveOptions.build(bv),
+      stateTransform: data.stateTransformer?.build(bv),
       promotionBuilder: data.promotionOptions.build(bv),
     );
     bv = bv.copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv));
@@ -449,6 +454,9 @@ class BuiltVariant {
         ),
       ) ??
       false;
+
+  BishopState transformState(BishopState state, [int? player]) =>
+      stateTransformer?.call(state, player) ?? state;
 
   Map<int, int> capturedPieces(
     BishopState state, {

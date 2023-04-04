@@ -1,5 +1,9 @@
 import 'package:bishop/bishop.dart';
 
+part 'masked_state.dart';
+part 'state_meta.dart';
+part 'state_transformer.dart';
+
 /// A record of the game's state at a particular move.
 class BishopState {
   /// The contents of each square on the board.
@@ -248,21 +252,7 @@ class BishopState {
     int sq = meta!.variant.boardSize.squareNumber(square);
     return meta!.variant.pieceSymbol(board[sq].type, board[sq].colour);
   }
-}
 
-class StateMeta {
-  final BuiltVariant variant;
-  final MoveMeta? moveMeta;
-  final List<Iterable<int>>? checks;
-
-  const StateMeta({
-    required this.variant,
-    this.moveMeta,
-    this.checks,
-  });
-
-  String? get algebraic => moveMeta?.algebraic;
-  String? get prettyName => moveMeta?.formatted;
-  List<bool?> get inCheck =>
-      checks?.map((e) => e.isNotEmpty).toList() ?? [null, null];
+  BishopState transform([int? player]) =>
+      meta?.variant.transformState(this, player) ?? this;
 }

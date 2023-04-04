@@ -40,6 +40,15 @@ class Area implements Region {
         omitCentre: omitCentre,
       );
 
+  static const radius1 = Area(
+    directions: [
+      //
+      Direction(-1, 1), Direction(0, 1), Direction(1, 1),
+      Direction(-1, 0), Direction(0, 0), Direction(1, 0),
+      Direction(-1, -1), Direction(0, -1), Direction(1, -1),
+    ],
+  );
+
   @override
   Area translate(int x, int y) =>
       Area(directions: directions.map((e) => e.translate(x, y)).toList());

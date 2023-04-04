@@ -96,6 +96,7 @@ class Variant {
   final Map<String, BoardRegion> regions;
 
   final List<Action> actions;
+  final StateTransformer? stateTransformer;
 
   final List<BishopTypeAdapter> adapters;
 
@@ -150,6 +151,7 @@ class Variant {
     this.passOptions = PassOptions.none,
     this.regions = const {},
     this.actions = const [],
+    this.stateTransformer,
     this.adapters = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
@@ -230,6 +232,12 @@ class Variant {
               adapters: adapters,
             )
           : const [],
+      stateTransformer: json['stateTransformer'] != null
+          ? BishopSerialisation.build<StateTransformer>(
+              json['stateTransformer'],
+              adapters: adapters,
+            )
+          : null,
       adapters: adapters,
     );
   }
@@ -298,6 +306,11 @@ class Variant {
           strict: false,
           adapters: allAdapters,
         ),
+      if (stateTransformer != null)
+        'stateTransformer': BishopSerialisation.export<StateTransformer>(
+          stateTransformer!,
+          adapters: allAdapters,
+        ),
     };
   }
 
@@ -325,6 +338,7 @@ class Variant {
     Map<String, int>? pieceValues,
     Map<String, BoardRegion>? regions,
     List<Action>? actions,
+    StateTransformer? stateTransformer,
     List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
@@ -351,6 +365,7 @@ class Variant {
       pieceValues: pieceValues ?? this.pieceValues,
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
+      stateTransformer: stateTransformer ?? this.stateTransformer,
       adapters: adapters ?? this.adapters,
     );
   }

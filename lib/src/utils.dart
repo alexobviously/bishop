@@ -101,3 +101,28 @@ Map<String, int> countPiecesInFen(String pos) {
 /// For example, `{'P': 3, 'B': 1} => ['P', 'P', 'P', 'B']`.
 List<T> expandCountMap<T>(Map<T, int> input) =>
     input.entries.expand((e) => List.filled(e.value, e.key)).toList();
+
+/// Builds a simple board mask from a list of visible squares.
+/// A value of 1 in the mask indicates a visible square, and 0 is invisible.
+List<int> buildMask(BoardSize size, Iterable<int> visibleSquares) =>
+    List.generate(size.numIndices, (i) => visibleSquares.contains(i) ? 1 : 0);
+
+/// Masks [board] with a a simple [mask], such as the one built by `buildMask`.
+List<int> maskBoard(List<int> board, List<int> mask) =>
+    board.asMap().entries.map((e) => e.value * mask[e.key]).toList();
+
+/// Gets all squares that are visible for [player] in [state], given all of
+/// their pieces can see [area] around them.
+Set<int> visibleSquares({
+  required List<int> board,
+  required BoardSize size,
+  required int player,
+  required Area area,
+}) =>
+    board
+        .asMap()
+        .entries
+        .where((e) => e.value.isNotEmpty && e.value.colour == player)
+        .map((e) => e.key)
+        .expand((e) => size.squaresForArea(e, area))
+        .toSet();

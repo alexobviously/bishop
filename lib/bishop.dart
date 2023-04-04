@@ -23,7 +23,7 @@ export 'src/regions/regions.dart';
 export 'src/serialisation/serialisation.dart';
 export 'src/start_pos_builder.dart';
 export 'src/square.dart';
-export 'src/state.dart';
+export 'src/state/state.dart';
 export 'src/utils.dart';
 export 'src/variant/variant.dart';
 export 'src/zobrist.dart';
