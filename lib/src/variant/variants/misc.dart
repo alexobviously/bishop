@@ -151,34 +151,8 @@ class MiscVariants {
         },
         promotionOptions: RegionPromotion(whiteId: 'wp', blackId: 'bp'),
         regions: {
-          'wp': UnionRegion([
-            RectRegion.lrbt(
-              Bishop.fileA,
-              Bishop.fileA,
-              Bishop.rank5,
-              Bishop.rank8,
-            ),
-            RectRegion.lrbt(
-              Bishop.fileA,
-              Bishop.fileD,
-              Bishop.rank8,
-              Bishop.rank8,
-            ),
-          ]),
-          'bp': UnionRegion([
-            RectRegion.lrbt(
-              Bishop.fileH,
-              Bishop.fileH,
-              Bishop.rank1,
-              Bishop.rank4,
-            ),
-            RectRegion.lrbt(
-              Bishop.fileE,
-              Bishop.fileH,
-              Bishop.rank1,
-              Bishop.rank1,
-            ),
-          ]),
+          'wp': RectRegion.lrbt(0, 0, 4, 7) + RectRegion.lrbt(0, 3, 7, 7),
+          'bp': RectRegion.lrbt(7, 7, 0, 3) + RectRegion.lrbt(4, 7, 0, 0),
         },
         halfMoveDraw: 100,
       );

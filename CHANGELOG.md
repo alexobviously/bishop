@@ -9,6 +9,9 @@
   - `HideFlagsStateTransformer` hides the flags for all of the player's or opponent's pieces, depending on configuration.
 - King attacks are calculated in advance for mainline moves and can be accessed with `state.meta!.checks!`. They come in the form of a list of squares containing pieces that are attacking the king of each player.
 - Gating move logic is no longer part of the standard move logic. `GatingMove` is its own type which contains a child move.
+- `SubtractRegion` and `XorRegion`.
+- Regions in `Variant.regions` are now built into a more efficient form when the variant is built.
+- `BoardRegion`s can now be combined using the `+`, `-` and `^` operators.
 
 ### 1.3.2
 - Fixed a castling bug (queenside allowed with piece on b1).

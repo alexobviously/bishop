@@ -18,6 +18,7 @@ class BuiltVariant {
   final int castlingPiece;
   final int royalPiece;
   final MaterialConditions<int> materialConditions;
+  final Map<String, BuiltRegion> regions;
   final Map<int, List<String>> winRegions;
   final List<Action> actions;
   final Map<ActionEvent, List<Action>> actionsByEvent;
@@ -42,6 +43,7 @@ class BuiltVariant {
     required this.castlingPiece,
     required this.royalPiece,
     required this.materialConditions,
+    required this.regions,
     required this.winRegions,
     required this.actions,
     required this.actionsByEvent,
@@ -67,6 +69,7 @@ class BuiltVariant {
     int? castlingPiece,
     int? royalPiece,
     MaterialConditions<int>? materialConditions,
+    Map<String, BuiltRegion>? regions,
     Map<int, List<String>>? winRegions,
     List<Action>? actions,
     Map<ActionEvent, List<Action>>? actionsByEvent,
@@ -91,6 +94,7 @@ class BuiltVariant {
         castlingPiece: castlingPiece ?? this.castlingPiece,
         royalPiece: royalPiece ?? this.royalPiece,
         materialConditions: materialConditions ?? this.materialConditions,
+        regions: regions ?? this.regions,
         winRegions: winRegions ?? this.winRegions,
         actions: actions ?? this.actions,
         actionsByEvent: actionsByEvent ?? this.actionsByEvent,
@@ -177,6 +181,7 @@ class BuiltVariant {
           : Bishop.invalid,
       royalPiece: pieces.indexWhere((p) => p.type.royal),
       materialConditions: data.materialConditions.convert(pieces),
+      regions: data.regions.map((k, v) => MapEntry(k, v.build(data.boardSize))),
       winRegions: winRegions,
       actions: actions,
       actionsByEvent: actionsByEvent,
@@ -203,7 +208,7 @@ class BuiltVariant {
     // TODO: make this more efficient by building some of these values in advance
     final pd = pieces[piece.type];
     if (square == null ||
-        data.regions.isEmpty ||
+        !hasRegions ||
         pd.type.regionEffects.isEmpty ||
         !boardSize.onBoard(square)) {
       return pd.type;
@@ -212,14 +217,14 @@ class BuiltVariant {
     if (effects.isEmpty) {
       return pd.type;
     }
-    List<String> regions = [];
-    for (final region in data.regions.entries) {
+    List<String> matchedRegions = [];
+    for (final region in regions.entries) {
       if (boardSize.inRegion(square, region.value)) {
-        regions.add(region.key);
+        matchedRegions.add(region.key);
       }
     }
     for (RegionEffect re in effects) {
-      if (regions.contains(
+      if (matchedRegions.contains(
         piece.colour == Bishop.white ? re.whiteRegion : re.blackRegion,
       )) {
         return re.pieceType!;
@@ -232,7 +237,7 @@ class BuiltVariant {
   /// allowed for [piece] to move to [square].
   bool allowMovement(int piece, int square) {
     final pd = pieces[piece.type];
-    if (data.regions.isEmpty || pd.type.regionEffects.isEmpty) {
+    if (regions.isEmpty || pd.type.regionEffects.isEmpty) {
       return true;
     }
     List<RegionEffect> effects = pd.type.restrictMovementRegionEffects;
@@ -242,9 +247,9 @@ class BuiltVariant {
     String? regionId = effects.first.regionForPlayer(piece.colour);
     if (regionId == null) return true;
 
-    BoardRegion? region = data.regions[regionId];
+    final region = regions[regionId];
     if (region == null) return true;
-    return boardSize.inRegion(square, region);
+    return region.containsSquare(square);
   }
 
   /// Determins whether [piece] (including colour) is in one of its win
@@ -252,9 +257,9 @@ class BuiltVariant {
   bool inWinRegion(int piece, int square) {
     if (!pieceHasWinRegions(piece)) return false;
     for (String r in winRegions[piece]!) {
-      BoardRegion? region = data.regions[r];
+      final region = regions[r];
       if (region == null) continue;
-      if (boardSize.inRegion(square, region)) {
+      if (region.containsSquare(square)) {
         return true;
       }
     }
@@ -343,13 +348,8 @@ class BuiltVariant {
   /// Whether this variant involves gating.
   bool get gating => data.gating;
 
-  /// A map of region definitions for the board, for use with `RegionEffects`
-  /// in piece definitions. The keys used here are used to reference the regions
-  /// in effects.
-  Map<String, BoardRegion> get regions => data.regions;
-
   /// Whether this variant has any region definitions.
-  bool get hasRegions => data.regions.isNotEmpty;
+  bool get hasRegions => regions.isNotEmpty;
 
   /// Whether this variant has any win regions.
   bool get hasWinRegions => winRegions.isNotEmpty;

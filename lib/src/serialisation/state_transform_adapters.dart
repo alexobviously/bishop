@@ -54,13 +54,13 @@ class HideFlagsAdapter extends BishopTypeAdapter<HideFlagsStateTransformer> {
   @override
   HideFlagsStateTransformer build(Map<String, dynamic>? params) =>
       HideFlagsStateTransformer(
-        forSelf: params?['forSelf'] ?? false,
-        forOpponent: params?['forOpponent'] ?? true,
+        forSelf: params?['self'] ?? false,
+        forOpponent: params?['opponent'] ?? true,
       );
 
   @override
   Map<String, dynamic> export(HideFlagsStateTransformer e) => {
-        if (e.forSelf) 'forSelf': e.forSelf,
-        if (!e.forOpponent) 'forOpponent': e.forOpponent,
+        if (e.forSelf) 'self': e.forSelf,
+        if (!e.forOpponent) 'opponent': e.forOpponent,
       };
 }

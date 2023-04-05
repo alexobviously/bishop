@@ -1,7 +1,7 @@
 part of 'regions.dart';
 
 /// A region on a board used to define area-specific piece behaviour.
-class RectRegion implements BoardRegion {
+class RectRegion extends BoardRegion {
   /// The rank the region starts at, inclusive.
   /// If null, the first rank will be used.
   final int? startRank;

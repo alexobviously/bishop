@@ -1,6 +1,8 @@
 part of 'regions.dart';
 
-class IntersectRegion implements BoardRegion {
+/// A region that contains the intersection of [regions], i.e. all squares that
+/// are in all of the [regions].
+class IntersectRegion extends BoardRegion {
   final List<BoardRegion> regions;
 
   const IntersectRegion(this.regions);

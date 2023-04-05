@@ -1,6 +1,7 @@
 part of 'regions.dart';
 
-class UnionRegion implements BoardRegion {
+/// A region that contains all of the squares of each region in [regions].
+class UnionRegion extends BoardRegion {
   final List<BoardRegion> regions;
 
   const UnionRegion(this.regions);
@@ -29,4 +30,7 @@ class UnionRegion implements BoardRegion {
 
   @override
   String toString() => 'Union(${regions.map((e) => e.toString()).join(', ')})';
+
+  @override
+  UnionRegion operator +(BoardRegion other) => UnionRegion([...regions, other]);
 }
