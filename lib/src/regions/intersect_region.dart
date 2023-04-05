@@ -35,4 +35,8 @@ class IntersectRegion extends BoardRegion {
   @override
   String toString() => 'Intersection('
       '${regions.map((e) => e.toString()).join(', ')})';
+
+  @override
+  IntersectRegion operator &(BoardRegion other) =>
+      IntersectRegion([...regions, other]);
 }

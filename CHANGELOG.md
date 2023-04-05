@@ -11,7 +11,7 @@
 - Gating move logic is no longer part of the standard move logic. `GatingMove` is its own type which contains a child move.
 - `SubtractRegion` and `XorRegion`.
 - Regions in `Variant.regions` are now built into a more efficient form when the variant is built.
-- `BoardRegion`s can now be combined using the `+`, `-` and `^` operators.
+- `BoardRegion`s can now be combined using the `+`, `-`, `&` and `^` operators.
 
 ### 1.3.2
 - Fixed a castling bug (queenside allowed with piece on b1).

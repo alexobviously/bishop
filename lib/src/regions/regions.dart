@@ -56,6 +56,10 @@ abstract class BoardRegion extends Region {
         this,
         if (other is UnionRegion) ...other.regions else other,
       ]);
+  IntersectRegion operator &(BoardRegion other) => IntersectRegion([
+        this,
+        if (other is IntersectRegion) ...other.regions else other,
+      ]);
   SubtractRegion operator -(BoardRegion other) => SubtractRegion(this, other);
   XorRegion operator ^(BoardRegion other) => XorRegion(this, other);
 }
