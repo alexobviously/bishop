@@ -68,6 +68,7 @@ class BishopSerialisation {
 
   static List<BishopTypeAdapter> get baseStateTransformAdapters => [
         HideFlagsAdapter(),
+        PairTransformAdapter(),
         VisionAreaAdapter(),
       ];
 
