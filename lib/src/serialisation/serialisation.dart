@@ -4,6 +4,7 @@ part 'drop_adapters.dart';
 part 'first_move_adapters.dart';
 part 'pass_adapters.dart';
 part 'promo_adapters.dart';
+part 'state_transform_adapters.dart';
 part 'type_adapter.dart';
 
 class BishopSerialisation {
@@ -15,6 +16,7 @@ class BishopSerialisation {
       ...baseStartPosAdapters,
       ...baseActionAdapters,
       ...baseFirstMoveAdapters,
+      ...baseStateTransformAdapters,
     ];
     return _baseAdapters!;
   }
@@ -62,6 +64,11 @@ class BishopSerialisation {
         FirstMoveSetAdapter(),
         RanksFirstMoveAdapter(),
         InitialFirstMoveAdapter(),
+      ];
+
+  static List<BishopTypeAdapter> get baseStateTransformAdapters => [
+        HideFlagsAdapter(),
+        VisionAreaAdapter(),
       ];
 
   static List<T> buildMany<T>(
