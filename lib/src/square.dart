@@ -44,6 +44,7 @@ extension SquareLogic on int {
   int unsetFlag(int flag) => unsetBit(Bishop.flagsStartBit + flag);
   int toggleFlag(int flag) => toggleBit(Bishop.flagsStartBit + flag);
   bool hasFlag(int flag) => hasBit(Bishop.flagsStartBit + flag);
+  int removeFlags() => this & ((1 << Bishop.flagsStartBit) - 1);
   int setInternalType(int type) => makePiece(
         this.type,
         colour,

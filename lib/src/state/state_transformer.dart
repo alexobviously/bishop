@@ -1,4 +1,3 @@
-
 part of 'state.dart';
 
 typedef StateTransformFunction<T extends BishopState> = T? Function(
@@ -56,4 +55,28 @@ class VisionAreaStateTransformer implements StateTransformer {
               ),
               state: state,
             );
+}
+
+class HideFlagsStateTransformer implements StateTransformer {
+  final bool forSelf;
+  final bool forOpponent;
+
+  const HideFlagsStateTransformer({
+    this.forSelf = false,
+    this.forOpponent = true,
+  });
+
+  @override
+  StateTransformFunction build(BuiltVariant variant) =>
+      (state, [player]) => player == null
+          ? null
+          : state.copyWith(
+              board: state.board.map((e) {
+              if (e.isEmpty) return e;
+              if ((forSelf && e.colour == player) ||
+                  (forOpponent && e.colour == player.opponent)) {
+                return e.removeFlags();
+              }
+              return e;
+            }).toList());
 }

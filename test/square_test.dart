@@ -62,4 +62,9 @@ void main() {
       expect(x, y);
     });
   });
+  test('Remove Flags', () {
+    int x = makePiece(1, Bishop.white).setFlag(3).setFlag(7);
+    expect(x.hasFlag(3), true);
+    expect(x.removeFlags().flags, 0);
+  });
 }
