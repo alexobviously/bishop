@@ -69,6 +69,6 @@ class MoveGenParams {
   );
 
   @override
-  String toString() => 'MoveGenOptions($captures, $quiet, $castling, $legal'
+  String toString() => 'MoveGenParams($captures, $quiet, $castling, $legal'
       ' $ignorePieces, $pieceType, $onlySquare)';
 }

@@ -98,27 +98,34 @@ class Game {
   List<Move> generatePremoves() =>
       generatePlayerMoves(state.turn.opponent, MoveGenParams.premoves);
 
-  /// Generates all moves for the specified [colour]. See [MoveGenParams] for possibilities.
-  List<Move> generatePlayerMoves(int colour, [MoveGenParams? options]) {
-    options ??= MoveGenParams.normal;
+  /// Generates all moves for the specified [player]. See [MoveGenParams] for possibilities.
+  List<Move> generatePlayerMoves(int player, [MoveGenParams? params]) {
+    params ??= MoveGenParams.normal;
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
       Square target = board[i];
       if (target.isNotEmpty &&
-          (target.colour == colour || target.colour == Bishop.neutralPassive)) {
-        List<Move> pieceMoves = generatePieceMoves(i, options);
+          (target.colour == player || target.colour == Bishop.neutralPassive)) {
+        List<Move> pieceMoves = generatePieceMoves(i, params);
         moves.addAll(pieceMoves);
-        if (options.onlyOne && moves.isNotEmpty) return moves;
+        if (params.onlyOne && moves.isNotEmpty) return moves;
       }
     }
-    if (variant.handsEnabled && options.quiet && !options.onlyPiece) {
-      moves.addAll(generateDrops(colour));
+    if (variant.handsEnabled && params.quiet && !params.onlyPiece) {
+      moves.addAll(generateDrops(player));
     }
-    if (variant.hasPass && options.quiet) {
-      final pass = generatePass(colour);
+    if (variant.hasMoveGenerators) {
+      moves.addAll(variant.generateCustomMoves(
+        state: state,
+        player: player,
+        params: params,
+      ));
+    }
+    if (variant.hasPass && params.quiet) {
+      final pass = generatePass(player);
       if (pass != null) moves.insert(0, pass);
     }
-    if (variant.forcedCapture != null && !options.ignorePieces) {
+    if (variant.forcedCapture != null && !params.ignorePieces) {
       final captures = moves.captures;
       if (captures.isNotEmpty) {
         return captures;

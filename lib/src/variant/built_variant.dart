@@ -22,6 +22,8 @@ class BuiltVariant {
   final List<Action> actions;
   final Map<ActionEvent, List<Action>> actionsByEvent;
   final StateTransformFunction? stateTransformer;
+  final List<MoveGenFunction> moveGenerators;
+  final Map<Type, MoveProcessorFunction> moveProcessors;
 
   const BuiltVariant({
     required this.data,
@@ -44,6 +46,8 @@ class BuiltVariant {
     required this.actions,
     required this.actionsByEvent,
     this.stateTransformer,
+    this.moveGenerators = const [],
+    this.moveProcessors = const {},
   });
 
   BuiltVariant copyWith({
@@ -66,7 +70,9 @@ class BuiltVariant {
     Map<int, List<String>>? winRegions,
     List<Action>? actions,
     Map<ActionEvent, List<Action>>? actionsByEvent,
-    StateTransformFunction? stateTransform,
+    StateTransformFunction? stateTransformer,
+    List<MoveGenFunction>? moveGenerators,
+    Map<Type, MoveProcessorFunction>? moveProcessors,
   }) =>
       BuiltVariant(
         data: data ?? this.data,
@@ -88,7 +94,9 @@ class BuiltVariant {
         winRegions: winRegions ?? this.winRegions,
         actions: actions ?? this.actions,
         actionsByEvent: actionsByEvent ?? this.actionsByEvent,
-        stateTransformer: stateTransform ?? this.stateTransformer,
+        stateTransformer: stateTransformer ?? this.stateTransformer,
+        moveGenerators: moveGenerators ?? this.moveGenerators,
+        moveProcessors: moveProcessors ?? this.moveProcessors,
       );
 
   factory BuiltVariant.fromData(Variant data) {
@@ -174,12 +182,15 @@ class BuiltVariant {
       actionsByEvent: actionsByEvent,
     );
 
-    // It's like this so the drop builder can depend on the promotion builder.
     bv = bv.copyWith(
       firstMoveChecker: data.firstMoveOptions.build(bv),
-      stateTransform: data.stateTransformer?.build(bv),
+      stateTransformer: data.stateTransformer?.build(bv),
+      moveGenerators: data.moveGenerators.map((e) => e.build(bv)).toList(),
+      moveProcessors: Map.fromEntries(
+          data.moveProcessors.map((e) => MapEntry(e.type, e.build(bv)))),
       promotionBuilder: data.promotionOptions.build(bv),
     );
+    // It's like this so the drop builder can depend on the promotion builder.
     bv = bv.copyWith(dropBuilder: data.handOptions.dropBuilder.build(bv));
     bv = bv.copyWith(passChecker: data.passOptions.build(bv));
 
@@ -349,6 +360,21 @@ class BuiltVariant {
   /// Whether this variant has actions for [event].
   bool hasActionsForEvent(ActionEvent event) =>
       actionsByEvent[event]!.isNotEmpty;
+
+  /// Whether this variant has custom move generators.
+  bool get hasMoveGenerators => moveGenerators.isNotEmpty;
+
+  Iterable<Move> generateCustomMoves({
+    required BishopState state,
+    required int player,
+    MoveGenParams params = MoveGenParams.normal,
+  }) =>
+      moveGenerators
+          .map((e) => e(state: state, player: player, params: params))
+          .expand((e) => e);
+
+  BishopState? makeCustomMove(MoveProcessorParams params) =>
+      moveProcessors[params.move.runtimeType]?.call(params);
 
   /// Generates all actions for [trigger].
   Iterable<Action> actionsForTrigger(

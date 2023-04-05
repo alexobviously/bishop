@@ -22,12 +22,6 @@ extension GameMovement on Game {
         zobrist: zobrist,
       );
     }
-    if (move is! StandardMove &&
-        move is! DropMove &&
-        move is! PassMove &&
-        move is! GatingMove) {
-      return false;
-    }
 
     if (state.invalidMove) return false;
 
@@ -38,6 +32,10 @@ extension GameMovement on Game {
       newState = makeStandardMove(state, move);
     } else if (move is PassMove) {
       newState = makePassMove(state, move);
+    } else {
+      newState = variant.makeCustomMove(
+        MoveProcessorParams(state: state, move: move, zobrist: zobrist),
+      );
     }
     if (newState == null) return false;
 

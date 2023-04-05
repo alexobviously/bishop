@@ -5,6 +5,7 @@ part 'gating_move.dart';
 part 'move_meta.dart';
 part 'multi_move.dart';
 part 'standard_move.dart';
+part 'static_move.dart';
 part 'pass_move.dart';
 part 'wrapper_move.dart';
 

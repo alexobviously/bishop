@@ -97,6 +97,8 @@ class Variant {
 
   final List<Action> actions;
   final StateTransformer? stateTransformer;
+  final List<MoveGenerator> moveGenerators;
+  final List<MoveProcessor> moveProcessors;
 
   final List<BishopTypeAdapter> adapters;
 
@@ -152,6 +154,8 @@ class Variant {
     this.regions = const {},
     this.actions = const [],
     this.stateTransformer,
+    this.moveGenerators = const [],
+    this.moveProcessors = const [],
     this.adapters = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
@@ -311,6 +315,16 @@ class Variant {
           stateTransformer!,
           adapters: allAdapters,
         ),
+      if (verbose || moveGenerators.isNotEmpty)
+        'moveGenerators': BishopSerialisation.exportMany<MoveGenerator>(
+          moveGenerators,
+          adapters: allAdapters,
+        ),
+      if (verbose || moveProcessors.isNotEmpty)
+        'moveProcessors': BishopSerialisation.exportMany<MoveProcessor>(
+          moveProcessors,
+          adapters: allAdapters,
+        ),
     };
   }
 
@@ -339,6 +353,8 @@ class Variant {
     Map<String, BoardRegion>? regions,
     List<Action>? actions,
     StateTransformer? stateTransformer,
+    List<MoveGenerator>? moveGenerators,
+    List<MoveProcessor>? moveProcessors,
     List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
@@ -366,6 +382,8 @@ class Variant {
       regions: regions ?? this.regions,
       actions: actions ?? this.actions,
       stateTransformer: stateTransformer ?? this.stateTransformer,
+      moveGenerators: moveGenerators ?? this.moveGenerators,
+      moveProcessors: moveProcessors ?? this.moveProcessors,
       adapters: adapters ?? this.adapters,
     );
   }

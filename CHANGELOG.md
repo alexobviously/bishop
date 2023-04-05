@@ -1,4 +1,12 @@
 ### 1.3.3
+- Custom move generation and processing:
+  - `MoveGenerator`: optionally supply a list of these in `Variant.moveGenerators`. These can be used to generate custom moves based on the state. You can generate both normal move types (e.g. add an extra move to a piece on a certain square or something), or totally different types of move that can be managed by `MoveProcessor`.
+  - `MoveProcessor`: supply a list of these in `Variant.moveProcessors` to process custom move types.
+- `StateTransformer`: a way to transform game states based on player perspectives.
+  - `Variant.stateTransformer` takes a `StateTransformer` that defines how the state is transformed.
+  - `BishopState.transform([int? player])` or `BuiltVariant.transformState()` will return a transformed state (or the same state if there is no transformer). It's possible to define a transformer that takes `player: null` and transforms the state regardless of player. This option exists for cases where you always want to transform
+  - `VisionAreaStateTransformer` applies a mask to the board based on a vision radius around pieces. `MaskedState` is a subclass of `BishopState` which contains the [mask] used to create it (for cases where e.g. you want to draw the mask on a board).
+  - `HideFlagsStateTransformer` hides the flags for all of the player's or opponent's pieces, depending on configuration.
 - King attacks are calculated in advance for mainline moves and can be accessed with `state.meta!.checks!`. They come in the form of a list of squares containing pieces that are attacking the king of each player.
 - Gating move logic is no longer part of the standard move logic. `GatingMove` is its own type which contains a child move.
 
