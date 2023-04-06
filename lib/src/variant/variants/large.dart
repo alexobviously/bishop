@@ -1,7 +1,7 @@
 part of '../variant.dart';
 
 /// Variants of chess played on larger boards.
-class LargeVariants {
+abstract class LargeVariants {
   static Variant capablanca() {
     final standard = Variant.standard();
     return standard.copyWith(
@@ -99,26 +99,4 @@ class LargeVariants {
           'W': PieceType.fromBetza('CF', value: 400) // Wizard
         },
       );
-
-  /// Not fully working yet - en passant is broken in most cases.
-  static Variant omega() => Variant(
-        name: 'Omega Chess',
-        boardSize: BoardSize(12, 12),
-        startPosition: 'w**********w/*crnbqkbnrc*/*pppppppppp*/*10*/*10*/*10*'
-            '/*10*/*10*/*10*/*PPPPPPPPPP*/*CRNBQKBNRC*/W**********W w - - 0 1',
-        pieceTypes: {
-          ...Bishop.chessPieces,
-          'P': PieceType.longMovePawn(3),
-          'C': PieceType.fromBetza('DAW', value: 400), // Champion
-          'W': PieceType.fromBetza('FC', value: 400), // Wizard
-        },
-        enPassant: true,
-        castlingOptions: CastlingOptions(
-          enabled: true,
-          kTarget: Bishop.fileI,
-          qTarget: Bishop.fileE,
-          kRook: Bishop.fileJ,
-          qRook: Bishop.fileC,
-        ),
-      ).withBlocker();
 }

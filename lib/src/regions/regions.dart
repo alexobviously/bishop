@@ -6,6 +6,7 @@ part 'built_region.dart';
 part 'rect_region.dart';
 part 'intersect_region.dart';
 part 'region_effect.dart';
+part 'set_region.dart';
 part 'subtract_region.dart';
 part 'union_region.dart';
 part 'xor_region.dart';
@@ -33,6 +34,8 @@ abstract class BoardRegion extends Region {
     'intersect': IntersectRegion.fromJson,
     'sub': SubtractRegion.fromJson,
     'xor': XorRegion.fromJson,
+    'set': SetRegion.fromJson,
+    'dset': DirectionSetRegion.fromJson,
   };
 
   Map<String, dynamic> toJson();

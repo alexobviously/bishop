@@ -185,6 +185,19 @@ class Direction {
     return Direction(int.parse(parts.first), int.parse(parts.last));
   }
 
+  factory Direction.fromSquareName(String name) {
+    name = name.toLowerCase();
+    RegExp rx = RegExp(r'([A-Za-z])([0-9]+)');
+    RegExpMatch? match = rx.firstMatch(name);
+    assert(match != null, 'Invalid square name: $name');
+    assert(match!.groupCount == 2, 'Invalid square name: $name');
+    String file = match!.group(1)!;
+    String rank = match.group(2)!;
+    int fileNum = file.codeUnits[0] - Bishop.asciiA;
+    int rankNum = int.parse(rank) - 1;
+    return Direction(fileNum, rankNum);
+  }
+
   static const none = Direction(0, 0);
   static const unit = Direction(1, 1);
 

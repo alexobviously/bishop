@@ -185,7 +185,7 @@ enum Variants {
   opulent(LargeVariants.opulent),
   shako(LargeVariants.shako),
   tenCubed(LargeVariants.tenCubed),
-  omega(LargeVariants.omega),
+
   mini(SmallVariants.mini),
   miniRandom(SmallVariants.miniRandom),
   micro(SmallVariants.micro),
@@ -216,6 +216,8 @@ enum Variants {
   hoppelPoppel(FairyVariants.hoppelPoppel),
   grasshopper(FairyVariants.grasshopper, alt: 'Grasshopper Chess'),
   berolina(FairyVariants.berolina, alt: 'Berolina Chess'),
+  troitzky(ShapeVariants.troitzky, alt: 'Troitzky Chess'),
+  omega(ShapeVariants.omega, alt: 'Omega Chess'),
   orda(Orda.orda),
   ordaMirror(Orda.ordaMirror);
 

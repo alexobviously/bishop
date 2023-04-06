@@ -18,6 +18,7 @@ part 'variants/fairy.dart';
 part 'variants/large.dart';
 part 'variants/misc.dart';
 part 'variants/musketeer.dart';
+part 'variants/shape.dart';
 part 'variants/shogi.dart';
 part 'variants/small.dart';
 part 'variants/xiangqi.dart';

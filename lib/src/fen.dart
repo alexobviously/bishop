@@ -142,7 +142,7 @@ ParseFenResult parseFen({
     if (c == '/') sq += variant.boardSize.h;
     if (pieceLookup.containsKey(symbol)) {
       if (!size.onBoard(sq)) {
-        throw ('Invalid FEN: rank overflow [$symbol, $sq]');
+        throw ('Invalid FEN: rank overflow [$c, $sq]');
       }
       // it's a piece
       int pieceIndex = pieceLookup[symbol]!;
