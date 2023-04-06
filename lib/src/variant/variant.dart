@@ -407,6 +407,10 @@ class Variant {
   Variant withPiece(String key, PieceType pieceType) =>
       withPieces({key: pieceType});
 
+  /// Convenience method for adding a blocker/wall piece.
+  Variant withBlocker([String symbol = '*']) =>
+      withPiece(symbol, PieceType.blocker());
+
   /// Returns a copy of the variant with [action] added.
   /// If [first] is true, it will be added to the start of the list.
   Variant withAction(Action action, {bool first = false}) =>

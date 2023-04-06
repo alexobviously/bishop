@@ -79,4 +79,26 @@ class LargeVariants {
           'W': PieceType.fromBetza('CF') // Wizard
         },
       );
+
+  /// Not fully working yet - en passant is broken in most cases.
+  static Variant omega() => Variant(
+        name: 'Omega Chess',
+        boardSize: BoardSize(12, 12),
+        startPosition: 'w**********w/*crnbqkbnrc*/*pppppppppp*/*10*/*10*/*10*/'
+            '*10*/*10*/*10*/*PPPPPPPPPP*/*CRNBQKBNRC*/W**********W w - - 0 1',
+        pieceTypes: {
+          ...Bishop.chessPieces,
+          'P': PieceType.longMovePawn(3),
+          'C': PieceType.fromBetza('DAW'), // Champion
+          'W': PieceType.fromBetza('FC'), // Wizard
+        },
+        enPassant: true,
+        castlingOptions: CastlingOptions(
+          enabled: true,
+          kTarget: Bishop.fileI,
+          qTarget: Bishop.fileE,
+          kRook: Bishop.fileJ,
+          qRook: Bishop.fileC,
+        ),
+      ).withBlocker();
 }

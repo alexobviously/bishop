@@ -250,6 +250,17 @@ class PieceType {
         value: 125, // idk exactly but seems better than a normal pawn
       );
 
+  // It works but you get a first move forward one square too,
+  // which isn't ever picked as long as the firstmove part is specified
+  // before the normal move part in the betza string. (todo: fix)
+  factory PieceType.longMovePawn(int moveLength) => PieceType.fromBetza(
+        'fmWfceFifmW$moveLength',
+        promoOptions: PiecePromoOptions.promotable,
+        enPassantable: true,
+        noSanSymbol: true,
+        value: 100,
+      );
+
   /// A pawn with no double move and no en passant.
   factory PieceType.simplePawn() => PieceType.fromBetza(
         'fmWfcF',
@@ -317,6 +328,7 @@ class PieceType {
         '',
         value: 0,
         actions: immortal ? [ActionImmortality()] : [],
+        promoOptions: PiecePromoOptions.none,
       );
 
   /// Can move to any empty square on the board.

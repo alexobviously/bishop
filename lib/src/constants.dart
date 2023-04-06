@@ -184,6 +184,7 @@ enum Variants {
   grand(LargeVariants.grand),
   shako(LargeVariants.shako),
   tenCubed(LargeVariants.tenCubed),
+  omega(LargeVariants.omega),
   mini(SmallVariants.mini),
   miniRandom(SmallVariants.miniRandom),
   micro(SmallVariants.micro),
