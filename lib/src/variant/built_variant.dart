@@ -407,8 +407,9 @@ class BuiltVariant {
     bool checkLimits = promoLimits != null && state != null;
     if (!checkPromoMap && !checkLimits) return promotionPieces;
 
-    List<int> promoPieces =
-        checkPromoMap ? [...promoMap![pieceIndex]!] : [...promotionPieces];
+    List<int> promoPieces = checkPromoMap
+        ? [...promoMap![pieceIndex] ?? promotionPieces]
+        : [...promotionPieces];
 
     if (checkLimits) {
       for (int p in promoLimits!.keys) {

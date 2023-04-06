@@ -218,6 +218,7 @@ enum Variants {
   hoppelPoppel(FairyVariants.hoppelPoppel),
   grasshopper(FairyVariants.grasshopper, alt: 'Grasshopper Chess'),
   berolina(FairyVariants.berolina, alt: 'Berolina Chess'),
+  wolf(FairyVariants.wolf, alt: 'Wolf Chess'),
   troitzky(ShapeVariants.troitzky, alt: 'Troitzky Chess'),
   omega(ShapeVariants.omega, alt: 'Omega Chess'),
   orda(Orda.orda),

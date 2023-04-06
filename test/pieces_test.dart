@@ -31,6 +31,10 @@ void main() {
     MoveTest('(4,1)', ['c8', 'e8', 'h3', 'h5']),
     MoveTest('r(4,3)', ['h1', 'h7']),
     MoveTest('frN2rfN', ['f5', 'h6', 'e6']),
+    MoveTest(
+      'N0',
+      ['b8', 'f8', 'c6', 'e6', 'h6', 'b5', 'f5', 'b3', 'f3', 'c2', 'e2', 'h2'],
+    ),
   ];
   group('Pieces', () {
     for (CountMovesTest t in countMoveTests) {

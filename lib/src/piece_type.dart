@@ -334,6 +334,10 @@ class PieceType {
   /// Can move to any empty square on the board.
   factory PieceType.duck() =>
       PieceType.fromBetza('m*').withNoPromotion().withImmortality();
+
+  /// A piece that can make any number of consecutive knight moves
+  /// in the same direction.
+  factory PieceType.nightrider() => PieceType.fromBetza('N0', value: 500);
 }
 
 /// A definition of a `PieceType`, specific to a `Variant`.

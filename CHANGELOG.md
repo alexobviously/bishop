@@ -19,6 +19,7 @@
   - Omega (`ShapeVariants.omega()`): experimental version - mostly working except for en-passant on long pawn moves.
   - Five Field Kono (`MiscVariants.kono()`): win by moving all of your pieces to your opponent's start position.
   - Joust (`MiscVariants.joust()`): the square a piece moves from is removed from the board each time it moves.
+  - Wolf (`FairyVariants.wolf()`): an 8x10 variant with several fairy pieces.
 - `ActionFillRegionEnding`: the end condition for Kono.
 - `ActionBlockOrigin`: implements the behaviour for Joust.
 
