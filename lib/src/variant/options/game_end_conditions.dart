@@ -90,6 +90,8 @@ class GameEndConditions {
         checkLimit: json['checkLimit'],
       );
 
+  GameEndConditionSet symmetric() => GameEndConditionSet.symmetric(this);
+
   static const GameEndConditions standard = GameEndConditions();
   static const GameEndConditions threeCheck = GameEndConditions(checkLimit: 3);
   static const GameEndConditions antichess =

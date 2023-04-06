@@ -1,5 +1,6 @@
 import 'package:bishop/bishop.dart';
 
+part 'actions/block.dart';
 part 'actions/checks.dart';
 part 'actions/explosion.dart';
 part 'actions/hands.dart';

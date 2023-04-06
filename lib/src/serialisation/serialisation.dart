@@ -48,6 +48,7 @@ class BishopSerialisation {
 
   static List<BishopTypeAdapter> get baseActionAdapters => [
         AddToHandAdapter(),
+        BlockOriginAdapter(),
         CheckPieceCountAdapter(),
         CheckRoyalsAliveAdapter(),
         ExitRegionEndingAdapter(),

@@ -163,9 +163,8 @@ class MiscVariants {
         startPosition: 'PpPpP/pPpPp/PpPpP/pPpPp/PpPpP/pPpPp w - - 0 1',
         boardSize: BoardSize(5, 6),
         pieceTypes: {'P': PieceType.fromBetza('cW')},
-        gameEndConditions: GameEndConditionSet.symmetric(
-          GameEndConditions(stalemate: EndType.lose),
-        ),
+        gameEndConditions:
+            GameEndConditions(stalemate: EndType.lose).symmetric(),
         promotionOptions: PromotionOptions.none,
       );
 
@@ -191,4 +190,16 @@ class MiscVariants {
         },
         promotionOptions: PromotionOptions.none,
       ).withAction(ActionFillRegionEnding('w', 'b'));
+
+  /// https://www.chessvariants.com/programs.dir/joust.html
+  static Variant joust() => Variant(
+        name: 'Joust',
+        description: 'The square a piece moves from is removed from the board'
+            'after each move.',
+        startPosition: '8/8/8/4n3/3N4/8/8/8 w - - 0 1',
+        pieceTypes: {'N': PieceType.fromBetza('mN')},
+        gameEndConditions:
+            GameEndConditions(stalemate: EndType.lose).symmetric(),
+        promotionOptions: PromotionOptions.none,
+      ).withBlocker().withAction(ActionBlockOrigin());
 }

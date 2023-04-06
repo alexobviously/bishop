@@ -214,6 +214,7 @@ enum Variants {
   clobber(MiscVariants.clobber),
   clobber10(MiscVariants.clobber10),
   kono(MiscVariants.kono, alt: 'Five Field Kono'),
+  joust(MiscVariants.joust),
   hoppelPoppel(FairyVariants.hoppelPoppel),
   grasshopper(FairyVariants.grasshopper, alt: 'Grasshopper Chess'),
   berolina(FairyVariants.berolina, alt: 'Berolina Chess'),
