@@ -133,6 +133,15 @@ class Bishop {
     BoardSize size = const BoardSize(8, 8),
   ]) =>
       size.squareNumber(name);
+
+  static Map<String, PieceType> get chessPieces => {
+        'P': PieceType.pawn(),
+        'N': PieceType.knight(),
+        'B': PieceType.bishop(),
+        'R': PieceType.rook(),
+        'Q': PieceType.queen(),
+        'K': PieceType.king(),
+      };
 }
 
 /// Defines whether a move definition allows captures, quiet moves or both.
@@ -174,6 +183,7 @@ enum Variants {
   capablanca(LargeVariants.capablanca),
   grand(LargeVariants.grand),
   shako(LargeVariants.shako),
+  tenCubed(LargeVariants.tenCubed),
   mini(SmallVariants.mini),
   miniRandom(SmallVariants.miniRandom),
   micro(SmallVariants.micro),

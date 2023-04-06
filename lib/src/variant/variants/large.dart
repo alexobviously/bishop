@@ -64,4 +64,19 @@ class LargeVariants {
       ),
     );
   }
+
+  /// https://www.chessvariants.com/contests/10/tencubedchess.html
+  static Variant tenCubed() => Variant(
+        name: 'TenCubed',
+        boardSize: BoardSize(10, 10),
+        startPosition: '2cwamwc2/1rnbqkbnr1/pppppppppp/10/10/10/10/'
+            'PPPPPPPPPP/1RNBQKBNR1/2CWAMWC2 w - - 0 1',
+        pieceTypes: {
+          ...Bishop.chessPieces,
+          'A': PieceType.archbishop(),
+          'M': PieceType.chancellor(), // Marshall
+          'C': PieceType.fromBetza('DAW'), // Champion
+          'W': PieceType.fromBetza('CF') // Wizard
+        },
+      );
 }
