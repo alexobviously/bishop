@@ -182,6 +182,7 @@ enum Variants {
   crazyhouse(CommonVariants.crazyhouse),
   capablanca(LargeVariants.capablanca),
   grand(LargeVariants.grand),
+  opulent(LargeVariants.opulent),
   shako(LargeVariants.shako),
   tenCubed(LargeVariants.tenCubed),
   omega(LargeVariants.omega),

@@ -12,6 +12,10 @@
 - `SubtractRegion` and `XorRegion`.
 - Regions in `Variant.regions` are now built into a more efficient form when the variant is built.
 - `BoardRegion`s can now be combined using the `+`, `-`, `&` and `^` operators.
+- Variants:
+  - TenCubed (`LargeVariants.tenCubed()`): 10x10 board with fairy pieces.
+  - Opulent (`LargeVariants.opulent()`): a variant of Grand.
+  - Omega (`LargeVariants.omega()`): experimental version - mostly working except for en-passant on long pawn moves.
 
 ### 1.3.2
 - Fixed a castling bug (queenside allowed with piece on b1).
