@@ -17,6 +17,8 @@
   - Opulent (`LargeVariants.opulent()`): a variant of Grand.
   - Troitzky (`ShapeVariants.troitzky()`): vaguely circular shaped board.
   - Omega (`ShapeVariants.omega()`): experimental version - mostly working except for en-passant on long pawn moves.
+  - Five Field Kono (`MiscVariants.kono()`): win by moving all of your pieces to your opponent's start position.
+- `ActionFillRegionEnding`: the end condition for Kono.
 
 ### 1.3.2
 - Fixed a castling bug (queenside allowed with piece on b1).

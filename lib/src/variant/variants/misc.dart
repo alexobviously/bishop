@@ -166,6 +166,7 @@ class MiscVariants {
         gameEndConditions: GameEndConditionSet.symmetric(
           GameEndConditions(stalemate: EndType.lose),
         ),
+        promotionOptions: PromotionOptions.none,
       );
 
   /// https://en.wikipedia.org/wiki/Clobber#Variants
@@ -176,4 +177,18 @@ class MiscVariants {
             'pPpPpPpPpP/PpPpPpPpPp/pPpPpPpPpP'
             '/PpPpPpPpPp/pPpPpPpPpP w - - 0 1',
       );
+
+  /// https://en.wikipedia.org/wiki/Five_Field_Kono
+  static Variant kono() => Variant(
+        name: 'Five Field Kono',
+        boardSize: BoardSize(5, 5),
+        startPosition: 'ppppp/p3p/5/P3P/PPPPP w - - 0 1',
+        // startPosition: 'PPPPP/4P/1P3/5/4p w - - 0 1',
+        pieceTypes: {'P': PieceType.fromBetza('mF')},
+        regions: {
+          'w': SetRegion(['a5', 'b5', 'c5', 'd5', 'e5', 'a4', 'e4']),
+          'b': SetRegion(['a1', 'b1', 'c1', 'd1', 'e1', 'a2', 'e2']),
+        },
+        promotionOptions: PromotionOptions.none,
+      ).withAction(ActionFillRegionEnding('w', 'b'));
 }

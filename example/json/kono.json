@@ -1,0 +1,45 @@
+{
+ "name": "Five Field Kono",
+ "description": "",
+ "bishopVersion": "1.3.3",
+ "boardSize": "5x5",
+ "pieceTypes": {"P": {"betza": "mF"}},
+ "castlingOptions": {"enabled": false},
+ "promotionOptions": "bishop.promo.none",
+ "materialConditions": {"enabled": false},
+ "startPosition": "ppppp/p3p/5/P3P/PPPPP w - - 0 1",
+ "enPassant": false,
+ "regions": {
+  "w": {
+   "type": "set",
+   "squares": [
+    "a5",
+    "b5",
+    "c5",
+    "d5",
+    "e5",
+    "a4",
+    "e4"
+   ]
+  },
+  "b": {
+   "type": "set",
+   "squares": [
+    "a1",
+    "b1",
+    "c1",
+    "d1",
+    "e1",
+    "a2",
+    "e2"
+   ]
+  }
+ },
+ "actions": [
+  {
+   "id": "bishop.action.fillRegion",
+   "whiteId": "w",
+   "blackId": "b"
+  }
+ ]
+}

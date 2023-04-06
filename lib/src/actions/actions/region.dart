@@ -65,3 +65,54 @@ class ExitRegionEndingAdapter
     };
   }
 }
+
+class ActionFillRegionEnding extends Action {
+  final String? whiteRegionId;
+  final String? blackRegionId;
+  ActionFillRegionEnding(this.whiteRegionId, this.blackRegionId)
+      : super(
+          action: (trigger) {
+            final region = trigger.variant.regions[
+                trigger.piece.colour == Bishop.white
+                    ? whiteRegionId
+                    : blackRegionId];
+            if (region == null ||
+                !trigger.size.inRegion(trigger.move.to, region)) {
+              return [];
+            }
+            final squares = trigger.size.squaresForRegion(region);
+            for (int sq in squares) {
+              if (trigger.board[sq].isEmpty ||
+                  trigger.board[sq].colour != trigger.piece.colour) {
+                return [];
+              }
+            }
+            return [
+              EffectSetGameResult(
+                WonGameEnteredRegion(
+                  winner: trigger.piece.colour,
+                  square: trigger.move.to,
+                ),
+              ),
+            ];
+          },
+        );
+}
+
+class FillRegionAdapter extends BishopTypeAdapter<ActionFillRegionEnding> {
+  @override
+  String get id => 'bishop.action.fillRegion';
+
+  @override
+  ActionFillRegionEnding build(Map<String, dynamic>? params) =>
+      ActionFillRegionEnding(
+        params?['whiteId'],
+        params?['blackId'],
+      );
+
+  @override
+  Map<String, dynamic> export(ActionFillRegionEnding e) => {
+        if (e.whiteRegionId != null) 'whiteId': e.whiteRegionId,
+        if (e.blackRegionId != null) 'blackId': e.blackRegionId,
+      };
+}

@@ -53,6 +53,7 @@ class BishopSerialisation {
         ExitRegionEndingAdapter(),
         ExplodeOnCaptureAdapter(),
         ExplosionRadiusAdapter(),
+        FillRegionAdapter(),
         FlyingGeneralsAdapter(),
         ImmortalityAdapter(),
         RemoveFromHandAdapter(),

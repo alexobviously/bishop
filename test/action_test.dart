@@ -115,4 +115,11 @@ void main() {
       expect(g.state.pieceOnSquare('f8'), 'b');
     });
   });
+  test('Fill Region (Kono)', () {
+    final g =
+        Game(variant: MiscVariants.kono(), fen: 'PPPPP/4P/1P3/5/4p w - - 0 1');
+    g.makeMoveString('b3a4');
+    expect(g.result, isA<WonGameEnteredRegion>());
+    expect(g.winner, Bishop.white);
+  });
 }
