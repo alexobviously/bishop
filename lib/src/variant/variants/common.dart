@@ -106,4 +106,19 @@ class CommonVariants {
       Variant.standard().withPieces({'*': PieceType.duck()}).copyWith(
         name: 'Duck Chess',
       );
+
+  /// https://en.wikipedia.org/wiki/Shatranj
+  static Variant shatranj() => Variant.standard().withPieces({
+        'B': PieceType.alfil(),
+        'Q': PieceType.ferz(),
+        'P': PieceType.simplePawn()
+            .copyWith(promoOptions: PiecePromoOptions.promotesToOne('Q')),
+      }).copyWith(
+        name: 'Shatranj',
+        castlingOptions: CastlingOptions.none,
+        materialConditions: MaterialConditions.none,
+        enPassant: false,
+        gameEndConditions:
+            GameEndConditions(stalemate: EndType.lose).symmetric(),
+      );
 }

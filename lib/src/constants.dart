@@ -199,6 +199,7 @@ enum Variants {
   horde(CommonVariants.horde),
   racingKings(CommonVariants.racingKings),
   antichess(CommonVariants.antichess),
+  shatranj(CommonVariants.shatranj),
   musketeer(Musketeer.variant),
   xiangqi(Xiangqi.xiangqi),
   miniXiangqi(Xiangqi.mini),

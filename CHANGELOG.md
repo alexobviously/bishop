@@ -26,6 +26,7 @@
   - Breakthrough (`OtherGames.breakthrough()`): only (modified) pawns, move one to the end to win.
   - New Zealand Chess (`FairyVariants.newZealand()`): rooks capture like knights, knights capture like rooks.
   - Nightrider Chess (`FairyVariants.nightrider()`): knights are replaced with nightriders.
+  - Shatranj (`CommonVariants.shatranj()`): an ancient form of chess.
 - `ActionFillRegionEnding`: the end condition for Kono.
 - `ActionBlockOrigin`: implements the behaviour for Joust.
 
