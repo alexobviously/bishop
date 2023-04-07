@@ -23,6 +23,7 @@
   - Wolf (`FairyVariants.wolf()`): an 8x10 variant with several fairy pieces.
   - Knightmate (`MiscVariants.knightmate()`): royal knight instead of king, common kings instead of knights.
   - Pocket Knight (`MiscVariants.pocketKnight()`): chess but each player has an extra knight in hand.
+  - Breakthrough (`MiscVariants.breakthrough()`): only (modified) pawns, move one to the end to win.
 - `ActionFillRegionEnding`: the end condition for Kono.
 - `ActionBlockOrigin`: implements the behaviour for Joust.
 

@@ -8,6 +8,12 @@ import 'play.dart';
 final parser = ArgParser()
   ..addFlag('ai', abbr: 'a', negatable: false)
   ..addOption('variant', abbr: 'v', defaultsTo: 'chess')
+  ..addOption(
+    'movelimit',
+    abbr: 'l',
+    defaultsTo: '200',
+    help: 'Number of half moves before game is terminated, 0 is unlimited.',
+  )
   ..addOption('pgn', abbr: 'p', help: 'PGN output file')
   ..addFlag('help', abbr: 'h', negatable: false);
 
@@ -19,6 +25,7 @@ void main(List<String> args) async {
   }
   String v = parsedArgs['variant'];
   bool ai = parsedArgs['ai'];
+  int moveLimit = int.parse(parsedArgs['movelimit']);
   Variant variant = variantFromString(v) ?? Variant.standard();
   print('Starting game with variant ${variant.name}');
   await Future.delayed(const Duration(seconds: 3));
@@ -45,7 +52,7 @@ void main(List<String> args) async {
     print('$playerName: ${game.toSan(m!)}');
     game.makeMove(m);
     i++;
-    if (i >= 200) break;
+    if (moveLimit > 0 && i >= moveLimit) break;
   }
   print(game.ascii());
   printYellow(game.pgn());

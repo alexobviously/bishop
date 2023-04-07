@@ -432,11 +432,14 @@ class Variant {
   /// When a royal piece enters the opposite rank, that player wins the game.
   /// Setting [whiteRank] or [blackRank] to a negative number will count in
   /// reverse from the top of the board.
+  /// If [winPieces] is specified, these piece types can win by campmate,
+  /// instead of royals.
   Variant withCampMate({
     String whiteRegionName = 'whiteCamp',
     String blackRegionName = 'blackCamp',
     int? whiteRank,
     int? blackRank,
+    List<String>? winPieces,
   }) {
     if (whiteRank != null && whiteRank < 0) {
       whiteRank = boardSize.maxRank + 1 + whiteRank;
@@ -449,7 +452,9 @@ class Variant {
     final pieces = pieceTypes.map(
       (k, v) => MapEntry(
         k,
-        v.royal ? v.copyWith(regionEffects: [...v.regionEffects, effect]) : v,
+        (winPieces != null ? winPieces.contains(k) : v.royal)
+            ? v.copyWith(regionEffects: [...v.regionEffects, effect])
+            : v,
       ),
     );
     return copyWith(

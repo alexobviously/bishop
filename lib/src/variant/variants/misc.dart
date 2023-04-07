@@ -177,6 +177,13 @@ class MiscVariants {
             '/PpPpPpPpPp/pPpPpPpPpP w - - 0 1',
       );
 
+  /// https://en.wikipedia.org/wiki/Breakthrough_(board_game)
+  static Variant breakthrough() => Variant(
+        name: 'Breakthrough',
+        startPosition: 'pppppppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPPPPP w - - 0 1',
+        pieceTypes: {'P': PieceType.fromBetza('fmWfF')},
+      ).withCampMate(winPieces: ['P']);
+
   /// https://en.wikipedia.org/wiki/Five_Field_Kono
   static Variant kono() => Variant(
         name: 'Five Field Kono',

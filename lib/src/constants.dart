@@ -188,7 +188,6 @@ enum Variants {
   opulent(LargeVariants.opulent),
   shako(LargeVariants.shako),
   tenCubed(LargeVariants.tenCubed),
-
   mini(SmallVariants.mini),
   miniRandom(SmallVariants.miniRandom),
   micro(SmallVariants.micro),
@@ -219,6 +218,7 @@ enum Variants {
   kono(MiscVariants.kono, alt: 'Five Field Kono'),
   joust(MiscVariants.joust),
   knightmate(MiscVariants.knightmate),
+  breakthrough(MiscVariants.breakthrough),
   pocketKnight(MiscVariants.pocketKnight),
   hoppelPoppel(FairyVariants.hoppelPoppel),
   grasshopper(FairyVariants.grasshopper, alt: 'Grasshopper Chess'),

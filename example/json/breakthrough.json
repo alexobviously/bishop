@@ -1,0 +1,27 @@
+{
+ "name": "Breakthrough",
+ "description": "",
+ "bishopVersion": "1.3.3",
+ "boardSize": "8x8",
+ "pieceTypes": {
+  "P": {
+   "betza": "fmWfF",
+   "regionEffects": [
+    {
+     "whiteRegion": "blackCamp",
+     "blackRegion": "whiteCamp",
+     "winGame": true
+    }
+   ]
+  }
+ },
+ "castlingOptions": {"enabled": false},
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {"enabled": false},
+ "startPosition": "pppppppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPPPPP w - - 0 1",
+ "enPassant": false,
+ "regions": {
+  "whiteCamp": {"b": 0, "t": 0},
+  "blackCamp": {"b": 7, "t": 7}
+ }
+}
