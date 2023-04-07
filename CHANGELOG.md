@@ -18,12 +18,12 @@
   - Opulent (`LargeVariants.opulent()`): a variant of Grand.
   - Troitzky (`ShapeVariants.troitzky()`): vaguely circular shaped board.
   - Omega (`ShapeVariants.omega()`): experimental version - mostly working except for en-passant on long pawn moves.
-  - Five Field Kono (`MiscVariants.kono()`): win by moving all of your pieces to your opponent's start position.
-  - Joust (`MiscVariants.joust()`): the square a piece moves from is removed from the board each time it moves.
+  - Five Field Kono (`OtherGames.kono()`): win by moving all of your pieces to your opponent's start position.
+  - Joust (`OtherGames.joust()`): the square a piece moves from is removed from the board each time it moves.
   - Wolf (`FairyVariants.wolf()`): an 8x10 variant with several fairy pieces.
   - Knightmate (`MiscVariants.knightmate()`): royal knight instead of king, common kings instead of knights.
   - Pocket Knight (`MiscVariants.pocketKnight()`): chess but each player has an extra knight in hand.
-  - Breakthrough (`MiscVariants.breakthrough()`): only (modified) pawns, move one to the end to win.
+  - Breakthrough (`OtherGames.breakthrough()`): only (modified) pawns, move one to the end to win.
 - `ActionFillRegionEnding`: the end condition for Kono.
 - `ActionBlockOrigin`: implements the behaviour for Joust.
 
@@ -32,7 +32,7 @@
 - Various minor improvements to PGN import/export.
 - Improvements to `example.dart`: can export PGN and use the engine.
 - Fixed some variants not having the 100 half-move rule when they should.
-- Variants: Clobber (`MiscVariants.clobber()`) and Clobber 10 (`MiscVariants.clobber10()`).
+- Variants: Clobber (`OtherGames.clobber()`) and Clobber 10 (`OtherGames.clobber10()`).
 
 ### 1.3.1
 - Further optimisation: excluding piece types early from attack checks (~20% performance boost).
@@ -62,7 +62,7 @@
 ### 1.2.10
 - Variants:
   - Andernach Chess (`MiscVariants.andernach()`): capturing pieces change colour.
-  - Jeson Mor (`MiscVariants.jesonMor()`): knights only, win by entering the central square and leaving it again.
+  - Jeson Mor (`OtherGames.jesonMor()`): knights only, win by entering the central square and leaving it again.
 - `ActionTransferOwnership`: changes the colour of the moving piece.
 - `ActionExitRegionEnding`: end the game when a piece leaves a region.
 
