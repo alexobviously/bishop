@@ -181,6 +181,10 @@ class PieceType {
   /// Returns a copy of the piece type with immortality.
   PieceType withImmortality() => withAction(ActionImmortality());
 
+  /// Returns a royal version of the piece type.
+  PieceType withRoyal() =>
+      copyWith(royal: true, promoOptions: PiecePromoOptions.none);
+
   factory PieceType.empty() => PieceType(
         moves: [],
         promoOptions: PiecePromoOptions.none,
@@ -230,6 +234,9 @@ class PieceType {
         royal: true,
         promoOptions: PiecePromoOptions.none,
       );
+
+  /// A non-royal king.
+  factory PieceType.commoner() => PieceType.fromBetza('K', value: 300);
 
   factory PieceType.pawn() => PieceType.fromBetza(
         'fmW' // moves forward one square

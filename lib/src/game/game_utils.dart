@@ -32,6 +32,16 @@ extension GameUtils on Game {
         }
       }
     }
+    if (variant.handsEnabled) {
+      eval += state.hands![player].fold<int>(
+        0,
+        (p, e) => p + variant.pieces[e].value + Bishop.handBonusValue,
+      );
+      eval -= state.hands![player.opponent].fold<int>(
+        0,
+        (p, e) => p + variant.pieces[e].value + Bishop.handBonusValue,
+      );
+    }
     return eval;
   }
 }

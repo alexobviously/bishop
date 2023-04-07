@@ -1,0 +1,47 @@
+{
+ "name": "Knightmate",
+ "description": "",
+ "bishopVersion": "1.3.3",
+ "boardSize": "8x8",
+ "pieceTypes": {
+  "P": {
+   "betza": "fmWfceFifmnD",
+   "promoOptions": {
+    "canPromote": true,
+    "canPromoteTo": false
+   },
+   "enPassantable": true,
+   "noSanSymbol": true,
+   "value": 100
+  },
+  "N": {
+   "betza": "N",
+   "royal": true,
+   "promoOptions": {
+    "canPromote": false,
+    "canPromoteTo": false
+   },
+   "value": 300
+  },
+  "B": {"betza": "B", "value": 300},
+  "R": {"betza": "R", "value": 500},
+  "Q": {"betza": "Q", "value": 900},
+  "K": {"betza": "K", "value": 300}
+ },
+ "castlingOptions": {
+  "enabled": true,
+  "kTarget": 6,
+  "qTarget": 2,
+  "fixedRooks": true,
+  "kRook": 7,
+  "qRook": 0,
+  "rookPiece": "R",
+  "useRookAsTarget": false
+ },
+ "promotionOptions": "bishop.promo.standard",
+ "materialConditions": {"enabled": false},
+ "startPosition": "rkbqnbkr/pppppppp/8/8/8/8/PPPPPPPP/RKBQNBKR w KQkq - 0 1",
+ "enPassant": true,
+ "halfMoveDraw": 100,
+ "repetitionDraw": 3
+}

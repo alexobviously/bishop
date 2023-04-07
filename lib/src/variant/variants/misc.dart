@@ -202,4 +202,23 @@ class MiscVariants {
             GameEndConditions(stalemate: EndType.lose).symmetric(),
         promotionOptions: PromotionOptions.none,
       ).withBlocker().withAction(ActionBlockOrigin());
+
+  /// https://www.chessvariants.com/diffobjective.dir/knightmate.html
+  static Variant knightmate() => Variant.standard().withPieces({
+        'K': PieceType.commoner(),
+        'N': PieceType.knight().withRoyal(),
+      }).copyWith(
+        name: 'Knightmate',
+        startPosition:
+            'rkbqnbkr/pppppppp/8/8/8/8/PPPPPPPP/RKBQNBKR w KQkq - 0 1',
+        materialConditions: MaterialConditions.none, // it's different
+      );
+
+  /// https://www.chessvariants.com/other.dir/pocket.html
+  static Variant pocketKnight() => Variant.standard().copyWith(
+        name: 'Pocket Knight',
+        startPosition:
+            'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[Nn] w KQkq - 0 1',
+        handOptions: HandOptions.enabledOnly,
+      );
 }

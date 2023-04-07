@@ -8,6 +8,7 @@
   - `VisionAreaStateTransformer` applies a mask to the board based on a vision radius around pieces. `MaskedState` is a subclass of `BishopState` which contains the [mask] used to create it (for cases where e.g. you want to draw the mask on a board).
   - `HideFlagsStateTransformer` hides the flags for all of the player's or opponent's pieces, depending on configuration.
 - King attacks are calculated in advance for mainline moves and can be accessed with `state.meta!.checks!`. They come in the form of a list of squares containing pieces that are attacking the king of each player.
+- `Game.evaluate()` now takes pieces in hands into account.
 - Gating move logic is no longer part of the standard move logic. `GatingMove` is its own type which contains a child move.
 - `SubtractRegion`, `XorRegion`, `SetRegion` and `DirectionSetRegion`.
 - Regions in `Variant.regions` are now built into a more efficient form when the variant is built.
@@ -20,6 +21,8 @@
   - Five Field Kono (`MiscVariants.kono()`): win by moving all of your pieces to your opponent's start position.
   - Joust (`MiscVariants.joust()`): the square a piece moves from is removed from the board each time it moves.
   - Wolf (`FairyVariants.wolf()`): an 8x10 variant with several fairy pieces.
+  - Knightmate (`MiscVariants.knightmate()`): royal knight instead of king, common kings instead of knights.
+  - Pocket Knight (`MiscVariants.pocketKnight()`): chess but each player has an extra knight in hand.
 - `ActionFillRegionEnding`: the end condition for Kono.
 - `ActionBlockOrigin`: implements the behaviour for Joust.
 

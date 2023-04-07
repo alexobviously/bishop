@@ -43,6 +43,9 @@ class Bishop {
   /// The value assigned to pieces that aren't explicitly valuated.
   static const int defaultPieceValue = 200;
 
+  /// Pieces in hand are slightly more valuable.
+  static const int handBonusValue = 25;
+
   /// The bit that represents whether a piece is in its custom state.
   static const int initialStateBit = 18;
 
@@ -215,6 +218,8 @@ enum Variants {
   clobber10(MiscVariants.clobber10),
   kono(MiscVariants.kono, alt: 'Five Field Kono'),
   joust(MiscVariants.joust),
+  knightmate(MiscVariants.knightmate),
+  pocketKnight(MiscVariants.pocketKnight),
   hoppelPoppel(FairyVariants.hoppelPoppel),
   grasshopper(FairyVariants.grasshopper, alt: 'Grasshopper Chess'),
   berolina(FairyVariants.berolina, alt: 'Berolina Chess'),
