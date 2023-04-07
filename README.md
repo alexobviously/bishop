@@ -69,6 +69,7 @@ Feel free to request variants or rules - just [create an issue](https://github.c
 * A lot more: see the [issue tracker](https://github.com/alexobviously/bishop/issues) and feel free to submit your own requests
 
 ### Built-in Variants
+There are over 50 built-in variants in total.  
 Chess, Chess960, Crazyhouse, Atomic, Horde, Racing Kings, Antichess, Capablanca, Grand, Seirawan, Three Check, King of the Hill, Musketeer, Xiangqi (+ Mini Xiangqi & Manchu), Three Kings, Kinglet, Hoppel-Poppel, Orda (+ Mirror), Shako, Dobutsu, Andernach, Jeson Mor, a variety of small board variants, and many more.
 
 ***

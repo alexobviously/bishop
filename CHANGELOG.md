@@ -24,6 +24,8 @@
   - Knightmate (`MiscVariants.knightmate()`): royal knight instead of king, common kings instead of knights.
   - Pocket Knight (`MiscVariants.pocketKnight()`): chess but each player has an extra knight in hand.
   - Breakthrough (`OtherGames.breakthrough()`): only (modified) pawns, move one to the end to win.
+  - New Zealand Chess (`FairyVariants.newZealand()`): rooks capture like knights, knights capture like rooks.
+  - Nightrider Chess (`FairyVariants.nightrider()`): knights are replaced with nightriders.
 - `ActionFillRegionEnding`: the end condition for Kono.
 - `ActionBlockOrigin`: implements the behaviour for Joust.
 
