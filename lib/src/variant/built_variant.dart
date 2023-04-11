@@ -25,6 +25,8 @@ class BuiltVariant {
   final StateTransformFunction? stateTransformer;
   final List<MoveGenFunction> moveGenerators;
   final Map<Type, MoveProcessorFunction> moveProcessors;
+  final Map<Type, MoveFormatterFunction> algebraicMoveFormatters;
+  final Map<Type, MoveFormatterFunction> prettyMoveFormatters;
 
   const BuiltVariant({
     required this.data,
@@ -50,6 +52,8 @@ class BuiltVariant {
     this.stateTransformer,
     this.moveGenerators = const [],
     this.moveProcessors = const {},
+    this.algebraicMoveFormatters = const {},
+    this.prettyMoveFormatters = const {},
   });
 
   BuiltVariant copyWith({
@@ -76,6 +80,8 @@ class BuiltVariant {
     StateTransformFunction? stateTransformer,
     List<MoveGenFunction>? moveGenerators,
     Map<Type, MoveProcessorFunction>? moveProcessors,
+    Map<Type, MoveFormatterFunction>? algebraicMoveFormatters,
+    Map<Type, MoveFormatterFunction>? prettyMoveFormatters,
   }) =>
       BuiltVariant(
         data: data ?? this.data,
@@ -101,6 +107,9 @@ class BuiltVariant {
         stateTransformer: stateTransformer ?? this.stateTransformer,
         moveGenerators: moveGenerators ?? this.moveGenerators,
         moveProcessors: moveProcessors ?? this.moveProcessors,
+        algebraicMoveFormatters:
+            algebraicMoveFormatters ?? this.algebraicMoveFormatters,
+        prettyMoveFormatters: prettyMoveFormatters ?? this.prettyMoveFormatters,
       );
 
   factory BuiltVariant.fromData(Variant data) {
@@ -153,6 +162,8 @@ class BuiltVariant {
     }
     if (promoMap.isEmpty) promoMap = null;
 
+    final formatters = [...defaultMoveFormatters];
+
     BuiltVariant bv = BuiltVariant(
       data: data,
       pieces: pieces,
@@ -192,7 +203,14 @@ class BuiltVariant {
       stateTransformer: data.stateTransformer?.build(bv),
       moveGenerators: data.moveGenerators.map((e) => e.build(bv)).toList(),
       moveProcessors: Map.fromEntries(
-          data.moveProcessors.map((e) => MapEntry(e.type, e.build(bv)))),
+        data.moveProcessors.map((e) => MapEntry(e.type, e.build(bv))),
+      ),
+      algebraicMoveFormatters: Map.fromEntries(
+        formatters.map((e) => MapEntry(e.type, e.algebraic(bv))),
+      ),
+      prettyMoveFormatters: Map.fromEntries(
+        formatters.map((e) => MapEntry(e.type, e.pretty(bv))),
+      ),
       promotionBuilder: data.promotionOptions.build(bv),
     );
     // It's like this so the drop builder can depend on the promotion builder.

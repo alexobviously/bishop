@@ -29,12 +29,7 @@ extension MoveListExtension<T extends Move> on Iterable<T> {
   /// All moves to [square].
   List<Move> to(int square) => where((e) => e.to == square).toList();
 
-  List<String> toAlgebraic(
-    Game g, {
-    bool simplifyFixedGating = true,
-  }) =>
-      map((e) => g.toAlgebraic(e, simplifyFixedGating: simplifyFixedGating))
-          .toList();
+  List<String> toAlgebraic(Game g) => map((e) => g.toAlgebraic(e)).toList();
 }
 
 extension NormalMoveListExtenion on Iterable<StandardMove> {

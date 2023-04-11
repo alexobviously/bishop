@@ -3,11 +3,10 @@ part of 'game.dart';
 extension GameOutputs on Game {
   /// Generates legal moves and returns the one that matches [algebraic].
   /// Returns null if no move is found.
-  Move? getMove(String algebraic, {bool simplifyFixedGating = true}) {
+  Move? getMove(String algebraic) {
     List<Move> moves = generateLegalMoves();
     Move? match = moves.firstWhereOrNull(
-      (m) =>
-          toAlgebraic(m, simplifyFixedGating: simplifyFixedGating) == algebraic,
+      (m) => toAlgebraic(m) == algebraic,
     );
     return match;
   }
@@ -26,15 +25,14 @@ extension GameOutputs on Game {
   }
 
   /// Returns the algebraic representation of [move], with respect to the board size.
-  String toAlgebraic(Move move, {bool simplifyFixedGating = true}) {
+  String toAlgebraic(Move move) {
     if (move is PassMove) return move.algebraic();
     if (move is DropMove) {
       return '${variant.pieces[move.piece].symbol.toLowerCase()}${move.algebraic(size)}';
     }
     if (move is GatingMove) {
-      String alg =
-          toAlgebraic(move.child, simplifyFixedGating: simplifyFixedGating);
-      if (variant.gatingMode == GatingMode.fixed && simplifyFixedGating) {
+      String alg = toAlgebraic(move.child);
+      if (variant.gatingMode == GatingMode.fixed) {
         return alg;
       }
       alg = '$alg/${variant.pieces[move.dropPiece].symbol.toLowerCase()}';

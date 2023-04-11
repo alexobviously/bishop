@@ -12,6 +12,7 @@ export 'src/fen.dart';
 export 'src/first_where_extension.dart';
 export 'src/game/game.dart';
 export 'src/move/move_definition.dart';
+export 'src/move/move_formatter.dart';
 export 'src/move/move_generator.dart';
 export 'src/move/move_list_extension.dart';
 export 'src/move/move_processor.dart';

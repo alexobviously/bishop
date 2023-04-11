@@ -115,11 +115,13 @@ class Game {
       moves.addAll(generateDrops(player));
     }
     if (variant.hasMoveGenerators) {
-      moves.addAll(variant.generateCustomMoves(
-        state: state,
-        player: player,
-        params: params,
-      ));
+      moves.addAll(
+        variant.generateCustomMoves(
+          state: state,
+          player: player,
+          params: params,
+        ),
+      );
     }
     if (variant.hasPass && params.quiet) {
       final pass = generatePass(player);

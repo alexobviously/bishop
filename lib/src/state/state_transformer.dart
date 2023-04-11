@@ -72,11 +72,12 @@ class HideFlagsStateTransformer implements StateTransformer {
           ? null
           : state.copyWith(
               board: state.board.map((e) {
-              if (e.isEmpty) return e;
-              if ((forSelf && e.colour == player) ||
-                  (forOpponent && e.colour == player.opponent)) {
-                return e.removeFlags();
-              }
-              return e;
-            }).toList());
+                if (e.isEmpty) return e;
+                if ((forSelf && e.colour == player) ||
+                    (forOpponent && e.colour == player.opponent)) {
+                  return e.removeFlags();
+                }
+                return e;
+              }).toList(),
+            );
 }

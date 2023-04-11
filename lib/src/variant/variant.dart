@@ -101,6 +101,7 @@ class Variant {
   final StateTransformer? stateTransformer;
   final List<MoveGenerator> moveGenerators;
   final List<MoveProcessor> moveProcessors;
+  final List<MoveFormatter> moveFormatters;
 
   final List<BishopTypeAdapter> adapters;
 
@@ -158,6 +159,7 @@ class Variant {
     this.stateTransformer,
     this.moveGenerators = const [],
     this.moveProcessors = const [],
+    this.moveFormatters = const [],
     this.adapters = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
@@ -357,6 +359,7 @@ class Variant {
     StateTransformer? stateTransformer,
     List<MoveGenerator>? moveGenerators,
     List<MoveProcessor>? moveProcessors,
+    List<MoveFormatter>? moveFormatters,
     List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
@@ -386,6 +389,7 @@ class Variant {
       stateTransformer: stateTransformer ?? this.stateTransformer,
       moveGenerators: moveGenerators ?? this.moveGenerators,
       moveProcessors: moveProcessors ?? this.moveProcessors,
+      moveFormatters: moveFormatters ?? this.moveFormatters,
       adapters: adapters ?? this.adapters,
     );
   }

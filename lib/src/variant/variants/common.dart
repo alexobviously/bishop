@@ -102,9 +102,15 @@ class CommonVariants {
       .invertPieceValues();
 
   /// Not production ready yet. Work in progress.
-  static Variant duck() =>
-      Variant.standard().withPieces({'*': PieceType.duck()}).copyWith(
+  static Variant duck() => Variant.standard()
+      .withPieces({
+        '*': PieceType.duck(),
+        'K': PieceType.commoner(),
+      })
+      .withAction(ActionCheckPieceCount(pieceType: 'K'))
+      .copyWith(
         name: 'Duck Chess',
+        materialConditions: MaterialConditions.none,
       );
 
   /// https://en.wikipedia.org/wiki/Shatranj
