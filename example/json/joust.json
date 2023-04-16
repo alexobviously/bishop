@@ -1,7 +1,7 @@
 {
  "name": "Joust",
  "description": "The square a piece moves from is removed from the boardafter each move.",
- "bishopVersion": "1.3.3",
+ "bishopVersion": "1.4.0",
  "boardSize": "8x8",
  "pieceTypes": {
   "N": {"betza": "mN"},
