@@ -142,6 +142,9 @@ extension GameOutputs on Game {
     // provide a list of moves to make this more efficient
     moves ??= generateLegalMoves();
 
+    return getStandardDisambiguator(
+        move: move, moves: moves, variant: variant, state: state);
+
     int piece = board[move.from].type;
     int fromFile = size.file(move.from);
     bool ambiguity = false;

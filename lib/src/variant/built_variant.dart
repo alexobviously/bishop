@@ -503,6 +503,9 @@ class BuiltVariant {
   BishopState transformState(BishopState state, [int? player]) =>
       stateTransformer?.call(state, player) ?? state;
 
+  // String toAlgebraic(Move move, BishopState state) =>
+  //     algebraicMoveFormatters[move.runtimeType]!(move, state);
+
   Map<int, int> capturedPieces(
     BishopState state, {
     String? startPos,

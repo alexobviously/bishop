@@ -1,5 +1,7 @@
 import 'package:bishop/bishop.dart';
 
+// Move formatting is not supported yet, this is a WIP.
+
 const List<MoveFormatter> defaultMoveFormatters = [
   PassMoveFormatter(),
   DropMoveFormatter(),
@@ -16,7 +18,7 @@ enum CheckType {
 }
 
 typedef MoveFormatterFunction<T extends Move> = String Function(
-  T move,
+  Move move, // todo: find a way to make this T
   MoveFormatterCallback formatter,
   CheckType? checkType,
 );
@@ -50,12 +52,13 @@ class DropMoveFormatter extends MoveFormatter<DropMove> {
 
   @override
   MoveFormatterFunction<DropMove> algebraic(BuiltVariant variant) =>
-      (move, _, __) => formatDropMoveAlgebraic(move: move, variant: variant);
+      (move, _, __) =>
+          formatDropMoveAlgebraic(move: move as DropMove, variant: variant);
 
   @override
   MoveFormatterFunction<DropMove> pretty(BuiltVariant variant) =>
       (move, _, checkType) => formatDropMovePretty(
-            move: move,
+            move: move as DropMove,
             variant: variant,
             checkType: checkType,
           );
@@ -67,7 +70,7 @@ class GatingMoveFormatter extends MoveFormatter<GatingMove> {
   @override
   MoveFormatterFunction<GatingMove> algebraic(BuiltVariant variant) =>
       (move, formatter, checkType) => formatGatingMoveAlgebraic(
-            move: move,
+            move: move as GatingMove,
             formatter: formatter,
             variant: variant,
           );
@@ -75,7 +78,7 @@ class GatingMoveFormatter extends MoveFormatter<GatingMove> {
   @override
   MoveFormatterFunction<GatingMove> pretty(BuiltVariant variant) =>
       (move, formatter, checkType) => formatGatingMovePretty(
-            move: move,
+            move: move as GatingMove,
             formatter: formatter,
             variant: variant,
           );
@@ -146,4 +149,43 @@ String formatDropMovePretty({
     san = '$san${checkType.symbol}';
   }
   return san;
+}
+
+/// To be used in cases where, given a piece and a destination, there is more than
+/// one possible move. For example, in 'Nbxa4', this function provides the 'b'.
+/// Optionally, provide [moves] - a list of legal moves. This will be generated
+/// if it is not specified.
+String getStandardDisambiguator({
+  required StandardMove move,
+  required List<Move> moves,
+  required BuiltVariant variant,
+  required BishopState state,
+}) {
+  int piece = state.board[move.from].type;
+  int fromFile = variant.boardSize.file(move.from);
+  bool ambiguity = false;
+  bool needRank = false;
+  bool needFile = false;
+  for (Move m in moves) {
+    if (m is! StandardMove) continue;
+    if (m.handDrop) continue;
+    if (m.from == move.from) continue;
+    if (m.to != move.to) continue;
+    if (piece != state.board[m.from].type) continue;
+    ambiguity = true;
+    if (variant.boardSize.file(m.from) == fromFile) {
+      needRank = true;
+    } else {
+      needFile = true;
+    }
+    if (needRank && needFile) break;
+  }
+
+  String disambiguator = '';
+  if (ambiguity) {
+    String sqName = variant.boardSize.squareName(move.from);
+    if (needFile) disambiguator = sqName[0];
+    if (needRank) disambiguator = '$disambiguator${sqName[1]}';
+  }
+  return disambiguator;
 }
