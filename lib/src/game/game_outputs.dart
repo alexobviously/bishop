@@ -143,35 +143,11 @@ extension GameOutputs on Game {
     moves ??= generateLegalMoves();
 
     return getStandardDisambiguator(
-        move: move, moves: moves, variant: variant, state: state);
-
-    int piece = board[move.from].type;
-    int fromFile = size.file(move.from);
-    bool ambiguity = false;
-    bool needRank = false;
-    bool needFile = false;
-    for (Move m in moves) {
-      if (m is! StandardMove) continue;
-      if (m.handDrop) continue;
-      if (m.from == move.from) continue;
-      if (m.to != move.to) continue;
-      if (piece != board[m.from].type) continue;
-      ambiguity = true;
-      if (size.file(m.from) == fromFile) {
-        needRank = true;
-      } else {
-        needFile = true;
-      }
-      if (needRank && needFile) break;
-    }
-
-    String disambiguator = '';
-    if (ambiguity) {
-      String sqName = size.squareName(move.from);
-      if (needFile) disambiguator = sqName[0];
-      if (needRank) disambiguator = '$disambiguator${sqName[1]}';
-    }
-    return disambiguator;
+      move: move,
+      moves: moves,
+      variant: variant,
+      state: state,
+    );
   }
 
   /// Perform a [perft test](https://www.chessprogramming.org/Perft) on the current position, to [depth].
