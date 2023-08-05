@@ -1,0 +1,3 @@
+[Variant "Spawn Chess"]
+
+1. @c3 @b3 2. @a2 @c2 3. Kd2 cxd1=R+ 4. Kxd1 bxa2 5. Rxa2 Kc7 6. @b3 @f2 7. Ne2 Kb6 8. @a5+ Ka6 9. Be3 @g2 10. Bxg2 @c2+ 11. Kxc2 Nc6 12. @f7 Ngf6 13. Bg5 f1=N 14. fxe8=N Nxe8 15. Bxf1 Nc7 16. Kc1 Ra7 17. @b6 Ne8 18. Kd1 Rd7 19. @a7 Kb7 20. Rc2 @h5 21. Ke1 Nxa5 22. @c6+ Nxc6 23. Kd2 Rd5+ 24. Ke1 Rxg5 25. @f7 Nf6 26. @f4 Nxa7 27. fxg5 Kxb6 28. gxf6 @d3 29. Nd4 dxc2 30. Nxc2 Be6 31. Kf2 Bxf7 32. @d7 Kc7 33. Ke3 @c5 34. @b6+ Kxd7 35. Kf2 @a2 36. Nba3 Nc6 37. @e7 Bxe7 38. fxe7 Kxe7 39. b7 @e3+ 40. Kxe3 Nb8 41. @c7 Be6 42. cxb8=Q Bc4 43. Nxc4 a1=N 44. Qd6+ Kf7 45. Ne5+ Kg7 46. Qg6+ Kf8 47. Qf7#  {White won by checkmate} 1-0
