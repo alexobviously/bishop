@@ -52,6 +52,23 @@ extension GameMovement on Game {
       );
     }
 
+    if (variant.turnEndCondition != null) {
+      final bool newTurn =
+          variant.turnEndCondition!(newState, state.moveNumber, state.movePart);
+      newState = newState.copyWith(
+        turn: newTurn ? 1 - state.turn : state.turn,
+        moveNumber: newTurn ? state.moveNumber + 1 : state.moveNumber,
+        movePart: newTurn ? 0 : state.movePart + 1,
+      );
+    } else {
+      // TODO: OPTIMISE
+      newState = newState.copyWith(
+        turn: 1 - state.turn,
+        moveNumber: state.moveNumber + 1,
+        movePart: 0,
+      );
+    }
+
     final moveMeta = generateMeta
         ? MoveMeta(
             algebraic: toAlgebraic(move),
@@ -343,8 +360,8 @@ extension GameMovement on Game {
       move: move,
       turn: 1 - state.turn,
       halfMoves: halfMoves,
-      moveNumber: state.moveNumber + 1,
-      movePart: 0, // TODO
+      moveNumber: state.moveNumber, // TODO: optimise later
+      movePart: state.movePart,
       castlingRights: castlingRights,
       royalSquares: royalSquares,
       virginFiles: virginFiles,

@@ -103,6 +103,8 @@ class Variant {
   final List<MoveProcessor> moveProcessors;
   final List<MoveFormatter> moveFormatters;
 
+  final TurnEndFunction? turnEndCondition; // TODO: serialise, builder classes
+
   final List<BishopTypeAdapter> adapters;
 
   /// Whether this variant involves castling.
@@ -160,6 +162,7 @@ class Variant {
     this.moveGenerators = const [],
     this.moveProcessors = const [],
     this.moveFormatters = const [],
+    this.turnEndCondition,
     this.adapters = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
@@ -246,6 +249,8 @@ class Variant {
               adapters: adapters,
             )
           : null,
+      // TODO: movegenerators etc
+      // TODO: turnEndCondition
       adapters: adapters,
     );
   }
@@ -360,6 +365,7 @@ class Variant {
     List<MoveGenerator>? moveGenerators,
     List<MoveProcessor>? moveProcessors,
     List<MoveFormatter>? moveFormatters,
+    TurnEndFunction? turnEndCondition,
     List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
@@ -390,6 +396,7 @@ class Variant {
       moveGenerators: moveGenerators ?? this.moveGenerators,
       moveProcessors: moveProcessors ?? this.moveProcessors,
       moveFormatters: moveFormatters ?? this.moveFormatters,
+      turnEndCondition: turnEndCondition ?? this.turnEndCondition,
       adapters: adapters ?? this.adapters,
     );
   }
