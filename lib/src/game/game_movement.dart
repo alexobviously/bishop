@@ -343,8 +343,8 @@ extension GameMovement on Game {
       move: move,
       turn: 1 - state.turn,
       halfMoves: halfMoves,
-      fullMoves:
-          state.turn == Bishop.black ? state.fullMoves + 1 : state.fullMoves,
+      moveNumber: state.moveNumber + 1,
+      movePart: 0, // TODO
       castlingRights: castlingRights,
       royalSquares: royalSquares,
       virginFiles: virginFiles,

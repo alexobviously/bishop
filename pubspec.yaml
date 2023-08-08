@@ -6,7 +6,6 @@ issue_tracker: https://github.com/alexobviously/bishop/issues
 environment:
   sdk: '>=2.17.0 <4.0.0'
 
-
 dev_dependencies:
   benchmark_harness: ^2.0.0
   collection: ^1.17.1
