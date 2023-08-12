@@ -2,8 +2,6 @@
 
 import 'package:bishop/bishop.dart';
 
-typedef TurnEndFunction = bool Function(BishopState state, int move, int part);
-
 typedef Colour = int;
 
 extension Opponent on Colour {

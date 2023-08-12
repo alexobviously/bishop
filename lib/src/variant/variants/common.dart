@@ -131,13 +131,15 @@ class CommonVariants {
   static Variant marseillais({bool balanced = true}) =>
       Variant.standard().copyWith(
         name: 'Marseillais Chess',
-        turnEndCondition: balanced
-            ? (_, move, part) => part == (move == 0 ? 0 : 1)
-            : (_, __, part) => part == 1,
+        turnEndCondition: TurnEndOr([
+          balanced ? TurnEndCondition.marseillais : TurnEndCondition.doubleMove,
+          // TurnEndCondition.check,
+          // ^ doesn't work yet because checks are calculated after turn conds
+        ]),
       );
 
   static Variant progressive() => Variant.standard().copyWith(
         name: 'Progressive Chess',
-        turnEndCondition: (_, move, part) => part == move,
+        turnEndCondition: TurnEndCondition.progressive,
       );
 }

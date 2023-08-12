@@ -52,9 +52,14 @@ extension GameMovement on Game {
       );
     }
 
+    // TODO: this should come after check calculation, needs refactor
     if (variant.turnEndCondition != null) {
-      final bool newTurn =
-          variant.turnEndCondition!(newState, state.moveNumber, state.movePart);
+      final bool newTurn = variant.turnEndCondition!(
+        newState,
+        state.moveNumber,
+        state.movePart,
+        state.turn,
+      );
       newState = newState.copyWith(
         turn: newTurn ? 1 - state.turn : state.turn,
         moveNumber: newTurn ? state.moveNumber + 1 : state.moveNumber,

@@ -200,7 +200,6 @@ class BuiltVariant {
       winRegions: winRegions,
       actions: actions,
       actionsByEvent: actionsByEvent,
-      turnEndCondition: data.turnEndCondition,
     );
 
     bv = bv.copyWith(
@@ -216,6 +215,7 @@ class BuiltVariant {
       prettyMoveFormatters: Map.fromEntries(
         formatters.map((e) => MapEntry(e.type, e.pretty(bv))),
       ),
+      turnEndCondition: data.turnEndCondition?.build(bv),
       promotionBuilder: data.promotionOptions.build(bv),
     );
     // It's like this so the drop builder can depend on the promotion builder.

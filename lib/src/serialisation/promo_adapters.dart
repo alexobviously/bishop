@@ -18,7 +18,7 @@ class StandardPromotionAdapter extends BishopTypeAdapter<StandardPromotion> {
       );
 
   @override
-  Map<String, dynamic>? export(StandardPromotion e) => {
+  Map<String, dynamic> export(StandardPromotion e) => {
         if (e.pieceLimits != null) 'pieceLimits': e.pieceLimits,
         if (e.ranks != null) 'ranks': e.ranks,
         if (e.optional != false) 'optional': e.optional,

@@ -12,6 +12,7 @@ part 'options/output_options.dart';
 part 'options/pass_options.dart';
 part 'options/promotion_options.dart';
 part 'options/material_conditions.dart';
+part 'options/turn_end_condition.dart';
 part 'variants/asymmetric.dart';
 part 'variants/common.dart';
 part 'variants/fairy.dart';
@@ -103,7 +104,7 @@ class Variant {
   final List<MoveProcessor> moveProcessors;
   final List<MoveFormatter> moveFormatters;
 
-  final TurnEndFunction? turnEndCondition; // TODO: serialise, builder classes
+  final TurnEndCondition? turnEndCondition;
 
   final List<BishopTypeAdapter> adapters;
 
@@ -250,7 +251,12 @@ class Variant {
             )
           : null,
       // TODO: movegenerators etc
-      // TODO: turnEndCondition
+      turnEndCondition: json['turnEndCondition'] != null
+          ? BishopSerialisation.build<TurnEndCondition>(
+              json['turnEndCondition'],
+              adapters: adapters,
+            )
+          : null,
       adapters: adapters,
     );
   }
@@ -334,6 +340,11 @@ class Variant {
           moveProcessors,
           adapters: allAdapters,
         ),
+      if (turnEndCondition != null)
+        'turnEndCondition': BishopSerialisation.export<TurnEndCondition>(
+          turnEndCondition!,
+          adapters: allAdapters,
+        ),
     };
   }
 
@@ -365,7 +376,7 @@ class Variant {
     List<MoveGenerator>? moveGenerators,
     List<MoveProcessor>? moveProcessors,
     List<MoveFormatter>? moveFormatters,
-    TurnEndFunction? turnEndCondition,
+    TurnEndCondition? turnEndCondition,
     List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
