@@ -84,6 +84,18 @@ void main() {
         expect(inRegion, t.inRegion);
       });
     }
+    test('Region Equality & Operators', () {
+      final r1 = BoardRegion.lrbt(0, 3, 0, 7);
+      final r2 = BoardRegion.lrbt(4, 7, 0, 7);
+      expect(r1.equals(~r2), true);
+      final r3 = BoardRegion.lrbt(0, 1, 0, 7);
+      final r4 = BoardRegion.lrbt(2, 3, 0, 7);
+      expect(r1.equals(r3 + r4), true);
+      expect(r2.equals(~(r3 + r4)), true);
+      final r5 = BoardRegion.lrbt(1, 3, 1, 3);
+      final r6 = BoardRegion.lrbt(2, 4, 2, 4);
+      expect((r5 & r6).equals((r5 + r6) - (r5 ^ r6)), true);
+    });
   });
 }
 
