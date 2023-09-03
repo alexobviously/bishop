@@ -16,12 +16,28 @@ abstract class TurnEndCondition {
   static const marseillais = TurnEndMoveCount(2, firstMoveCount: 1);
   static const progressive = TurnEndIncrementingMoveCount();
   static const check = TurnEndCheck();
+
+  TurnEndAnd operator &(TurnEndCondition other) =>
+      TurnEndAnd.combine(this, other);
+
+  TurnEndOr operator |(TurnEndCondition other) =>
+      TurnEndOr.combine(this, other);
+
+  TurnEndCondition operator ~() => TurnEndNot(this);
 }
 
 class TurnEndAnd extends TurnEndCondition {
   final List<TurnEndCondition> conditions;
 
   const TurnEndAnd(this.conditions);
+
+  factory TurnEndAnd.combine(TurnEndCondition a, TurnEndCondition b) =>
+      TurnEndAnd([
+        if (a is TurnEndAnd) ...a.conditions,
+        if (a is! TurnEndAnd) a,
+        if (b is TurnEndAnd) ...b.conditions,
+        if (b is! TurnEndAnd) b,
+      ]);
 
   @override
   TurnEndFunction build(BuiltVariant variant) {
@@ -36,11 +52,31 @@ class TurnEndOr extends TurnEndCondition {
 
   const TurnEndOr(this.conditions);
 
+  factory TurnEndOr.combine(TurnEndCondition a, TurnEndCondition b) =>
+      TurnEndOr([
+        if (a is TurnEndOr) ...a.conditions,
+        if (a is! TurnEndOr) a,
+        if (b is TurnEndOr) ...b.conditions,
+        if (b is! TurnEndOr) b,
+      ]);
+
   @override
   TurnEndFunction build(BuiltVariant variant) {
     final functions = conditions.map((c) => c.build(variant)).toList();
     return (state, move, part, player) =>
         functions.any((f) => f(state, move, part, player));
+  }
+}
+
+class TurnEndNot extends TurnEndCondition {
+  final TurnEndCondition condition;
+
+  const TurnEndNot(this.condition);
+
+  @override
+  TurnEndFunction build(BuiltVariant variant) {
+    final function = condition.build(variant);
+    return (state, move, part, player) => !function(state, move, part, player);
   }
 }
 
