@@ -200,6 +200,8 @@ enum Variants {
   racingKings(CommonVariants.racingKings),
   antichess(CommonVariants.antichess),
   shatranj(CommonVariants.shatranj),
+  marseillais(CommonVariants.marseillais),
+  progressive(CommonVariants.progressive),
   musketeer(Musketeer.variant),
   xiangqi(Xiangqi.xiangqi),
   miniXiangqi(Xiangqi.mini),

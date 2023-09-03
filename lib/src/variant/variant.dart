@@ -12,6 +12,7 @@ part 'options/output_options.dart';
 part 'options/pass_options.dart';
 part 'options/promotion_options.dart';
 part 'options/material_conditions.dart';
+part 'options/turn_end_condition.dart';
 part 'variants/asymmetric.dart';
 part 'variants/common.dart';
 part 'variants/fairy.dart';
@@ -103,6 +104,8 @@ class Variant {
   final List<MoveProcessor> moveProcessors;
   final List<MoveFormatter> moveFormatters;
 
+  final TurnEndCondition? turnEndCondition;
+
   final List<BishopTypeAdapter> adapters;
 
   /// Whether this variant involves castling.
@@ -160,6 +163,7 @@ class Variant {
     this.moveGenerators = const [],
     this.moveProcessors = const [],
     this.moveFormatters = const [],
+    this.turnEndCondition,
     this.adapters = const [],
   }) : assert(
           startPosition != null || startPosBuilder != null,
@@ -246,6 +250,13 @@ class Variant {
               adapters: adapters,
             )
           : null,
+      // TODO: movegenerators etc
+      turnEndCondition: json['turnEndCondition'] != null
+          ? BishopSerialisation.build<TurnEndCondition>(
+              json['turnEndCondition'],
+              adapters: adapters,
+            )
+          : null,
       adapters: adapters,
     );
   }
@@ -329,6 +340,11 @@ class Variant {
           moveProcessors,
           adapters: allAdapters,
         ),
+      if (turnEndCondition != null)
+        'turnEndCondition': BishopSerialisation.export<TurnEndCondition>(
+          turnEndCondition!,
+          adapters: allAdapters,
+        ),
     };
   }
 
@@ -360,6 +376,7 @@ class Variant {
     List<MoveGenerator>? moveGenerators,
     List<MoveProcessor>? moveProcessors,
     List<MoveFormatter>? moveFormatters,
+    TurnEndCondition? turnEndCondition,
     List<BishopTypeAdapter>? adapters,
   }) {
     return Variant(
@@ -390,6 +407,7 @@ class Variant {
       moveGenerators: moveGenerators ?? this.moveGenerators,
       moveProcessors: moveProcessors ?? this.moveProcessors,
       moveFormatters: moveFormatters ?? this.moveFormatters,
+      turnEndCondition: turnEndCondition ?? this.turnEndCondition,
       adapters: adapters ?? this.adapters,
     );
   }

@@ -127,4 +127,19 @@ class CommonVariants {
         gameEndConditions:
             GameEndConditions(stalemate: EndType.lose).symmetric(),
       );
+
+  static Variant marseillais({bool balanced = true}) =>
+      Variant.standard().copyWith(
+        name: 'Marseillais Chess',
+        turnEndCondition: TurnEndOr([
+          balanced ? TurnEndCondition.marseillais : TurnEndCondition.doubleMove,
+          // TurnEndCondition.check,
+          // ^ doesn't work yet because checks are calculated after turn conds
+        ]),
+      );
+
+  static Variant progressive() => Variant.standard().copyWith(
+        name: 'Progressive Chess',
+        turnEndCondition: TurnEndCondition.progressive,
+      );
 }

@@ -52,6 +52,28 @@ extension GameMovement on Game {
       );
     }
 
+    // TODO: this should come after check calculation, needs refactor
+    if (variant.turnEndCondition != null) {
+      final bool newTurn = variant.turnEndCondition!(
+        newState,
+        state.moveNumber,
+        state.movePart,
+        state.turn,
+      );
+      newState = newState.copyWith(
+        turn: newTurn ? 1 - state.turn : state.turn,
+        moveNumber: newTurn ? state.moveNumber + 1 : state.moveNumber,
+        movePart: newTurn ? 0 : state.movePart + 1,
+      );
+    } else {
+      // TODO: OPTIMISE
+      newState = newState.copyWith(
+        turn: 1 - state.turn,
+        moveNumber: state.moveNumber + 1,
+        movePart: 0,
+      );
+    }
+
     final moveMeta = generateMeta
         ? MoveMeta(
             algebraic: toAlgebraic(move),
@@ -343,8 +365,8 @@ extension GameMovement on Game {
       move: move,
       turn: 1 - state.turn,
       halfMoves: halfMoves,
-      fullMoves:
-          state.turn == Bishop.black ? state.fullMoves + 1 : state.fullMoves,
+      moveNumber: state.moveNumber, // TODO: optimise later
+      movePart: state.movePart,
       castlingRights: castlingRights,
       royalSquares: royalSquares,
       virginFiles: virginFiles,

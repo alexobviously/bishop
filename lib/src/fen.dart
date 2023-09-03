@@ -201,8 +201,9 @@ ParseFenResult parseFen({
   final state = BishopState(
     board: board,
     turn: turn,
+    moveNumber: (int.parse(fullMoves) - 1) * 2 + (turn == Bishop.black ? 1 : 0),
+    movePart: 0, // TODO: figure this out
     halfMoves: int.parse(halfMoves),
-    fullMoves: int.parse(fullMoves),
     epSquare: ep,
     castlingRights: castling.castlingRights,
     royalSquares: royalSquares,

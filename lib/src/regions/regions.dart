@@ -5,6 +5,7 @@ part 'area.dart';
 part 'built_region.dart';
 part 'rect_region.dart';
 part 'intersect_region.dart';
+part 'not_region.dart';
 part 'region_effect.dart';
 part 'set_region.dart';
 part 'subtract_region.dart';
@@ -36,6 +37,7 @@ abstract class BoardRegion extends Region {
     'xor': XorRegion.fromJson,
     'set': SetRegion.fromJson,
     'dset': DirectionSetRegion.fromJson,
+    'not': NotRegion.fromJson,
   };
 
   Map<String, dynamic> toJson();
@@ -56,15 +58,25 @@ abstract class BoardRegion extends Region {
       BuiltRegion(squares(size).toList(), size);
 
   UnionRegion operator +(BoardRegion other) => UnionRegion([
-        this,
+        if (this is UnionRegion) ...(this as UnionRegion).regions else this,
         if (other is UnionRegion) ...other.regions else other,
       ]);
   IntersectRegion operator &(BoardRegion other) => IntersectRegion([
-        this,
+        if (this is IntersectRegion)
+          ...(this as IntersectRegion).regions
+        else
+          this,
         if (other is IntersectRegion) ...other.regions else other,
       ]);
   SubtractRegion operator -(BoardRegion other) => SubtractRegion(this, other);
   XorRegion operator ^(BoardRegion other) => XorRegion(this, other);
+  NotRegion operator ~() => NotRegion(this);
+
+  bool equals(BoardRegion other, [BoardSize size = BoardSize.standard]) {
+    final s1 = squares(size).toSet();
+    final s2 = other.squares(size).toSet();
+    return s1.length == s2.length && s1.difference(s2).isEmpty;
+  }
 }
 
 class BoardRegionAdapter extends BishopTypeAdapter<BoardRegion> {

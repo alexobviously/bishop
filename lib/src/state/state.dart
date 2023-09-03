@@ -21,12 +21,18 @@ class BishopState {
   /// The player who can make the next move.
   final Colour turn;
 
+  /// The of player moves that have been played in the game.
+  /// In chess, this is equivalent to 'half moves played'.
+  /// Moves can have multiple parts in some variants, see [movePart].
+  final int moveNumber;
+
+  /// The part of the current move that is being played.
+  /// In chess, this is always 0, but in variants with multi-part moves, this
+  /// will be incremented each time a part is played.
+  final int movePart;
+
   /// How many half moves have been played since the last capture or pawn move.
   final int halfMoves;
-
-  // todo: refactor so we store number of half moves instead
-  /// How many full moves have been played in the entire game.
-  final int fullMoves;
 
   /// The current castling rights of both players.
   final CastlingRights castlingRights;
@@ -68,8 +74,10 @@ class BishopState {
   /// updated in `Game.makeMove()`.
   final int hash;
 
-  int get moveNumber => fullMoves - (turn == Bishop.white ? 1 : 0);
   bool get invalidMove => result is InvalidMoveResult;
+
+  /// How many full moves have been played in the entire game. 1-indexed.
+  int get fullMoves => moveNumber ~/ 2 + 1;
 
   /// The total number of pieces currently in play belonging to [player].
   int pieceCount(int player) {
@@ -94,8 +102,9 @@ class BishopState {
     this.move,
     this.meta,
     required this.turn,
+    required this.moveNumber,
+    required this.movePart,
     required this.halfMoves,
-    required this.fullMoves,
     required this.castlingRights,
     this.epSquare,
     required this.royalSquares,
@@ -113,8 +122,9 @@ class BishopState {
     Move? move,
     StateMeta? meta,
     Colour? turn,
+    int? moveNumber,
+    int? movePart,
     int? halfMoves,
-    int? fullMoves,
     CastlingRights? castlingRights,
     int? epSquare,
     List<int>? royalSquares,
@@ -131,8 +141,9 @@ class BishopState {
         move: move ?? this.move,
         meta: meta ?? this.meta,
         turn: turn ?? this.turn,
+        moveNumber: moveNumber ?? this.moveNumber,
+        movePart: movePart ?? this.movePart,
         halfMoves: halfMoves ?? this.halfMoves,
-        fullMoves: fullMoves ?? this.fullMoves,
         castlingRights: castlingRights ?? this.castlingRights,
         epSquare: epSquare ?? this.epSquare,
         royalSquares: royalSquares ?? this.royalSquares,

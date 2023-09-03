@@ -27,6 +27,7 @@ class BuiltVariant {
   final Map<Type, MoveProcessorFunction> moveProcessors;
   final Map<Type, MoveFormatterFunction> algebraicMoveFormatters;
   final Map<Type, MoveFormatterFunction> prettyMoveFormatters;
+  final TurnEndFunction? turnEndCondition;
 
   const BuiltVariant({
     required this.data,
@@ -54,6 +55,7 @@ class BuiltVariant {
     this.moveProcessors = const {},
     this.algebraicMoveFormatters = const {},
     this.prettyMoveFormatters = const {},
+    this.turnEndCondition,
   });
 
   BuiltVariant copyWith({
@@ -82,6 +84,7 @@ class BuiltVariant {
     Map<Type, MoveProcessorFunction>? moveProcessors,
     Map<Type, MoveFormatterFunction>? algebraicMoveFormatters,
     Map<Type, MoveFormatterFunction>? prettyMoveFormatters,
+    TurnEndFunction? turnEndCondition,
   }) =>
       BuiltVariant(
         data: data ?? this.data,
@@ -110,6 +113,7 @@ class BuiltVariant {
         algebraicMoveFormatters:
             algebraicMoveFormatters ?? this.algebraicMoveFormatters,
         prettyMoveFormatters: prettyMoveFormatters ?? this.prettyMoveFormatters,
+        turnEndCondition: turnEndCondition ?? this.turnEndCondition,
       );
 
   factory BuiltVariant.fromData(Variant data) {
@@ -211,6 +215,7 @@ class BuiltVariant {
       prettyMoveFormatters: Map.fromEntries(
         formatters.map((e) => MapEntry(e.type, e.pretty(bv))),
       ),
+      turnEndCondition: data.turnEndCondition?.build(bv),
       promotionBuilder: data.promotionOptions.build(bv),
     );
     // It's like this so the drop builder can depend on the promotion builder.
