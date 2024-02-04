@@ -53,7 +53,7 @@ class MaterialConditions<T> {
         },
       };
 
-  MaterialConditions copyWith({
+  MaterialConditions<T> copyWith({
     bool? enabled,
     List<T>? soloMaters,
     List<T>? pairMaters,

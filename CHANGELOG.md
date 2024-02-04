@@ -1,5 +1,6 @@
 ### 1.4.1
-- **Potentially breaking**: FEN strings without castling rights specified now default to no castling rights, instead of all castling rights.
+- **Potentially breaking**: FEN strings without castling rights specified now default to no castling rights, instead of all castling rights (thanks @govind-maheshwari2).
+- Fixed Seirawan chess mating conditions not taking `H` and `E` into account (thanks @malaschitz).
 
 ### 1.4.0
 - Custom move generation and processing (beta):

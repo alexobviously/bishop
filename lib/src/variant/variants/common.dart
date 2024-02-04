@@ -27,6 +27,9 @@ class CommonVariants {
         'H': PieceType.archbishop(), // hawk
         'E': PieceType.chancellor(), // elephant
       },
+      materialConditions: MaterialConditions.standard.copyWith(
+        soloMaters: ['P', 'Q', 'R', 'E', 'H'],
+      ),
     );
   }
 
