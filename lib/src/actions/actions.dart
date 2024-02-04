@@ -71,7 +71,7 @@ class Action {
         action: action,
         precondition: Conditions.merge([
           Conditions.movingPieceType(type),
-          if (precondition != null) precondition!
+          if (precondition != null) precondition!,
         ]),
         condition: condition,
       );

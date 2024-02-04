@@ -55,7 +55,7 @@ class ActionDefinitions {
                     : trigger.piece.colour,
                 trigger.variant.pieceIndexLookup[type]!,
               ),
-            )
+            ),
           ];
 
   /// An action that removes a piece of [type] from the moving player's hand.
@@ -73,7 +73,7 @@ class ActionDefinitions {
                     : trigger.piece.colour,
                 trigger.variant.pieceIndexLookup[type]!,
               ),
-            )
+            ),
           ];
 
   /// Simply output the effects regardless of the trigger.

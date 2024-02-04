@@ -73,12 +73,11 @@ class MaterialConditions<T> {
   static const standard = MaterialConditions(
     enabled: true,
     soloMaters: ['P', 'Q', 'R', 'A', 'C'],
-    pairMaters: [
-      'N'
-    ], // although a knight cannot force mate, it can happen if the opponent helps
+    // although a knight cannot force mate, it can happen if the opponent helps
+    pairMaters: ['N'],
     combinedPairMaters: ['B'],
     specialCases: [
-      ['B', 'N']
+      ['B', 'N'],
     ],
   );
 

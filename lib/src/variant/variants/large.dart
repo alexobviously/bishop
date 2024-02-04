@@ -96,7 +96,7 @@ abstract class LargeVariants {
           'A': PieceType.archbishop(),
           'M': PieceType.chancellor(), // Marshall
           'C': PieceType.fromBetza('DAW', value: 400), // Champion
-          'W': PieceType.fromBetza('CF', value: 400) // Wizard
+          'W': PieceType.fromBetza('CF', value: 400), // Wizard
         },
       );
 }

@@ -12,7 +12,7 @@ typedef Hand = List<int>;
 
 // TODO: there's a lot of stuff here now, maybe refactor and not call this constants?
 class Bishop {
-  static const version = '1.4.0';
+  static const version = '1.4.1';
 
   static const Colour white = 0;
   static const Colour black = 1;
@@ -100,7 +100,7 @@ class Bishop {
     'q': '♕',
     'k': '♔',
     'p': '♙',
-    '.': '·'
+    '.': '·',
   };
 
   /// Gets the file for [square], according to [size].

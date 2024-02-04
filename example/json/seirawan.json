@@ -1,7 +1,7 @@
 {
  "name": "Seirawan Chess",
  "description": "",
- "bishopVersion": "1.3.0",
+ "bishopVersion": "1.4.1",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -42,7 +42,7 @@
  "promotionOptions": "bishop.promo.standard",
  "materialConditions": {
   "enabled": true,
-  "soloMaters": ["P", "Q", "R", "A", "C"],
+  "soloMaters": ["P", "Q", "R", "E", "H"],
   "pairMaters": ["N"],
   "combinedPairMaters": ["B"],
   "specialCases": [["B", "N"]]

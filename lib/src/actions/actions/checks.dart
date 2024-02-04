@@ -29,7 +29,7 @@ class ActionCheckRoyalsAlive extends Action {
                   : [
                       EffectSetGameResult(
                         WonGameRoyalDead(winner: Bishop.white),
-                      )
+                      ),
                     ];
             }
             return kingsAlive[Bishop.black]

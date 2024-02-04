@@ -49,7 +49,7 @@ void main() {
         'e5d4',
         'd1f3',
         'g8f6',
-        'c1g5'
+        'c1g5',
       ];
       for (String m in moves) {
         bool ok = g.makeMoveString(m);
