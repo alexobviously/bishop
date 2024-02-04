@@ -4,7 +4,7 @@ description: Bishop is a chess logic package with flexible variant support.
 repository: https://github.com/alexobviously/bishop
 issue_tracker: https://github.com/alexobviously/bishop/issues
 environment:
-  sdk: '>=2.17.0 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
 
 
 dev_dependencies:
