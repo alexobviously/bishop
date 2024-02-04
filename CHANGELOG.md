@@ -1,3 +1,6 @@
+### 1.4.1
+- **Potentially breaking**: FEN strings without castling rights specified now default to no castling rights, instead of all castling rights.
+
 ### 1.4.0
 - Custom move generation and processing (beta):
   - `MoveGenerator`: optionally supply a list of these in `Variant.moveGenerators`. These can be used to generate custom moves based on the state. You can generate both normal move types (e.g. add an extra move to a piece on a certain square or something), or totally different types of move that can be managed by `MoveProcessor`.

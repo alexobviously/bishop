@@ -72,9 +72,7 @@ ParseFenResult parseFen({
   if (!(['w', 'b'].contains(turnStr))) {
     throw ("Invalid FEN: colour should be 'w' or 'b'");
   }
-  String castlingStr = (strict || sections.length > 2)
-      ? sections[2]
-      : 'KQkq'; // TODO: get default castling for variant
+  String castlingStr = (strict || sections.length > 2) ? sections[2] : '-';
   String epStr = (strict || sections.length > 3) ? sections[3] : '-';
   String halfMoves = (strict || sections.length > 4) ? sections[4] : '0';
   String fullMoves = (strict || sections.length > 5) ? sections[5] : '1';
@@ -88,7 +86,7 @@ ParseFenResult parseFen({
     List<String> fileStrings = sections[0].split('/');
     List<String> gateStrings = [
       fileStrings.removeAt(0),
-      fileStrings.removeAt(fileStrings.length - 1)
+      fileStrings.removeAt(fileStrings.length - 1),
     ];
     boardSymbols = fileStrings.join('/').split(''); // rebuild
     for (int i = 0; i < 2; i++) {
