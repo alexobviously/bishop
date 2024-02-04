@@ -1,6 +1,7 @@
 ### 1.4.1
 - **Potentially breaking**: FEN strings without castling rights specified now default to no castling rights, instead of all castling rights (thanks @govind-maheshwari2).
 - Fixed Seirawan chess mating conditions not taking `H` and `E` into account (thanks @malaschitz).
+- Fixed Chess960 castling moves not working in some cases where the rook would land on the square after the king (thanks @malaschitz).
 
 ### 1.4.0
 - Custom move generation and processing (beta):

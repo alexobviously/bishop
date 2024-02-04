@@ -100,4 +100,13 @@ void main() {
       ),
     );
   });
+  test('Chess960 K-C1:R-A1 castling', () {
+    final g = Game(
+      variant: CommonVariants.chess960(),
+      fen: 'rnkqbbrn/pppppppp/8/8/8/8/PPPPPPPP/R1K1BBRN w AGag - 0 1',
+    );
+    final moves = g.generateLegalMoves();
+    expect(moves.castlingMoves.length, 1);
+    expect(moves.from(g.size.squareNumber('c1')).length, 3);
+  });
 }

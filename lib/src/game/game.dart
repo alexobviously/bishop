@@ -433,7 +433,7 @@ class Game {
             for (int j = 1; j <= numRookMidSquares; j++) {
               int midFile = rookFile + (i == 0 ? -j : j);
               int midSq = size.square(midFile, royalRank);
-              if (board[midSq].isNotEmpty) {
+              if (board[midSq].isNotEmpty && midFile != royalFile) {
                 valid = false;
                 break;
               }
