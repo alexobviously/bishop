@@ -1,3 +1,6 @@
+### 1.4.2
+- Fixed an error with castling rights changes when a rook takes a rook.
+
 ### 1.4.1
 - Now using Dart 3!
 - **Potentially breaking**: FEN strings without castling rights specified now default to no castling rights, instead of all castling rights (thanks @govind-maheshwari2).

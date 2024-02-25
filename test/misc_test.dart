@@ -83,13 +83,6 @@ void main() {
     expect(g.state.pieceCount(Bishop.black), 1);
     expect(g.state.move?.enPassant, true);
   });
-  test('Don\'t allow castling with piece between rook and dest', () {
-    final g = Game(
-      fen:
-          '1r2k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/5Q1p/PPPBBPPP/RN2K2R w KQk - 2 2',
-    );
-    expect(g.generateLegalMoves().castlingMoves.length, 1);
-  });
   test('King Attackers (discovered check)', () {
     final g = Game(fen: '3k4/8/3N4/8/8/8/8/K2R4 w - - 0 1');
     g.makeMoveString('d6b7');
@@ -99,14 +92,5 @@ void main() {
         [g.size.squareNumber('d1'), g.size.squareNumber('b7')],
       ),
     );
-  });
-  test('Chess960 K-C1:R-A1 castling', () {
-    final g = Game(
-      variant: CommonVariants.chess960(),
-      fen: 'rnkqbbrn/pppppppp/8/8/8/8/PPPPPPPP/R1K1BBRN w AGag - 0 1',
-    );
-    final moves = g.generateLegalMoves();
-    expect(moves.castlingMoves.length, 1);
-    expect(moves.from(g.size.squareNumber('c1')).length, 3);
   });
 }

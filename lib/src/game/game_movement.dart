@@ -167,14 +167,14 @@ extension GameMovement on Game {
     GameResult? result;
 
     // TODO: more validation?
-    int fromRank = size.rank(move.from);
-    PieceType fromPiece = variant.pieces[fromSq.type].type;
+    final int fromRank = size.rank(move.from);
+    final PieceType fromPiece = variant.pieces[fromSq.type].type;
     if (fromSq.isNotEmpty &&
         (fromSq.colour != state.turn &&
             fromSq.colour != Bishop.neutralPassive)) {
       return null;
     }
-    int colour = turn;
+    final int colour = turn;
     // Remove the moved piece, if this piece came from on the board.
     if (move.from >= Bishop.boardStart) {
       hash ^= zobrist.table[move.from][fromSq.piece];
@@ -280,56 +280,50 @@ extension GameMovement on Game {
       board[kingSq] = fromSq.setInitialState(false);
       board[rookSq] = rook;
       castlingRights = castlingRights.remove(colour);
-      // refactor conditions?
-      hash ^= zobrist.table[zobrist.castling][state.castlingRights];
-      hash ^= zobrist.table[zobrist.castling][castlingRights];
       royalSquares[colour] = kingSq;
     } else if (fromPiece.royal) {
       // king moved
       castlingRights = castlingRights.remove(colour);
+      royalSquares[colour] = move.to;
+    } else {
+      // If the player's rook moved, remove relevant castling rights
+      if (fromSq.type == variant.castlingPiece) {
+        int fromFile = size.file(move.from);
+        bool onFirstRank = size.rank(move.from) == size.firstRank(colour);
+        int ks = colour == Bishop.white ? Castling.k : Castling.bk;
+        int qs = colour == Bishop.white ? Castling.q : Castling.bq;
+        if (fromFile == castlingTargetK &&
+            onFirstRank &&
+            castlingRights.hasRight(ks)) {
+          castlingRights = castlingRights.flip(ks);
+        } else if (fromFile == castlingTargetQ &&
+            onFirstRank &&
+            castlingRights.hasRight(qs)) {
+          castlingRights = castlingRights.flip(qs);
+        }
+      }
+      // If the opponent's rook was captured, remove relevant castling rights
+      if (move.capture && move.capturedPiece!.type == variant.castlingPiece) {
+        // rook captured
+        int toFile = size.file(move.to);
+        int opponent = colour.opponent;
+        bool onFirstRank = size.rank(move.to) == size.firstRank(opponent);
+        int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
+        int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
+        if (toFile == castlingTargetK &&
+            onFirstRank &&
+            castlingRights.hasRight(ks)) {
+          castlingRights = castlingRights.flip(ks);
+        } else if (toFile == castlingTargetQ &&
+            onFirstRank &&
+            castlingRights.hasRight(qs)) {
+          castlingRights = castlingRights.flip(qs);
+        }
+      }
+    }
+    if (castlingRights != state.castlingRights) {
       hash ^= zobrist.table[zobrist.castling][state.castlingRights];
       hash ^= zobrist.table[zobrist.castling][castlingRights];
-      royalSquares[colour] = move.to;
-    } else if (fromSq.type == variant.castlingPiece) {
-      // rook moved
-      int fromFile = size.file(move.from);
-      bool onFirstRank = size.rank(move.from) == size.firstRank(colour);
-      int ks = colour == Bishop.white ? Castling.k : Castling.bk;
-      int qs = colour == Bishop.white ? Castling.q : Castling.bq;
-      if (fromFile == castlingTargetK &&
-          onFirstRank &&
-          castlingRights.hasRight(ks)) {
-        castlingRights = castlingRights.flip(ks);
-        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
-        hash ^= zobrist.table[zobrist.castling][castlingRights];
-      } else if (fromFile == castlingTargetQ &&
-          onFirstRank &&
-          castlingRights.hasRight(qs)) {
-        castlingRights = castlingRights.flip(qs);
-        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
-        hash ^= zobrist.table[zobrist.castling][castlingRights];
-      }
-    } else if (move.capture &&
-        move.capturedPiece!.type == variant.castlingPiece) {
-      // rook captured
-      int toFile = size.file(move.to);
-      int opponent = colour.opponent;
-      bool onFirstRank = size.rank(move.to) == size.firstRank(opponent);
-      int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
-      int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
-      if (toFile == castlingTargetK &&
-          onFirstRank &&
-          castlingRights.hasRight(ks)) {
-        castlingRights = castlingRights.flip(ks);
-        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
-        hash ^= zobrist.table[zobrist.castling][castlingRights];
-      } else if (toFile == castlingTargetQ &&
-          onFirstRank &&
-          castlingRights.hasRight(qs)) {
-        castlingRights = castlingRights.flip(qs);
-        hash ^= zobrist.table[zobrist.castling][state.castlingRights];
-        hash ^= zobrist.table[zobrist.castling][castlingRights];
-      }
     }
     if (variant.hasWinRegions) {
       int p = board[move.to].piece;
