@@ -1,5 +1,6 @@
 ### 1.4.2
 - Fixed an error with castling rights changes when a rook takes a rook.
+- Fixed incorrect PGN formatting when the first move was black (thanks @govind-maheshwari2).
 
 ### 1.4.1
 - Now using Dart 3!
