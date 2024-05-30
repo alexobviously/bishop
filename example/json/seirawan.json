@@ -1,7 +1,7 @@
 {
  "name": "Seirawan Chess",
  "description": "",
- "bishopVersion": "1.4.1",
+ "bishopVersion": "1.4.3",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {

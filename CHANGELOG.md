@@ -1,3 +1,8 @@
+### 1.4.3
+- Separated the ideas of 'castling piece' and 'royal piece'. `PieceType` now has a `castling` field which determines whether a piece can castle. By default this is equal to `royal`, so most users don't need to worry about it - this is backwards compatible.
+- The non-royal king in Kinglet chess can now castle.
+- Variant: Extinction (`MiscVariants.extinction()`): game ends when a player doesn't have at least one of each piece type.
+
 ### 1.4.2
 - Fixed an error with castling rights changes when a rook takes a rook.
 - Fixed incorrect PGN formatting when the first move was black (thanks @govind-maheshwari2).

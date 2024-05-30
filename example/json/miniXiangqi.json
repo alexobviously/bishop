@@ -1,7 +1,7 @@
 {
  "name": "Mini Xiangqi",
  "description": "A miniature variant of Xiangqi, played on a 7x7 board with no river.",
- "bishopVersion": "1.3.0",
+ "bishopVersion": "1.4.3",
  "boardSize": "7x7",
  "pieceTypes": {
   "K": {

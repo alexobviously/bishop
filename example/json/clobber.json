@@ -1,11 +1,11 @@
 {
  "name": "Clobber",
  "description": "",
- "bishopVersion": "1.3.2",
+ "bishopVersion": "1.4.3",
  "boardSize": "5x6",
  "pieceTypes": {"P": {"betza": "cW"}},
  "castlingOptions": {"enabled": false},
- "promotionOptions": "bishop.promo.standard",
+ "promotionOptions": "bishop.promo.none",
  "materialConditions": {"enabled": false},
  "gameEndConditions": {
   "stalemate": "lose",

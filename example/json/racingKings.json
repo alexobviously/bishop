@@ -1,7 +1,7 @@
 {
  "name": "Racing Kings",
  "description": "The first player to run their king to the finish line wins.",
- "bishopVersion": "1.3.0",
+ "bishopVersion": "1.4.3",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {

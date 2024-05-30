@@ -1,21 +1,23 @@
 {
- "name": "Dart",
+ "name": "Shatranj",
  "description": "",
  "bishopVersion": "1.4.3",
- "boardSize": "6x6",
+ "boardSize": "8x8",
  "pieceTypes": {
   "P": {
    "betza": "fmWfcF",
    "promoOptions": {
     "canPromote": true,
-    "canPromoteTo": false
+    "canPromoteTo": false,
+    "promotesTo": ["Q"]
    },
    "noSanSymbol": true,
    "value": 100
   },
   "N": {"betza": "N", "value": 300},
-  "B": {"betza": "B", "value": 300},
+  "B": {"betza": "A", "value": 120},
   "R": {"betza": "R", "value": 500},
+  "Q": {"betza": "F", "value": 140},
   "K": {
    "betza": "K",
    "royal": true,
@@ -23,29 +25,17 @@
     "canPromote": false,
     "canPromoteTo": false
    }
-  },
-  "X": {
-   "betza": "",
-   "promoOptions": {
-    "canPromote": false,
-    "canPromoteTo": false
-   },
-   "value": 0,
-   "actions": ["bishop.action.immortality"]
   }
  },
  "castlingOptions": {"enabled": false},
  "promotionOptions": "bishop.promo.standard",
  "materialConditions": {"enabled": false},
- "startPosition": "knrppp/nbp3/rp3P/p3PR/3PBN/PPPRNK[XXXxxx] w - - 0 1",
+ "gameEndConditions": {
+  "stalemate": "lose",
+  "elimination": "lose"
+ },
+ "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
  "enPassant": false,
  "halfMoveDraw": 100,
- "handOptions": {
-  "enableHands": true,
-  "addCapturesToHand": false,
-  "dropBuilder": {
-   "id": "bishop.drops.region",
-   "region": {"b": 1, "t": 4, "l": 1, "r": 4}
-  }
- }
+ "repetitionDraw": 3
 }

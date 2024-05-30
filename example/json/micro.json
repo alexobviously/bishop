@@ -1,7 +1,7 @@
 {
  "name": "Micro Chess",
  "description": "",
- "bishopVersion": "1.3.0",
+ "bishopVersion": "1.4.3",
  "boardSize": "5x5",
  "pieceTypes": {
   "P": {

@@ -1,6 +1,6 @@
 {
- "name": "Andernach Chess",
- "description": "Capturing pieces, except for kings, change colour.",
+ "name": "Extinction Chess",
+ "description": "The first player that does not have pieces of all types loses the game.",
  "bishopVersion": "1.4.3",
  "boardSize": "8x8",
  "pieceTypes": {
@@ -18,14 +18,7 @@
   "B": {"betza": "B", "value": 300},
   "R": {"betza": "R", "value": 500},
   "Q": {"betza": "Q", "value": 900},
-  "K": {
-   "betza": "K",
-   "royal": true,
-   "promoOptions": {
-    "canPromote": false,
-    "canPromoteTo": false
-   }
-  }
+  "K": {"betza": "K", "castling": true}
  },
  "castlingOptions": {
   "enabled": true,
@@ -51,8 +44,28 @@
  "repetitionDraw": 3,
  "actions": [
   {
-   "id": "bishop.action.transferOwnership",
-   "quiet": false
+   "id": "bishop.action.checkPieceCount",
+   "pieceType": "P"
+  },
+  {
+   "id": "bishop.action.checkPieceCount",
+   "pieceType": "N"
+  },
+  {
+   "id": "bishop.action.checkPieceCount",
+   "pieceType": "B"
+  },
+  {
+   "id": "bishop.action.checkPieceCount",
+   "pieceType": "R"
+  },
+  {
+   "id": "bishop.action.checkPieceCount",
+   "pieceType": "Q"
+  },
+  {
+   "id": "bishop.action.checkPieceCount",
+   "pieceType": "K"
   }
  ]
 }

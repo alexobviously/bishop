@@ -1,11 +1,11 @@
 {
- "name": "Troitzky Chess",
+ "name": "Omega Chess",
  "description": "",
  "bishopVersion": "1.4.3",
- "boardSize": "10x10",
+ "boardSize": "12x12",
  "pieceTypes": {
   "P": {
-   "betza": "fmWfceFifmnD",
+   "betza": "fmWfceFifmW3",
    "promoOptions": {
     "canPromote": true,
     "canPromoteTo": false
@@ -26,6 +26,8 @@
     "canPromoteTo": false
    }
   },
+  "C": {"betza": "DAW", "value": 400},
+  "W": {"betza": "FC", "value": 400},
   "*": {
    "betza": "",
    "promoOptions": {
@@ -36,45 +38,17 @@
    "actions": ["bishop.action.immortality"]
   }
  },
- "castlingOptions": {"enabled": false},
- "promotionOptions": {
-  "id": "bishop.promo.region",
-  "wId": "wp",
-  "bId": "bp"
+ "castlingOptions": {
+  "enabled": true,
+  "kTarget": 8,
+  "qTarget": 4,
+  "fixedRooks": true,
+  "kRook": 9,
+  "qRook": 2,
+  "useRookAsTarget": false
  },
+ "promotionOptions": "bishop.promo.standard",
  "materialConditions": {"enabled": false},
- "startPosition": "****qk****/**rnbbnr**/*pppppppp*/*8*/10/10/*8*/*PPPPPPPP*/**RNBBNR**/****QK**** w - - 0 1",
- "enPassant": true,
- "regions": {
-  "wp": {
-   "type": "set",
-   "squares": [
-    "a6",
-    "b8",
-    "c9",
-    "d9",
-    "e10",
-    "f10",
-    "g9",
-    "h9",
-    "i8",
-    "j6"
-   ]
-  },
-  "bp": {
-   "type": "set",
-   "squares": [
-    "a5",
-    "b3",
-    "c2",
-    "d2",
-    "e1",
-    "f1",
-    "g2",
-    "h2",
-    "i3",
-    "j5"
-   ]
-  }
- }
+ "startPosition": "w**********w/*crnbqkbnrc*/*pppppppppp*/*10*/*10*/*10*/*10*/*10*/*10*/*PPPPPPPPPP*/*CRNBQKBNRC*/W**********W w - - 0 1",
+ "enPassant": true
 }

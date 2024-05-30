@@ -1,7 +1,7 @@
 {
  "name": "Hoppel-Poppel",
  "description": "",
- "bishopVersion": "1.3.0",
+ "bishopVersion": "1.4.3",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
@@ -38,13 +38,7 @@
   "useRookAsTarget": false
  },
  "promotionOptions": "bishop.promo.standard",
- "materialConditions": {
-  "enabled": true,
-  "soloMaters": ["P", "Q", "R", "A", "C"],
-  "pairMaters": ["N"],
-  "combinedPairMaters": ["B"],
-  "specialCases": [["B", "N"]]
- },
+ "materialConditions": {"enabled": false},
  "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
  "enPassant": true,
  "halfMoveDraw": 100,

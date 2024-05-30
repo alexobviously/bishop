@@ -1,6 +1,6 @@
 {
- "name": "Andernach Chess",
- "description": "Capturing pieces, except for kings, change colour.",
+ "name": "Nightrider Chess",
+ "description": "",
  "bishopVersion": "1.4.3",
  "boardSize": "8x8",
  "pieceTypes": {
@@ -14,7 +14,7 @@
    "noSanSymbol": true,
    "value": 100
   },
-  "N": {"betza": "N", "value": 300},
+  "N": {"betza": "N0", "value": 500},
   "B": {"betza": "B", "value": 300},
   "R": {"betza": "R", "value": 500},
   "Q": {"betza": "Q", "value": 900},
@@ -38,21 +38,9 @@
   "useRookAsTarget": false
  },
  "promotionOptions": "bishop.promo.standard",
- "materialConditions": {
-  "enabled": true,
-  "soloMaters": ["P", "Q", "R", "A", "C"],
-  "pairMaters": ["N"],
-  "combinedPairMaters": ["B"],
-  "specialCases": [["B", "N"]]
- },
+ "materialConditions": {"enabled": false},
  "startPosition": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
  "enPassant": true,
  "halfMoveDraw": 100,
- "repetitionDraw": 3,
- "actions": [
-  {
-   "id": "bishop.action.transferOwnership",
-   "quiet": false
-  }
- ]
+ "repetitionDraw": 3
 }

@@ -1,7 +1,7 @@
 {
  "name": "Pocket Knight",
  "description": "",
- "bishopVersion": "1.4.0",
+ "bishopVersion": "1.4.3",
  "boardSize": "8x8",
  "pieceTypes": {
   "P": {
