@@ -34,7 +34,7 @@ void main(List<String> args) async {
                     if (value != stockfish[key]) {
                       int diff = stockfish[key] - value;
                       print(
-                        'Error on $key - $value (us) vs ${stockfish[key]} (stockfish) [${(diff > 0) ? "+$diff" : diff}]',
+                        'Error on $key - $value (bishop) vs ${stockfish[key]} (stockfish) [${(diff > 0) ? "+$diff" : diff}]',
                       );
                     } else if (showCorrect) {
                       print('$key correct ($value)');

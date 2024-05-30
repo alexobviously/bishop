@@ -233,6 +233,7 @@ extension GameMovement on Game {
 
     int castlingRights = state.castlingRights;
     List<int> royalSquares = List.from(state.royalSquares);
+    List<int> castlingSquares = List.from(state.castlingSquares);
 
     if (move.enPassant) {
       // Remove the captured ep piece
@@ -265,29 +266,37 @@ extension GameMovement on Game {
           : variant.castlingOptions.qTarget!;
       int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
       int rookSq = size.square(rookFile, fromRank);
-      int kingSq = size.square(castlingFile, fromRank);
+      int castlingSq = size.square(castlingFile, fromRank);
       int rook = board[move.castlingPieceSquare!];
       hash ^= zobrist.table[move.castlingPieceSquare!][rook.piece];
-      if (board[kingSq].isNotEmpty) {
-        hash ^= zobrist.table[kingSq][board[kingSq].piece];
+      if (board[castlingSq].isNotEmpty) {
+        hash ^= zobrist.table[castlingSq][board[castlingSq].piece];
       }
-      hash ^= zobrist.table[kingSq][fromSq.piece];
+      hash ^= zobrist.table[castlingSq][fromSq.piece];
       if (board[rookSq].isNotEmpty) {
         hash ^= zobrist.table[rookSq][board[rookSq].piece];
       }
       hash ^= zobrist.table[rookSq][rook.piece];
       board[move.castlingPieceSquare!] = Bishop.empty;
-      board[kingSq] = fromSq.setInitialState(false);
+      board[castlingSq] = fromSq.setInitialState(false);
       board[rookSq] = rook;
       castlingRights = castlingRights.remove(colour);
-      royalSquares[colour] = kingSq;
-    } else if (fromPiece.royal) {
-      // king moved
-      castlingRights = castlingRights.remove(colour);
-      royalSquares[colour] = move.to;
+      castlingSquares[colour] = castlingSq;
+      if (fromPiece.royal) {
+        royalSquares[colour] = castlingSq;
+      }
+    } else if (fromPiece.royal || fromPiece.castling) {
+      // Royal or castling piece moved, but it wasn't castling.
+      if (fromPiece.castling) {
+        castlingRights = castlingRights.remove(colour);
+        castlingSquares[colour] = move.to;
+      }
+      if (fromPiece.royal) {
+        royalSquares[colour] = move.to;
+      }
     } else {
       // If the player's rook moved, remove relevant castling rights
-      if (fromSq.type == variant.castlingPiece) {
+      if (fromSq.type == variant.rookPiece) {
         int fromFile = size.file(move.from);
         bool onFirstRank = size.rank(move.from) == size.firstRank(colour);
         int ks = colour == Bishop.white ? Castling.k : Castling.bk;
@@ -302,8 +311,8 @@ extension GameMovement on Game {
           castlingRights = castlingRights.flip(qs);
         }
       }
-      // If the opponent's rook was captured, remove relevant castling rights
-      if (move.capture && move.capturedPiece!.type == variant.castlingPiece) {
+      // If the opponent's rook was captured, remove relevant castling rights.
+      if (move.capture && move.capturedPiece!.type == variant.rookPiece) {
         // rook captured
         int toFile = size.file(move.to);
         int opponent = colour.opponent;
@@ -320,6 +329,10 @@ extension GameMovement on Game {
           castlingRights = castlingRights.flip(qs);
         }
       }
+    }
+    // If the opponent's castling piece was captured.
+    if (move.capture && move.capturedPiece!.type == variant.castlingPiece) {
+      castlingRights = castlingRights.remove(colour.opponent);
     }
     if (castlingRights != state.castlingRights) {
       hash ^= zobrist.table[zobrist.castling][state.castlingRights];
@@ -341,6 +354,7 @@ extension GameMovement on Game {
           state.turn == Bishop.black ? state.fullMoves + 1 : state.fullMoves,
       castlingRights: castlingRights,
       royalSquares: royalSquares,
+      castlingSquares: castlingSquares,
       virginFiles: virginFiles,
       epSquare: epSquare,
       hash: hash,

@@ -14,9 +14,10 @@ class BuiltVariant {
   final DropBuilderFunction? dropBuilder;
   final MoveChecker? passChecker;
   final PieceMoveChecker? firstMoveChecker;
+  final int royalPiece;
   final int epPiece;
   final int castlingPiece;
-  final int royalPiece;
+  final int rookPiece;
   final MaterialConditions<int> materialConditions;
   final Map<String, BuiltRegion> regions;
   final Map<int, List<String>> winRegions;
@@ -43,6 +44,7 @@ class BuiltVariant {
     this.firstMoveChecker,
     required this.epPiece,
     required this.castlingPiece,
+    required this.rookPiece,
     required this.royalPiece,
     required this.materialConditions,
     required this.regions,
@@ -69,9 +71,10 @@ class BuiltVariant {
     DropBuilderFunction? dropBuilder,
     MoveChecker? passChecker,
     PieceMoveChecker? firstMoveChecker,
+    int? royalPiece,
     int? epPiece,
     int? castlingPiece,
-    int? royalPiece,
+    int? rookPiece,
     MaterialConditions<int>? materialConditions,
     Map<String, BuiltRegion>? regions,
     Map<int, List<String>>? winRegions,
@@ -96,9 +99,10 @@ class BuiltVariant {
         dropBuilder: dropBuilder ?? this.dropBuilder,
         passChecker: passChecker ?? this.passChecker,
         firstMoveChecker: firstMoveChecker ?? this.firstMoveChecker,
+        royalPiece: royalPiece ?? this.royalPiece,
         epPiece: epPiece ?? this.epPiece,
         castlingPiece: castlingPiece ?? this.castlingPiece,
-        royalPiece: royalPiece ?? this.royalPiece,
+        rookPiece: rookPiece ?? this.rookPiece,
         materialConditions: materialConditions ?? this.materialConditions,
         regions: regions ?? this.regions,
         winRegions: winRegions ?? this.winRegions,
@@ -184,13 +188,16 @@ class BuiltVariant {
       promoLimits: data.promotionOptions.pieceLimits
           ?.map((k, v) => MapEntry(pieceIndexLookup[k]!, v)),
       promoMap: promoMap,
+      royalPiece: pieces.indexWhere((p) => p.type.royal),
       epPiece: data.enPassant
           ? pieces.indexWhere((p) => p.type.enPassantable)
           : Bishop.invalid,
       castlingPiece: data.castling
+          ? pieces.indexWhere((p) => p.type.castling)
+          : Bishop.invalid,
+      rookPiece: data.castling
           ? pieces.indexWhere((p) => p.symbol == data.castlingOptions.rookPiece)
           : Bishop.invalid,
-      royalPiece: pieces.indexWhere((p) => p.type.royal),
       materialConditions: data.materialConditions.convert(pieces),
       regions: data.regions.map((k, v) => MapEntry(k, v.build(data.boardSize))),
       winRegions: winRegions,

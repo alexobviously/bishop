@@ -9,8 +9,13 @@ class PieceType {
   /// All of the different move groups this piece can make.
   final List<MoveDefinition> moves;
 
-  /// Royal pieces can be checkmated, and can castle.
+  /// Royal pieces can be checkmated, and can castle,
+  /// unless [castling] is false.
   final bool royal;
+
+  /// Whether this is a castling piece.
+  /// If not specified, it will be the same as [royal].
+  final bool castling;
 
   /// Defines the promotion behaviour of this piece type.
   final PiecePromoOptions promoOptions;
@@ -51,6 +56,7 @@ class PieceType {
     this.betza,
     required this.moves,
     this.royal = false,
+    bool? castling,
     this.promoOptions = PiecePromoOptions.promoPiece,
     this.enPassantable = false,
     this.noSanSymbol = false,
@@ -58,7 +64,7 @@ class PieceType {
     this.regionEffects = const [],
     this.actions = const [],
     this.optimisationData,
-  });
+  }) : castling = castling ?? royal;
 
   factory PieceType.fromJson(
     Map<String, dynamic> json, {
@@ -68,6 +74,7 @@ class PieceType {
       return PieceType.fromBetza(
         json['betza'],
         royal: json['royal'] ?? false,
+        castling: json['castling'],
         promoOptions: json.containsKey('promoOptions')
             ? PiecePromoOptions.fromJson(json['promoOptions'])
             : PiecePromoOptions.promoPiece,
@@ -97,6 +104,7 @@ class PieceType {
     return {
       'betza': betza,
       if (verbose || royal) 'royal': royal,
+      if (verbose || castling != royal) 'castling': castling,
       if (verbose || promoOptions != PiecePromoOptions.promoPiece)
         'promoOptions': promoOptions.toJson(),
       if (verbose || enPassantable) 'enPassantable': enPassantable,
@@ -119,6 +127,7 @@ class PieceType {
     String? betza,
     List<MoveDefinition>? moves,
     bool? royal,
+    bool? castling,
     PiecePromoOptions? promoOptions,
     bool? enPassantable,
     bool? noSanSymbol,
@@ -131,6 +140,7 @@ class PieceType {
         betza: betza ?? this.betza,
         moves: moves ?? this.moves,
         royal: royal ?? this.royal,
+        castling: castling ?? this.castling,
         promoOptions: promoOptions ?? this.promoOptions,
         enPassantable: enPassantable ?? this.enPassantable,
         noSanSymbol: noSanSymbol ?? this.noSanSymbol,
@@ -194,6 +204,7 @@ class PieceType {
   factory PieceType.fromBetza(
     String betza, {
     bool royal = false,
+    bool? castling,
     PiecePromoOptions promoOptions = PiecePromoOptions.promoPiece,
     bool enPassantable = false,
     bool noSanSymbol = false,
@@ -209,6 +220,7 @@ class PieceType {
       betza: betza,
       moves: moves,
       royal: royal,
+      castling: castling,
       promoOptions: promoOptions,
       enPassantable: enPassantable,
       noSanSymbol: noSanSymbol,

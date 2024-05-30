@@ -31,7 +31,7 @@ class MiscVariants {
           'B': PieceType.bishop().withNoPromotion(),
           'R': PieceType.rook().withNoPromotion(),
           'Q': PieceType.queen().withNoPromotion(),
-          'K': PieceType.fromBetza('K'),
+          'K': PieceType.fromBetza('K', castling: true),
         },
         actions: [ActionCheckPieceCount(pieceType: 'P')],
       );

@@ -120,6 +120,7 @@ ParseFenResult parseFen({
   int sq = 0;
   int emptySquares = 0;
   List<int> royalSquares = List.filled(Bishop.numPlayers, Bishop.invalid);
+  List<int> castlingSquares = List.filled(Bishop.numPlayers, Bishop.invalid);
 
   for (String c in boardSymbols) {
     if (c == '~') {
@@ -153,6 +154,9 @@ ParseFenResult parseFen({
       pieces[piece.piece]++;
       if (variant.pieces[pieceIndex].type.royal) {
         royalSquares[colour] = sq;
+      }
+      if (variant.pieces[pieceIndex].type.castling) {
+        castlingSquares[colour] = sq;
       }
       sq++;
     }
@@ -191,7 +195,7 @@ ParseFenResult parseFen({
   final castling = variant.castling
       ? setupCastling(
           castlingString: castlingStr,
-          royalSquares: royalSquares,
+          castlingSquares: castlingSquares,
           board: board,
           variant: variant,
         )
@@ -204,6 +208,7 @@ ParseFenResult parseFen({
     epSquare: ep,
     castlingRights: castling.castlingRights,
     royalSquares: royalSquares,
+    castlingSquares: castlingSquares,
     virginFiles: virginFiles,
     hands: hands,
     gates: gates,
@@ -222,14 +227,14 @@ class ParseFenResult {
 
 class CastlingSetup {
   final int castlingRights;
-  final int? royalFile;
+  final int? castlingFile;
   final int? castlingTargetK;
   final int? castlingTargetQ;
   final List<String>? castlingFileSymbols;
 
   const CastlingSetup({
     required this.castlingRights,
-    this.royalFile,
+    this.castlingFile,
     this.castlingTargetK,
     this.castlingTargetQ,
     this.castlingFileSymbols,
@@ -240,7 +245,7 @@ class CastlingSetup {
 
 CastlingSetup setupCastling({
   required String castlingString,
-  required List<int> royalSquares,
+  required List<int> castlingSquares,
   required List<int> board,
   required BuiltVariant variant,
 }) {
@@ -252,7 +257,7 @@ CastlingSetup setupCastling({
     throw ('Invalid castling string');
   }
   List<String>? castlingFileSymbols;
-  int? royalFile;
+  int? castlingFile;
   int? castlingTargetK;
   int? castlingTargetQ;
   final size = variant.boardSize;
@@ -260,12 +265,12 @@ CastlingSetup setupCastling({
   for (String c in castlingString.split('')) {
     // there is probably a better way to do all of this
     bool white = c == c.toUpperCase();
-    royalFile = size.file(royalSquares[white ? 0 : 1]);
+    castlingFile = size.file(castlingSquares[white ? 0 : 1]);
     if (Castling.symbols.containsKey(c)) {
       cr += Castling.symbols[c]!;
     } else {
       int cFile = fileFromSymbol(c);
-      bool kingside = cFile > size.file(royalSquares[white ? 0 : 1]);
+      bool kingside = cFile > size.file(castlingSquares[white ? 0 : 1]);
       if (kingside) {
         castlingTargetK = cFile;
         cr += white ? Castling.k : Castling.bk;
@@ -285,9 +290,9 @@ CastlingSetup setupCastling({
       bool kingside = false;
       for (int j = 0; j < size.h; j++) {
         int piece = board[r + j].type;
-        if (piece == variant.royalPiece) {
+        if (piece == variant.castlingPiece) {
           kingside = true;
-        } else if (piece == variant.castlingPiece) {
+        } else if (piece == variant.rookPiece) {
           if (kingside) {
             castlingTargetK = j;
           } else {
@@ -306,7 +311,7 @@ CastlingSetup setupCastling({
   }
   return CastlingSetup(
     castlingRights: cr,
-    royalFile: royalFile,
+    castlingFile: castlingFile,
     castlingTargetK: castlingTargetK,
     castlingTargetQ: castlingTargetQ,
     castlingFileSymbols: castlingFileSymbols,

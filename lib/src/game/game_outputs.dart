@@ -218,10 +218,11 @@ extension GameOutputs on Game {
     int firstTurn = history.first.turn;
     int turn = firstTurn;
     String pgn = '';
-     for (int i = 0; i < moves.length; i++) {
-      if (i == 0 || turn == Bishop.white)
+    for (int i = 0; i < moves.length; i++) {
+      if (i == 0 || turn == Bishop.white) {
         pgn =
             '$pgn${firstMove + i ~/ 2}${(i == 0 && turn == Bishop.black) ? "" : ". "}';
+      }
       if (i == 0 && turn == Bishop.black) {
         pgn = '$pgn... ';
         firstMove++;
