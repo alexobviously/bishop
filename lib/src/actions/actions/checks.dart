@@ -104,7 +104,10 @@ class ActionCheckPieceCount extends Action {
             }
             return [
               EffectSetGameResult(
-                WonGameElimination(winner: white ? Bishop.white : Bishop.black),
+                WonGameElimination(
+                  winner: white ? Bishop.white : Bishop.black,
+                  pieceType: pieceType,
+                ),
               ),
             ];
           },
