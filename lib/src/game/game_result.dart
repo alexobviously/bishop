@@ -107,13 +107,18 @@ class WonGameRoyalDead extends WonGame {
 }
 
 class WonGameElimination extends WonGame {
-  const WonGameElimination({required super.winner});
+  final String? pieceType;
+  const WonGameElimination({required super.winner, this.pieceType});
 
   @override
   String toString() => 'WonGameElimination($winner)';
 
   @override
-  String get readable => '${super.readable} by elimination';
+  String get readable => [
+        super.readable,
+        'by elimination',
+        if (pieceType != null) '($pieceType)',
+      ].join(' ');
 }
 
 class WonGameStalemate extends WonGame {

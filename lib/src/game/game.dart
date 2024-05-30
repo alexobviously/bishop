@@ -32,7 +32,7 @@ class Game {
 
   int? castlingTargetK;
   int? castlingTargetQ;
-  int? royalFile;
+  int? castlingFile;
   List<String> castlingFileSymbols = ['K', 'Q', 'k', 'q'];
   late MoveGenParams royalCaptureOptions;
 
@@ -81,7 +81,7 @@ class Game {
     final newState = result.state.copyWith(hash: zobrist.compute(result.state));
     zobrist.incrementHash(newState.hash);
     history.add(newState);
-    royalFile = result.castling.royalFile;
+    castlingFile = result.castling.castlingFile;
     castlingTargetK = result.castling.castlingTargetK;
     castlingTargetQ = result.castling.castlingTargetQ;
     castlingFileSymbols =
@@ -384,7 +384,10 @@ class Game {
     }
 
     // Generate castling
-    if (variant.castling && options.castling && pieceType.royal && !inCheck) {
+    if (variant.castling &&
+        options.castling &&
+        pieceType.castling &&
+        !inCheck) {
       bool kingside = colour == Bishop.white
           ? state.castlingRights.wk
           : state.castlingRights.bk;
@@ -425,7 +428,7 @@ class Game {
         if (board[targetSq].isNotEmpty &&
             targetSq != rookSq &&
             targetSq != square) continue;
-        int numMidSqs = (targetFile - royalFile!).abs();
+        int numMidSqs = (targetFile - castlingFile!).abs();
         bool valid = true;
         if (!options.ignorePieces) {
           int numRookMidSquares = (targetFile - rookFile).abs();
@@ -433,14 +436,14 @@ class Game {
             for (int j = 1; j <= numRookMidSquares; j++) {
               int midFile = rookFile + (i == 0 ? -j : j);
               int midSq = size.square(midFile, royalRank);
-              if (board[midSq].isNotEmpty && midFile != royalFile) {
+              if (board[midSq].isNotEmpty && midFile != castlingFile) {
                 valid = false;
                 break;
               }
             }
           }
           for (int j = 1; j <= numMidSqs; j++) {
-            int midFile = royalFile! + (i == 0 ? j : -j);
+            int midFile = castlingFile! + (i == 0 ? j : -j);
 
             // For some Chess960 positions.
             // See also https://github.com/alexobviously/bishop/issues/11
@@ -456,7 +459,7 @@ class Game {
               break;
             }
 
-            if (midFile == targetFile && targetFile == royalFile) {
+            if (midFile == targetFile && targetFile == castlingFile) {
               continue;
             } // king starting on target
 

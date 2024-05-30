@@ -208,6 +208,7 @@ enum Variants {
   dobutsu(Dobutsu.dobutsu, alt: 'Dobutsu Shogi'),
   spawn(MiscVariants.spawn, alt: 'Spawn Chess'),
   kinglet(MiscVariants.kinglet, alt: 'Kinglet Chess'),
+  extinction(MiscVariants.extinction),
   threeKings(MiscVariants.threeKings, alt: 'Three Kings Chess'),
   domination(MiscVariants.domination),
   dart(MiscVariants.dart),

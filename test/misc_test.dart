@@ -93,4 +93,13 @@ void main() {
       ),
     );
   });
+  test('Kinglet Castling & Win Condition', () {
+    final g = Game(
+      variant: MiscVariants.kinglet(),
+      fen: 'rnbqkbnr/p7/1P6/8/8/8/P7/RNBQK2R w KQkq - 0 1',
+    );
+    g.makeMultipleMoves(['e1g1', 'h8h1', 'b1a3', 'h1g1', 'b6a7']);
+    expect(g.result, isA<WonGameElimination>());
+    expect(g.winner, Bishop.white);
+  });
 }

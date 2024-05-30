@@ -38,6 +38,10 @@ class BishopState {
   /// Index 0 - white, index 1 - black.
   final List<int> royalSquares;
 
+  /// The squares that the castling pieces currently reside on.
+  /// This will usually be equivalent to [royalSquares].
+  final List<int> castlingSquares;
+
   /// A list of files that have been untouched for each player.
   /// For use with e.g. Seirawan chess, where pieces can only be gated on files
   /// that haven't had their pieces move yet.
@@ -99,6 +103,7 @@ class BishopState {
     required this.castlingRights,
     this.epSquare,
     required this.royalSquares,
+    required this.castlingSquares,
     required this.virginFiles,
     this.hands,
     this.gates,
@@ -118,6 +123,7 @@ class BishopState {
     CastlingRights? castlingRights,
     int? epSquare,
     List<int>? royalSquares,
+    List<int>? castlingSquares,
     List<List<int>>? virginFiles,
     List<Hand>? hands,
     List<Hand>? gates,
@@ -136,6 +142,7 @@ class BishopState {
         castlingRights: castlingRights ?? this.castlingRights,
         epSquare: epSquare ?? this.epSquare,
         royalSquares: royalSquares ?? this.royalSquares,
+        castlingSquares: castlingSquares ?? this.castlingSquares,
         virginFiles: virginFiles ?? this.virginFiles,
         hands: hands ?? this.hands,
         gates: gates ?? this.gates,

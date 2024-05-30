@@ -21,6 +21,7 @@ class MiscVariants {
         },
       );
 
+  /// https://www.chessvariants.org/winning.dir/kinglet.html
   static Variant kinglet() => Variant.standard().copyWith(
         name: 'Kinglet Chess',
         description:
@@ -31,15 +32,38 @@ class MiscVariants {
           'B': PieceType.bishop().withNoPromotion(),
           'R': PieceType.rook().withNoPromotion(),
           'Q': PieceType.queen().withNoPromotion(),
-          'K': PieceType.fromBetza('K'),
+          'K': PieceType.fromBetza('K', castling: true),
         },
         actions: [ActionCheckPieceCount(pieceType: 'P')],
       );
 
+  /// https://www.chessvariants.org/winning.dir/extinction.html
+  static Variant extinction() => Variant.standard().copyWith(
+        name: 'Extinction Chess',
+        description: 'The first player that does not have pieces of all '
+            'types loses the game.',
+        pieceTypes: {
+          'P': PieceType.pawn(),
+          'N': PieceType.knight(),
+          'B': PieceType.bishop(),
+          'R': PieceType.rook(),
+          'Q': PieceType.queen(),
+          'K': PieceType.fromBetza('K', castling: true),
+        },
+        actions: [
+          ActionCheckPieceCount(pieceType: 'P'),
+          ActionCheckPieceCount(pieceType: 'N'),
+          ActionCheckPieceCount(pieceType: 'B'),
+          ActionCheckPieceCount(pieceType: 'R'),
+          ActionCheckPieceCount(pieceType: 'Q'),
+          ActionCheckPieceCount(pieceType: 'K'),
+        ],
+      );
+
   static Variant threeKings() => Variant.standard().copyWith(
         name: 'Three Kings Chess',
-        description:
-            'Each player has three kings, but only one has to be captured for them to win.',
+        description: 'Each player has three kings, but only one has to '
+            'be captured for them to win.',
         startPosition: 'knbqkbnk/pppppppp/8/8/8/8/PPPPPPPP/KNBQKBNK w - - 0 1',
         castlingOptions: CastlingOptions.none,
         actions: [ActionCheckPieceCount(pieceType: 'K', count: 3)],
