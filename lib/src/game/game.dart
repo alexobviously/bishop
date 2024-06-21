@@ -463,7 +463,7 @@ class Game {
               continue;
             } // king starting on target
 
-            if (j != numMidSqs && board[midSq].isNotEmpty) {
+            if (j != numMidSqs && midSq > -1 && board[midSq].isNotEmpty) {
               // squares between to and from must be empty
               valid = false;
               break;
