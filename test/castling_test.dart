@@ -21,6 +21,15 @@ void main() {
       expect(moves.from(g.size.squareNumber('c1')).length, 3);
     });
     // https://github.com/alexobviously/bishop/issues/77
+    test('Chess960 K-B1:R-C1 castling', () {
+      final g = Game(
+        variant: CommonVariants.chess960(),
+        fen: 'rkr4n/ppppqbpp/3bpp1n/8/8/2BPPN2/PPPQBPPP/RKR4N w KQkq - 6 7',
+      );
+      final moves = g.generateLegalMoves();
+      expect(moves.castlingMoves.length, 1);
+      expect(moves.from(g.size.squareNumber('b1')).length, 1);
+    });
     test('Castling rights when a rook takes a rook', () {
       final g = Game(
         fen: 'rnbqk1nr/ppp1ppb1/6p1/3p4/8/2N5/PPPPPPP1/R1BQKBNR w KQkq - 0 5',
