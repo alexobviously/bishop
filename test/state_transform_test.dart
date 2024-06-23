@@ -5,7 +5,7 @@ void main() {
   group('State Transform', () {
     test('Vision Area', () {
       final v = Variant.standard().copyWith(
-        stateTransformer: VisionAreaStateTransformer(),
+        stateTransformer: const VisionAreaStateTransformer(),
       );
       final g = Game(
         variant: v,

@@ -74,7 +74,7 @@ class MiscVariants {
   // https://www.chessvariants.com/diffobjective.dir/utchess.html#domination
   // todo: make this serialisable, break action down
   static Variant domination({int scoreLimit = 15}) {
-    final region = RectRegion(
+    final region = const RectRegion(
       startFile: Bishop.fileD,
       endFile: Bishop.fileE,
       startRank: Bishop.rank4,
@@ -109,7 +109,7 @@ class MiscVariants {
   }
 
   static Variant dart() {
-    final dropRegion = RectRegion(
+    final dropRegion = const RectRegion(
       startFile: Bishop.fileB,
       endFile: Bishop.fileE,
       startRank: Bishop.rank2,
@@ -117,7 +117,7 @@ class MiscVariants {
     );
     return Variant(
       name: 'Dart',
-      boardSize: BoardSize(6, 6),
+      boardSize: const BoardSize(6, 6),
       startPosition: 'knrppp/nbp3/rp3P/p3PR/3PBN/PPPRNK[XXXxxx] w - - 0 1',
       enPassant: false,
       handOptions: HandOptions(
@@ -153,7 +153,7 @@ class MiscVariants {
           ...Variant.standard().pieceTypes,
           'P': PieceType.fromBetza('mlfFcflW', noSanSymbol: true).promotable(),
         },
-        promotionOptions: RegionPromotion(whiteId: 'wp', blackId: 'bp'),
+        promotionOptions: const RegionPromotion(whiteId: 'wp', blackId: 'bp'),
         regions: {
           'wp': RectRegion.lrbt(0, 0, 4, 7) + RectRegion.lrbt(0, 3, 7, 7),
           'bp': RectRegion.lrbt(7, 7, 0, 3) + RectRegion.lrbt(4, 7, 0, 0),

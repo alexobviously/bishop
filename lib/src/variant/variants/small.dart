@@ -19,7 +19,7 @@ class SmallVariants {
     Variant mini = Variant.mini();
     return mini.copyWith(
       name: 'Mini Random',
-      startPosBuilder: RandomChessStartPosBuilder(size: BoardSize.mini),
+      startPosBuilder: const RandomChessStartPosBuilder(size: BoardSize.mini),
       castlingOptions: CastlingOptions.miniRandom,
       outputOptions: OutputOptions.chess960,
     );
@@ -29,7 +29,7 @@ class SmallVariants {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Micro Chess',
-      boardSize: BoardSize(5, 5),
+      boardSize: const BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
       castlingOptions: CastlingOptions.micro,
     );
@@ -39,7 +39,7 @@ class SmallVariants {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Nano Chess',
-      boardSize: BoardSize(4, 5),
+      boardSize: const BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
       castlingOptions: CastlingOptions.nano,
     );

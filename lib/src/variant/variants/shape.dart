@@ -5,11 +5,11 @@ abstract class ShapeVariants {
   /// Variant with a circular shaped board.
   static Variant troitzky() => Variant(
         name: 'Troitzky Chess',
-        boardSize: BoardSize(10, 10),
+        boardSize: const BoardSize(10, 10),
         startPosition: '****qk****/**rnbbnr**/*pppppppp*/*8*/10'
             '/10/*8*/*PPPPPPPP*/**RNBBNR**/****QK**** w - - 0 1',
         pieceTypes: Bishop.chessPieces,
-        promotionOptions: RegionPromotion(whiteId: 'wp', blackId: 'bp'),
+        promotionOptions: const RegionPromotion(whiteId: 'wp', blackId: 'bp'),
         regions: {
           'wp': SetRegion(
             ['a6', 'b8', 'c9', 'd9', 'e10', 'f10', 'g9', 'h9', 'i8', 'j6'],
@@ -24,7 +24,7 @@ abstract class ShapeVariants {
   /// Not fully working yet - en passant is broken in most cases.
   static Variant omega() => Variant(
         name: 'Omega Chess',
-        boardSize: BoardSize(12, 12),
+        boardSize: const BoardSize(12, 12),
         startPosition: 'w**********w/*crnbqkbnrc*/*pppppppppp*/*10*/*10*/*10*'
             '/*10*/*10*/*10*/*PPPPPPPPPP*/*CRNBQKBNRC*/W**********W w - - 0 1',
         pieceTypes: {
@@ -34,7 +34,7 @@ abstract class ShapeVariants {
           'W': PieceType.fromBetza('FC', value: 400), // Wizard
         },
         enPassant: true,
-        castlingOptions: CastlingOptions(
+        castlingOptions: const CastlingOptions(
           enabled: true,
           kTarget: Bishop.fileI,
           qTarget: Bishop.fileE,

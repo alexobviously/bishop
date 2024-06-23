@@ -16,7 +16,7 @@ class Engine {
   }) async {
     if (game.gameOver) {
       print(game.drawn ? 'Draw' : 'Checkmate');
-      return EngineResult();
+      return const EngineResult();
     }
     int endTime = DateTime.now().millisecondsSinceEpoch + timeLimit;
     int endBuffer = endTime + timeBuffer;

@@ -85,7 +85,7 @@ class Xiangqi {
         name: 'Mini Xiangqi',
         description:
             'A miniature variant of Xiangqi, played on a 7x7 board with no river.',
-        boardSize: BoardSize(7, 7),
+        boardSize: const BoardSize(7, 7),
         pieceTypes: {
           'K': general(),
           'N': horse(),

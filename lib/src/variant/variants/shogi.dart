@@ -35,7 +35,7 @@ class Shogi {
 
   static Variant shogi() => Variant(
         name: 'Shogi',
-        boardSize: BoardSize(9, 9),
+        boardSize: const BoardSize(9, 9),
         pieceTypes: {
           'K': PieceType.king(),
           'N': knight(),
@@ -73,7 +73,7 @@ class Dobutsu {
   static Variant dobutsu() => Variant(
         name: 'Dobutsu Shogi',
         description: 'A simple Shogi variant aimed at children.',
-        boardSize: BoardSize(3, 4),
+        boardSize: const BoardSize(3, 4),
         startPosition: defaultFen,
         pieceTypes: {
           'L': lion(),
@@ -82,7 +82,7 @@ class Dobutsu {
           'C': chick(),
           'H': hen(),
         },
-        handOptions: HandOptions(
+        handOptions: const HandOptions(
           enableHands: true,
           addCapturesToHand: true,
           dropBuilder: DropBuilder.unrestricted,

@@ -10,7 +10,7 @@ abstract class OtherGames {
         description:
             'Knights only. Move a knight onto the central square and off'
             ' it again to win.',
-        boardSize: BoardSize(9, 9),
+        boardSize: const BoardSize(9, 9),
         startPosition: 'nnnnnnnnn/9/9/9/9/9/9/9/NNNNNNNNN w - - 0 1',
         pieceTypes: {'N': PieceType.knight()},
         promotionOptions: PromotionOptions.none,
@@ -26,17 +26,17 @@ abstract class OtherGames {
   static Variant clobber() => Variant(
         name: 'Clobber',
         startPosition: 'PpPpP/pPpPp/PpPpP/pPpPp/PpPpP/pPpPp w - - 0 1',
-        boardSize: BoardSize(5, 6),
+        boardSize: const BoardSize(5, 6),
         pieceTypes: {'P': PieceType.fromBetza('cW')},
         gameEndConditions:
-            GameEndConditions(stalemate: EndType.lose).symmetric(),
+            const GameEndConditions(stalemate: EndType.lose).symmetric(),
         promotionOptions: PromotionOptions.none,
       );
 
   /// https://en.wikipedia.org/wiki/Clobber#Variants
   static Variant clobber10() => clobber().copyWith(
         name: 'Clobber10',
-        boardSize: BoardSize(10, 10),
+        boardSize: const BoardSize(10, 10),
         startPosition: 'PpPpPpPpPp/pPpPpPpPpP/PpPpPpPpPp/pPpPpPpPpP/PpPpPpPpPp/'
             'pPpPpPpPpP/PpPpPpPpPp/pPpPpPpPpP'
             '/PpPpPpPpPp/pPpPpPpPpP w - - 0 1',
@@ -52,7 +52,7 @@ abstract class OtherGames {
   /// https://en.wikipedia.org/wiki/Five_Field_Kono
   static Variant kono() => Variant(
         name: 'Five Field Kono',
-        boardSize: BoardSize(5, 5),
+        boardSize: const BoardSize(5, 5),
         startPosition: 'ppppp/p3p/5/P3P/PPPPP w - - 0 1',
         // startPosition: 'PPPPP/4P/1P3/5/4p w - - 0 1',
         pieceTypes: {'P': PieceType.fromBetza('mF')},
@@ -71,7 +71,7 @@ abstract class OtherGames {
         startPosition: '8/8/8/4n3/3N4/8/8/8 w - - 0 1',
         pieceTypes: {'N': PieceType.fromBetza('mN')},
         gameEndConditions:
-            GameEndConditions(stalemate: EndType.lose).symmetric(),
+            const GameEndConditions(stalemate: EndType.lose).symmetric(),
         promotionOptions: PromotionOptions.none,
       ).withBlocker().withAction(ActionBlockOrigin());
 }

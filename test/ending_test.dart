@@ -18,7 +18,7 @@ void main() {
       final g = Game(
         variant: Variant.standard().copyWith(
           gameEndConditions: GameEndConditionSet.symmetric(
-            GameEndConditions(stalemate: EndType.lose),
+            const GameEndConditions(stalemate: EndType.lose),
           ),
         ),
         fen: 'k7/8/8/1Q6/8/4K3/8/8 w - - 0 1',

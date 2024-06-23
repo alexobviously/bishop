@@ -61,7 +61,9 @@ class AddToHandAdapter extends BishopTypeAdapter<ActionAddToHand> {
   @override
   Map<String, dynamic> export(ActionAddToHand e) {
     if (e.condition != null || e.precondition != null) {
-      throw BishopException('Unsupported export of condition or precondition');
+      throw const BishopException(
+        'Unsupported export of condition or precondition',
+      );
     }
     return {
       'piece': e.piece,
@@ -88,7 +90,9 @@ class RemoveFromHandAdapter extends BishopTypeAdapter<ActionRemoveFromHand> {
   @override
   Map<String, dynamic> export(ActionRemoveFromHand e) {
     if (e.condition != null || e.precondition != null) {
-      throw BishopException('Unsupported export of condition or precondition');
+      throw const BishopException(
+        'Unsupported export of condition or precondition',
+      );
     }
     return {
       'piece': e.piece,

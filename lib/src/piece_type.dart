@@ -195,7 +195,7 @@ class PieceType {
   PieceType withRoyal() =>
       copyWith(royal: true, promoOptions: PiecePromoOptions.none);
 
-  factory PieceType.empty() => PieceType(
+  factory PieceType.empty() => const PieceType(
         moves: [],
         promoOptions: PiecePromoOptions.none,
       );

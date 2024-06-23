@@ -6,7 +6,7 @@ void main() {
     final v = Variant(
       name: 'Pseudo-duck',
       startPosition: 'b3/4/4/3B w - - 0 1',
-      boardSize: BoardSize(4, 4),
+      boardSize: const BoardSize(4, 4),
       pieceTypes: {
         'M': PieceType.fromBetza('m*'),
         'C': PieceType.fromBetza('c*'),

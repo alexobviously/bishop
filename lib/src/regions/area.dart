@@ -29,7 +29,7 @@ class Area implements Region {
       (x) => List.generate(height, (y) => Direction(x + xStart, y + yStart)),
     ).expand((e) => e).toList();
     if (omitCentre) {
-      dirs.remove(Direction(0, 0));
+      dirs.remove(const Direction(0, 0));
     }
     return Area(directions: dirs);
   }

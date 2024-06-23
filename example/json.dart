@@ -40,7 +40,7 @@ void main(List<String> args) {
   final variant = Variant(
     name: 'Example',
     description: 'An example variant for JSON serialisation',
-    boardSize: BoardSize(3, 5),
+    boardSize: const BoardSize(3, 5),
     startPosition: 'nkn/ppp/3/PPP/NKN w - - 0 1',
     castlingOptions: CastlingOptions.none,
     enPassant: false,

@@ -6,7 +6,7 @@ abstract class LargeVariants {
     final standard = Variant.standard();
     return standard.copyWith(
       name: 'Capablanca Chess',
-      boardSize: BoardSize(10, 8),
+      boardSize: const BoardSize(10, 8),
       startPosition: 'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP'
           '/RNABQKBCNR w KQkq - 0 1',
       castlingOptions: CastlingOptions.capablanca,
@@ -22,7 +22,7 @@ abstract class LargeVariants {
     final standard = Variant.standard();
     return standard.copyWith(
       name: 'Grand Chess',
-      boardSize: BoardSize(10, 10),
+      boardSize: const BoardSize(10, 10),
       startPosition: 'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP'
           '/1NBQKCABN1/R8R w - - 0 1',
       castlingOptions: CastlingOptions.none,
@@ -65,7 +65,7 @@ abstract class LargeVariants {
     final standard = Variant.standard();
     return standard.copyWith(
       name: 'Shako',
-      boardSize: BoardSize(10, 10),
+      boardSize: const BoardSize(10, 10),
       startPosition: 'c8c/ernbqkbnre/pppppppppp/10/10/10/10/PPPPPPPPPP'
           '/ERNBQKBNRE/C8C w KQkq - 0 1',
       pieceTypes: {
@@ -73,7 +73,7 @@ abstract class LargeVariants {
         'E': PieceType.fromBetza('FA'),
         'C': Xiangqi.cannon(),
       },
-      castlingOptions: CastlingOptions(
+      castlingOptions: const CastlingOptions(
         enabled: true,
         kTarget: Bishop.fileH,
         qTarget: Bishop.fileD,
@@ -88,7 +88,7 @@ abstract class LargeVariants {
   /// https://www.chessvariants.com/contests/10/tencubedchess.html
   static Variant tenCubed() => Variant(
         name: 'TenCubed',
-        boardSize: BoardSize(10, 10),
+        boardSize: const BoardSize(10, 10),
         startPosition: '2cwamwc2/1rnbqkbnr1/pppppppppp/10/10/10/10'
             '/PPPPPPPPPP/1RNBQKBNR1/2CWAMWC2 w - - 0 1',
         pieceTypes: {

@@ -72,7 +72,7 @@ void main() {
           }
         }
         List<int> p2 = g2.state.pieces;
-        if (!ListEquality().equals(p1, p2)) {
+        if (!const ListEquality().equals(p1, p2)) {
           print(' --- Failure details --- ');
           print('Pieces: $p1, $p2');
           print('FEN 1: ${g1.fen}');

@@ -3,35 +3,35 @@ import 'package:test/test.dart';
 
 void main() {
   List<CountMovesTest> countMoveTests = [
-    CountMovesTest('N', 8),
-    CountMovesTest('Q', 8),
-    CountMovesTest('B', 4),
-    CountMovesTest('fmWfceFifmnD', 4), // pawn
-    CountMovesTest('BN', 12),
-    CountMovesTest('FWDA', 16), // musketeer elephant
-    CountMovesTest('B2ND', 16), // musketeer spider
-    CountMovesTest('FWDsN', 16), // musketeer cannon
-    CountMovesTest('rbB', 1),
-    CountMovesTest('fR', 1),
-    CountMovesTest('bB', 2),
-    CountMovesTest('fsN', 2),
-    CountMovesTest('vZ', 4),
-    CountMovesTest('lfC', 1),
-    CountMovesTest('flrbN', 2), // works but should it?
+    const CountMovesTest('N', 8),
+    const CountMovesTest('Q', 8),
+    const CountMovesTest('B', 4),
+    const CountMovesTest('fmWfceFifmnD', 4), // pawn
+    const CountMovesTest('BN', 12),
+    const CountMovesTest('FWDA', 16), // musketeer elephant
+    const CountMovesTest('B2ND', 16), // musketeer spider
+    const CountMovesTest('FWDsN', 16), // musketeer cannon
+    const CountMovesTest('rbB', 1),
+    const CountMovesTest('fR', 1),
+    const CountMovesTest('bB', 2),
+    const CountMovesTest('fsN', 2),
+    const CountMovesTest('vZ', 4),
+    const CountMovesTest('lfC', 1),
+    const CountMovesTest('flrbN', 2), // works but should it?
   ];
   List<MoveTest> moveTests = [
-    MoveTest('ffN', ['c6', 'e6']),
-    MoveTest('lfN', ['c6']),
-    MoveTest('lhN', ['c6', 'b5', 'b3', 'c2']),
-    MoveTest('rfZ', ['f7']),
-    MoveTest('bhC', ['c1', 'e1', 'g3', 'a3']),
-    MoveTest('rbF1', ['e3']),
-    MoveTest('vN', ['c2', 'c6', 'e2', 'e6']),
-    MoveTest('fslbC', ['a5', 'g5', 'c1']),
-    MoveTest('(4,1)', ['c8', 'e8', 'h3', 'h5']),
-    MoveTest('r(4,3)', ['h1', 'h7']),
-    MoveTest('frN2rfN', ['f5', 'h6', 'e6']),
-    MoveTest(
+    const MoveTest('ffN', ['c6', 'e6']),
+    const MoveTest('lfN', ['c6']),
+    const MoveTest('lhN', ['c6', 'b5', 'b3', 'c2']),
+    const MoveTest('rfZ', ['f7']),
+    const MoveTest('bhC', ['c1', 'e1', 'g3', 'a3']),
+    const MoveTest('rbF1', ['e3']),
+    const MoveTest('vN', ['c2', 'c6', 'e2', 'e6']),
+    const MoveTest('fslbC', ['a5', 'g5', 'c1']),
+    const MoveTest('(4,1)', ['c8', 'e8', 'h3', 'h5']),
+    const MoveTest('r(4,3)', ['h1', 'h7']),
+    const MoveTest('frN2rfN', ['f5', 'h6', 'e6']),
+    const MoveTest(
       'N0',
       ['b8', 'f8', 'c6', 'e6', 'h6', 'b5', 'f5', 'b3', 'f3', 'c2', 'e2', 'h2'],
     ),

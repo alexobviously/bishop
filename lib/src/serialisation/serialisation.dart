@@ -24,7 +24,7 @@ class BishopSerialisation {
   static List<BishopTypeAdapter>? _baseAdapters;
 
   static List<BishopTypeAdapter> get basePromoAdapters => [
-        NoPromotionAdapter(),
+        const NoPromotionAdapter(),
         RegionPromotionAdapter(),
         StandardPromotionAdapter(),
         OptionalPromotionAdapter(),
@@ -32,13 +32,13 @@ class BishopSerialisation {
 
   static List<BishopTypeAdapter> get baseDropAdapters => [
         RegionDropAdapter(),
-        StandardDropAdapter(),
-        UnrestrictedDropAdapter(),
+        const StandardDropAdapter(),
+        const UnrestrictedDropAdapter(),
       ];
 
   static List<BishopTypeAdapter> get basePassAdapters => [
-        NoPassAdapter(),
-        StandardPassAdapter(),
+        const NoPassAdapter(),
+        const StandardPassAdapter(),
       ];
 
   static List<BishopTypeAdapter> get baseStartPosAdapters => [
@@ -65,7 +65,7 @@ class BishopSerialisation {
         FirstMovePairAdapter(),
         FirstMoveSetAdapter(),
         RanksFirstMoveAdapter(),
-        InitialFirstMoveAdapter(),
+        const InitialFirstMoveAdapter(),
       ];
 
   static List<BishopTypeAdapter> get baseStateTransformAdapters => [

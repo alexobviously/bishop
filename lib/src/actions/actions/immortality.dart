@@ -51,7 +51,7 @@ class ImmortalityAdapter extends BishopTypeAdapter<ActionImmortality> {
   @override
   Map<String, dynamic>? export(ActionImmortality e) {
     if (e.condition != null) {
-      throw BishopException('Unsupported export of condition');
+      throw const BishopException('Unsupported export of condition');
     }
     return {
       if (e.event != ActionEvent.afterMove) 'event': e.event.export(),

@@ -28,7 +28,7 @@ extension GameEndings on Game {
     final elimCond = variant.gameEndConditions[state.turn].elimination;
     if (elimCond.isNotNone) {
       if (eliminated) {
-        if (elimCond.isDraw) return DrawnGameElimination();
+        if (elimCond.isDraw) return const DrawnGameElimination();
         return WonGameElimination(
           winner: elimCond.isWin ? state.turn : state.turn.opponent,
         );
@@ -37,12 +37,12 @@ extension GameEndings on Game {
     final stalemateCond = variant.gameEndConditions[state.turn].stalemate;
     if (stalemateCond.isNotNone && stalemate) {
       return stalemateCond.isDraw
-          ? DrawnGameStalemate()
+          ? const DrawnGameStalemate()
           : WonGameStalemate(
               winner: stalemateCond.isWin ? state.turn : state.turn.opponent,
             );
     }
-    if (insufficientMaterial) return DrawnGameInsufficientMaterial();
+    if (insufficientMaterial) return const DrawnGameInsufficientMaterial();
     if (repetition) return DrawnGameRepetition(repeats: hashHits);
     if (halfMoveRule) return DrawnGameLength(halfMoves: state.halfMoves);
     return null;

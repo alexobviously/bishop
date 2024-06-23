@@ -93,7 +93,7 @@ extension ConvertMaterialConditions on MaterialConditions<String> {
     List<int> pieceIndices(List<String> symbols) =>
         symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
     if (!enabled) {
-      return MaterialConditions(enabled: false);
+      return const MaterialConditions(enabled: false);
     } else {
       return MaterialConditions(
         enabled: true,

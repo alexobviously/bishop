@@ -57,7 +57,9 @@ class ExitRegionEndingAdapter
   @override
   Map<String, dynamic> export(ActionExitRegionEnding e) {
     if (e.condition != null || e.precondition != null) {
-      throw BishopException('Unsupported export of condition or precondition');
+      throw const BishopException(
+        'Unsupported export of condition or precondition',
+      );
     }
     return {
       'region': e.region.toJson(),

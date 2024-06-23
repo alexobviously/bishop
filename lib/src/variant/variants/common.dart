@@ -48,7 +48,7 @@ class CommonVariants {
       )
       .withRegion(
         'hill',
-        RectRegion(
+        const RectRegion(
           startFile: Bishop.fileD,
           endFile: Bishop.fileE,
           startRank: Bishop.rank4,
@@ -128,6 +128,6 @@ class CommonVariants {
         materialConditions: MaterialConditions.none,
         enPassant: false,
         gameEndConditions:
-            GameEndConditions(stalemate: EndType.lose).symmetric(),
+            const GameEndConditions(stalemate: EndType.lose).symmetric(),
       );
 }

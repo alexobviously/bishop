@@ -2,9 +2,14 @@ include: package:lints/recommended.yaml
 
 linter:
   rules:
-    - camel_case_types
-    - prefer_single_quotes
-    - unawaited_futures
-    - cancel_subscriptions
-    - require_trailing_commas
-    - always_declare_return_types
+    always_declare_return_types: true
+    camel_case_types: true
+    cancel_subscriptions: true
+    constant_identifier_names: true
+    noop_primitive_operations: true
+    prefer_const_constructors: true
+    # prefer_final_locals: true # todo: there are like 500 of these lol
+    prefer_single_quotes: true
+    require_trailing_commas: true
+    unawaited_futures: true
+    unnecessary_to_list_in_spreads: true

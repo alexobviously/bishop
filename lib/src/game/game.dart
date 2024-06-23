@@ -141,7 +141,7 @@ class Game {
     if (!variant.canPass(state: state, colour: colour)) {
       return null;
     }
-    PassMove m = PassMove();
+    PassMove m = const PassMove();
     if (legal) {
       bool valid = makeMove(m, false);
       if (lostBy(colour, ignoreSoftResults: true) || kingAttacked(colour)) {

@@ -29,22 +29,22 @@ void main() {
       },
     );
     List<InRegionTest> tests = [
-      InRegionTest(
+      const InRegionTest(
         region: 'redPalace',
         square: 'd1',
         inRegion: true,
       ),
-      InRegionTest(
+      const InRegionTest(
         region: 'redPalace',
         square: 'f6',
         inRegion: false,
       ),
-      InRegionTest(
+      const InRegionTest(
         region: 'blackSide',
         square: 'h7',
         inRegion: true,
       ),
-      InRegionTest(
+      const InRegionTest(
         region: 'redSide',
         square: 'h7',
         inRegion: false,

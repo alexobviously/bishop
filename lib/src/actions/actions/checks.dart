@@ -27,16 +27,20 @@ class ActionCheckRoyalsAlive extends Action {
               return kingsAlive[Bishop.black]
                   ? []
                   : [
-                      EffectSetGameResult(
+                      const EffectSetGameResult(
                         WonGameRoyalDead(winner: Bishop.white),
                       ),
                     ];
             }
             return kingsAlive[Bishop.black]
-                ? [EffectSetGameResult(WonGameRoyalDead(winner: Bishop.black))]
+                ? [
+                    const EffectSetGameResult(
+                      WonGameRoyalDead(winner: Bishop.black),
+                    ),
+                  ]
                 : (allowDraw
-                    ? [EffectSetGameResult(DrawnGameBothRoyalsDead())]
-                    : [EffectInvalidateMove()]);
+                    ? [const EffectSetGameResult(DrawnGameBothRoyalsDead())]
+                    : [const EffectInvalidateMove()]);
           },
         );
 }
@@ -56,7 +60,9 @@ class CheckRoyalsAliveAdapter
   @override
   Map<String, dynamic> export(ActionCheckRoyalsAlive e) {
     if (e.condition != null || e.precondition != null) {
-      throw BishopException('Unsupported export of condition or precondition');
+      throw const BishopException(
+        'Unsupported export of condition or precondition',
+      );
     }
     return {
       if (e.event != ActionEvent.afterMove) 'event': e.event.export(),
@@ -99,8 +105,8 @@ class ActionCheckPieceCount extends Action {
             if (white && black) return [];
             if (draw || (!white && !black)) {
               return drawsInvalidate
-                  ? [EffectInvalidateMove()]
-                  : [EffectSetGameResult(DrawnGameElimination())];
+                  ? [const EffectInvalidateMove()]
+                  : [const EffectSetGameResult(DrawnGameElimination())];
             }
             return [
               EffectSetGameResult(
@@ -132,7 +138,9 @@ class CheckPieceCountAdapter extends BishopTypeAdapter<ActionCheckPieceCount> {
   @override
   Map<String, dynamic>? export(ActionCheckPieceCount e) {
     if (e.condition != null || e.precondition != null) {
-      throw BishopException('Unsupported export of condition or precondition');
+      throw const BishopException(
+        'Unsupported export of condition or precondition',
+      );
     }
     return {
       'pieceType': e.pieceType,
