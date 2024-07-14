@@ -1,3 +1,6 @@
+### 1.4.4
+- Fixed Chess960 short castling in the case where the king is on B and rook is on C.
+
 ### 1.4.3
 - Separated the ideas of 'castling piece' and 'royal piece'. `PieceType` now has a `castling` field which determines whether a piece can castle. By default this is equal to `royal`, so most users don't need to worry about it - this is backwards compatible.
 - The non-royal king in Kinglet chess can now castle.
