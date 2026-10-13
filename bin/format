@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+set -e
+
+# Checks current formatting against what `dart format` would produce.
+# Exists to prevent clanker-related formatting incidents.
+#
+# Usage:
+#   bin/format               # Check formatting on changed Dart files (dry-run)
+#   bin/format --apply       # Apply formatting on changed Dart files
+#   bin/format --all         # Check formatting on all Dart files in workspace
+#   bin/format --all --apply # Apply formatting on all Dart files in workspace
+#   bin/format <path...>     # Check/apply formatting on specific files or directories
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT_DIR"
+
+APPLY=false
+ALL=false
+CUSTOM_TARGETS=()
+
+for arg in "$@"; do
+  case "$arg" in
+    --apply)
+      APPLY=true
+      ;;
+    --all)
+      ALL=true
+      ;;
+    -h|--help)
+      echo "Usage:"
+      echo "  bin/format               Check formatting on changed Dart files against main (dry-run)"
+      echo "  bin/format --apply       Apply formatting to changed Dart files"
+      echo "  bin/format --all         Check formatting on all Dart files in workspace"
+      echo "  bin/format --all --apply Apply formatting to all Dart files in workspace"
+      echo "  bin/format <path...>     Check or format specific files/directories"
+      exit 0
+      ;;
+    *)
+      CUSTOM_TARGETS+=("$arg")
+      ;;
+  esac
+done
+
+# Use FVM's Dart when available
+if command -v fvm >/dev/null 2>&1; then
+  DART_CMD=(fvm dart)
+else
+  DART_CMD=(dart)
+fi
+
+TARGET_FILES=()
+
+if [ ${#CUSTOM_TARGETS[@]} -gt 0 ]; then
+  TARGET_FILES=("${CUSTOM_TARGETS[@]}")
+elif [ "$ALL" = true ]; then
+  TARGET_FILES=(lib packages test)
+else
+  if [ -n "$GITHUB_BASE_REF" ]; then
+    # In GitHub Actions PRs (with fetch-depth: 2), HEAD^1 is the target base branch
+    BASE_REF=$(git rev-parse --verify HEAD^1 2>/dev/null || git rev-parse --verify "origin/$GITHUB_BASE_REF" 2>/dev/null || echo "$GITHUB_BASE_REF")
+  else
+    BASE_REF=$(git rev-parse --verify origin/main 2>/dev/null || git rev-parse --verify main 2>/dev/null || echo "HEAD~1")
+  fi
+  
+  # Get modified, added, and untracked .dart files (excluding generated .g.dart files)
+  RAW_FILES=$( { git diff --name-only --diff-filter=d "$BASE_REF"; git ls-files --others --exclude-standard; } | grep '\.dart$' | grep -v '\.g\.dart$' | sort -u || true )
+
+  # Verify files actually exist on disk
+  if [ -n "$RAW_FILES" ]; then
+    while IFS= read -r file; do
+      if [ -f "$file" ]; then
+        TARGET_FILES+=("$file")
+      fi
+    done <<< "$RAW_FILES"
+  fi
+fi
+
+if [ ${#TARGET_FILES[@]} -eq 0 ]; then
+  echo "No changed Dart files found to check."
+  exit 0
+fi
+
+if [ "$APPLY" = true ]; then
+  echo "Formatting ${#TARGET_FILES[@]} target(s)..."
+  "${DART_CMD[@]}" format "${TARGET_FILES[@]}"
+else
+  echo "Checking formatting on ${#TARGET_FILES[@]} target(s)..."
+
+  set +e
+  OUTPUT=$("${DART_CMD[@]}" format --output=none --set-exit-if-changed "${TARGET_FILES[@]}" 2>&1)
+  EXIT_CODE=$?
+  set -e
+
+  CHANGED_FILES=$(echo "$OUTPUT" | grep '^Changed ' | sed 's/^Changed //' || true)
+
+  if [ $EXIT_CODE -ne 0 ] && [ -n "$CHANGED_FILES" ]; then
+    COUNT=$(echo "$CHANGED_FILES" | wc -l | tr -d ' ')
+    echo ""
+    echo "❌ Incorrect formatting detected in $COUNT file(s):"
+    while IFS= read -r file; do
+      if [ -n "$file" ]; then
+        echo "  - $file"
+        # In GitHub Actions, emit an inline PR diff annotation on line 1.
+        # Line 1 keeps annotations to 1 per file (avoiding the 10-annotation limit)
+        # and flags the file clearly in the PR checks.
+        if [ -n "$GITHUB_ACTIONS" ]; then
+          echo "::error file=$file,line=1::File is not formatted. Run 'bin/format --apply' to fix."
+        fi
+      fi
+    done <<< "$CHANGED_FILES"
+    echo ""
+    echo "Run 'bin/format --apply' to fix them."
+    exit 1
+  elif [ $EXIT_CODE -ne 0 ]; then
+    # Output full error message if dart format failed for another reason (e.g. syntax error)
+    echo "$OUTPUT"
+    exit $EXIT_CODE
+  else
+    echo "✓ All files properly formatted."
+  fi
+fi

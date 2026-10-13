@@ -22,6 +22,13 @@ jobs:
       - name: Install dependencies
         run: dart pub get
 
+      - name: Check code formatting
+        if: github.event_name == 'pull_request'
+        run: ./bin/format
+
+      - name: Register Dart problem matcher
+        run: echo "::add-matcher::.github/dart-problem-matcher.json"
+
       - name: Static analysis
         id: analyze
         run: dart analyze
