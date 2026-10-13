@@ -293,7 +293,7 @@ class BuiltVariant {
 
   int pieceIndex(String symbol) => pieces.indexWhere((p) => p.symbol == symbol);
   List<int> pieceIndices(List<String> symbols) =>
-      symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
+      symbols.map(pieceIndex).where((p) => p >= 0).toList();
 
   String pieceSymbol(int type, [int colour = Bishop.white]) =>
       pieces[type].char(colour);

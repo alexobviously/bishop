@@ -170,7 +170,7 @@ extension GameOutputs on Game {
 
   /// Get a list of legal moves in the current position, in algebraic format.
   List<String> algebraicMoves() =>
-      generateLegalMoves().map((e) => toAlgebraic(e)).toList();
+      generateLegalMoves().map(toAlgebraic).toList();
 
   /// Get a list of moves played in the game so far.
   List<Move> get moveHistory =>
@@ -337,7 +337,7 @@ extension GameOutputs on Game {
           .map((e) => fileSymbol(e).toUpperCase())
           .join('');
       String blackVFiles =
-          state.virginFiles[Bishop.black].map((e) => fileSymbol(e)).join('');
+          state.virginFiles[Bishop.black].map(fileSymbol).join('');
       castling = '$castling$whiteVFiles$blackVFiles';
     }
     String ep = state.epSquare != null ? size.squareName(state.epSquare!) : '-';

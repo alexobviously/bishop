@@ -1,15 +1,57 @@
 include: package:lints/recommended.yaml
 
+formatter:
+  trailing_commas: preserve
+
 linter:
   rules:
     always_declare_return_types: true
     camel_case_types: true
     cancel_subscriptions: true
+    combinators_ordering: true
     constant_identifier_names: true
+    directives_ordering: true
+    empty_container_bodies: true
+    implicit_call_tearoffs: true
+    library_private_types_in_public_api: false
     noop_primitive_operations: true
     prefer_const_constructors: true
+    prefer_final_fields: true
     # prefer_final_locals: true # todo: there are like 500 of these lol
     prefer_single_quotes: true
     require_trailing_commas: true
+    sort_pub_dependencies: true
+    strict_top_level_inference: true
     unawaited_futures: true
+    unnecessary_async: true
+    unnecessary_const_in_enum_constructor: true
+    unnecessary_lambdas: true
     unnecessary_to_list_in_spreads: true
+    use_null_aware_elements: true
+    use_super_parameters: true
+    use_truncating_division: true
+
+analyzer:
+  errors:
+    always_declare_return_types: warning
+    annotate_overrides: warning
+    avoid_init_to_null: warning
+    avoid_print: warning
+    prefer_const_constructors_in_immutables: warning
+    prefer_final_fields: warning
+    prefer_final_locals: warning
+    sort_pub_dependencies: warning
+    strict_top_level_inference: warning
+    unawaited_futures: warning
+    unnecessary_async: warning
+    unnecessary_to_list_in_spreads: warning
+    unrelated_type_equality_checks: warning
+    use_null_aware_elements: warning
+    use_super_parameters: warning
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.mocks.dart"
+    - "build/**"
+    - "android/**"
+    - "ios/**"
+    - "web/**"

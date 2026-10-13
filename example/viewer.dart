@@ -6,7 +6,7 @@ import 'play.dart';
 late final GameNavigator navigator;
 bool loaded = false;
 
-void main(List<String> args) async {
+void main(List<String> args) {
   stdin.echoMode = false;
   stdin.lineMode = false;
   stdin.asBroadcastStream().listen(_onKey);

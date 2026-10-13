@@ -91,7 +91,7 @@ extension ConvertMaterialConditions on MaterialConditions<String> {
     int pieceIndex(String symbol) =>
         pieces.indexWhere((p) => p.symbol == symbol);
     List<int> pieceIndices(List<String> symbols) =>
-        symbols.map((p) => pieceIndex(p)).where((p) => p >= 0).toList();
+        symbols.map(pieceIndex).where((p) => p >= 0).toList();
     if (!enabled) {
       return const MaterialConditions(enabled: false);
     } else {
@@ -100,7 +100,7 @@ extension ConvertMaterialConditions on MaterialConditions<String> {
         soloMaters: pieceIndices(soloMaters),
         pairMaters: pieceIndices(pairMaters),
         combinedPairMaters: pieceIndices(combinedPairMaters),
-        specialCases: specialCases.map((e) => pieceIndices(e)).toList(),
+        specialCases: specialCases.map(pieceIndices).toList(),
       );
     }
   }

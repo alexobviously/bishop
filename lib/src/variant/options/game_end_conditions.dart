@@ -126,7 +126,7 @@ enum EndType {
   draw,
   none;
 
-  const EndType();
+  EndType();
   static EndType fromName(String name) =>
       values.firstWhere((e) => e.name == name);
 
