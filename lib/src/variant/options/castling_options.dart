@@ -34,17 +34,16 @@ class CastlingOptions {
   //   }
   // }
 
-  factory CastlingOptions.fromJson(Map<String, dynamic> json) =>
-      CastlingOptions(
-        enabled: json['enabled'],
-        kTarget: json['kTarget'],
-        qTarget: json['qTarget'],
-        fixedRooks: json['fixedRooks'] ?? true,
-        kRook: json['kRook'],
-        qRook: json['qRook'],
-        rookPiece: json['rookPiece'],
-        useRookAsTarget: json['useRookAsTarget'] ?? false,
-      );
+  factory fromJson(Map<String, dynamic> json) => CastlingOptions(
+    enabled: json['enabled'],
+    kTarget: json['kTarget'],
+    qTarget: json['qTarget'],
+    fixedRooks: json['fixedRooks'] ?? true,
+    kRook: json['kRook'],
+    qRook: json['qRook'],
+    rookPiece: json['rookPiece'],
+    useRookAsTarget: json['useRookAsTarget'] ?? false,
+  );
 
   Map<String, dynamic> toJson() => {
     'enabled': enabled,

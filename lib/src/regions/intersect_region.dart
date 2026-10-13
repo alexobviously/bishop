@@ -7,10 +7,9 @@ class IntersectRegion extends BoardRegion {
 
   const IntersectRegion(this.regions);
 
-  factory IntersectRegion.fromJson(Map<String, dynamic> json) =>
-      IntersectRegion(
-        (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
-      );
+  factory fromJson(Map<String, dynamic> json) => IntersectRegion(
+    (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
+  );
 
   @override
   bool contains(int file, int rank) =>

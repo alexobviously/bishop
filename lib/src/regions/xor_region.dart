@@ -8,7 +8,7 @@ class XorRegion extends BoardRegion {
 
   const XorRegion(this.left, this.right);
 
-  factory XorRegion.fromJson(Map<String, dynamic> json) => XorRegion(
+  factory fromJson(Map<String, dynamic> json) => XorRegion(
     BoardRegion.fromJson(json['l']),
     BoardRegion.fromJson(json['r']),
   );

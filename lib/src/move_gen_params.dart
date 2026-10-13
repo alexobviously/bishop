@@ -44,22 +44,21 @@ class MoveGenParams {
     castling: false,
     legal: false,
   );
-  factory MoveGenParams.pieceCaptures(int pieceType) => MoveGenParams(
+  factory pieceCaptures(int pieceType) => MoveGenParams(
     captures: true,
     quiet: false,
     castling: false,
     legal: false,
     pieceType: pieceType,
   );
-  factory MoveGenParams.squareAttacks(int square, [bool onlyOne = true]) =>
-      MoveGenParams(
-        captures: true,
-        quiet: false,
-        castling: false,
-        legal: false,
-        onlySquare: square,
-        onlyOne: onlyOne,
-      );
+  factory squareAttacks(int square, [bool onlyOne = true]) => MoveGenParams(
+    captures: true,
+    quiet: false,
+    castling: false,
+    legal: false,
+    onlySquare: square,
+    onlyOne: onlyOne,
+  );
   static const premoves = MoveGenParams(
     captures: true,
     quiet: true,

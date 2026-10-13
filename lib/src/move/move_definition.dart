@@ -14,7 +14,7 @@ abstract class MoveDefinition {
     this.firstOnly = false,
   });
 
-  factory MoveDefinition.fromBetza(Atom atom, Direction d) {
+  factory fromBetza(Atom atom, Direction d) {
     if (atom.base == '*') {
       return TeleportMoveDefinition(modality: atom.modality);
     }
@@ -87,20 +87,19 @@ class StandardMoveDefinition extends MoveDefinition {
   });
 
   /// Build a move definition from a betza [atom] and a [direction].
-  factory StandardMoveDefinition.fromBetza(Atom atom, Direction direction) =>
-      StandardMoveDefinition(
-        direction: direction,
-        range: atom.range,
-        modality: atom.modality,
-        enPassant: atom.enPassant,
-        firstOnly: atom.firstOnly,
-        lame: atom.lame,
-        hopDistance: atom.unlimitedHopper
-            ? 0
-            : atom.limitedHopper
-            ? 1
-            : -1,
-      );
+  factory fromBetza(Atom atom, Direction direction) => StandardMoveDefinition(
+    direction: direction,
+    range: atom.range,
+    modality: atom.modality,
+    enPassant: atom.enPassant,
+    firstOnly: atom.firstOnly,
+    lame: atom.lame,
+    hopDistance: atom.unlimitedHopper
+        ? 0
+        : atom.limitedHopper
+        ? 1
+        : -1,
+  );
 
   StandardMoveDefinition copyWith({
     Direction? direction,
@@ -179,12 +178,12 @@ class Direction {
   final int v;
   const Direction(this.h, this.v);
 
-  factory Direction.fromString(String str) {
+  factory fromString(String str) {
     final parts = str.split(',');
     return Direction(int.parse(parts.first), int.parse(parts.last));
   }
 
-  factory Direction.fromSquareName(String name) {
+  factory fromSquareName(String name) {
     name = name.toLowerCase();
     RegExp rx = RegExp(r'([A-Za-z])([0-9]+)');
     RegExpMatch? match = rx.firstMatch(name);

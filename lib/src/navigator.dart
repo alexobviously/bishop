@@ -18,7 +18,7 @@ class GameNavigator {
     }
   }
 
-  factory GameNavigator.fromPgn(String pgn, {bool startAtEnd = false}) =>
+  factory fromPgn(String pgn, {bool startAtEnd = false}) =>
       GameNavigator(game: parsePgn(pgn).buildGame(), startAtEnd: startAtEnd);
 
   final Game _game;

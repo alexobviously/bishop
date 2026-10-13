@@ -32,7 +32,7 @@ class BoardSize {
   const BoardSize(this.h, this.v);
 
   /// Builds a BoardSize from a string like '8x8'.
-  factory BoardSize.fromString(String str) {
+  factory fromString(String str) {
     final parts = str.split('x');
     return BoardSize(int.parse(parts.first), int.parse(parts.last));
   }

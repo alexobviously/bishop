@@ -12,7 +12,7 @@ enum ActionEvent {
   /// If you don't know which event to use, you probably want this one.
   afterMove;
 
-  factory ActionEvent.import(String? name) =>
+  factory import(String? name) =>
       values.firstWhereOrNull((e) => e.name == name) ?? ActionEvent.afterMove;
   String export() => name;
 }

@@ -53,14 +53,14 @@ class Action {
     action: action ?? this.action,
   );
 
-  factory Action.explodeOnCapture(Area area) => ActionExplodeOnCapture(area);
-  factory Action.explosionRadius(int radius) => ActionExplosionRadius(radius);
+  factory explodeOnCapture(Area area) => ActionExplodeOnCapture(area);
+  factory explosionRadius(int radius) => ActionExplosionRadius(radius);
 
   /// The flying generals rule from Xiangqi. If the generals/kings are facing
   /// each other, with no pieces between, the move will be invalidated.
   /// Set [activeCondition] to true if you have other actions that might modify
   /// the board before this.
-  factory Action.flyingGenerals({bool activeCondition = false}) =>
+  factory flyingGenerals({bool activeCondition = false}) =>
       ActionFlyingGenerals(activeCondition: activeCondition);
 
   /// Copies the Action with the added condition that the piece type is [type].

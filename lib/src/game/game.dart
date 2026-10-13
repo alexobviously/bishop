@@ -54,7 +54,7 @@ class Game {
     setup(fen: fen, fenBuilder: fenBuilder);
   }
 
-  factory Game.fromPgn(String pgn) => parsePgn(pgn).buildGame();
+  factory fromPgn(String pgn) => parsePgn(pgn).buildGame();
 
   void setup({String? fen, FenBuilder? fenBuilder}) {
     zobrist = Zobrist(variant, zobristSeed);

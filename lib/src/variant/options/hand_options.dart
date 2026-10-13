@@ -16,7 +16,7 @@ class HandOptions {
     this.dropBuilder = DropBuilder.standard,
   });
 
-  factory HandOptions.fromJson(
+  factory fromJson(
     Map<String, dynamic> json, {
     List<BishopTypeAdapter> adapters = const [],
   }) => HandOptions(
@@ -65,8 +65,7 @@ abstract class DropBuilder {
 
   /// Drops only in a single [region] for both players.
   /// Use `RegionDropBuilder` for separate regions or region IDs.
-  factory DropBuilder.region(BoardRegion region) =>
-      RegionDropBuilder.single(region);
+  factory region(BoardRegion region) => RegionDropBuilder.single(region);
 }
 
 class StandardDropBuilder extends DropBuilder {
@@ -100,10 +99,9 @@ class RegionDropBuilder extends DropBuilder {
     this.blackId,
   });
 
-  factory RegionDropBuilder.single(BoardRegion region) =>
+  factory single(BoardRegion region) =>
       RegionDropBuilder(whiteRegion: region, blackRegion: region);
-  factory RegionDropBuilder.singleId(String id) =>
-      RegionDropBuilder(whiteId: id, blackId: id);
+  factory singleId(String id) => RegionDropBuilder(whiteId: id, blackId: id);
 
   @override
   DropBuilderFunction build(BuiltVariant variant) => Drops.regions(

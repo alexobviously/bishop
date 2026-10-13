@@ -166,7 +166,7 @@ class Variant {
          'Variant needs either a startPosition or startPosBuilder',
        );
 
-  factory Variant.fromJson(
+  factory fromJson(
     Map<String, dynamic> json, {
     List<BishopTypeAdapter> adapters = const [],
   }) {
@@ -481,7 +481,7 @@ class Variant {
     );
   }
 
-  factory Variant.standard() {
+  factory standard() {
     return Variant(
       name: 'Chess',
       boardSize: BoardSize.standard,
@@ -506,18 +506,18 @@ class Variant {
 
   // These constructors may eventually be removed -
   // prefer using the things they redirect to.
-  factory Variant.chess960() => CommonVariants.chess960();
-  factory Variant.crazyhouse() => CommonVariants.crazyhouse();
-  factory Variant.seirawan() => CommonVariants.seirawan();
-  factory Variant.threeCheck() => CommonVariants.threeCheck();
-  factory Variant.kingOfTheHill() => CommonVariants.kingOfTheHill();
-  factory Variant.atomic({bool allowExplosionDraw = false}) =>
+  factory chess960() => CommonVariants.chess960();
+  factory crazyhouse() => CommonVariants.crazyhouse();
+  factory seirawan() => CommonVariants.seirawan();
+  factory threeCheck() => CommonVariants.threeCheck();
+  factory kingOfTheHill() => CommonVariants.kingOfTheHill();
+  factory atomic({bool allowExplosionDraw = false}) =>
       CommonVariants.atomic(allowExplosionDraw: allowExplosionDraw);
-  factory Variant.horde() => CommonVariants.horde();
-  factory Variant.capablanca() => LargeVariants.capablanca();
-  factory Variant.grand() => LargeVariants.grand();
-  factory Variant.mini() => SmallVariants.mini();
-  factory Variant.miniRandom() => SmallVariants.miniRandom();
-  factory Variant.micro() => SmallVariants.micro();
-  factory Variant.nano() => SmallVariants.nano();
+  factory horde() => CommonVariants.horde();
+  factory capablanca() => LargeVariants.capablanca();
+  factory grand() => LargeVariants.grand();
+  factory mini() => SmallVariants.mini();
+  factory miniRandom() => SmallVariants.miniRandom();
+  factory micro() => SmallVariants.micro();
+  factory nano() => SmallVariants.nano();
 }

@@ -8,20 +8,16 @@ class GameEndConditionSet {
 
   Map<String, dynamic> toJson() => isSymmetric
       ? white.toJson()
-      : {
-          'white': white.toJson(),
-          'black': black.toJson(),
-        };
+      : {'white': white.toJson(), 'black': black.toJson()};
 
-  factory GameEndConditionSet.fromJson(Map<String, dynamic> json) =>
-      json.containsKey('white')
+  factory fromJson(Map<String, dynamic> json) => json.containsKey('white')
       ? GameEndConditionSet(
           GameEndConditions.fromJson(json['white']),
           GameEndConditions.fromJson(json['black']),
         )
       : GameEndConditionSet.symmetric(GameEndConditions.fromJson(json));
 
-  factory GameEndConditionSet.symmetric(GameEndConditions conditions) =>
+  factory symmetric(GameEndConditions conditions) =>
       GameEndConditionSet(conditions, conditions);
 
   static const standard = GameEndConditionSet(
@@ -83,12 +79,11 @@ class GameEndConditions {
     if (checkLimit != null) 'checkLimit': checkLimit,
   };
 
-  factory GameEndConditions.fromJson(Map<String, dynamic> json) =>
-      GameEndConditions(
-        stalemate: EndType.fromName(json['stalemate']),
-        elimination: EndType.fromName(json['elimination']),
-        checkLimit: json['checkLimit'],
-      );
+  factory fromJson(Map<String, dynamic> json) => GameEndConditions(
+    stalemate: EndType.fromName(json['stalemate']),
+    elimination: EndType.fromName(json['elimination']),
+    checkLimit: json['checkLimit'],
+  );
 
   GameEndConditionSet symmetric() => GameEndConditionSet.symmetric(this);
 
