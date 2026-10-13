@@ -21,7 +21,7 @@ class Engine {
     int endTime = DateTime.now().millisecondsSinceEpoch + timeLimit;
     int endBuffer = endTime + timeBuffer;
     int depthSearched = 0;
-    List<Move> moves = game.generateLegalMoves();
+    List<Move> moves = orderMoves(game.generateLegalMoves());
     Map<Move, int> evals = {};
     for (Move m in moves) {
       evals[m] = 0;
@@ -78,6 +78,7 @@ class Engine {
     }
     // -evaluate because we are currently looking at this asthe other player
     if (depth == 0) return -game.evaluate(player);
+    moves = orderMoves(moves);
     if (moves.isNotEmpty) {
       int a = alpha;
       for (Move m in moves) {
@@ -90,6 +91,57 @@ class Engine {
       }
     }
     return value;
+  }
+
+  /// Assigns a heuristic score to [move] for move ordering.
+  /// Captures are prioritized using MVV-LVA (Most Valuable Victim - Least Valuable Attacker),
+  /// followed by promotions and castling.
+  int scoreMove(Move move) {
+    int score = 0;
+    if (move.capture) {
+      final victimValue = switch (move) {
+        Move(:final capturedPiece?)
+            when capturedPiece.type < game.variant.pieces.length =>
+          game.variant.pieces[capturedPiece.type].value,
+        Move(enPassant: true) => 100,
+        _ => Bishop.defaultPieceValue,
+      };
+
+      final attackerValue = switch (move) {
+        Move(:final from)
+            when from >= Bishop.boardStart &&
+                from < game.board.length &&
+                game.board[from].type < game.variant.pieces.length =>
+          game.variant.pieces[game.board[from].type].value,
+        _ => Bishop.defaultPieceValue,
+      };
+
+      // MVV-LVA: Most Valuable Victim - Least Valuable Attacker
+      score += 10000 + (victimValue * 10) - (attackerValue ~/ 10);
+    }
+
+    if (move.promotion) {
+      int promoValue = 800;
+      if (move.promoPiece != null &&
+          move.promoPiece! < game.variant.pieces.length) {
+        promoValue = game.variant.pieces[move.promoPiece!].value;
+      }
+      score += 8000 + promoValue;
+    }
+
+    if (move.castling) {
+      score += 500;
+    }
+
+    return score;
+  }
+
+  /// Orders [moves] using [scoreMove] to improve alpha-beta pruning efficiency.
+  List<Move> orderMoves(List<Move> moves) {
+    if (moves.length <= 1) return moves;
+    final scored = [for (final m in moves) (m, scoreMove(m))];
+    scored.sort((a, b) => b.$2.compareTo(a.$2));
+    return [for (final s in scored) s.$1];
   }
 }
 
