@@ -40,7 +40,7 @@ class PassMoveFormatter extends MoveFormatter<PassMove> {
 
   @override
   MoveFormatterFunction<PassMove> algebraic(BuiltVariant variant) =>
-      (_, __, ___) => 'pass';
+      (_, _, _) => 'pass';
 
   @override
   MoveFormatterFunction<PassMove> pretty(BuiltVariant variant) =>
@@ -52,16 +52,16 @@ class DropMoveFormatter extends MoveFormatter<DropMove> {
 
   @override
   MoveFormatterFunction<DropMove> algebraic(BuiltVariant variant) =>
-      (move, _, __) =>
+      (move, _, _) =>
           formatDropMoveAlgebraic(move: move as DropMove, variant: variant);
 
   @override
   MoveFormatterFunction<DropMove> pretty(BuiltVariant variant) =>
       (move, _, checkType) => formatDropMovePretty(
-            move: move as DropMove,
-            variant: variant,
-            checkType: checkType,
-          );
+        move: move as DropMove,
+        variant: variant,
+        checkType: checkType,
+      );
 }
 
 class GatingMoveFormatter extends MoveFormatter<GatingMove> {
@@ -70,18 +70,18 @@ class GatingMoveFormatter extends MoveFormatter<GatingMove> {
   @override
   MoveFormatterFunction<GatingMove> algebraic(BuiltVariant variant) =>
       (move, formatter, checkType) => formatGatingMoveAlgebraic(
-            move: move as GatingMove,
-            formatter: formatter,
-            variant: variant,
-          );
+        move: move as GatingMove,
+        formatter: formatter,
+        variant: variant,
+      );
 
   @override
   MoveFormatterFunction<GatingMove> pretty(BuiltVariant variant) =>
       (move, formatter, checkType) => formatGatingMovePretty(
-            move: move as GatingMove,
-            formatter: formatter,
-            variant: variant,
-          );
+        move: move as GatingMove,
+        formatter: formatter,
+        variant: variant,
+      );
 }
 
 String formatGatingMoveAlgebraic({
@@ -111,7 +111,8 @@ String formatGatingMovePretty({
   CheckType? checkType,
   required BuiltVariant variant,
 }) {
-  String san = '${formatter(move.child, checkType)}/'
+  String san =
+      '${formatter(move.child, checkType)}/'
       '${variant.pieces[move.dropPiece].symbol}';
   if (move.castling) {
     String dropSq = move.dropOnRookSquare

@@ -14,13 +14,17 @@ jobs:
       image:  dart:latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
 
       - name: Print Dart SDK version
         run: dart --version
 
       - name: Install dependencies
         run: dart pub get
-      
+
+      - name: Static analysis
+        id: analyze
+        run: dart analyze
+
       - name: Run Tests
         run: dart test test
