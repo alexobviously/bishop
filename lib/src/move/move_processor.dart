@@ -36,32 +36,34 @@ class EffectMoveProcessor<T extends Move> implements MoveProcessor<T> {
 
   @override
   MoveProcessorFunction<T> build(BuiltVariant variant) => (params) {
-        final effects = builder(variant)(params);
-        return params.state.applyEffects(
-          effects: effects,
-          size: variant.boardSize,
-          zobrist: params.zobrist,
-        );
-      };
+    final effects = builder(variant)(params);
+    return params.state.applyEffects(
+      effects: effects,
+      size: variant.boardSize,
+      zobrist: params.zobrist,
+    );
+  };
 }
 
 /// A move processor that modifies the state using an [action].
 class ActionMoveProcessor<T extends Move> extends EffectMoveProcessor<T> {
   final ActionDefinition action;
   ActionMoveProcessor(this.action)
-      : super(
-          (variant) => (params) => action(
-                ActionTrigger(
-                  event: ActionEvent.beforeMove,
-                  variant: variant,
-                  state: params.state,
-                  move: params.move,
-                  piece: params.move.promoPiece ??
-                      params.move.dropPiece ??
-                      params.state.board[params.move.from],
-                ),
+    : super(
+        (variant) =>
+            (params) => action(
+              ActionTrigger(
+                event: ActionEvent.beforeMove,
+                variant: variant,
+                state: params.state,
+                move: params.move,
+                piece:
+                    params.move.promoPiece ??
+                    params.move.dropPiece ??
+                    params.state.board[params.move.from],
               ),
-        );
+            ),
+      );
 }
 
 /// A move processor that handles a `StaticMove`.
@@ -78,10 +80,10 @@ class DetonateMoveProcessor extends ActionMoveProcessor<StaticMove> {
     this.immunePieces,
     this.alwaysSuicide = true,
   }) : super(
-          ActionDefinitions.explosion(
-            area,
-            immunePieces: immunePieces,
-            alwaysSuicide: alwaysSuicide,
-          ),
-        );
+         ActionDefinitions.explosion(
+           area,
+           immunePieces: immunePieces,
+           alwaysSuicide: alwaysSuicide,
+         ),
+       );
 }

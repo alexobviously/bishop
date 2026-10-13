@@ -116,8 +116,7 @@ class Bishop {
     int file,
     int rank, [
     BoardSize size = BoardSize.standard,
-  ]) =>
-      size.square(file, rank);
+  ]) => size.square(file, rank);
 
   /// Determines whether a square is on the board.
   static bool onBoard(int square, [BoardSize size = const BoardSize(8, 8)]) =>
@@ -127,24 +126,22 @@ class Bishop {
   static String squareName(
     int square, [
     BoardSize size = const BoardSize(8, 8),
-  ]) =>
-      size.squareName(square);
+  ]) => size.squareName(square);
 
   /// Returns the square id for a square with [name].
   static int squareNumber(
     String name, [
     BoardSize size = const BoardSize(8, 8),
-  ]) =>
-      size.squareNumber(name);
+  ]) => size.squareNumber(name);
 
   static Map<String, PieceType> get chessPieces => {
-        'P': PieceType.pawn(),
-        'N': PieceType.knight(),
-        'B': PieceType.bishop(),
-        'R': PieceType.rook(),
-        'Q': PieceType.queen(),
-        'K': PieceType.king(),
-      };
+    'P': PieceType.pawn(),
+    'N': PieceType.knight(),
+    'B': PieceType.bishop(),
+    'R': PieceType.rook(),
+    'Q': PieceType.queen(),
+    'K': PieceType.king(),
+  };
 }
 
 /// Defines whether a move definition allows captures, quiet moves or both.
@@ -241,9 +238,9 @@ enum Variants {
   String? get _altSimple => alt?.toLowerCase().replaceAll(' ', '');
 
   bool matchName(String n) => [
-        _nameSimple,
-        if (alt != null) _altSimple,
-      ].contains(n.toLowerCase().replaceAll(' ', ''));
+    _nameSimple,
+    if (alt != null) _altSimple,
+  ].contains(n.toLowerCase().replaceAll(' ', ''));
 
   bool matchNamePartial(String n) =>
       _nameSimple.startsWith(n) || (_altSimple?.startsWith(n) ?? false);
@@ -311,6 +308,7 @@ class PieceMoveParams extends MoveParams {
 /// if there are capture moves, but no non-capturing (quiet) moves.
 enum ForcedCapture {
   any;
+
   // todo: support 'most pieces' option like draughts, and highest value
 
   ForcedCapture();

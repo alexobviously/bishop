@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:bishop/bishop.dart';
 
 // todo: try to make this a bit more stateless somehow?

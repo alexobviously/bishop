@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:bishop/bishop.dart';
 
 part 'area.dart';
@@ -56,13 +57,13 @@ abstract class BoardRegion extends Region {
       BuiltRegion(squares(size).toList(), size);
 
   UnionRegion operator +(BoardRegion other) => UnionRegion([
-        this,
-        if (other is UnionRegion) ...other.regions else other,
-      ]);
+    this,
+    if (other is UnionRegion) ...other.regions else other,
+  ]);
   IntersectRegion operator &(BoardRegion other) => IntersectRegion([
-        this,
-        if (other is IntersectRegion) ...other.regions else other,
-      ]);
+    this,
+    if (other is IntersectRegion) ...other.regions else other,
+  ]);
   SubtractRegion operator -(BoardRegion other) => SubtractRegion(this, other);
   XorRegion operator ^(BoardRegion other) => XorRegion(this, other);
 }

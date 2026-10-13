@@ -18,9 +18,9 @@ class IntersectRegion extends BoardRegion {
 
   @override
   Set<int> squares(BoardSize size) => regions.fold<Set<int>>(
-        regions.first.squares(size).toSet(),
-        (a, b) => a.intersection(b.squares(size).toSet()),
-      );
+    regions.first.squares(size).toSet(),
+    (a, b) => a.intersection(b.squares(size).toSet()),
+  );
 
   @override
   IntersectRegion translate(int x, int y) =>
@@ -28,12 +28,13 @@ class IntersectRegion extends BoardRegion {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'intersect',
-        'regions': [...regions.map((e) => e.toJson())],
-      };
+    'type': 'intersect',
+    'regions': [...regions.map((e) => e.toJson())],
+  };
 
   @override
-  String toString() => 'Intersection('
+  String toString() =>
+      'Intersection('
       '${regions.map((e) => e.toString()).join(', ')})';
 
   @override

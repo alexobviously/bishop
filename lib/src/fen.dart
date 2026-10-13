@@ -33,8 +33,10 @@ ParseFenResult parseFen({
   // Parse hands for variants with drops
   List<List<int>>? hands;
   List<List<int>>? gates;
-  List<int> pieces =
-      List.filled((variant.pieces.length + 1) * Bishop.numPlayers, 0);
+  List<int> pieces = List.filled(
+    (variant.pieces.length + 1) * Bishop.numPlayers,
+    0,
+  );
   List<int> checks = [0, 0];
   if (variant.handsEnabled || variant.gatingMode == GatingMode.flex) {
     List<List<int>> temp = List.generate(Bishop.numPlayers, (_) => []);
@@ -98,8 +100,10 @@ ParseFenResult parseFen({
           empty = (empty * 10) + int.parse(c);
           if (squareIndex + empty - 1 > size.h) {
             // todo: this might be wrong
-            throw BishopException('Invalid FEN: gate ($i) overflow'
-                '[$c, ${squareIndex + empty - 1}]');
+            throw BishopException(
+              'Invalid FEN: gate ($i) overflow'
+              '[$c, ${squareIndex + empty - 1}]',
+            );
           }
         } else {
           squareIndex += empty;
@@ -124,8 +128,9 @@ ParseFenResult parseFen({
 
   for (String c in boardSymbols) {
     if (c == '~') {
-      board[sq - 1] =
-          board[sq - 1].setInternalType(variant.defaultPromotablePiece);
+      board[sq - 1] = board[sq - 1].setInternalType(
+        variant.defaultPromotablePiece,
+      );
       continue;
     }
     String symbol = c.toUpperCase();

@@ -30,8 +30,9 @@ class ActionDefinitions {
               return true;
             }
             if (immunePieces != null) {
-              if (immunePieces
-                  .contains(trigger.variant.pieces[sq.type].symbol)) {
+              if (immunePieces.contains(
+                trigger.variant.pieces[sq.type].symbol,
+              )) {
                 return false;
               }
             }
@@ -47,16 +48,14 @@ class ActionDefinitions {
     int count = 1,
   }) =>
       (ActionTrigger trigger) => [
-            ...List.filled(
-              count,
-              EffectAddToHand(
-                forOpponent
-                    ? trigger.piece.colour.opponent
-                    : trigger.piece.colour,
-                trigger.variant.pieceIndexLookup[type]!,
-              ),
-            ),
-          ];
+        ...List.filled(
+          count,
+          EffectAddToHand(
+            forOpponent ? trigger.piece.colour.opponent : trigger.piece.colour,
+            trigger.variant.pieceIndexLookup[type]!,
+          ),
+        ),
+      ];
 
   /// An action that removes a piece of [type] from the moving player's hand.
   static ActionDefinition removeFromHand(
@@ -65,19 +64,18 @@ class ActionDefinitions {
     int count = 1,
   }) =>
       (ActionTrigger trigger) => [
-            ...List.filled(
-              count,
-              EffectRemoveFromHand(
-                forOpponent
-                    ? trigger.piece.colour.opponent
-                    : trigger.piece.colour,
-                trigger.variant.pieceIndexLookup[type]!,
-              ),
-            ),
-          ];
+        ...List.filled(
+          count,
+          EffectRemoveFromHand(
+            forOpponent ? trigger.piece.colour.opponent : trigger.piece.colour,
+            trigger.variant.pieceIndexLookup[type]!,
+          ),
+        ),
+      ];
 
   /// Simply output the effects regardless of the trigger.
-  static ActionDefinition pass(List<ActionEffect> effects) => (_) => effects;
+  static ActionDefinition pass(List<ActionEffect> effects) =>
+      (_) => effects;
 
   /// Invalidates the move, regardless of the trigger.
   static ActionDefinition get invalidateMove =>

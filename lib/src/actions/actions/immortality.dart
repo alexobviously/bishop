@@ -20,21 +20,21 @@ class ActionImmortality extends Action {
     super.event = ActionEvent.afterMove,
     super.condition,
   }) : super(
-          precondition: Conditions.merge([
-            if (pieceType != null) Conditions.capturedPieceIs(pieceType),
-            if (flag != null) Conditions.capturedPieceHasFlag(flag),
-            if (pieceIndex != null) Conditions.capturedPieceType(pieceIndex),
-          ]),
-          action: ActionDefinitions.invalidateMove,
-        );
+         precondition: Conditions.merge([
+           if (pieceType != null) Conditions.capturedPieceIs(pieceType),
+           if (flag != null) Conditions.capturedPieceHasFlag(flag),
+           if (pieceIndex != null) Conditions.capturedPieceType(pieceIndex),
+         ]),
+         action: ActionDefinitions.invalidateMove,
+       );
 
   @override
   Action forPieceType(int type) => ActionImmortality(
-        pieceIndex: type,
-        flag: flag,
-        event: event,
-        condition: condition,
-      );
+    pieceIndex: type,
+    flag: flag,
+    event: event,
+    condition: condition,
+  );
 }
 
 class ImmortalityAdapter extends BishopTypeAdapter<ActionImmortality> {
@@ -43,10 +43,10 @@ class ImmortalityAdapter extends BishopTypeAdapter<ActionImmortality> {
 
   @override
   ActionImmortality build(Map<String, dynamic>? params) => ActionImmortality(
-        event: ActionEvent.import(params?['event']),
-        pieceType: params?['pieceType'],
-        flag: params?['flag'],
-      );
+    event: ActionEvent.import(params?['event']),
+    pieceType: params?['pieceType'],
+    flag: params?['flag'],
+  );
 
   @override
   Map<String, dynamic>? export(ActionImmortality e) {

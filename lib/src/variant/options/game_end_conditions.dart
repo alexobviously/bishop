@@ -15,11 +15,11 @@ class GameEndConditionSet {
 
   factory GameEndConditionSet.fromJson(Map<String, dynamic> json) =>
       json.containsKey('white')
-          ? GameEndConditionSet(
-              GameEndConditions.fromJson(json['white']),
-              GameEndConditions.fromJson(json['black']),
-            )
-          : GameEndConditionSet.symmetric(GameEndConditions.fromJson(json));
+      ? GameEndConditionSet(
+          GameEndConditions.fromJson(json['white']),
+          GameEndConditions.fromJson(json['black']),
+        )
+      : GameEndConditionSet.symmetric(GameEndConditions.fromJson(json));
 
   factory GameEndConditionSet.symmetric(GameEndConditions conditions) =>
       GameEndConditionSet(conditions, conditions);
@@ -78,10 +78,10 @@ class GameEndConditions {
   });
 
   Map<String, dynamic> toJson() => {
-        'stalemate': stalemate.name,
-        'elimination': elimination.name,
-        if (checkLimit != null) 'checkLimit': checkLimit,
-      };
+    'stalemate': stalemate.name,
+    'elimination': elimination.name,
+    if (checkLimit != null) 'checkLimit': checkLimit,
+  };
 
   factory GameEndConditions.fromJson(Map<String, dynamic> json) =>
       GameEndConditions(
@@ -94,11 +94,14 @@ class GameEndConditions {
 
   static const GameEndConditions standard = GameEndConditions();
   static const GameEndConditions threeCheck = GameEndConditions(checkLimit: 3);
-  static const GameEndConditions antichess =
-      GameEndConditions(stalemate: EndType.win, elimination: EndType.win);
+  static const GameEndConditions antichess = GameEndConditions(
+    stalemate: EndType.win,
+    elimination: EndType.win,
+  );
 
   @override
-  String toString() => 'GameEndConditions(elimination: ${elimination.name},'
+  String toString() =>
+      'GameEndConditions(elimination: ${elimination.name},'
       'stalemate: ${stalemate.name}, checkLimit: $checkLimit)';
 
   @override

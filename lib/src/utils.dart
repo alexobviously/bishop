@@ -78,9 +78,9 @@ String boardToAscii(
     output = '$output|\n';
   }
   output = '$output$border\n     ';
-  for (String i in Iterable<int>.generate(variant.boardSize.h)
-      .map((e) => String.fromCharCode(e + 97))
-      .toList()) {
+  for (String i in Iterable<int>.generate(
+    variant.boardSize.h,
+  ).map((e) => String.fromCharCode(e + 97)).toList()) {
     output = '$output$i  ';
   }
   return output;
@@ -118,11 +118,10 @@ Set<int> visibleSquares({
   required BoardSize size,
   required int player,
   required Area area,
-}) =>
-    board
-        .asMap()
-        .entries
-        .where((e) => e.value.isNotEmpty && e.value.colour == player)
-        .map((e) => e.key)
-        .expand((e) => size.squaresForArea(e, area))
-        .toSet();
+}) => board
+    .asMap()
+    .entries
+    .where((e) => e.value.isNotEmpty && e.value.colour == player)
+    .map((e) => e.key)
+    .expand((e) => size.squaresForArea(e, area))
+    .toSet();

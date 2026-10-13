@@ -5,8 +5,7 @@ void main() {
   group('Castling', () {
     test('Don\'t allow castling with piece between rook and dest', () {
       final g = Game(
-        fen:
-            '1r2k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/5Q1p/PPPBBPPP/RN2K2R w KQk - 2 2',
+        fen: '1r2k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/5Q1p/PPPBBPPP/RN2K2R w KQk - 2 2',
       );
       expect(g.generateLegalMoves().castlingMoves.length, 1);
     });

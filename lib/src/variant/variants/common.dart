@@ -3,23 +3,22 @@ part of '../variant.dart';
 /// Common chess variants with different rules.
 class CommonVariants {
   static Variant chess960() => Variant.standard().copyWith(
-        name: 'Chess960',
-        startPosBuilder: Chess960StartPosBuilder(),
-        castlingOptions: CastlingOptions.chess960,
-        outputOptions: OutputOptions.chess960,
-      );
+    name: 'Chess960',
+    startPosBuilder: Chess960StartPosBuilder(),
+    castlingOptions: CastlingOptions.chess960,
+    outputOptions: OutputOptions.chess960,
+  );
 
   static Variant crazyhouse() => Variant.standard().copyWith(
-        name: 'Crazyhouse',
-        handOptions: HandOptions.captures,
-      );
+    name: 'Crazyhouse',
+    handOptions: HandOptions.captures,
+  );
 
   static Variant seirawan() {
     Variant standard = Variant.standard();
     return standard.copyWith(
       name: 'Seirawan Chess',
-      startPosition:
-          'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
+      startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
       gatingMode: GatingMode.flex,
       outputOptions: OutputOptions.seirawan,
       pieceTypes: {
@@ -34,9 +33,9 @@ class CommonVariants {
   }
 
   static Variant threeCheck() => Variant.standard().copyWith(
-        name: 'Three Check',
-        gameEndConditions: GameEndConditionSet.threeCheck,
-      );
+    name: 'Three Check',
+    gameEndConditions: GameEndConditionSet.threeCheck,
+  );
 
   static Variant kingOfTheHill() => Variant.standard()
       .copyWith(name: 'King of the Hill')
@@ -66,14 +65,13 @@ class CommonVariants {
       );
 
   static Variant horde() => Variant.standard().copyWith(
-        name: 'Horde Chess',
-        startPosition:
-            'rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1',
-        firstMoveOptions: FirstMoveOptions.ranks(
-          [Bishop.rank1, Bishop.rank2], // white
-          [Bishop.rank7, Bishop.rank8], // black
-        ),
-      );
+    name: 'Horde Chess',
+    startPosition: 'rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1',
+    firstMoveOptions: FirstMoveOptions.ranks(
+      [Bishop.rank1, Bishop.rank2], // white
+      [Bishop.rank7, Bishop.rank8], // black
+    ),
+  );
 
   static Variant racingKings() => Variant.standard()
       .copyWith(
@@ -117,17 +115,20 @@ class CommonVariants {
       );
 
   /// https://en.wikipedia.org/wiki/Shatranj
-  static Variant shatranj() => Variant.standard().withPieces({
+  static Variant shatranj() => Variant.standard()
+      .withPieces({
         'B': PieceType.alfil(),
         'Q': PieceType.ferz(),
-        'P': PieceType.simplePawn()
-            .copyWith(promoOptions: PiecePromoOptions.promotesToOne('Q')),
-      }).copyWith(
+        'P': PieceType.simplePawn().copyWith(
+          promoOptions: PiecePromoOptions.promotesToOne('Q'),
+        ),
+      })
+      .copyWith(
         name: 'Shatranj',
         castlingOptions: CastlingOptions.none,
         materialConditions: MaterialConditions.none,
         enPassant: false,
-        gameEndConditions:
-            const GameEndConditions(stalemate: EndType.lose).symmetric(),
+        gameEndConditions: const GameEndConditions(stalemate: EndType.lose)
+            .symmetric(),
       );
 }

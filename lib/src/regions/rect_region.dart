@@ -38,33 +38,33 @@ class RectRegion extends BoardRegion {
 
   /// A board region consisting of a single square.
   factory RectRegion.square(int file, int rank) => RectRegion(
-        startFile: file,
-        endFile: file,
-        startRank: rank,
-        endRank: rank,
-      );
+    startFile: file,
+    endFile: file,
+    startRank: rank,
+    endRank: rank,
+  );
 
   factory RectRegion.fromJson(Map<String, dynamic> json) => RectRegion(
-        startRank: json['b'] ?? json['startRank'],
-        endRank: json['t'] ?? json['endRank'],
-        startFile: json['l'] ?? json['startFile'],
-        endFile: json['r'] ?? json['endFile'],
-      );
+    startRank: json['b'] ?? json['startRank'],
+    endRank: json['t'] ?? json['endRank'],
+    startFile: json['l'] ?? json['startFile'],
+    endFile: json['r'] ?? json['endFile'],
+  );
 
   @override
   Map<String, dynamic> toJson() => {
-        if (startRank != null) 'b': startRank,
-        if (endRank != null) 't': endRank,
-        if (startFile != null) 'l': startFile,
-        if (endFile != null) 'r': endFile,
-      };
+    if (startRank != null) 'b': startRank,
+    if (endRank != null) 't': endRank,
+    if (startFile != null) 'l': startFile,
+    if (endFile != null) 'r': endFile,
+  };
 
   RectRegion finalise(BoardSize size) => RectRegion(
-        startRank: startRank ?? 0,
-        endRank: endRank ?? size.maxRank,
-        startFile: startFile ?? 0,
-        endFile: endFile ?? size.maxFile,
-      );
+    startRank: startRank ?? 0,
+    endRank: endRank ?? size.maxRank,
+    startFile: startFile ?? 0,
+    endFile: endFile ?? size.maxFile,
+  );
 
   @override
   String toString() => 'RectRegion($startFile-$endFile, $startRank-$endRank)';
@@ -103,9 +103,9 @@ class RectRegion extends BoardRegion {
 
   @override
   RectRegion translate(int x, int y) => RectRegion(
-        startRank: startRank != null ? startRank! + y : null,
-        endRank: endRank != null ? endRank! + y : null,
-        startFile: startFile != null ? startFile! + x : null,
-        endFile: endFile != null ? endFile! + x : null,
-      );
+    startRank: startRank != null ? startRank! + y : null,
+    endRank: endRank != null ? endRank! + y : null,
+    startFile: startFile != null ? startFile! + x : null,
+    endFile: endFile != null ? endFile! + x : null,
+  );
 }

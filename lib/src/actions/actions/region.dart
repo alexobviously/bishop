@@ -10,36 +10,36 @@ class ActionExitRegionEnding extends Action {
     super.precondition,
     super.condition,
   }) : super(
-          action: (trigger) {
-            if (!trigger.variant.boardSize
-                .inRegion(trigger.move.from, region)) {
-              return [];
-            }
-            List<ActionEffect> effect(GameResult res) =>
-                [EffectSetGameResult(res)];
+         action: (trigger) {
+           if (!trigger.variant.boardSize.inRegion(trigger.move.from, region)) {
+             return [];
+           }
+           List<ActionEffect> effect(GameResult res) => [
+             EffectSetGameResult(res),
+           ];
 
-            if (endType.isWinLose) {
-              return effect(
-                WonGameExitedRegion(
-                  winner: endType.isWin
-                      ? trigger.piece.colour
-                      : trigger.piece.colour.opponent,
-                  square: trigger.move.from,
-                ),
-              );
-            }
+           if (endType.isWinLose) {
+             return effect(
+               WonGameExitedRegion(
+                 winner: endType.isWin
+                     ? trigger.piece.colour
+                     : trigger.piece.colour.opponent,
+                 square: trigger.move.from,
+               ),
+             );
+           }
 
-            if (endType.isDraw) {
-              return effect(
-                DrawnGameExitedRegion(
-                  player: trigger.piece.colour,
-                  square: trigger.move.from,
-                ),
-              );
-            }
-            return [];
-          },
-        );
+           if (endType.isDraw) {
+             return effect(
+               DrawnGameExitedRegion(
+                 player: trigger.piece.colour,
+                 square: trigger.move.from,
+               ),
+             );
+           }
+           return [];
+         },
+       );
 }
 
 class ExitRegionEndingAdapter
@@ -72,33 +72,33 @@ class ActionFillRegionEnding extends Action {
   final String? whiteRegionId;
   final String? blackRegionId;
   ActionFillRegionEnding(this.whiteRegionId, this.blackRegionId)
-      : super(
-          action: (trigger) {
-            final region = trigger.variant.regions[
-                trigger.piece.colour == Bishop.white
-                    ? whiteRegionId
-                    : blackRegionId];
-            if (region == null ||
-                !trigger.size.inRegion(trigger.move.to, region)) {
+    : super(
+        action: (trigger) {
+          final region =
+              trigger.variant.regions[trigger.piece.colour == Bishop.white
+                  ? whiteRegionId
+                  : blackRegionId];
+          if (region == null ||
+              !trigger.size.inRegion(trigger.move.to, region)) {
+            return [];
+          }
+          final squares = trigger.size.squaresForRegion(region);
+          for (int sq in squares) {
+            if (trigger.board[sq].isEmpty ||
+                trigger.board[sq].colour != trigger.piece.colour) {
               return [];
             }
-            final squares = trigger.size.squaresForRegion(region);
-            for (int sq in squares) {
-              if (trigger.board[sq].isEmpty ||
-                  trigger.board[sq].colour != trigger.piece.colour) {
-                return [];
-              }
-            }
-            return [
-              EffectSetGameResult(
-                WonGameEnteredRegion(
-                  winner: trigger.piece.colour,
-                  square: trigger.move.to,
-                ),
+          }
+          return [
+            EffectSetGameResult(
+              WonGameEnteredRegion(
+                winner: trigger.piece.colour,
+                square: trigger.move.to,
               ),
-            ];
-          },
-        );
+            ),
+          ];
+        },
+      );
 }
 
 class FillRegionAdapter extends BishopTypeAdapter<ActionFillRegionEnding> {
@@ -114,7 +114,7 @@ class FillRegionAdapter extends BishopTypeAdapter<ActionFillRegionEnding> {
 
   @override
   Map<String, dynamic> export(ActionFillRegionEnding e) => {
-        if (e.whiteRegionId != null) 'whiteId': e.whiteRegionId,
-        if (e.blackRegionId != null) 'blackId': e.blackRegionId,
-      };
+    if (e.whiteRegionId != null) 'whiteId': e.whiteRegionId,
+    if (e.blackRegionId != null) 'blackId': e.blackRegionId,
+  };
 }

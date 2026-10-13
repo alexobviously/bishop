@@ -56,11 +56,10 @@ abstract class DeepAdapter<T> extends BishopTypeAdapter<T> {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
     X? Function(dynamic input)? fallback,
-  }) =>
-      BishopSerialisation.build<X>(
-        input,
-        adapters: adapters,
-        strict: strict,
-        fallback: fallback,
-      );
+  }) => BishopSerialisation.build<X>(
+    input,
+    adapters: adapters,
+    strict: strict,
+    fallback: fallback,
+  );
 }

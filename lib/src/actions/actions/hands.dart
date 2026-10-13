@@ -15,12 +15,12 @@ class ActionAddToHand extends Action {
     super.precondition,
     super.condition,
   }) : super(
-          action: ActionDefinitions.addToHand(
-            piece,
-            count: count,
-            forOpponent: forOpponent,
-          ),
-        );
+         action: ActionDefinitions.addToHand(
+           piece,
+           count: count,
+           forOpponent: forOpponent,
+         ),
+       );
 }
 
 /// Removes [count] of [piece] from the acting player's hand. If [forOpponent] is
@@ -38,12 +38,12 @@ class ActionRemoveFromHand extends Action {
     super.precondition,
     super.condition,
   }) : super(
-          action: ActionDefinitions.removeFromHand(
-            piece,
-            count: count,
-            forOpponent: forOpponent,
-          ),
-        );
+         action: ActionDefinitions.removeFromHand(
+           piece,
+           count: count,
+           forOpponent: forOpponent,
+         ),
+       );
 }
 
 class AddToHandAdapter extends BishopTypeAdapter<ActionAddToHand> {
@@ -52,11 +52,11 @@ class AddToHandAdapter extends BishopTypeAdapter<ActionAddToHand> {
 
   @override
   ActionAddToHand build(Map<String, dynamic>? params) => ActionAddToHand(
-        params!['piece'],
-        forOpponent: params['forOpponent'] ?? false,
-        count: params['count'] ?? 1,
-        event: ActionEvent.import(params['event']),
-      );
+    params!['piece'],
+    forOpponent: params['forOpponent'] ?? false,
+    count: params['count'] ?? 1,
+    event: ActionEvent.import(params['event']),
+  );
 
   @override
   Map<String, dynamic> export(ActionAddToHand e) {

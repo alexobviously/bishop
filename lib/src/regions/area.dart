@@ -35,10 +35,10 @@ class Area implements Region {
   }
 
   factory Area.radius(int size, {bool omitCentre = false}) => Area.filled(
-        width: size * 2 + 1,
-        height: size * 2 + 1,
-        omitCentre: omitCentre,
-      );
+    width: size * 2 + 1,
+    height: size * 2 + 1,
+    omitCentre: omitCentre,
+  );
 
   static const radius1 = Area(
     directions: [

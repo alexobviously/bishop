@@ -55,7 +55,7 @@ class Chess960StartPosBuilder implements StartPositionBuilder {
 
 class Chess960StartPosAdapter extends BasicAdapter<Chess960StartPosBuilder> {
   Chess960StartPosAdapter()
-      : super('bishop.start.chess960', Chess960StartPosBuilder.new);
+    : super('bishop.start.chess960', Chess960StartPosBuilder.new);
 }
 
 class RandomChessStartPosBuilder implements StartPositionBuilder {
@@ -137,7 +137,7 @@ class RandomChessStartPosAdapter
 
   @override
   Map<String, dynamic>? export(RandomChessStartPosBuilder e) => {
-        if (e.size != BoardSize.standard) 'size': e.size.simpleString,
-        if (e.numRooks != null) 'numRooks': e.numRooks,
-      };
+    if (e.size != BoardSize.standard) 'size': e.size.simpleString,
+    if (e.numRooks != null) 'numRooks': e.numRooks,
+  };
 }

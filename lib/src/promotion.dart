@@ -26,10 +26,10 @@ class PiecePromoOptions {
       );
 
   Map<String, dynamic> toJson() => {
-        'canPromote': canPromote,
-        'canPromoteTo': canPromoteTo,
-        if (promotesTo != null) 'promotesTo': promotesTo,
-      };
+    'canPromote': canPromote,
+    'canPromoteTo': canPromoteTo,
+    if (promotesTo != null) 'promotesTo': promotesTo,
+  };
 
   /// A piece that cannot be promoted and isn't a promotion option.
   static const none = PiecePromoOptions(canPromote: false, canPromoteTo: false);
@@ -86,78 +86,75 @@ class Promotion {
   static PromotionBuilder standard({
     required List<int> ranks,
     bool optional = false,
-  }) =>
-      (PromotionParams params) {
-        if (!params.pieceType.promoOptions.canPromote) return null;
+  }) => (PromotionParams params) {
+    if (!params.pieceType.promoOptions.canPromote) return null;
 
-        Square piece = params.state.board[params.move.from];
-        if (piece.isEmpty) return null;
-        Colour colour = piece.colour;
+    Square piece = params.state.board[params.move.from];
+    if (piece.isEmpty) return null;
+    Colour colour = piece.colour;
 
-        int toRank = params.variant.boardSize.rank(params.move.to);
-        bool promo = colour == Bishop.white
-            ? toRank >= ranks[Bishop.white]
-            : toRank <= ranks[Bishop.black];
+    int toRank = params.variant.boardSize.rank(params.move.to);
+    bool promo = colour == Bishop.white
+        ? toRank >= ranks[Bishop.white]
+        : toRank <= ranks[Bishop.black];
 
-        if (!promo) return null;
+    if (!promo) return null;
 
-        List<StandardMove> moves = [];
-        for (int p in params.promoPieces) {
-          StandardMove m = params.move.copyWith(
-            promoSource: params.state.board[params.move.from].type,
-            promoPiece: p,
-          );
-          moves.add(m);
-        }
-        if (optional) moves.add(params.move);
-        return moves;
-      };
+    List<StandardMove> moves = [];
+    for (int p in params.promoPieces) {
+      StandardMove m = params.move.copyWith(
+        promoSource: params.state.board[params.move.from].type,
+        promoPiece: p,
+      );
+      moves.add(m);
+    }
+    if (optional) moves.add(params.move);
+    return moves;
+  };
 
   static PromotionBuilder optional({
     required List<int> ranks,
     List<int>? forcedRanks,
-  }) =>
-      (PromotionParams params) {
-        if (!params.pieceType.promoOptions.canPromote) return null;
+  }) => (PromotionParams params) {
+    if (!params.pieceType.promoOptions.canPromote) return null;
 
-        Square piece = params.state.board[params.move.from];
-        if (piece.isEmpty) return null;
-        Colour colour = piece.colour;
+    Square piece = params.state.board[params.move.from];
+    if (piece.isEmpty) return null;
+    Colour colour = piece.colour;
 
-        int toRank = params.variant.boardSize.rank(params.move.to);
-        bool optPromo = colour == Bishop.white
-            ? toRank >= ranks[Bishop.white]
-            : toRank <= ranks[Bishop.black];
-        if (!optPromo) return null;
+    int toRank = params.variant.boardSize.rank(params.move.to);
+    bool optPromo = colour == Bishop.white
+        ? toRank >= ranks[Bishop.white]
+        : toRank <= ranks[Bishop.black];
+    if (!optPromo) return null;
 
-        bool forcedPromo = false;
-        if (forcedRanks != null) {
-          forcedPromo = colour == Bishop.white
-              ? toRank >= forcedRanks[Bishop.white]
-              : toRank <= forcedRanks[Bishop.black];
-        }
+    bool forcedPromo = false;
+    if (forcedRanks != null) {
+      forcedPromo = colour == Bishop.white
+          ? toRank >= forcedRanks[Bishop.white]
+          : toRank <= forcedRanks[Bishop.black];
+    }
 
-        List<StandardMove> moves = [];
-        for (int p in params.promoPieces) {
-          StandardMove m = params.move.copyWith(
-            promoSource: params.state.board[params.move.from].type,
-            promoPiece: p,
-          );
-          moves.add(m);
-        }
-        if (!forcedPromo) moves.add(params.move);
-        return moves;
-      };
+    List<StandardMove> moves = [];
+    for (int p in params.promoPieces) {
+      StandardMove m = params.move.copyWith(
+        promoSource: params.state.board[params.move.from].type,
+        promoPiece: p,
+      );
+      moves.add(m);
+    }
+    if (!forcedPromo) moves.add(params.move);
+    return moves;
+  };
 
   static PromotionBuilder pair(
     PromotionBuilder white,
     PromotionBuilder black,
-  ) =>
-      (params) {
-        int piece = params.state.board[params.move.from];
-        if (piece.isEmpty) return null;
-        return piece.colour == Bishop.white ? white(params) : black(params);
-      };
+  ) => (params) {
+    int piece = params.state.board[params.move.from];
+    if (piece.isEmpty) return null;
+    return piece.colour == Bishop.white ? white(params) : black(params);
+  };
 
   /// Promotes only within [region].
   static PromotionBuilder region(Region region, {bool optional = false}) =>
@@ -187,11 +184,11 @@ class Promotion {
     Region? whiteRegion,
     Region? blackRegion, {
     bool optional = false,
-  }) =>
-      pair(
-        whiteRegion == null ? none() : region(whiteRegion, optional: optional),
-        blackRegion == null ? none() : region(blackRegion, optional: optional),
-      );
+  }) => pair(
+    whiteRegion == null ? none() : region(whiteRegion, optional: optional),
+    blackRegion == null ? none() : region(blackRegion, optional: optional),
+  );
 
-  static PromotionBuilder none() => (_) => null;
+  static PromotionBuilder none() =>
+      (_) => null;
 }

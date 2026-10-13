@@ -7,8 +7,9 @@ extension GameMovement on Game {
   /// field. Set this to false for more efficient calculations.
   bool makeMove(Move move, [bool generateMeta = true]) {
     BishopState state = this.state;
-    Square fromSq =
-        move.from >= Bishop.boardStart ? state.board[move.from] : Bishop.empty;
+    Square fromSq = move.from >= Bishop.boardStart
+        ? state.board[move.from]
+        : Bishop.empty;
 
     if (variant.hasActionsForEvent(ActionEvent.beforeMove)) {
       state = state.executeActions(
@@ -145,8 +146,9 @@ extension GameMovement on Game {
     if (move is! StandardMove && move is! DropMove) {
       return null;
     }
-    Square fromSq =
-        move.from >= Bishop.boardStart ? state.board[move.from] : Bishop.empty;
+    Square fromSq = move.from >= Bishop.boardStart
+        ? state.board[move.from]
+        : Bishop.empty;
 
     List<int> board = [...state.board];
     if ((move.from != Bishop.hand && !size.onBoard(move.from)) ||
@@ -218,8 +220,11 @@ extension GameMovement on Game {
       if (move.from == Bishop.hand) hands?[colour].remove(move.dropPiece!);
     } else if (move.promotion) {
       // Place the promoted piece
-      board[move.to] =
-          makePiece(move.promoPiece!, state.turn, internalType: fromSq.type);
+      board[move.to] = makePiece(
+        move.promoPiece!,
+        state.turn,
+        internalType: fromSq.type,
+      );
       hash ^= zobrist.table[move.to][board[move.to].piece];
       pieces[board[move.to].piece]++;
     }
@@ -237,7 +242,8 @@ extension GameMovement on Game {
 
     if (move.enPassant) {
       // Remove the captured ep piece
-      int captureSq = state.move?.to ??
+      int captureSq =
+          state.move?.to ??
           (move.to + Bishop.playerDirection[colour.opponent] * size.north);
       hash ^= zobrist.table[captureSq][board[captureSq].piece];
       pieces[board[captureSq].piece]--;
@@ -350,8 +356,9 @@ extension GameMovement on Game {
       move: move,
       turn: 1 - state.turn,
       halfMoves: halfMoves,
-      fullMoves:
-          state.turn == Bishop.black ? state.fullMoves + 1 : state.fullMoves,
+      fullMoves: state.turn == Bishop.black
+          ? state.fullMoves + 1
+          : state.fullMoves,
       castlingRights: castlingRights,
       royalSquares: royalSquares,
       castlingSquares: castlingSquares,

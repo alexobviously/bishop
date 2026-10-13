@@ -46,12 +46,12 @@ extension SquareLogic on int {
   bool hasFlag(int flag) => hasBit(Bishop.flagsStartBit + flag);
   int removeFlags() => this & ((1 << Bishop.flagsStartBit) - 1);
   int setInternalType(int type) => makePiece(
-        this.type,
-        colour,
-        internalType: type,
-        initialState: inInitialState,
-        flags: flags,
-      );
+    this.type,
+    colour,
+    internalType: type,
+    initialState: inInitialState,
+    flags: flags,
+  );
   int setInitialState(bool initial) => initial
       ? setBit(Bishop.initialStateBit)
       : unsetBit(Bishop.initialStateBit);

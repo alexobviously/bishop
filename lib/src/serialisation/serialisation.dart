@@ -24,76 +24,73 @@ class BishopSerialisation {
   static List<BishopTypeAdapter>? _baseAdapters;
 
   static List<BishopTypeAdapter> get basePromoAdapters => [
-        const NoPromotionAdapter(),
-        RegionPromotionAdapter(),
-        StandardPromotionAdapter(),
-        OptionalPromotionAdapter(),
-      ];
+    const NoPromotionAdapter(),
+    RegionPromotionAdapter(),
+    StandardPromotionAdapter(),
+    OptionalPromotionAdapter(),
+  ];
 
   static List<BishopTypeAdapter> get baseDropAdapters => [
-        RegionDropAdapter(),
-        const StandardDropAdapter(),
-        const UnrestrictedDropAdapter(),
-      ];
+    RegionDropAdapter(),
+    const StandardDropAdapter(),
+    const UnrestrictedDropAdapter(),
+  ];
 
   static List<BishopTypeAdapter> get basePassAdapters => [
-        const NoPassAdapter(),
-        const StandardPassAdapter(),
-      ];
+    const NoPassAdapter(),
+    const StandardPassAdapter(),
+  ];
 
   static List<BishopTypeAdapter> get baseStartPosAdapters => [
-        Chess960StartPosAdapter(),
-        RandomChessStartPosAdapter(),
-      ];
+    Chess960StartPosAdapter(),
+    RandomChessStartPosAdapter(),
+  ];
 
   static List<BishopTypeAdapter> get baseActionAdapters => [
-        AddToHandAdapter(),
-        BlockOriginAdapter(),
-        CheckPieceCountAdapter(),
-        CheckRoyalsAliveAdapter(),
-        ExitRegionEndingAdapter(),
-        ExplodeOnCaptureAdapter(),
-        ExplosionRadiusAdapter(),
-        FillRegionAdapter(),
-        FlyingGeneralsAdapter(),
-        ImmortalityAdapter(),
-        RemoveFromHandAdapter(),
-        TransferOwnershipAdapter(),
-      ];
+    AddToHandAdapter(),
+    BlockOriginAdapter(),
+    CheckPieceCountAdapter(),
+    CheckRoyalsAliveAdapter(),
+    ExitRegionEndingAdapter(),
+    ExplodeOnCaptureAdapter(),
+    ExplosionRadiusAdapter(),
+    FillRegionAdapter(),
+    FlyingGeneralsAdapter(),
+    ImmortalityAdapter(),
+    RemoveFromHandAdapter(),
+    TransferOwnershipAdapter(),
+  ];
 
   static List<BishopTypeAdapter> get baseFirstMoveAdapters => [
-        FirstMovePairAdapter(),
-        FirstMoveSetAdapter(),
-        RanksFirstMoveAdapter(),
-        const InitialFirstMoveAdapter(),
-      ];
+    FirstMovePairAdapter(),
+    FirstMoveSetAdapter(),
+    RanksFirstMoveAdapter(),
+    const InitialFirstMoveAdapter(),
+  ];
 
   static List<BishopTypeAdapter> get baseStateTransformAdapters => [
-        HideFlagsAdapter(),
-        PairTransformAdapter(),
-        VisionAreaAdapter(),
-      ];
+    HideFlagsAdapter(),
+    PairTransformAdapter(),
+    VisionAreaAdapter(),
+  ];
 
   static List<T> buildMany<T>(
     List input, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
-  }) =>
-      input
-          .map((e) => build<T>(e, adapters: adapters, strict: strict))
-          .where((e) => e != null)
-          .map((e) => e as T)
-          .toList();
+  }) => input
+      .map((e) => build<T>(e, adapters: adapters, strict: strict))
+      .where((e) => e != null)
+      .map((e) => e as T)
+      .toList();
 
   static Map<String, T> buildMap<T>(
     Map<String, dynamic> input, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
-  }) =>
-      (input.map(
-        (k, v) => MapEntry(k, build<T>(v, adapters: adapters, strict: strict)),
-      )..removeWhere((_, v) => v == null))
-          .map((k, v) => MapEntry(k, v as T));
+  }) => (input.map(
+    (k, v) => MapEntry(k, build<T>(v, adapters: adapters, strict: strict)),
+  )..removeWhere((_, v) => v == null)).map((k, v) => MapEntry(k, v as T));
 
   static T? build<T>(
     dynamic input, {
@@ -139,18 +136,16 @@ class BishopSerialisation {
     List<T> objects, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
-  }) =>
-      objects
-          .map((e) => export<T>(e, adapters: adapters, strict: strict))
-          .where((e) => e != null)
-          .toList();
+  }) => objects
+      .map((e) => export<T>(e, adapters: adapters, strict: strict))
+      .where((e) => e != null)
+      .toList();
 
   static Map<String, dynamic> exportMap<T>(
     Map<String, T> objects, {
     List<BishopTypeAdapter> adapters = const [],
     bool strict = true,
-  }) =>
-      objects.map((k, v) => export<T>(v, adapters: adapters, strict: strict));
+  }) => objects.map((k, v) => export<T>(v, adapters: adapters, strict: strict));
 
   static dynamic export<T>(
     T object, {
@@ -159,8 +154,9 @@ class BishopSerialisation {
   }) {
     adapters = [...adapters, ...baseAdapters];
     try {
-      final adapter =
-          adapters.firstWhereOrNull((e) => e.type == object.runtimeType);
+      final adapter = adapters.firstWhereOrNull(
+        (e) => e.type == object.runtimeType,
+      );
       if (adapter == null) {
         if (strict) {
           throw BishopException('Adapter not found: ${object.runtimeType}');

@@ -8,25 +8,23 @@ class FirstMovePairAdapter extends DeepAdapter<FirstMoveOptionsPair> {
   FirstMoveOptionsPair build(
     Map<String, dynamic>? params, {
     List<BishopTypeAdapter> adapters = const [],
-  }) =>
-      FirstMoveOptionsPair(
-        deserialise<FirstMoveOptions>(params?['white'], adapters: adapters),
-        deserialise<FirstMoveOptions>(params?['black'], adapters: adapters),
-      );
+  }) => FirstMoveOptionsPair(
+    deserialise<FirstMoveOptions>(params?['white'], adapters: adapters),
+    deserialise<FirstMoveOptions>(params?['black'], adapters: adapters),
+  );
 
   @override
   Map<String, dynamic>? export(
     FirstMoveOptionsPair e, {
     List<BishopTypeAdapter> adapters = const [],
-  }) =>
-      {
-        'white': e.white != null
-            ? serialise<FirstMoveOptions>(e.white!, adapters: adapters)
-            : null,
-        'black': e.black != null
-            ? serialise<FirstMoveOptions>(e.black!, adapters: adapters)
-            : null,
-      };
+  }) => {
+    'white': e.white != null
+        ? serialise<FirstMoveOptions>(e.white!, adapters: adapters)
+        : null,
+    'black': e.black != null
+        ? serialise<FirstMoveOptions>(e.black!, adapters: adapters)
+        : null,
+  };
 }
 
 class FirstMoveSetAdapter extends DeepAdapter<FirstMoveOptionsSet> {
@@ -37,20 +35,18 @@ class FirstMoveSetAdapter extends DeepAdapter<FirstMoveOptionsSet> {
   FirstMoveOptionsSet build(
     Map<String, dynamic>? params, {
     List<BishopTypeAdapter> adapters = const [],
-  }) =>
-      FirstMoveOptionsSet(
-        BishopSerialisation.buildMap<FirstMoveOptions>(
-          params!,
-          adapters: adapters,
-        ),
-      );
+  }) => FirstMoveOptionsSet(
+    BishopSerialisation.buildMap<FirstMoveOptions>(
+      params!,
+      adapters: adapters,
+    ),
+  );
 
   @override
   Map<String, dynamic>? export(
     FirstMoveOptionsSet e, {
     List<BishopTypeAdapter> adapters = const [],
-  }) =>
-      BishopSerialisation.exportMap(e.set, adapters: adapters);
+  }) => BishopSerialisation.exportMap(e.set, adapters: adapters);
 }
 
 class RanksFirstMoveAdapter extends BishopTypeAdapter<RanksFirstMoveOptions> {
@@ -69,5 +65,5 @@ class RanksFirstMoveAdapter extends BishopTypeAdapter<RanksFirstMoveOptions> {
 class InitialFirstMoveAdapter
     extends BasicAdapter<InitialStateFirstMoveOptions> {
   const InitialFirstMoveAdapter()
-      : super('bishop.first.initial', InitialStateFirstMoveOptions.new);
+    : super('bishop.first.initial', InitialStateFirstMoveOptions.new);
 }

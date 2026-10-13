@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:bishop/bishop.dart';
 
 class GameNavigator {
@@ -97,7 +98,7 @@ class NavigatorNode {
   void setParent(NavigatorNode parent) => this.parent = parent;
 
   List<NavigatorNode> get mainLine => [
-        this,
-        if (children.isNotEmpty) ...children.first.mainLine,
-      ];
+    this,
+    if (children.isNotEmpty) ...children.first.mainLine,
+  ];
 }

@@ -36,8 +36,10 @@ PgnData parsePgn(String pgn) {
     metadata[key] = value;
   }
   int metaEnd = matches.isEmpty ? 0 : matches.last.end;
-  String game =
-      pgn.substring(metaEnd).replaceAll('\n', ' ').replaceAll('\r', ' ');
+  String game = pgn
+      .substring(metaEnd)
+      .replaceAll('\n', ' ')
+      .replaceAll('\r', ' ');
   int i = 0;
   List<String> moves = [];
   Map<int, String> comments = {};
@@ -104,10 +106,9 @@ Game gameFromPgn(
   Variant? variant,
   String? startPosition,
   bool strictVariantTag = true,
-}) =>
-    gameFromPgnData(
-      parsePgn(pgn),
-      variant: variant,
-      startPosition: startPosition,
-      strictVariantTag: strictVariantTag,
-    );
+}) => gameFromPgnData(
+  parsePgn(pgn),
+  variant: variant,
+  startPosition: startPosition,
+  strictVariantTag: strictVariantTag,
+);

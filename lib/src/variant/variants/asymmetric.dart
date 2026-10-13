@@ -2,7 +2,8 @@ part of '../variant.dart';
 
 class Orda {
   static PieceType kheshig() => PieceType.fromBetza('KN', value: 700);
-  static Variant orda() => Variant.standard().copyWith(
+  static Variant orda() => Variant.standard()
+      .copyWith(
         name: 'Orda',
         startPosition: 'lhaykahl/8/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1',
         materialConditions: MaterialConditions.none,
@@ -20,9 +21,11 @@ class Orda {
         },
         // TODO: set asymmetric castling options when available
         // for now, the fen covers it though
-      ).withCampMate();
+      )
+      .withCampMate();
 
-  static Variant ordaMirror() => Variant.standard().copyWith(
+  static Variant ordaMirror() => Variant.standard()
+      .copyWith(
         name: 'Orda Mirror',
         startPosition: 'lhafkahl/8/pppppppp/8/8/PPPPPPPP/8/LHAFKAHL w - - 0 1',
         castlingOptions: CastlingOptions.none,
@@ -35,5 +38,6 @@ class Orda {
           'A': PieceType.knibis(), // Archer
           'F': PieceType.fromBetza('mQcN', value: 500), // Falcon
         },
-      ).withCampMate();
+      )
+      .withCampMate();
 }

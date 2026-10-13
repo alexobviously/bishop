@@ -58,9 +58,9 @@ extension GameEndings on Game {
   /// Returns true if the royal pieces for each player are on the same file,
   /// e.g. Xiangqi's flying generals rule.
   bool get royalsFacing => size.squaresOnSameFile(
-        state.royalSquares[Bishop.white],
-        state.royalSquares[Bishop.black],
-      );
+    state.royalSquares[Bishop.white],
+    state.royalSquares[Bishop.black],
+  );
 
   /// Is this stalemate?
   bool get stalemate => !inCheck && generateLegalMoves().isEmpty;
@@ -128,13 +128,13 @@ extension GameEndings on Game {
 
   bool wonBy(int colour, {bool ignoreSoftResults = false}) =>
       ((!ignoreSoftResults || !(state.result?.soft ?? false)) &&
-          state.result is WonGame &&
-          (state.result as WonGame).winner == colour);
+      state.result is WonGame &&
+      (state.result as WonGame).winner == colour);
 
   bool lostBy(int colour, {bool ignoreSoftResults = false}) =>
       ((!ignoreSoftResults || !(state.result?.soft ?? false)) &&
-          state.result is WonGame &&
-          (state.result as WonGame).winner != colour);
+      state.result is WonGame &&
+      (state.result as WonGame).winner != colour);
 
   /// True if the game has ended in any way. See `result` for how it ended.
   bool get gameOver => result != null;

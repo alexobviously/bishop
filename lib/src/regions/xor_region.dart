@@ -9,16 +9,16 @@ class XorRegion extends BoardRegion {
   const XorRegion(this.left, this.right);
 
   factory XorRegion.fromJson(Map<String, dynamic> json) => XorRegion(
-        BoardRegion.fromJson(json['l']),
-        BoardRegion.fromJson(json['r']),
-      );
+    BoardRegion.fromJson(json['l']),
+    BoardRegion.fromJson(json['r']),
+  );
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'xor',
-        'l': left.toJson(),
-        'r': right.toJson(),
-      };
+    'type': 'xor',
+    'l': left.toJson(),
+    'r': right.toJson(),
+  };
 
   @override
   bool contains(int file, int rank) =>

@@ -23,11 +23,14 @@ void main() {
   test('Flex - Castling', () {
     final g = Game(
       variant: CommonVariants.seirawan(),
-      fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQK2R[HEhe] w '
+      fen:
+          'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQK2R[HEhe] w '
           'KQkqABCDEFGHabcdefgh - 0 1',
     );
-    final m =
-        g.generateLegalMoves().from(g.size.squareNumber('e1')).castlingMoves;
+    final m = g
+        .generateLegalMoves()
+        .from(g.size.squareNumber('e1'))
+        .castlingMoves;
     expect(m.length, 5);
     g.makeMoveString('e1g1/ee1');
     expect(

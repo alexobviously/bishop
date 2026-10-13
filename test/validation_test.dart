@@ -49,8 +49,7 @@ void main() {
       ),
       FenTest(
         variant: Variant.crazyhouse(),
-        fen:
-            'rnbqkb1r/ppp2p1p/3p1np1/8/5p2/2NQ4/PPP2PPP/2KR1BNR[Pbp] b kq - 1 9',
+        fen: 'rnbqkb1r/ppp2p1p/3p1np1/8/5p2/2NQ4/PPP2PPP/2KR1BNR[Pbp] b kq - 1 9',
         valid: true,
       ),
       FenTest(
@@ -95,8 +94,7 @@ void main() {
       ),
       FenTest(
         variant: Musketeer.variant(),
-        fen:
-            '1a4o1/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/2A2O2 w KQkq - 0 1',
+        fen: '1a4o1/rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR/2A2O2 w KQkq - 0 1',
         valid: true,
       ),
     ];
