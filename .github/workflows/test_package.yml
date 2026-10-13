@@ -24,7 +24,7 @@ jobs:
 
       - name: Static analysis
         id: analyze
-        run: dart analyze --no-pub --no-fatal-infos
+        run: dart analyze --no-fatal-infos
       
       - name: Run Tests
         run: dart test test
