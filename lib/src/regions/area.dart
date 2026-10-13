@@ -10,12 +10,12 @@ class Area implements Region {
 
   const Area({required this.directions});
 
-  factory Area.fromStrings(List<String> directions) =>
+  factory fromStrings(List<String> directions) =>
       Area(directions: directions.map(Direction.fromString).toList());
 
   List<String> export() => directions.map((e) => e.simpleString).toList();
 
-  factory Area.filled({
+  factory filled({
     required int width,
     required int height,
     int xOffset = 0,
@@ -34,7 +34,7 @@ class Area implements Region {
     return Area(directions: dirs);
   }
 
-  factory Area.radius(int size, {bool omitCentre = false}) => Area.filled(
+  factory radius(int size, {bool omitCentre = false}) => Area.filled(
     width: size * 2 + 1,
     height: size * 2 + 1,
     omitCentre: omitCentre,

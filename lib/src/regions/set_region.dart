@@ -4,12 +4,11 @@ class DirectionSetRegion extends BoardRegion {
   final Iterable<Direction> directions;
   const DirectionSetRegion(this.directions);
 
-  factory DirectionSetRegion.fromJson(Map<String, dynamic> json) =>
-      DirectionSetRegion(
-        (json['squares'] as List)
-            .map<Direction>((e) => Direction.fromString(e))
-            .toSet(),
-      );
+  factory fromJson(Map<String, dynamic> json) => DirectionSetRegion(
+    (json['squares'] as List)
+        .map<Direction>((e) => Direction.fromString(e))
+        .toSet(),
+  );
 
   @override
   bool contains(int file, int rank) =>
@@ -38,7 +37,7 @@ class SetRegion extends DirectionSetRegion {
   SetRegion(this.squareNames)
     : super(squareNames.map(Direction.fromSquareName).toSet());
 
-  factory SetRegion.fromJson(Map<String, dynamic> json) =>
+  factory fromJson(Map<String, dynamic> json) =>
       SetRegion((json['squares'] as List).cast<String>().toSet());
 
   @override

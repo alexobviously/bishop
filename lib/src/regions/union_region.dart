@@ -6,7 +6,7 @@ class UnionRegion extends BoardRegion {
 
   const UnionRegion(this.regions);
 
-  factory UnionRegion.fromJson(Map<String, dynamic> json) => UnionRegion(
+  factory fromJson(Map<String, dynamic> json) => UnionRegion(
     (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
   );
 

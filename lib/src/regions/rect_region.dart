@@ -25,26 +25,24 @@ class RectRegion extends BoardRegion {
     this.endFile,
   });
 
-  factory RectRegion.lrbt(int? l, int? r, int? b, int? t) =>
+  factory lrbt(int? l, int? r, int? b, int? t) =>
       RectRegion(startFile: l, endFile: r, startRank: b, endRank: t);
 
   /// A board region consisting of the entirety of a single rank.
-  factory RectRegion.rank(int rank) =>
-      RectRegion(startRank: rank, endRank: rank);
+  factory rank(int rank) => RectRegion(startRank: rank, endRank: rank);
 
   /// A board region consisting of the entirety of a single file.
-  factory RectRegion.file(int file) =>
-      RectRegion(startFile: file, endFile: file);
+  factory file(int file) => RectRegion(startFile: file, endFile: file);
 
   /// A board region consisting of a single square.
-  factory RectRegion.square(int file, int rank) => RectRegion(
+  factory square(int file, int rank) => RectRegion(
     startFile: file,
     endFile: file,
     startRank: rank,
     endRank: rank,
   );
 
-  factory RectRegion.fromJson(Map<String, dynamic> json) => RectRegion(
+  factory fromJson(Map<String, dynamic> json) => RectRegion(
     startRank: json['b'] ?? json['startRank'],
     endRank: json['t'] ?? json['endRank'],
     startFile: json['l'] ?? json['startFile'],

@@ -66,7 +66,7 @@ class PieceType {
     this.optimisationData,
   }) : castling = castling ?? royal;
 
-  factory PieceType.fromJson(
+  factory fromJson(
     Map<String, dynamic> json, {
     List<BishopTypeAdapter> adapters = const [],
   }) {
@@ -197,13 +197,13 @@ class PieceType {
   PieceType withRoyal() =>
       copyWith(royal: true, promoOptions: PiecePromoOptions.none);
 
-  factory PieceType.empty() => const PieceType(
+  factory empty() => const PieceType(
     moves: [],
     promoOptions: PiecePromoOptions.none,
   );
 
   /// Generate a piece type with all of its moves from [Betza notation](https://www.gnu.org/software/xboard/Betza.html).
-  factory PieceType.fromBetza(
+  factory fromBetza(
     String betza, {
     bool royal = false,
     bool? castling,
@@ -234,27 +234,27 @@ class PieceType {
     );
   }
 
-  factory PieceType.knight() => PieceType.fromBetza('N', value: 300);
-  factory PieceType.bishop() => PieceType.fromBetza('B', value: 300);
-  factory PieceType.rook() => PieceType.fromBetza('R', value: 500);
-  factory PieceType.queen() => PieceType.fromBetza('Q', value: 900);
-  factory PieceType.king() => PieceType.fromBetza(
+  factory knight() => PieceType.fromBetza('N', value: 300);
+  factory bishop() => PieceType.fromBetza('B', value: 300);
+  factory rook() => PieceType.fromBetza('R', value: 500);
+  factory queen() => PieceType.fromBetza('Q', value: 900);
+  factory king() => PieceType.fromBetza(
     'K',
     royal: true,
     promoOptions: PiecePromoOptions.none,
   );
 
   /// A king that cannot move.
-  factory PieceType.staticKing() => PieceType.fromBetza(
+  factory staticKing() => PieceType.fromBetza(
     '',
     royal: true,
     promoOptions: PiecePromoOptions.none,
   );
 
   /// A non-royal king.
-  factory PieceType.commoner() => PieceType.fromBetza('K', value: 300);
+  factory commoner() => PieceType.fromBetza('K', value: 300);
 
-  factory PieceType.pawn() => PieceType.fromBetza(
+  factory pawn() => PieceType.fromBetza(
     'fmW' // moves forward one square
     'fceF' // captures diagonally forward one square
     'ifmnD', // on the first move, moves forward two squares
@@ -265,7 +265,7 @@ class PieceType {
   );
 
   /// An 'inverted' pawn that moves diagonally and captures fowards.
-  factory PieceType.berolinaPawn() => PieceType.fromBetza(
+  factory berolinaPawn() => PieceType.fromBetza(
     'fmFfceWifmnA',
     promoOptions: PiecePromoOptions.promotable,
     enPassantable: true,
@@ -276,7 +276,7 @@ class PieceType {
   // It works but you get a first move forward one square too,
   // which isn't ever picked as long as the firstmove part is specified
   // before the normal move part in the betza string. (todo: fix)
-  factory PieceType.longMovePawn(int moveLength) => PieceType.fromBetza(
+  factory longMovePawn(int moveLength) => PieceType.fromBetza(
     'fmWfceFifmW$moveLength',
     promoOptions: PiecePromoOptions.promotable,
     enPassantable: true,
@@ -285,7 +285,7 @@ class PieceType {
   );
 
   /// A pawn with no double move and no en passant.
-  factory PieceType.simplePawn() => PieceType.fromBetza(
+  factory simplePawn() => PieceType.fromBetza(
     'fmWfcF',
     promoOptions: PiecePromoOptions.promotable,
     noSanSymbol: true,
@@ -295,59 +295,59 @@ class PieceType {
   // Values are pretty approximate and based on wikipedia/things Betza says.
 
   /// Moves like a knight, captures like a bishop.
-  factory PieceType.knibis() => PieceType.fromBetza('mNcB', value: 400);
+  factory knibis() => PieceType.fromBetza('mNcB', value: 400);
 
   /// Moves like a bishop, captures like a knight.
-  factory PieceType.biskni() => PieceType.fromBetza('mBcN');
+  factory biskni() => PieceType.fromBetza('mBcN');
 
   /// Moves like a knight, captures like a rook.
-  factory PieceType.kniroo() => PieceType.fromBetza('mNcR', value: 400);
+  factory kniroo() => PieceType.fromBetza('mNcR', value: 400);
 
   /// Moves like a rook, captures like a knight.
-  factory PieceType.rookni() => PieceType.fromBetza('mRcN');
+  factory rookni() => PieceType.fromBetza('mRcN');
 
   /// Moves like a bishop, captures like a rook.
-  factory PieceType.bisroo() => PieceType.fromBetza('mBcR');
+  factory bisroo() => PieceType.fromBetza('mBcR');
 
   /// Moves like a rook, captures like a bishop.
-  factory PieceType.roobis() => PieceType.fromBetza('mRcB');
+  factory roobis() => PieceType.fromBetza('mRcB');
 
   /// Moves and captures like a bishop or a knight.
-  factory PieceType.archbishop() => PieceType.fromBetza('BN', value: 900);
+  factory archbishop() => PieceType.fromBetza('BN', value: 900);
 
   /// Moves and captures like a rook or a knight.
-  factory PieceType.chancellor() => PieceType.fromBetza('RN', value: 900);
+  factory chancellor() => PieceType.fromBetza('RN', value: 900);
 
   /// Moves and captures like a queen or a knight.
-  factory PieceType.amazon() => PieceType.fromBetza('QN', value: 1200);
+  factory amazon() => PieceType.fromBetza('QN', value: 1200);
 
   /// Moves and captures like a queen, but *must* jump over exactly one piece,
   /// and land on the square directly after it.
-  factory PieceType.grasshopper() => PieceType.fromBetza('gQ', value: 180);
+  factory grasshopper() => PieceType.fromBetza('gQ', value: 180);
 
   /// Moves one square orthogonally in any direction.
-  factory PieceType.wazir() => PieceType.fromBetza('W', value: 120);
+  factory wazir() => PieceType.fromBetza('W', value: 120);
 
   /// Moves one square diagonally in any direction.
-  factory PieceType.ferz() => PieceType.fromBetza('F', value: 140);
+  factory ferz() => PieceType.fromBetza('F', value: 140);
 
   /// Jumps two squares diagonally in any direction.
-  factory PieceType.alfil() => PieceType.fromBetza('A', value: 120);
+  factory alfil() => PieceType.fromBetza('A', value: 120);
 
   /// Jumps two squares orthogonally in any direction.
-  factory PieceType.dabbaba() => PieceType.fromBetza('D', value: 130);
+  factory dabbaba() => PieceType.fromBetza('D', value: 130);
 
   /// Jumps 3 squares in one direction, 1 in the other. Like a long knight.
-  factory PieceType.camel() => PieceType.fromBetza('C', value: 200);
+  factory camel() => PieceType.fromBetza('C', value: 200);
 
   /// Jumps 3 squares in one direction, 2 in the other.
-  factory PieceType.zebra() => PieceType.fromBetza('Z', value: 180);
+  factory zebra() => PieceType.fromBetza('Z', value: 180);
 
   /// Jumps 4 squares in one direction, 1 in the other.
-  factory PieceType.giraffe() => PieceType.fromBetza('(4,1)', value: 180);
+  factory giraffe() => PieceType.fromBetza('(4,1)', value: 180);
 
   /// A piece that does nothing but blocks. Can optionally be [immortal].
-  factory PieceType.blocker({bool immortal = true}) => PieceType.fromBetza(
+  factory blocker({bool immortal = true}) => PieceType.fromBetza(
     '',
     value: 0,
     actions: immortal ? [ActionImmortality()] : [],
@@ -355,12 +355,12 @@ class PieceType {
   );
 
   /// Can move to any empty square on the board.
-  factory PieceType.duck() =>
+  factory duck() =>
       PieceType.fromBetza('m*').withNoPromotion().withImmortality();
 
   /// A piece that can make any number of consecutive knight moves
   /// in the same direction.
-  factory PieceType.nightrider() => PieceType.fromBetza('N0', value: 500);
+  factory nightrider() => PieceType.fromBetza('N0', value: 500);
 }
 
 /// A definition of a `PieceType`, specific to a `Variant`.
@@ -379,7 +379,7 @@ class PieceDefinition {
     required this.value,
   });
 
-  factory PieceDefinition.empty() =>
+  factory empty() =>
       PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
 
   /// The symbol of this piece definition, respecting its [colour].

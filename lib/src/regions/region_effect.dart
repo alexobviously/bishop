@@ -35,7 +35,7 @@ class RegionEffect {
     this.winGame = false,
   });
 
-  factory RegionEffect.fromJson(Map<String, dynamic> json) => RegionEffect(
+  factory fromJson(Map<String, dynamic> json) => RegionEffect(
     whiteRegion: json['whiteRegion'],
     blackRegion: json['blackRegion'],
     pieceType: json.containsKey('pieceType')
@@ -72,7 +72,7 @@ class RegionEffect {
       : copyWith(pieceType: pieceType!.normalise(size));
 
   /// An effect that restricts the movement of the piece to within the region.
-  factory RegionEffect.movement({String? white, String? black}) => RegionEffect(
+  factory movement({String? white, String? black}) => RegionEffect(
     whiteRegion: white,
     blackRegion: black,
     restrictMovement: true,
@@ -80,7 +80,7 @@ class RegionEffect {
 
   /// An effect that causes the piece to change to a different type when within
   /// the region.
-  factory RegionEffect.changePiece({
+  factory changePiece({
     String? whiteRegion,
     String? blackRegion,
     required PieceType pieceType,
@@ -90,7 +90,7 @@ class RegionEffect {
     pieceType: pieceType,
   );
 
-  factory RegionEffect.winGame({String? white, String? black}) => RegionEffect(
+  factory winGame({String? white, String? black}) => RegionEffect(
     whiteRegion: white,
     blackRegion: black,
     winGame: true,

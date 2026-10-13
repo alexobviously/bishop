@@ -18,12 +18,11 @@ class PiecePromoOptions {
     this.promotesTo,
   });
 
-  factory PiecePromoOptions.fromJson(Map<String, dynamic> json) =>
-      PiecePromoOptions(
-        canPromote: json['canPromote'] ?? false,
-        canPromoteTo: json['canPromoteTo'] ?? false,
-        promotesTo: json['promotesTo']?.cast<String>(),
-      );
+  factory fromJson(Map<String, dynamic> json) => PiecePromoOptions(
+    canPromote: json['canPromote'] ?? false,
+    canPromoteTo: json['canPromoteTo'] ?? false,
+    promotesTo: json['promotesTo']?.cast<String>(),
+  );
 
   Map<String, dynamic> toJson() => {
     'canPromote': canPromote,
@@ -41,15 +40,13 @@ class PiecePromoOptions {
   static const promotable = PiecePromoOptions(canPromote: true);
 
   /// A piece that can be promoted, but its only options are [pieces].
-  factory PiecePromoOptions.promotesTo(List<String> pieces) =>
-      PiecePromoOptions(
-        canPromote: true,
-        promotesTo: pieces,
-      );
+  factory promotesTo(List<String> pieces) => PiecePromoOptions(
+    canPromote: true,
+    promotesTo: pieces,
+  );
 
   /// A piece that can be promoted, but only to [piece].
-  factory PiecePromoOptions.promotesToOne(String piece) =>
-      PiecePromoOptions.promotesTo([piece]);
+  factory promotesToOne(String piece) => PiecePromoOptions.promotesTo([piece]);
 
   @override
   int get hashCode =>

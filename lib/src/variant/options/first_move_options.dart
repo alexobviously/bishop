@@ -5,19 +5,17 @@ abstract class FirstMoveOptions {
 
   PieceMoveChecker? build(BuiltVariant variant);
 
-  factory FirstMoveOptions.pair(
+  factory pair(
     FirstMoveOptions? white,
     FirstMoveOptions? black,
   ) => FirstMoveOptionsPair(white, black);
 
-  factory FirstMoveOptions.set(Map<String, FirstMoveOptions> set) =>
-      FirstMoveOptionsSet(set);
+  factory set(Map<String, FirstMoveOptions> set) => FirstMoveOptionsSet(set);
 
-  factory FirstMoveOptions.ranks(List<int> white, List<int> black) =>
-      FirstMoveOptionsPair(
-        RanksFirstMoveOptions(white),
-        RanksFirstMoveOptions(black),
-      );
+  factory ranks(List<int> white, List<int> black) => FirstMoveOptionsPair(
+    RanksFirstMoveOptions(white),
+    RanksFirstMoveOptions(black),
+  );
 
   static const standard = InitialStateFirstMoveOptions();
 }

@@ -21,7 +21,7 @@ abstract class Region {
 
 abstract class BoardRegion extends Region {
   const BoardRegion();
-  factory BoardRegion.fromJson(Map<String, dynamic> json) {
+  factory fromJson(Map<String, dynamic> json) {
     String? type = json['type'];
     if (type != null) {
       return _builders[json['type']]!(json);
@@ -44,14 +44,12 @@ abstract class BoardRegion extends Region {
   @override
   BoardRegion translate(int x, int y);
 
-  factory BoardRegion.lrbt(int? l, int? r, int? b, int? t) =>
-      RectRegion.lrbt(l, r, b, t);
+  factory lrbt(int? l, int? r, int? b, int? t) => RectRegion.lrbt(l, r, b, t);
 
-  factory BoardRegion.square(int file, int rank) =>
-      RectRegion.square(file, rank);
+  factory square(int file, int rank) => RectRegion.square(file, rank);
 
-  factory BoardRegion.rank(int rank) => RectRegion.rank(rank);
-  factory BoardRegion.file(int file) => RectRegion.file(file);
+  factory rank(int rank) => RectRegion.rank(rank);
+  factory file(int file) => RectRegion.file(file);
 
   BuiltRegion build(BoardSize size) =>
       BuiltRegion(squares(size).toList(), size);

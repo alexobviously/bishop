@@ -7,7 +7,7 @@ class SubtractRegion extends BoardRegion {
 
   const SubtractRegion(this.positive, this.negative);
 
-  factory SubtractRegion.fromJson(Map<String, dynamic> json) => SubtractRegion(
+  factory fromJson(Map<String, dynamic> json) => SubtractRegion(
     BoardRegion.fromJson(json['+']),
     BoardRegion.fromJson(json['-']),
   );
@@ -31,10 +31,8 @@ class SubtractRegion extends BoardRegion {
       );
 
   @override
-  SubtractRegion translate(int x, int y) => SubtractRegion(
-    positive.translate(x, y),
-    negative.translate(x, y),
-  );
+  SubtractRegion translate(int x, int y) =>
+      SubtractRegion(positive.translate(x, y), negative.translate(x, y));
 
   @override
   String toString() => 'Subtract($positive, $negative)';

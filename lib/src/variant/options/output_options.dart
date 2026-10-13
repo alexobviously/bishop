@@ -20,7 +20,7 @@ class OutputOptions {
     this.virginFiles = false,
   });
 
-  factory OutputOptions.fromJson(Map<String, dynamic> json) => OutputOptions(
+  factory fromJson(Map<String, dynamic> json) => OutputOptions(
     castlingFormat: CastlingFormat.values.firstWhere(
       (e) => e.name == json['castlingFormat'],
     ),

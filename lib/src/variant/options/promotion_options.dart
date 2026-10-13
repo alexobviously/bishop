@@ -13,7 +13,7 @@ abstract class PromotionOptions {
 
   static const standard = StandardPromotion();
 
-  factory PromotionOptions.ranks(
+  factory ranks(
     List<int> ranks, {
     Map<String, int>? pieceLimits,
   }) => StandardPromotion(ranks: ranks, pieceLimits: pieceLimits);
@@ -21,7 +21,7 @@ abstract class PromotionOptions {
   /// Rules where pieces can optionally promote on [ranks], and if [forced] is
   /// true, then they will be forced to promote on [forcedRanks].
   /// This allows for rules such as those in Shogi or Grand Chess.
-  factory PromotionOptions.optional({
+  factory optional({
     List<int>? ranks,
     bool forced = true,
     List<int>? forcedRanks,
@@ -33,10 +33,10 @@ abstract class PromotionOptions {
     pieceLimits: pieceLimits,
   );
 
-  factory PromotionOptions.limited(Map<String, int>? pieceLimits) =>
+  factory limited(Map<String, int>? pieceLimits) =>
       StandardPromotion(pieceLimits: pieceLimits);
 
-  factory PromotionOptions.custom(
+  factory custom(
     PromotionBuilder? Function(BuiltVariant variant) builder,
     Map<String, int>? pieceLimits,
   ) => CustomPromotion(builder: builder, pieceLimits: pieceLimits);

@@ -33,7 +33,7 @@ class MaskedState extends BishopState {
     super.hash = 0,
   });
 
-  factory MaskedState.mask({
+  factory mask({
     required List<int> mask,
     required BishopState state,
   }) {
@@ -61,7 +61,7 @@ class MaskedState extends BishopState {
     );
   }
 
-  factory MaskedState.fromBishopState(
+  factory fromBishopState(
     BishopState state,
     List<int> mask, {
     List<int>? board,

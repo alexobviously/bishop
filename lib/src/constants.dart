@@ -152,8 +152,7 @@ enum Modality {
 
   final String betza;
   Modality(this.betza);
-  factory Modality.fromBetza(String betza) =>
-      values.firstWhere((e) => e.betza == betza);
+  factory fromBetza(String betza) => values.firstWhere((e) => e.betza == betza);
 }
 
 /// Defines different types of gating for variants.

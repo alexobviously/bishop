@@ -115,7 +115,7 @@ class BuiltVariant {
     prettyMoveFormatters: prettyMoveFormatters ?? this.prettyMoveFormatters,
   );
 
-  factory BuiltVariant.fromData(Variant data) {
+  factory fromData(Variant data) {
     data = data.normalise();
 
     Map<int, List<String>> winRegions = {};
@@ -227,7 +227,7 @@ class BuiltVariant {
     return bv;
   }
 
-  factory BuiltVariant.standard() => BuiltVariant.fromData(Variant.standard());
+  factory standard() => BuiltVariant.fromData(Variant.standard());
 
   PieceType pieceType(int piece, [int? square]) {
     // TODO: make this more efficient by building some of these values in advance
