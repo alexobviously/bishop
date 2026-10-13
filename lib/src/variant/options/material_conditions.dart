@@ -37,21 +37,22 @@ class MaterialConditions<T> {
         soloMaters: (json['soloMaters'] ?? []).cast<T>(),
         pairMaters: (json['pairMaters'] ?? []).cast<T>(),
         combinedPairMaters: (json['combinedPairMaters'] ?? []).cast<T>(),
-        specialCases: (json['specialCases'] as List<dynamic>?)
+        specialCases:
+            (json['specialCases'] as List<dynamic>?)
                 ?.map((e) => (e as List<dynamic>).map((e) => e as T).toList())
                 .toList() ??
             [],
       );
 
   Map<String, dynamic> toJson() => {
-        'enabled': enabled,
-        if (enabled) ...{
-          'soloMaters': soloMaters,
-          'pairMaters': pairMaters,
-          'combinedPairMaters': combinedPairMaters,
-          'specialCases': specialCases,
-        },
-      };
+    'enabled': enabled,
+    if (enabled) ...{
+      'soloMaters': soloMaters,
+      'pairMaters': pairMaters,
+      'combinedPairMaters': combinedPairMaters,
+      'specialCases': specialCases,
+    },
+  };
 
   MaterialConditions<T> copyWith({
     bool? enabled,
@@ -59,14 +60,13 @@ class MaterialConditions<T> {
     List<T>? pairMaters,
     List<T>? combinedPairMaters,
     List<List<T>>? specialCases,
-  }) =>
-      MaterialConditions(
-        enabled: enabled ?? this.enabled,
-        soloMaters: soloMaters ?? this.soloMaters,
-        pairMaters: pairMaters ?? this.pairMaters,
-        combinedPairMaters: combinedPairMaters ?? this.combinedPairMaters,
-        specialCases: specialCases ?? this.specialCases,
-      );
+  }) => MaterialConditions(
+    enabled: enabled ?? this.enabled,
+    soloMaters: soloMaters ?? this.soloMaters,
+    pairMaters: pairMaters ?? this.pairMaters,
+    combinedPairMaters: combinedPairMaters ?? this.combinedPairMaters,
+    specialCases: specialCases ?? this.specialCases,
+  );
 
   /// Material conditions for standard chess, as well as simple expanded variants
   /// with chancellor and archbishop only (e.g. Capablanca).

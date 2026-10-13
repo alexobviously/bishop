@@ -17,9 +17,9 @@ class BuiltRegion implements Region {
 
   @override
   Region translate(int x, int y) => BuiltRegion(
-        boardSquares
-            .map((e) => size.square(size.file(e) + x, size.rank(e) + y))
-            .toList(),
-        size,
-      );
+    boardSquares
+        .map((e) => size.square(size.file(e) + x, size.rank(e) + y))
+        .toList(),
+    size,
+  );
 }

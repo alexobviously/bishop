@@ -98,8 +98,8 @@ class StandardMoveDefinition extends MoveDefinition {
         hopDistance: atom.unlimitedHopper
             ? 0
             : atom.limitedHopper
-                ? 1
-                : -1,
+            ? 1
+            : -1,
       );
 
   StandardMoveDefinition copyWith({
@@ -113,19 +113,18 @@ class StandardMoveDefinition extends MoveDefinition {
     int? normalised,
     Direction? lameDirection,
     int? lameNormalised,
-  }) =>
-      StandardMoveDefinition(
-        direction: direction ?? this.direction,
-        range: range ?? this.range,
-        modality: modality ?? this.modality,
-        enPassant: enPassant ?? this.enPassant,
-        firstOnly: firstOnly ?? this.firstOnly,
-        lame: lame ?? this.lame,
-        hopDistance: hopDistance ?? this.hopDistance,
-        normalised: normalised ?? this.normalised,
-        lameDirection: lameDirection ?? this.lameDirection,
-        lameNormalised: lameNormalised ?? this.lameNormalised,
-      );
+  }) => StandardMoveDefinition(
+    direction: direction ?? this.direction,
+    range: range ?? this.range,
+    modality: modality ?? this.modality,
+    enPassant: enPassant ?? this.enPassant,
+    firstOnly: firstOnly ?? this.firstOnly,
+    lame: lame ?? this.lame,
+    hopDistance: hopDistance ?? this.hopDistance,
+    normalised: normalised ?? this.normalised,
+    lameDirection: lameDirection ?? this.lameDirection,
+    lameNormalised: lameNormalised ?? this.lameNormalised,
+  );
 
   /// Calculates the values needed to use this on a board of [size].
   @override
@@ -216,8 +215,8 @@ class Direction {
   DirectionType get type => orthogonal
       ? DirectionType.orthogonal
       : diagonal
-          ? DirectionType.diagonal
-          : DirectionType.oblique;
+      ? DirectionType.diagonal
+      : DirectionType.oblique;
 
   /// A list of directions that occur from mirroring this `Direction` in both axes.
   List<Direction> get permutations {
@@ -257,8 +256,10 @@ class Direction {
     if (other is int) {
       return other == 1 ? this : Direction(h * other, v * other);
     }
-    throw Exception('Direction can only be multiplied by an int or another'
-        'Direction (tried to use ${other.runtimeType}).');
+    throw Exception(
+      'Direction can only be multiplied by an int or another'
+      'Direction (tried to use ${other.runtimeType}).',
+    );
   }
 
   Direction operator ~/(Object other) {
@@ -268,8 +269,10 @@ class Direction {
     if (other is int) {
       return other == 1 ? this : Direction(h ~/ other, v ~/ other);
     }
-    throw Exception('Direction can only be divided by an int or another'
-        'Direction (tried to use ${other.runtimeType}).');
+    throw Exception(
+      'Direction can only be divided by an int or another'
+      'Direction (tried to use ${other.runtimeType}).',
+    );
   }
 
   Direction operator -() => Direction(-h, -v);
@@ -278,11 +281,7 @@ class Direction {
   int get hashCode => (h << 8) + v;
 }
 
-enum DirectionType {
-  orthogonal,
-  diagonal,
-  oblique;
-}
+enum DirectionType { orthogonal, diagonal, oblique }
 
 extension MoveDefListExtension on Iterable<StandardMoveDefinition> {
   bool get hasOrthogonal =>

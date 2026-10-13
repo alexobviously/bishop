@@ -21,9 +21,9 @@ class DirectionSetRegion extends BoardRegion {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'dset',
-        'squares': directions.map((e) => e.simpleString).toList(),
-      };
+    'type': 'dset',
+    'squares': directions.map((e) => e.simpleString).toList(),
+  };
 
   @override
   BoardRegion translate(int x, int y) =>
@@ -36,16 +36,16 @@ class DirectionSetRegion extends BoardRegion {
 class SetRegion extends DirectionSetRegion {
   final Iterable<String> squareNames;
   SetRegion(this.squareNames)
-      : super(squareNames.map(Direction.fromSquareName).toSet());
+    : super(squareNames.map(Direction.fromSquareName).toSet());
 
   factory SetRegion.fromJson(Map<String, dynamic> json) =>
       SetRegion((json['squares'] as List).cast<String>().toSet());
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'set',
-        'squares': squareNames.toList(),
-      };
+    'type': 'set',
+    'squares': squareNames.toList(),
+  };
 
   @override
   String toString() => 'SetRegion($squareNames)';

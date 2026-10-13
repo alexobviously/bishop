@@ -47,15 +47,15 @@ class CastlingOptions {
       );
 
   Map<String, dynamic> toJson() => {
-        'enabled': enabled,
-        if (kTarget != null) 'kTarget': kTarget,
-        if (qTarget != null) 'qTarget': qTarget,
-        if (enabled) 'fixedRooks': fixedRooks,
-        if (kRook != null) 'kRook': kRook,
-        if (qRook != null) 'qRook': qRook,
-        if (rookPiece != null) 'rookPiece': rookPiece,
-        if (enabled) 'useRookAsTarget': useRookAsTarget,
-      };
+    'enabled': enabled,
+    if (kTarget != null) 'kTarget': kTarget,
+    if (qTarget != null) 'qTarget': qTarget,
+    if (enabled) 'fixedRooks': fixedRooks,
+    if (kRook != null) 'kRook': kRook,
+    if (qRook != null) 'qRook': qRook,
+    if (rookPiece != null) 'rookPiece': rookPiece,
+    if (enabled) 'useRookAsTarget': useRookAsTarget,
+  };
 
   CastlingOptions copyWith({
     bool? enabled,
@@ -66,17 +66,16 @@ class CastlingOptions {
     int? qRook,
     String? rookPiece,
     bool? useRookAsTarget,
-  }) =>
-      CastlingOptions(
-        enabled: enabled ?? this.enabled,
-        kTarget: kTarget ?? this.kTarget,
-        qTarget: qTarget ?? this.qTarget,
-        fixedRooks: fixedRooks ?? this.fixedRooks,
-        kRook: kRook ?? this.kRook,
-        qRook: qRook ?? this.qRook,
-        rookPiece: rookPiece ?? this.rookPiece,
-        useRookAsTarget: useRookAsTarget ?? this.useRookAsTarget,
-      );
+  }) => CastlingOptions(
+    enabled: enabled ?? this.enabled,
+    kTarget: kTarget ?? this.kTarget,
+    qTarget: qTarget ?? this.qTarget,
+    fixedRooks: fixedRooks ?? this.fixedRooks,
+    kRook: kRook ?? this.kRook,
+    qRook: qRook ?? this.qRook,
+    rookPiece: rookPiece ?? this.rookPiece,
+    useRookAsTarget: useRookAsTarget ?? this.useRookAsTarget,
+  );
 
   static const none = CastlingOptions(enabled: false);
 

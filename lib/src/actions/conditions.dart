@@ -5,13 +5,13 @@ class Conditions {
   /// Merges multiple [conditions] into one.
   static ActionCondition merge(List<ActionCondition> conditions) =>
       conditions.length == 1
-          ? conditions.first
-          : (ActionTrigger trigger) {
-              for (final c in conditions) {
-                if (!c(trigger)) return false;
-              }
-              return true;
-            };
+      ? conditions.first
+      : (ActionTrigger trigger) {
+          for (final c in conditions) {
+            if (!c(trigger)) return false;
+          }
+          return true;
+        };
 
   /// Inverts the result of a condition.
   static ActionCondition invert(ActionCondition condition) =>
@@ -89,34 +89,34 @@ class Conditions {
   /// Returns true if the royal pieces are not facing, or if they are facing
   /// with no pieces between them.
   static ActionCondition get royalsNotFacing => (ActionTrigger trigger) {
-        final state = trigger.state;
-        final size = trigger.variant.boardSize;
-        int whiteSq = state.royalSquares[Bishop.white];
-        int blackSq = state.royalSquares[Bishop.black];
-        if (!size.squaresOnSameFile(whiteSq, blackSq)) {
-          return false;
-        }
-        int start = min(whiteSq, blackSq);
-        int end = max(whiteSq, blackSq);
-        for (int i = start + size.north; i < end; i += size.north) {
-          if (state.board[i].isNotEmpty) return false;
-        }
-        return true;
-      };
+    final state = trigger.state;
+    final size = trigger.variant.boardSize;
+    int whiteSq = state.royalSquares[Bishop.white];
+    int blackSq = state.royalSquares[Bishop.black];
+    if (!size.squaresOnSameFile(whiteSq, blackSq)) {
+      return false;
+    }
+    int start = min(whiteSq, blackSq);
+    int end = max(whiteSq, blackSq);
+    for (int i = start + size.north; i < end; i += size.north) {
+      if (state.board[i].isNotEmpty) return false;
+    }
+    return true;
+  };
 
   static ActionCondition playerHasPieceCount({
     required String pieceType,
     required int player,
     int count = 1,
     bool draw = false,
-  }) =>
-      (ActionTrigger trigger) {
-        int piece = trigger.variant.pieceIndexLookup[pieceType]!;
-        return trigger.state.pieces[makePiece(piece, player)] >= count;
-      };
+  }) => (ActionTrigger trigger) {
+    int piece = trigger.variant.pieceIndexLookup[pieceType]!;
+    return trigger.state.pieces[makePiece(piece, player)] >= count;
+  };
 }
 
 extension ConditionExtension on ActionCondition {
   /// Inverts the result of a condition.
-  ActionCondition invert() => (trigger) => !this(trigger);
+  ActionCondition invert() =>
+      (trigger) => !this(trigger);
 }

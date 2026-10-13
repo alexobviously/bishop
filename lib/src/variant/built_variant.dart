@@ -85,36 +85,35 @@ class BuiltVariant {
     Map<Type, MoveProcessorFunction>? moveProcessors,
     Map<Type, MoveFormatterFunction>? algebraicMoveFormatters,
     Map<Type, MoveFormatterFunction>? prettyMoveFormatters,
-  }) =>
-      BuiltVariant(
-        data: data ?? this.data,
-        pieces: pieces ?? this.pieces,
-        pieceLookup: pieceLookup ?? this.pieceLookup,
-        pieceIndexLookup: pieceIndexLookup ?? this.pieceIndexLookup,
-        promotionPieces: promotionPieces ?? this.promotionPieces,
-        promotablePieces: promotablePieces ?? this.promotablePieces,
-        promoLimits: promoLimits ?? this.promoLimits,
-        promoMap: promoMap ?? this.promoMap,
-        promotionBuilder: promotionBuilder ?? this.promotionBuilder,
-        dropBuilder: dropBuilder ?? this.dropBuilder,
-        passChecker: passChecker ?? this.passChecker,
-        firstMoveChecker: firstMoveChecker ?? this.firstMoveChecker,
-        royalPiece: royalPiece ?? this.royalPiece,
-        epPiece: epPiece ?? this.epPiece,
-        castlingPiece: castlingPiece ?? this.castlingPiece,
-        rookPiece: rookPiece ?? this.rookPiece,
-        materialConditions: materialConditions ?? this.materialConditions,
-        regions: regions ?? this.regions,
-        winRegions: winRegions ?? this.winRegions,
-        actions: actions ?? this.actions,
-        actionsByEvent: actionsByEvent ?? this.actionsByEvent,
-        stateTransformer: stateTransformer ?? this.stateTransformer,
-        moveGenerators: moveGenerators ?? this.moveGenerators,
-        moveProcessors: moveProcessors ?? this.moveProcessors,
-        algebraicMoveFormatters:
-            algebraicMoveFormatters ?? this.algebraicMoveFormatters,
-        prettyMoveFormatters: prettyMoveFormatters ?? this.prettyMoveFormatters,
-      );
+  }) => BuiltVariant(
+    data: data ?? this.data,
+    pieces: pieces ?? this.pieces,
+    pieceLookup: pieceLookup ?? this.pieceLookup,
+    pieceIndexLookup: pieceIndexLookup ?? this.pieceIndexLookup,
+    promotionPieces: promotionPieces ?? this.promotionPieces,
+    promotablePieces: promotablePieces ?? this.promotablePieces,
+    promoLimits: promoLimits ?? this.promoLimits,
+    promoMap: promoMap ?? this.promoMap,
+    promotionBuilder: promotionBuilder ?? this.promotionBuilder,
+    dropBuilder: dropBuilder ?? this.dropBuilder,
+    passChecker: passChecker ?? this.passChecker,
+    firstMoveChecker: firstMoveChecker ?? this.firstMoveChecker,
+    royalPiece: royalPiece ?? this.royalPiece,
+    epPiece: epPiece ?? this.epPiece,
+    castlingPiece: castlingPiece ?? this.castlingPiece,
+    rookPiece: rookPiece ?? this.rookPiece,
+    materialConditions: materialConditions ?? this.materialConditions,
+    regions: regions ?? this.regions,
+    winRegions: winRegions ?? this.winRegions,
+    actions: actions ?? this.actions,
+    actionsByEvent: actionsByEvent ?? this.actionsByEvent,
+    stateTransformer: stateTransformer ?? this.stateTransformer,
+    moveGenerators: moveGenerators ?? this.moveGenerators,
+    moveProcessors: moveProcessors ?? this.moveProcessors,
+    algebraicMoveFormatters:
+        algebraicMoveFormatters ?? this.algebraicMoveFormatters,
+    prettyMoveFormatters: prettyMoveFormatters ?? this.prettyMoveFormatters,
+  );
 
   factory BuiltVariant.fromData(Variant data) {
     data = data.normalise();
@@ -185,8 +184,9 @@ class BuiltVariant {
           .where((e) => e.value.type.promoOptions.canPromote)
           .map((e) => e.key)
           .toList(),
-      promoLimits: data.promotionOptions.pieceLimits
-          ?.map((k, v) => MapEntry(pieceIndexLookup[k]!, v)),
+      promoLimits: data.promotionOptions.pieceLimits?.map(
+        (k, v) => MapEntry(pieceIndexLookup[k]!, v),
+      ),
       promoMap: promoMap,
       royalPiece: pieces.indexWhere((p) => p.type.royal),
       epPiece: data.enPassant
@@ -393,10 +393,9 @@ class BuiltVariant {
     required BishopState state,
     required int player,
     MoveGenParams params = MoveGenParams.normal,
-  }) =>
-      moveGenerators
-          .map((e) => e(state: state, player: player, params: params))
-          .expand((e) => e);
+  }) => moveGenerators
+      .map((e) => e(state: state, player: player, params: params))
+      .expand((e) => e);
 
   BishopState? makeCustomMove(MoveProcessorParams params) =>
       moveProcessors[params.move.runtimeType]?.call(params);
@@ -405,11 +404,11 @@ class BuiltVariant {
   Iterable<Action> actionsForTrigger(
     ActionTrigger trigger, {
     bool checkPrecondition = true,
-  }) =>
-      checkPrecondition
-          ? actionsByEvent[trigger.event]!
-              .where((e) => e.precondition?.call(trigger) ?? true)
-          : actionsByEvent[trigger.event]!;
+  }) => checkPrecondition
+      ? actionsByEvent[trigger.event]!.where(
+          (e) => e.precondition?.call(trigger) ?? true,
+        )
+      : actionsByEvent[trigger.event]!;
 
   /// Generates all effects for all actions triggered by [trigger].
   List<ActionEffect> executeActions(ActionTrigger trigger) {
@@ -486,8 +485,9 @@ class BuiltVariant {
 
   /// Determines whether player [colour] can pass their turn in [state].
   bool canPass({required BishopState state, required int colour}) =>
-      passChecker
-          ?.call(MoveParams(colour: colour, state: state, variant: this)) ??
+      passChecker?.call(
+        MoveParams(colour: colour, state: state, variant: this),
+      ) ??
       false;
 
   bool canFirstMove({
@@ -535,33 +535,30 @@ class BuiltVariant {
     BishopState state, {
     String? startPos,
     int? seed,
-  }) =>
-      pieceMapIntToStr(
-        capturedPieces(state, startPos: startPos, seed: seed),
-        fullPiece: true,
-      );
+  }) => pieceMapIntToStr(
+    capturedPieces(state, startPos: startPos, seed: seed),
+    fullPiece: true,
+  );
 
   Map<int, T> pieceMapStrToInt<T>(
     Map<String, T> input, {
     bool fullPiece = false,
-  }) =>
-      input.map(
-        (k, v) => MapEntry<int, T>(
-          fullPiece ? pieceFromSymbol(k) : pieceIndex(k.toUpperCase()),
-          v,
-        ),
-      );
+  }) => input.map(
+    (k, v) => MapEntry<int, T>(
+      fullPiece ? pieceFromSymbol(k) : pieceIndex(k.toUpperCase()),
+      v,
+    ),
+  );
 
   Map<String, T> pieceMapIntToStr<T>(
     Map<int, T> input, {
     bool fullPiece = false,
-  }) =>
-      input.map(
-        (k, v) => MapEntry<String, T>(
-          fullPiece ? pieceSymbol(k.type, k.colour) : pieces[k].symbol,
-          v,
-        ),
-      );
+  }) => input.map(
+    (k, v) => MapEntry<String, T>(
+      fullPiece ? pieceSymbol(k.type, k.colour) : pieces[k].symbol,
+      v,
+    ),
+  );
 
   @override
   String toString() => name;

@@ -21,22 +21,25 @@ class OutputOptions {
   });
 
   factory OutputOptions.fromJson(Map<String, dynamic> json) => OutputOptions(
-        castlingFormat: CastlingFormat.values
-            .firstWhere((e) => e.name == json['castlingFormat']),
-        showPromoted: json['showPromoted'],
-        virginFiles: json['virginFiles'],
-      );
+    castlingFormat: CastlingFormat.values.firstWhere(
+      (e) => e.name == json['castlingFormat'],
+    ),
+    showPromoted: json['showPromoted'],
+    virginFiles: json['virginFiles'],
+  );
 
   Map<String, dynamic> toJson() => {
-        'castlingFormat': castlingFormat.name,
-        'showPromoted': showPromoted,
-        'virginFiles': virginFiles,
-      };
+    'castlingFormat': castlingFormat.name,
+    'showPromoted': showPromoted,
+    'virginFiles': virginFiles,
+  };
 
-  static const standard =
-      OutputOptions(castlingFormat: CastlingFormat.standard);
-  static const chess960 =
-      OutputOptions(castlingFormat: CastlingFormat.shredder);
+  static const standard = OutputOptions(
+    castlingFormat: CastlingFormat.standard,
+  );
+  static const chess960 = OutputOptions(
+    castlingFormat: CastlingFormat.shredder,
+  );
   static const crazyhouse = OutputOptions(
     castlingFormat: CastlingFormat.standard,
     showPromoted: true,

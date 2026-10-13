@@ -13,36 +13,35 @@ class ActionCheckRoyalsAlive extends Action {
     super.condition,
     this.allowDraw = false,
   }) : super(
-          action: (ActionTrigger trigger) {
-            int king = trigger.variant.royalPiece;
-            List<bool> kingsAlive = Bishop.colours
-                .map(
-                  (e) =>
-                      trigger
-                          .state.board[trigger.state.royalSquares[e]].piece ==
-                      makePiece(king, e),
-                )
-                .toList();
-            if (kingsAlive[Bishop.white]) {
-              return kingsAlive[Bishop.black]
-                  ? []
-                  : [
-                      const EffectSetGameResult(
-                        WonGameRoyalDead(winner: Bishop.white),
-                      ),
-                    ];
-            }
-            return kingsAlive[Bishop.black]
-                ? [
-                    const EffectSetGameResult(
-                      WonGameRoyalDead(winner: Bishop.black),
-                    ),
-                  ]
-                : (allowDraw
-                    ? [const EffectSetGameResult(DrawnGameBothRoyalsDead())]
-                    : [const EffectInvalidateMove()]);
-          },
-        );
+         action: (ActionTrigger trigger) {
+           int king = trigger.variant.royalPiece;
+           List<bool> kingsAlive = Bishop.colours
+               .map(
+                 (e) =>
+                     trigger.state.board[trigger.state.royalSquares[e]].piece ==
+                     makePiece(king, e),
+               )
+               .toList();
+           if (kingsAlive[Bishop.white]) {
+             return kingsAlive[Bishop.black]
+                 ? []
+                 : [
+                     const EffectSetGameResult(
+                       WonGameRoyalDead(winner: Bishop.white),
+                     ),
+                   ];
+           }
+           return kingsAlive[Bishop.black]
+               ? [
+                   const EffectSetGameResult(
+                     WonGameRoyalDead(winner: Bishop.black),
+                   ),
+                 ]
+               : (allowDraw
+                     ? [const EffectSetGameResult(DrawnGameBothRoyalsDead())]
+                     : [const EffectInvalidateMove()]);
+         },
+       );
 }
 
 class CheckRoyalsAliveAdapter
@@ -96,28 +95,30 @@ class ActionCheckPieceCount extends Action {
     super.precondition,
     super.condition,
   }) : super(
-          action: (ActionTrigger trigger) {
-            int piece = trigger.variant.pieceIndexLookup[pieceType]!;
-            bool white = player == Bishop.black ||
-                trigger.state.pieces[makePiece(piece, Bishop.white)] >= count;
-            bool black = player == Bishop.white ||
-                trigger.state.pieces[makePiece(piece, Bishop.black)] >= count;
-            if (white && black) return [];
-            if (draw || (!white && !black)) {
-              return drawsInvalidate
-                  ? [const EffectInvalidateMove()]
-                  : [const EffectSetGameResult(DrawnGameElimination())];
-            }
-            return [
-              EffectSetGameResult(
-                WonGameElimination(
-                  winner: white ? Bishop.white : Bishop.black,
-                  pieceType: pieceType,
-                ),
-              ),
-            ];
-          },
-        );
+         action: (ActionTrigger trigger) {
+           int piece = trigger.variant.pieceIndexLookup[pieceType]!;
+           bool white =
+               player == Bishop.black ||
+               trigger.state.pieces[makePiece(piece, Bishop.white)] >= count;
+           bool black =
+               player == Bishop.white ||
+               trigger.state.pieces[makePiece(piece, Bishop.black)] >= count;
+           if (white && black) return [];
+           if (draw || (!white && !black)) {
+             return drawsInvalidate
+                 ? [const EffectInvalidateMove()]
+                 : [const EffectSetGameResult(DrawnGameElimination())];
+           }
+           return [
+             EffectSetGameResult(
+               WonGameElimination(
+                 winner: white ? Bishop.white : Bishop.black,
+                 pieceType: pieceType,
+               ),
+             ),
+           ];
+         },
+       );
 }
 
 class CheckPieceCountAdapter extends BishopTypeAdapter<ActionCheckPieceCount> {
@@ -160,12 +161,12 @@ class CheckPieceCountAdapter extends BishopTypeAdapter<ActionCheckPieceCount> {
 class ActionFlyingGenerals extends Action {
   final bool activeCondition;
   ActionFlyingGenerals({this.activeCondition = false})
-      : super(
-          event: ActionEvent.afterMove,
-          precondition: activeCondition ? null : Conditions.royalsNotFacing,
-          condition: activeCondition ? Conditions.royalsNotFacing : null,
-          action: ActionDefinitions.invalidateMove,
-        );
+    : super(
+        event: ActionEvent.afterMove,
+        precondition: activeCondition ? null : Conditions.royalsNotFacing,
+        condition: activeCondition ? Conditions.royalsNotFacing : null,
+        action: ActionDefinitions.invalidateMove,
+      );
 }
 
 class FlyingGeneralsAdapter extends BishopTypeAdapter<ActionFlyingGenerals> {
@@ -180,6 +181,6 @@ class FlyingGeneralsAdapter extends BishopTypeAdapter<ActionFlyingGenerals> {
 
   @override
   Map<String, dynamic> export(ActionFlyingGenerals e) => {
-        if (e.activeCondition) 'activeCondition': e.activeCondition,
-      };
+    if (e.activeCondition) 'activeCondition': e.activeCondition,
+  };
 }

@@ -7,8 +7,8 @@ class UnionRegion extends BoardRegion {
   const UnionRegion(this.regions);
 
   factory UnionRegion.fromJson(Map<String, dynamic> json) => UnionRegion(
-        (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
-      );
+    (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
+  );
 
   @override
   bool contains(int file, int rank) =>
@@ -24,9 +24,9 @@ class UnionRegion extends BoardRegion {
 
   @override
   Map<String, dynamic> toJson() => {
-        'type': 'union',
-        'regions': [...regions.map((e) => e.toJson())],
-      };
+    'type': 'union',
+    'regions': [...regions.map((e) => e.toJson())],
+  };
 
   @override
   String toString() => 'Union(${regions.map((e) => e.toString()).join(', ')})';

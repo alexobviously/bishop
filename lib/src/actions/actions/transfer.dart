@@ -13,17 +13,17 @@ class ActionTransferOwnership extends Action {
     this.quiet = true,
     super.condition,
   }) : super(
-          event: ActionEvent.afterMove,
-          precondition: Conditions.merge([
-            Conditions.movingPieceIsRoyal.invert(),
-            if (capture && !quiet) Conditions.isCapture,
-            if (quiet && !capture) Conditions.isNotCapture,
-          ]),
-          action: (trigger) {
-            final piece = trigger.board[trigger.move.to];
-            return [EffectModifySquare(trigger.move.to, piece.flipColour())];
-          },
-        );
+         event: ActionEvent.afterMove,
+         precondition: Conditions.merge([
+           Conditions.movingPieceIsRoyal.invert(),
+           if (capture && !quiet) Conditions.isCapture,
+           if (quiet && !capture) Conditions.isNotCapture,
+         ]),
+         action: (trigger) {
+           final piece = trigger.board[trigger.move.to];
+           return [EffectModifySquare(trigger.move.to, piece.flipColour())];
+         },
+       );
 }
 
 class TransferOwnershipAdapter

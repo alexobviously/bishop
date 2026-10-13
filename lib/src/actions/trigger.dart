@@ -33,14 +33,13 @@ class ActionTrigger {
     BuiltVariant? variant,
     Move? move,
     int? piece,
-  }) =>
-      ActionTrigger(
-        event: event ?? this.event,
-        variant: variant ?? this.variant,
-        state: state ?? this.state,
-        move: move ?? this.move,
-        piece: piece ?? this.piece,
-      );
+  }) => ActionTrigger(
+    event: event ?? this.event,
+    variant: variant ?? this.variant,
+    state: state ?? this.state,
+    move: move ?? this.move,
+    piece: piece ?? this.piece,
+  );
 
   BoardSize get size => variant.boardSize;
   List<int> get board => state.board;

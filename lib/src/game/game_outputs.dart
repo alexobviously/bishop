@@ -19,8 +19,9 @@ extension GameOutputs on Game {
       san = san.replaceAll('#', '').replaceAll('+', '');
     }
     List<Move> moves = generateLegalMoves();
-    Move? match = moves
-        .firstWhereOrNull((m) => toSan(m, moves: moves, checks: checks) == san);
+    Move? match = moves.firstWhereOrNull(
+      (m) => toSan(m, moves: moves, checks: checks) == san,
+    );
     return match;
   }
 
@@ -67,7 +68,8 @@ extension GameOutputs on Game {
   String toSan(Move move, {List<Move>? moves, bool checks = true}) {
     if (move is PassMove) return move.algebraic();
     if (move is GatingMove) {
-      String san = '${toSan(move.child, checks: checks)}/'
+      String san =
+          '${toSan(move.child, checks: checks)}/'
           '${variant.pieces[move.dropPiece].symbol}';
       if (move.castling) {
         String dropSq = move.dropOnRookSquare
@@ -112,8 +114,9 @@ extension GameOutputs on Game {
           san = pieceDef.symbol;
         }
         if (disambiguator.isNotEmpty) {
-          san =
-              pieceDef.type.noSanSymbol ? disambiguator : '$san$disambiguator';
+          san = pieceDef.type.noSanSymbol
+              ? disambiguator
+              : '$san$disambiguator';
         }
         if (move.capture) san = '${san}x';
         san = '$san${size.squareName(move.to)}';
@@ -237,8 +240,9 @@ extension GameOutputs on Game {
     }
 
     if (metadata.isNotEmpty) {
-      String meta =
-          metadata.entries.map((e) => '[${e.key} "${e.value}"]').join('\n');
+      String meta = metadata.entries
+          .map((e) => '[${e.key} "${e.value}"]')
+          .join('\n');
       pgn = '$meta\n\n$pgn';
     }
     if (gameOver) {
@@ -336,8 +340,9 @@ extension GameOutputs on Game {
       String whiteVFiles = state.virginFiles[Bishop.white]
           .map((e) => fileSymbol(e).toUpperCase())
           .join('');
-      String blackVFiles =
-          state.virginFiles[Bishop.black].map(fileSymbol).join('');
+      String blackVFiles = state.virginFiles[Bishop.black]
+          .map(fileSymbol)
+          .join('');
       castling = '$castling$whiteVFiles$blackVFiles';
     }
     String ep = state.epSquare != null ? size.squareName(state.epSquare!) : '-';
@@ -404,16 +409,15 @@ extension GameOutputs on Game {
   }
 
   GameInfo get info => GameInfo(
-        lastMove: state.move,
-        lastFrom: state.move != null
-            ? (state.move!.from == Bishop.hand
-                ? 'hand'
-                : size.squareName(state.move!.from))
-            : null,
-        lastTo: state.move != null ? size.squareName(state.move!.to) : null,
-        checkSq:
-            inCheck ? size.squareName(state.royalSquares[state.turn]) : null,
-      );
+    lastMove: state.move,
+    lastFrom: state.move != null
+        ? (state.move!.from == Bishop.hand
+              ? 'hand'
+              : size.squareName(state.move!.from))
+        : null,
+    lastTo: state.move != null ? size.squareName(state.move!.to) : null,
+    checkSq: inCheck ? size.squareName(state.royalSquares[state.turn]) : null,
+  );
 
   /// Retrieves the value of the custom state variable [i].
   int getCustomState(int i) =>

@@ -10,11 +10,11 @@ class Xiangqi {
   static const defaultFenManchu =
       'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/9/9/M1BAKAB2 w - - 0 1';
   static PieceType general() => PieceType.fromBetza(
-        'W',
-        royal: true,
-        promoOptions: PiecePromoOptions.none,
-        regionEffects: [palaceMovement()],
-      );
+    'W',
+    royal: true,
+    promoOptions: PiecePromoOptions.none,
+    regionEffects: [palaceMovement()],
+  );
   static PieceType advisor() =>
       PieceType.fromBetza('F', value: 200, regionEffects: [palaceMovement()]);
   static PieceType elephant() =>
@@ -23,17 +23,17 @@ class Xiangqi {
   static PieceType chariot() => PieceType.fromBetza('R', value: 900);
   static PieceType cannon() => PieceType.fromBetza('mRcpR', value: 450);
   static PieceType soldier() => PieceType.fromBetza(
-        'fsW',
-        value:
-            100, // TODO: this should be 200 but multi-value pieces aren't supported
-        regionEffects: [
-          RegionEffect.changePiece(
-            whiteRegion: 'redSide',
-            blackRegion: 'blackSide',
-            pieceType: weakSoldier(),
-          ),
-        ],
-      );
+    'fsW',
+    value:
+        100, // TODO: this should be 200 but multi-value pieces aren't supported
+    regionEffects: [
+      RegionEffect.changePiece(
+        whiteRegion: 'redSide',
+        blackRegion: 'blackSide',
+        pieceType: weakSoldier(),
+      ),
+    ],
+  );
   static PieceType weakSoldier() => PieceType.fromBetza('fW', value: 100);
   static PieceType strongSoldier() => PieceType.fromBetza('fsW');
   static PieceType manchuSuperPiece() =>
@@ -42,77 +42,77 @@ class Xiangqi {
   static Variant variant() => xiangqi();
 
   static Variant xiangqi() => Variant(
-        name: 'Xiangqi',
-        boardSize: BoardSize.xiangqi,
-        pieceTypes: {
-          'K': general(),
-          'A': advisor(),
-          'B': elephant(),
-          'N': horse(),
-          'R': chariot(),
-          'C': cannon(),
-          'P': soldier(),
-        },
-        materialConditions: MaterialConditions.none,
-        promotionOptions: PromotionOptions.none,
-        startPosition: defaultFen,
-        regions: {
-          'redSide': const RectRegion(
-            startRank: Bishop.rank1,
-            endRank: Bishop.rank5,
-          ),
-          'blackSide': const RectRegion(
-            startRank: Bishop.rank6,
-            endRank: Bishop.rank10,
-          ),
-          'redPalace': const RectRegion(
-            startRank: Bishop.rank1,
-            endRank: Bishop.rank3,
-            startFile: Bishop.fileD,
-            endFile: Bishop.fileF,
-          ),
-          'blackPalace': const RectRegion(
-            startRank: Bishop.rank8,
-            endRank: Bishop.rank10,
-            startFile: Bishop.fileD,
-            endFile: Bishop.fileF,
-          ),
-        },
-        actions: [Action.flyingGenerals()],
-      );
+    name: 'Xiangqi',
+    boardSize: BoardSize.xiangqi,
+    pieceTypes: {
+      'K': general(),
+      'A': advisor(),
+      'B': elephant(),
+      'N': horse(),
+      'R': chariot(),
+      'C': cannon(),
+      'P': soldier(),
+    },
+    materialConditions: MaterialConditions.none,
+    promotionOptions: PromotionOptions.none,
+    startPosition: defaultFen,
+    regions: {
+      'redSide': const RectRegion(
+        startRank: Bishop.rank1,
+        endRank: Bishop.rank5,
+      ),
+      'blackSide': const RectRegion(
+        startRank: Bishop.rank6,
+        endRank: Bishop.rank10,
+      ),
+      'redPalace': const RectRegion(
+        startRank: Bishop.rank1,
+        endRank: Bishop.rank3,
+        startFile: Bishop.fileD,
+        endFile: Bishop.fileF,
+      ),
+      'blackPalace': const RectRegion(
+        startRank: Bishop.rank8,
+        endRank: Bishop.rank10,
+        startFile: Bishop.fileD,
+        endFile: Bishop.fileF,
+      ),
+    },
+    actions: [Action.flyingGenerals()],
+  );
 
   static Variant mini() => Variant(
-        name: 'Mini Xiangqi',
-        description:
-            'A miniature variant of Xiangqi, played on a 7x7 board with no river.',
-        boardSize: const BoardSize(7, 7),
-        pieceTypes: {
-          'K': general(),
-          'N': horse(),
-          'R': chariot(),
-          'C': cannon(),
-          'P': strongSoldier(),
-        },
-        startPosition: defaultFenMini,
-        castlingOptions: CastlingOptions.none,
-        materialConditions: MaterialConditions.none,
-        promotionOptions: PromotionOptions.none,
-        regions: {
-          'redPalace': const RectRegion(
-            startRank: Bishop.rank1,
-            endRank: Bishop.rank3,
-            startFile: Bishop.fileC,
-            endFile: Bishop.fileE,
-          ),
-          'blackPalace': const RectRegion(
-            startRank: Bishop.rank5,
-            endRank: Bishop.rank7,
-            startFile: Bishop.fileC,
-            endFile: Bishop.fileE,
-          ),
-        },
-        actions: [Action.flyingGenerals()],
-      );
+    name: 'Mini Xiangqi',
+    description:
+        'A miniature variant of Xiangqi, played on a 7x7 board with no river.',
+    boardSize: const BoardSize(7, 7),
+    pieceTypes: {
+      'K': general(),
+      'N': horse(),
+      'R': chariot(),
+      'C': cannon(),
+      'P': strongSoldier(),
+    },
+    startPosition: defaultFenMini,
+    castlingOptions: CastlingOptions.none,
+    materialConditions: MaterialConditions.none,
+    promotionOptions: PromotionOptions.none,
+    regions: {
+      'redPalace': const RectRegion(
+        startRank: Bishop.rank1,
+        endRank: Bishop.rank3,
+        startFile: Bishop.fileC,
+        endFile: Bishop.fileE,
+      ),
+      'blackPalace': const RectRegion(
+        startRank: Bishop.rank5,
+        endRank: Bishop.rank7,
+        startFile: Bishop.fileC,
+        endFile: Bishop.fileE,
+      ),
+    },
+    actions: [Action.flyingGenerals()],
+  );
 
   static Variant manchu() {
     final x = xiangqi();

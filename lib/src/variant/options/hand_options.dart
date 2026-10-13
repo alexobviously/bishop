@@ -19,18 +19,18 @@ class HandOptions {
   factory HandOptions.fromJson(
     Map<String, dynamic> json, {
     List<BishopTypeAdapter> adapters = const [],
-  }) =>
-      HandOptions(
-        enableHands: json['enableHands'],
-        addCapturesToHand: json['addCapturesToHand'],
-        dropBuilder: (json.containsKey('dropBuilder')
-                ? BishopSerialisation.build<DropBuilder>(
-                    json['dropBuilder'],
-                    adapters: adapters,
-                  )
-                : null) ??
-            DropBuilder.standard,
-      );
+  }) => HandOptions(
+    enableHands: json['enableHands'],
+    addCapturesToHand: json['addCapturesToHand'],
+    dropBuilder:
+        (json.containsKey('dropBuilder')
+            ? BishopSerialisation.build<DropBuilder>(
+                json['dropBuilder'],
+                adapters: adapters,
+              )
+            : null) ??
+        DropBuilder.standard,
+  );
 
   Map<String, dynamic> toJson({
     bool verbose = false,
@@ -48,8 +48,10 @@ class HandOptions {
   }
 
   static const disabled = HandOptions();
-  static const captures =
-      HandOptions(enableHands: true, addCapturesToHand: true);
+  static const captures = HandOptions(
+    enableHands: true,
+    addCapturesToHand: true,
+  );
   static const enabledOnly = HandOptions(enableHands: true);
 }
 
@@ -105,7 +107,7 @@ class RegionDropBuilder extends DropBuilder {
 
   @override
   DropBuilderFunction build(BuiltVariant variant) => Drops.regions(
-        whiteRegion ?? (whiteId != null ? variant.regions[whiteId] : null),
-        blackRegion ?? (blackId != null ? variant.regions[blackId] : null),
-      );
+    whiteRegion ?? (whiteId != null ? variant.regions[whiteId] : null),
+    blackRegion ?? (blackId != null ? variant.regions[blackId] : null),
+  );
 }

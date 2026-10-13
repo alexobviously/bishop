@@ -49,8 +49,8 @@ class Game {
     FenBuilder? fenBuilder,
     this.zobristSeed = Bishop.defaultSeed,
     this.startPosSeed,
-  })  : startedInInitialPosition = fen == null && fenBuilder == null,
-        variant = BuiltVariant.fromData(variant ?? Variant.standard()) {
+  }) : startedInInitialPosition = fen == null && fenBuilder == null,
+       variant = BuiltVariant.fromData(variant ?? Variant.standard()) {
     setup(fen: fen, fenBuilder: fenBuilder);
   }
 
@@ -189,8 +189,11 @@ class Game {
     PieceType pieceType = variant.pieceType(piece, square);
     if (options.onlySquare != null &&
         pieceType.optimisationData != null &&
-        pieceType.optimisationData!
-            .excludePiece(square, options.onlySquare!, size)) {
+        pieceType.optimisationData!.excludePiece(
+          square,
+          options.onlySquare!,
+          size,
+        )) {
       return const [];
     }
 
@@ -322,8 +325,11 @@ class Game {
           // TODO: prioritise ep? for moves that could be both ep and quiet
           if (md.quiet) {
             if (!options.quiet && options.onlySquare == null) continue;
-            StandardMove m =
-                StandardMove(to: to, from: from, setEnPassant: setEnPassant);
+            StandardMove m = StandardMove(
+              to: to,
+              from: from,
+              setEnPassant: setEnPassant,
+            );
             addMove(m);
           } else if (variant.enPassant &&
               md.enPassant &&
@@ -411,13 +417,17 @@ class Game {
         int targetFile = i == 0
             ? variant.castlingOptions.kTarget!
             : variant.castlingOptions.qTarget!;
-        int targetSq =
-            size.square(targetFile, royalRank); // where the king lands
+        int targetSq = size.square(
+          targetFile,
+          royalRank,
+        ); // where the king lands
         int rookFile = i == 0 ? castlingTargetK! : castlingTargetQ!;
         int rookSq = size.square(rookFile, royalRank); // where the rook starts
         int rookTargetFile = i == 0 ? targetFile - 1 : targetFile + 1;
-        int rookTargetSq =
-            size.square(rookTargetFile, royalRank); // where the rook lands
+        int rookTargetSq = size.square(
+          rookTargetFile,
+          royalRank,
+        ); // where the rook lands
 
         // Check rook target square is empty (or occupied by the rook/king already)
         if (board[rookTargetSq].isNotEmpty &&
@@ -618,8 +628,10 @@ class Game {
   /// Checks if [square] is attacked by [player].
   /// Works by generating all legal moves for the other player, and therefore is slow.
   bool isAttacked(int square, int player) {
-    List<Move> attacks =
-        generatePlayerMoves(player, MoveGenParams.squareAttacks(square));
+    List<Move> attacks = generatePlayerMoves(
+      player,
+      MoveGenParams.squareAttacks(square),
+    );
     return attacks.isNotEmpty;
   }
 
@@ -630,10 +642,10 @@ class Game {
 
   /// Finds all the pieces for [player] attacking [square].
   /// Returns a list of the squares those pieces are on.
-  Set<int> getAttackers(int square, int player) =>
-      generatePlayerMoves(player, MoveGenParams.squareAttacks(square, false))
-          .map((e) => e.from)
-          .toSet();
+  Set<int> getAttackers(int square, int player) => generatePlayerMoves(
+    player,
+    MoveGenParams.squareAttacks(square, false),
+  ).map((e) => e.from).toSet();
 
   /// Finds all pieces attacking [player]'s king.
   /// Returns a list of the squares those pieces are on.

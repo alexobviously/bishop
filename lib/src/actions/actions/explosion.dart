@@ -11,14 +11,14 @@ class ActionExplodeOnCapture extends Action {
     this.immunePieces,
     this.alwaysSuicide = true,
   }) : super(
-          event: ActionEvent.afterMove,
-          precondition: Conditions.isCapture,
-          action: ActionDefinitions.explosion(
-            area,
-            immunePieces: immunePieces,
-            alwaysSuicide: alwaysSuicide,
-          ),
-        );
+         event: ActionEvent.afterMove,
+         precondition: Conditions.isCapture,
+         action: ActionDefinitions.explosion(
+           area,
+           immunePieces: immunePieces,
+           alwaysSuicide: alwaysSuicide,
+         ),
+       );
 }
 
 /// Creates an explosion with [radius] whenever a piece is captured.
@@ -47,10 +47,10 @@ class ExplodeOnCaptureAdapter
 
   @override
   Map<String, dynamic> export(ActionExplodeOnCapture e) => {
-        'area': e.area.export(),
-        if (e.immunePieces?.isNotEmpty ?? false) 'immunePieces': e.immunePieces,
-        if (!e.alwaysSuicide) 'alwaysSuicide': e.alwaysSuicide,
-      };
+    'area': e.area.export(),
+    if (e.immunePieces?.isNotEmpty ?? false) 'immunePieces': e.immunePieces,
+    if (!e.alwaysSuicide) 'alwaysSuicide': e.alwaysSuicide,
+  };
 }
 
 class ExplosionRadiusAdapter extends BishopTypeAdapter<ActionExplosionRadius> {
@@ -67,8 +67,8 @@ class ExplosionRadiusAdapter extends BishopTypeAdapter<ActionExplosionRadius> {
 
   @override
   Map<String, dynamic> export(ActionExplosionRadius e) => {
-        'radius': e.radius,
-        if (e.immunePieces?.isNotEmpty ?? false) 'immunePieces': e.immunePieces,
-        if (!e.alwaysSuicide) 'alwaysSuicide': e.alwaysSuicide,
-      };
+    'radius': e.radius,
+    if (e.immunePieces?.isNotEmpty ?? false) 'immunePieces': e.immunePieces,
+    if (!e.alwaysSuicide) 'alwaysSuicide': e.alwaysSuicide,
+  };
 }

@@ -45,12 +45,12 @@ class MoveGenParams {
     legal: false,
   );
   factory MoveGenParams.pieceCaptures(int pieceType) => MoveGenParams(
-        captures: true,
-        quiet: false,
-        castling: false,
-        legal: false,
-        pieceType: pieceType,
-      );
+    captures: true,
+    quiet: false,
+    castling: false,
+    legal: false,
+    pieceType: pieceType,
+  );
   factory MoveGenParams.squareAttacks(int square, [bool onlyOne = true]) =>
       MoveGenParams(
         captures: true,
@@ -69,6 +69,7 @@ class MoveGenParams {
   );
 
   @override
-  String toString() => 'MoveGenParams($captures, $quiet, $castling, $legal'
+  String toString() =>
+      'MoveGenParams($captures, $quiet, $castling, $legal'
       ' $ignorePieces, $pieceType, $onlySquare)';
 }

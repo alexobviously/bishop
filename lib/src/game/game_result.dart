@@ -115,10 +115,10 @@ class WonGameElimination extends WonGame {
 
   @override
   String get readable => [
-        super.readable,
-        'by elimination',
-        if (pieceType != null) '($pieceType)',
-      ].join(' ');
+    super.readable,
+    'by elimination',
+    if (pieceType != null) '($pieceType)',
+  ].join(' ');
 }
 
 class WonGameStalemate extends WonGame {

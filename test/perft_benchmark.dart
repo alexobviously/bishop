@@ -1,5 +1,6 @@
 import 'package:benchmark_harness/benchmark_harness.dart';
 import 'package:bishop/bishop.dart';
+
 import 'perft.dart';
 
 class PerftBenchmark extends BenchmarkBase {
@@ -28,8 +29,10 @@ class PerftBenchmark extends BenchmarkBase {
     final result = NpsResult(test.fen, nodes, (t2 - t1) / 1000);
     npsResults.add(result);
     if (_showNps) {
-      print('${result.nps.toStringAsFixed(2)}nps ($nodes nodes) '
-          '(${test.fen}) (${test.variant.name})');
+      print(
+        '${result.nps.toStringAsFixed(2)}nps ($nodes nodes) '
+        '(${test.fen}) (${test.variant.name})',
+      );
     }
 
     if (nodes != test.nodes) {
@@ -47,7 +50,8 @@ class NpsResult {
   const NpsResult(this.fen, this.nodes, this.seconds) : nps = nodes / seconds;
 
   @override
-  String toString() => '${nps.toStringAsFixed(2)}nps '
+  String toString() =>
+      '${nps.toStringAsFixed(2)}nps '
       '($nodes/${seconds.toStringAsFixed(2)}s) [$fen]';
 }
 
@@ -75,8 +79,10 @@ void main(List<String> args) {
   num npsAvg = npsResults.fold<num>(0, (p, e) => p + e.nps) / npsResults.length;
   final npsMin = npsResults.last;
   final npsMax = npsResults.first;
-  print('Total Tests: ${npsResults.length}, '
-      'mean NPS: ${npsAvg.toStringAsFixed(2)}');
+  print(
+    'Total Tests: ${npsResults.length}, '
+    'mean NPS: ${npsAvg.toStringAsFixed(2)}',
+  );
   print('Best: $npsMax');
   print('Worst: $npsMin');
   // todo: figure out wy the first couple of runs of each perft is so slow

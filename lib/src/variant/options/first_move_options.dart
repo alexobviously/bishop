@@ -8,8 +8,7 @@ abstract class FirstMoveOptions {
   factory FirstMoveOptions.pair(
     FirstMoveOptions? white,
     FirstMoveOptions? black,
-  ) =>
-      FirstMoveOptionsPair(white, black);
+  ) => FirstMoveOptionsPair(white, black);
 
   factory FirstMoveOptions.set(Map<String, FirstMoveOptions> set) =>
       FirstMoveOptionsSet(set);
@@ -45,8 +44,9 @@ class FirstMoveOptionsSet implements FirstMoveOptions {
 
   @override
   PieceMoveChecker build(BuiltVariant variant) {
-    final Map<int, PieceMoveChecker?> builtSet =
-        set.map((k, v) => MapEntry(variant.pieceIndex(k), v.build(variant)));
+    final Map<int, PieceMoveChecker?> builtSet = set.map(
+      (k, v) => MapEntry(variant.pieceIndex(k), v.build(variant)),
+    );
     return (params) => builtSet[params.piece.type]?.call(params) ?? false;
   }
 }

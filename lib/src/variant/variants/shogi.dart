@@ -17,15 +17,15 @@ class Shogi {
   static PieceType gold() => PieceType.fromBetza('WfF');
 
   static PieceType bishop() => PieceType.fromBetza(
-        'B',
-        promoOptions: PiecePromoOptions.promotesToOne('H'),
-      );
+    'B',
+    promoOptions: PiecePromoOptions.promotesToOne('H'),
+  );
   static PieceType dragonHorse() => PieceType.fromBetza('WB');
 
   static PieceType rook() => PieceType.fromBetza(
-        'R',
-        promoOptions: PiecePromoOptions.promotesToOne('D'),
-      );
+    'R',
+    promoOptions: PiecePromoOptions.promotesToOne('D'),
+  );
   static PieceType dragonKing() => PieceType.fromBetza('FR');
 
   static PiecePromoOptions get promotesToGold =>
@@ -34,26 +34,26 @@ class Shogi {
   static Variant variant() => shogi();
 
   static Variant shogi() => Variant(
-        name: 'Shogi',
-        boardSize: const BoardSize(9, 9),
-        pieceTypes: {
-          'K': PieceType.king(),
-          'N': knight(),
-          'S': silver(),
-          'L': lance(),
-          'P': pawn(),
-          'G': gold(),
-          'R': rook(),
-          'D': dragonKing(),
-          'B': bishop(),
-          'H': dragonHorse(),
-        },
-        startPosition: defaultFen,
-        handOptions: HandOptions.captures,
-        promotionOptions: PromotionOptions.optional(
-          ranks: [Bishop.rank7, Bishop.rank3],
-        ),
-      );
+    name: 'Shogi',
+    boardSize: const BoardSize(9, 9),
+    pieceTypes: {
+      'K': PieceType.king(),
+      'N': knight(),
+      'S': silver(),
+      'L': lance(),
+      'P': pawn(),
+      'G': gold(),
+      'R': rook(),
+      'D': dragonKing(),
+      'B': bishop(),
+      'H': dragonHorse(),
+    },
+    startPosition: defaultFen,
+    handOptions: HandOptions.captures,
+    promotionOptions: PromotionOptions.optional(
+      ranks: [Bishop.rank7, Bishop.rank3],
+    ),
+  );
 }
 
 class Dobutsu {
@@ -71,21 +71,21 @@ class Dobutsu {
   static Variant variant() => dobutsu();
 
   static Variant dobutsu() => Variant(
-        name: 'Dobutsu Shogi',
-        description: 'A simple Shogi variant aimed at children.',
-        boardSize: const BoardSize(3, 4),
-        startPosition: defaultFen,
-        pieceTypes: {
-          'L': lion(),
-          'G': giraffe(),
-          'E': elephant(),
-          'C': chick(),
-          'H': hen(),
-        },
-        handOptions: const HandOptions(
-          enableHands: true,
-          addCapturesToHand: true,
-          dropBuilder: DropBuilder.unrestricted,
-        ),
-      ).withCampMate();
+    name: 'Dobutsu Shogi',
+    description: 'A simple Shogi variant aimed at children.',
+    boardSize: const BoardSize(3, 4),
+    startPosition: defaultFen,
+    pieceTypes: {
+      'L': lion(),
+      'G': giraffe(),
+      'E': elephant(),
+      'C': chick(),
+      'H': hen(),
+    },
+    handOptions: const HandOptions(
+      enableHands: true,
+      addCapturesToHand: true,
+      dropBuilder: DropBuilder.unrestricted,
+    ),
+  ).withCampMate();
 }

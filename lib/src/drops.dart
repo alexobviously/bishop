@@ -37,23 +37,24 @@ class Drops {
   ) =>
       (params) => params.colour == Bishop.white ? white(params) : black(params);
 
-  static DropBuilderFunction none() => (_) => [];
+  static DropBuilderFunction none() =>
+      (_) => [];
 
   static DropBuilderFunction region(Region region) => (MoveParams params) {
-        Set<int> hand = params.state.handPieceTypes(params.colour);
-        if (hand.isEmpty) return [];
-        final size = params.variant.boardSize;
-        List<Move> drops = [];
-        for (int i in size.squaresForRegion(region)) {
-          if (!size.onBoard(i)) continue;
-          if (params.state.board[i].isNotEmpty) continue;
-          drops.addAll(hand.map((e) => DropMove(to: i, piece: e)));
-        }
-        return drops;
-      };
+    Set<int> hand = params.state.handPieceTypes(params.colour);
+    if (hand.isEmpty) return [];
+    final size = params.variant.boardSize;
+    List<Move> drops = [];
+    for (int i in size.squaresForRegion(region)) {
+      if (!size.onBoard(i)) continue;
+      if (params.state.board[i].isNotEmpty) continue;
+      drops.addAll(hand.map((e) => DropMove(to: i, piece: e)));
+    }
+    return drops;
+  };
 
   static DropBuilderFunction regions(Region? white, Region? black) => pair(
-        white == null ? none() : region(white),
-        black == null ? none() : region(black),
-      );
+    white == null ? none() : region(white),
+    black == null ? none() : region(black),
+  );
 }

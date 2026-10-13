@@ -20,5 +20,6 @@ class NoPass implements PassOptions {
 class StandardPass implements PassOptions {
   const StandardPass();
   @override
-  MoveChecker build(BuiltVariant variant) => (_) => true;
+  MoveChecker build(BuiltVariant variant) =>
+      (_) => true;
 }

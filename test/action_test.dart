@@ -64,8 +64,10 @@ void main() {
       );
       g.makeMultipleMoves(['a7a8k', 'b3b2']);
       expect(
-        g.state
-            .pieces[makePiece(g.variant.pieceIndexLookup['K']!, Bishop.white)],
+        g.state.pieces[makePiece(
+          g.variant.pieceIndexLookup['K']!,
+          Bishop.white,
+        )],
         1,
       );
       expect(
@@ -91,8 +93,9 @@ void main() {
       expect(g.makeMoveString('d4d5'), false);
     });
     test('Immortality (piece type)', () {
-      final v =
-          Variant.standard().withAction(ActionImmortality(pieceType: 'B'));
+      final v = Variant.standard().withAction(
+        ActionImmortality(pieceType: 'B'),
+      );
       final g = Game(variant: v, fen: '7k/8/3b4/8/4N3/8/8/7K w - - 0 1');
       final moves = g.generateLegalMoves();
       expect(moves.captures.length, 0);
@@ -116,8 +119,10 @@ void main() {
     });
   });
   test('Fill Region (Kono)', () {
-    final g =
-        Game(variant: OtherGames.kono(), fen: 'PPPPP/4P/1P3/5/4p w - - 0 1');
+    final g = Game(
+      variant: OtherGames.kono(),
+      fen: 'PPPPP/4P/1P3/5/4p w - - 0 1',
+    );
     g.makeMoveString('b3a4');
     expect(g.result, isA<WonGameEnteredRegion>());
     expect(g.winner, Bishop.white);

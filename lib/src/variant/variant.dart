@@ -162,9 +162,9 @@ class Variant {
     this.moveFormatters = const [],
     this.adapters = const [],
   }) : assert(
-          startPosition != null || startPosBuilder != null,
-          'Variant needs either a startPosition or startPosBuilder',
-        );
+         startPosition != null || startPosBuilder != null,
+         'Variant needs either a startPosition or startPosBuilder',
+       );
 
   factory Variant.fromJson(
     Map<String, dynamic> json, {
@@ -179,7 +179,8 @@ class Variant {
             MapEntry(k as String, PieceType.fromJson(v, adapters: adapters)),
       ),
       castlingOptions: CastlingOptions.fromJson(json['castlingOptions']),
-      promotionOptions: (json.containsKey('promotionOptions')
+      promotionOptions:
+          (json.containsKey('promotionOptions')
               ? BishopSerialisation.build<PromotionOptions>(
                   json['promotionOptions'],
                   adapters: adapters,
@@ -203,7 +204,8 @@ class Variant {
             )
           : null,
       enPassant: json['enPassant'],
-      firstMoveOptions: (json.containsKey('firstMoveOptions')
+      firstMoveOptions:
+          (json.containsKey('firstMoveOptions')
               ? BishopSerialisation.build<FirstMoveOptions>(
                   json['firstMoveOptions'],
                   adapters: adapters,
@@ -219,20 +221,24 @@ class Variant {
       handOptions: json.containsKey('handOptions')
           ? HandOptions.fromJson(json['handOptions'])
           : HandOptions.disabled,
-      gatingMode: GatingMode.values
-          .firstWhere((e) => e.name == (json['gatingMode'] ?? 'none')),
+      gatingMode: GatingMode.values.firstWhere(
+        (e) => e.name == (json['gatingMode'] ?? 'none'),
+      ),
       pieceValues: (json['pieceValues'] as Map<String, dynamic>?)?.map(
         (k, v) => MapEntry(k, v as int),
       ),
-      passOptions: (json.containsKey('passOptions')
+      passOptions:
+          (json.containsKey('passOptions')
               ? BishopSerialisation.build<PassOptions>(
                   json['passOptions'],
                   adapters: adapters,
                 )
               : null) ??
           PassOptions.none,
-      regions: (json['regions'] as Map<String, dynamic>?)
-              ?.map((k, v) => MapEntry(k, BoardRegion.fromJson(v))) ??
+      regions:
+          (json['regions'] as Map<String, dynamic>?)?.map(
+            (k, v) => MapEntry(k, BoardRegion.fromJson(v)),
+          ) ??
           const {},
       actions: json.containsKey('actions')
           ? BishopSerialisation.buildMany<Action>(
@@ -395,9 +401,8 @@ class Variant {
   }
 
   Variant normalise() => copyWith(
-        pieceTypes:
-            pieceTypes.map((k, v) => MapEntry(k, v.normalise(boardSize))),
-      );
+    pieceTypes: pieceTypes.map((k, v) => MapEntry(k, v.normalise(boardSize))),
+  );
 
   /// Copies the variant with [pieceTypes], including piece types already in
   /// the variant and overwriting them if necessary.
@@ -406,8 +411,8 @@ class Variant {
 
   /// Copies the variant with [pieces] removed.
   Variant withPiecesRemoved(List<String> pieces) => copyWith(
-        pieceTypes: {...pieceTypes}..removeWhere((k, _) => pieces.contains(k)),
-      );
+    pieceTypes: {...pieceTypes}..removeWhere((k, _) => pieces.contains(k)),
+  );
 
   /// Copies the variant with a single piece added/updated.
   Variant withPiece(String key, PieceType pieceType) =>
@@ -429,9 +434,10 @@ class Variant {
   /// Inverts the value of all piece types. Useful for variants like Antichess
   /// where the goal is to lose your pieces.
   Variant invertPieceValues() => copyWith(
-        pieceTypes:
-            pieceTypes.map((k, v) => MapEntry(k, v.copyWith(value: -v.value))),
-      );
+    pieceTypes: pieceTypes.map(
+      (k, v) => MapEntry(k, v.copyWith(value: -v.value)),
+    ),
+  );
 
   /// Copies the variant with the 'campmate' end condition:
   /// When a royal piece enters the opposite rank, that player wins the game.
@@ -452,8 +458,10 @@ class Variant {
     if (blackRank != null && blackRank < 0) {
       blackRank = boardSize.maxRank + 1 + blackRank;
     }
-    final effect =
-        RegionEffect.winGame(white: blackRegionName, black: whiteRegionName);
+    final effect = RegionEffect.winGame(
+      white: blackRegionName,
+      black: whiteRegionName,
+    );
     final pieces = pieceTypes.map(
       (k, v) => MapEntry(
         k,
