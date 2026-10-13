@@ -76,8 +76,7 @@ class Engine {
         return -Bishop.mateUpper;
       }
     }
-    // -evaluate because we are currently looking at this asthe other player
-    if (depth == 0) return -game.evaluate(player);
+    if (depth == 0) return quiescence(alpha, beta, player);
     moves = orderMoves(moves);
     if (moves.isNotEmpty) {
       int a = alpha;
@@ -91,6 +90,58 @@ class Engine {
       }
     }
     return value;
+  }
+
+  /// Quiescence search evaluates only tactical moves (captures, check evasions)
+  /// beyond the horizon depth to avoid the "horizon effect".
+  int quiescence(
+    int alpha,
+    int beta,
+    Colour player, [
+    int maxQDepth = 6,
+  ]) {
+    if (game.drawn) return 0;
+    final result = game.result;
+    if (result is WonGame) {
+      return result.winner == player ? -Bishop.mateUpper : Bishop.mateUpper;
+    }
+
+    final inCheck = game.inCheck;
+    int a = alpha;
+
+    // Standing pat is allowed only when not in check:
+    if (!inCheck) {
+      final standPat = -game.evaluate(player);
+      if (standPat >= beta) return beta;
+      if (standPat > a) a = standPat;
+    }
+
+    if (maxQDepth <= 0) return a;
+
+    // Search all evasions if in check; otherwise only captures:
+    List<Move> moves = inCheck
+        ? game.generateLegalMoves()
+        : game.generatePlayerMoves(game.turn, MoveGenParams.onlyCaptures);
+
+    if (moves.isEmpty) {
+      if (inCheck) {
+        return game.turn == player ? Bishop.mateUpper : -Bishop.mateUpper;
+      }
+      return a;
+    }
+
+    moves = orderMoves(moves);
+
+    for (Move m in moves) {
+      game.makeMove(m, false);
+      int score = -quiescence(-beta, -a, player.opponent, maxQDepth - 1);
+      game.undo();
+
+      if (score >= beta) return beta;
+      if (score > a) a = score;
+    }
+
+    return a;
   }
 
   /// Assigns a heuristic score to [move] for move ordering.
