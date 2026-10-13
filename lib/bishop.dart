@@ -1,4 +1,5 @@
 /// A chess logic package with flexible variant support.
+// ignore: unnecessary_library_name
 library bishop;
 
 export 'src/actions/actions.dart';

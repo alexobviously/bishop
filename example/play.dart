@@ -16,15 +16,15 @@ void main(List<String> args) async {
   selectUseEngine();
   printYellow(
     '''Enter your moves as algebraic strings, e.g. b1c3, e7e8q, etc.
-    \'moves\': list available moves.
+    'moves': list available moves.
     \t'moves from [square]': list all moves starting at [square].
     \t'moves to [square]': list all moves ending on [square].
     \t'moves captures': list all capture moves.
     \t'moves quiet': list all non-capture moves.
-    \'resign\': resign.
-    \'pgn\': prints the PGN so far.
-    \'history\': prints move history in algebraic form.
-    \'random\': make a random move.
+    'resign': resign.
+    'pgn': prints the PGN so far.
+    'history': prints move history in algebraic form.
+    'random': make a random move.
     ''',
   );
   game = Game(variant: variant!);

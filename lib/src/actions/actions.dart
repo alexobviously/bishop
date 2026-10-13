@@ -1,4 +1,5 @@
 import 'dart:math';
+
 import 'package:bishop/bishop.dart';
 
 part 'conditions.dart';
@@ -45,13 +46,12 @@ class Action {
     ActionCondition? precondition,
     ActionCondition? condition,
     ActionDefinition? action,
-  }) =>
-      Action(
-        event: event ?? this.event,
-        precondition: precondition ?? this.precondition,
-        condition: condition ?? this.condition,
-        action: action ?? this.action,
-      );
+  }) => Action(
+    event: event ?? this.event,
+    precondition: precondition ?? this.precondition,
+    condition: condition ?? this.condition,
+    action: action ?? this.action,
+  );
 
   factory Action.explodeOnCapture(Area area) => ActionExplodeOnCapture(area);
   factory Action.explosionRadius(int radius) => ActionExplosionRadius(radius);
@@ -67,20 +67,20 @@ class Action {
   /// Used internally when building variants, to enable convenience actions on
   /// piece type definitions.
   Action forPieceType(int type) => Action(
-        event: event,
-        action: action,
-        precondition: Conditions.merge([
-          Conditions.movingPieceType(type),
-          if (precondition != null) precondition!,
-        ]),
-        condition: condition,
-      );
+    event: event,
+    action: action,
+    precondition: Conditions.merge([
+      Conditions.movingPieceType(type),
+      ?precondition,
+    ]),
+    condition: condition,
+  );
 
   /// Swaps [precondition] and [condition].
   Action swapConditions() => Action(
-        event: event,
-        precondition: condition,
-        condition: precondition,
-        action: action,
-      );
+    event: event,
+    precondition: condition,
+    condition: precondition,
+    action: action,
+  );
 }
