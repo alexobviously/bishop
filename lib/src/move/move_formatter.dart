@@ -14,7 +14,7 @@ enum CheckType {
   checkmate('#');
 
   final String symbol;
-  const CheckType(this.symbol);
+  CheckType(this.symbol);
 }
 
 typedef MoveFormatterFunction<T extends Move> = String Function(

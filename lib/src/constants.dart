@@ -154,7 +154,7 @@ enum Modality {
   both('');
 
   final String betza;
-  const Modality(this.betza);
+  Modality(this.betza);
   factory Modality.fromBetza(String betza) =>
       values.firstWhere((e) => e.betza == betza);
 }
@@ -235,7 +235,7 @@ enum Variants {
 
   final Variant Function() builder;
   final String? alt;
-  const Variants(this.builder, {this.alt});
+  Variants(this.builder, {this.alt});
 
   String get _nameSimple => name.toLowerCase().replaceAll(' ', '');
   String? get _altSimple => alt?.toLowerCase().replaceAll(' ', '');
@@ -313,7 +313,7 @@ enum ForcedCapture {
   any;
   // todo: support 'most pieces' option like draughts, and highest value
 
-  const ForcedCapture();
+  ForcedCapture();
   static ForcedCapture fromName(String name) =>
       values.firstWhere((e) => e.name == name);
 }

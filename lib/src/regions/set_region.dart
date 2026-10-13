@@ -36,7 +36,7 @@ class DirectionSetRegion extends BoardRegion {
 class SetRegion extends DirectionSetRegion {
   final Iterable<String> squareNames;
   SetRegion(this.squareNames)
-      : super(squareNames.map((e) => Direction.fromSquareName(e)).toSet());
+      : super(squareNames.map(Direction.fromSquareName).toSet());
 
   factory SetRegion.fromJson(Map<String, dynamic> json) =>
       SetRegion((json['squares'] as List).cast<String>().toSet());

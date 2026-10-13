@@ -59,7 +59,7 @@ void main(List<String> args) {
     _showNps = true;
   }
   List<PerftBenchmark> perfts = [
-    ...Perfts.standard.map((e) => PerftBenchmark(e)),
+    ...Perfts.standard.map(PerftBenchmark.new),
     // ...Perfts.ruleVariants.map((e) => PerftBenchmark(e)),
   ];
   double total = 0;
