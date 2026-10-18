@@ -15,23 +15,14 @@ enum TTBound {
 }
 
 /// An entry in the [TranspositionTable].
-class TTEntry {
-  final int hash;
-  final int depth;
-  final int value;
-  final TTBound bound;
-  final Move? bestMove;
-  final int age;
-
-  const TTEntry({
-    required this.hash,
-    required this.depth,
-    required this.value,
-    required this.bound,
-    this.bestMove,
-    this.age = 0,
-  });
-}
+class const TTEntry({
+  required final int hash,
+  required final int depth,
+  required final int value,
+  required final TTBound bound,
+  final Move? bestMove,
+  final int age = 0,
+});
 
 /// A fixed-size transposition table using Zobrist hashing to cache evaluations,
 /// avoid re-searching identical subtrees, and order best moves first.
@@ -110,14 +101,11 @@ class TranspositionTable {
   }
 }
 
-class Engine {
-  Game game;
-  final TranspositionTable tt;
-
-  Engine({
-    required this.game,
-    TranspositionTable? tt,
-  }) : tt = tt ?? TranspositionTable();
+class Engine({
+  required var Game game,
+  TranspositionTable? tt,
+}) {
+  final TranspositionTable tt = tt ?? TranspositionTable();
 
   Future<EngineResult> search({
     int maxDepth = 50,
@@ -174,7 +162,7 @@ class Engine {
         hash: rootHash,
         depth: depth,
         value: evals[moves.first]!,
-        bound: TTBound.exact,
+        bound: .exact,
         bestMove: moves.first,
       );
 
@@ -216,14 +204,12 @@ class Engine {
 
     // 1. TT Cutoff
     if (ttEntry != null && ttEntry.depth >= depth) {
-      switch (ttEntry.bound) {
-        case TTBound.exact:
-          return ttEntry.value;
-        case TTBound.lowerBound:
-          if (ttEntry.value >= beta) return ttEntry.value;
-        case TTBound.upperBound:
-          if (ttEntry.value <= alpha) return ttEntry.value;
-      }
+      final isCutoff = switch (ttEntry.bound) {
+        .exact => true,
+        .lowerBound => ttEntry.value >= beta,
+        .upperBound => ttEntry.value <= alpha,
+      };
+      if (isCutoff) return ttEntry.value;
     }
 
     if (depth == 0) return quiescence(alpha, beta, player);
@@ -250,14 +236,11 @@ class Engine {
     }
 
     // 3. Store in TT
-    final TTBound bound;
-    if (value >= beta) {
-      bound = TTBound.lowerBound;
-    } else if (value <= alpha) {
-      bound = TTBound.upperBound;
-    } else {
-      bound = TTBound.exact;
-    }
+    final TTBound bound = switch (value) {
+      _ when value >= beta => .lowerBound,
+      _ when value <= alpha => .upperBound,
+      _ => .exact,
+    };
 
     tt.set(
       hash: hash,
@@ -378,12 +361,10 @@ class Engine {
   }
 }
 
-class EngineResult {
-  final Move? move;
-  final int? eval;
-  final int? depth;
-
+class const EngineResult({
+  final Move? move,
+  final int? eval,
+  final int? depth,
+}) {
   bool get hasMove => move != null;
-
-  const EngineResult({this.move, this.eval, this.depth});
 }
