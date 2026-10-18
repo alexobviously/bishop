@@ -2,10 +2,110 @@ import 'dart:math';
 
 import 'package:bishop/bishop.dart';
 
-class Engine {
-  final Game game;
+/// The bound type for an entry in the [TranspositionTable].
+enum TTBound {
+  /// The minimax evaluation is exact (alpha < eval < beta).
+  exact,
 
-  Engine({required this.game});
+  /// A beta-cutoff occurred; the true score is at least this value (eval >= beta).
+  lowerBound,
+
+  /// A fail-low occurred; the true score is at most this value (eval <= alpha).
+  upperBound,
+}
+
+/// An entry in the [TranspositionTable].
+class const TTEntry({
+  required final int hash,
+  required final int depth,
+  required final int value,
+  required final TTBound bound,
+  final Move? bestMove,
+  final int age = 0,
+});
+
+/// A fixed-size transposition table using Zobrist hashing to cache evaluations,
+/// avoid re-searching identical subtrees, and order best moves first.
+class TranspositionTable {
+  static const int defaultSize = 1 << 20; // 1,048,576 entries (~64 MB when saturated)
+
+  final int size;
+  final int mask;
+  final List<TTEntry?> _table;
+  int age = 0;
+
+  TranspositionTable({int size = defaultSize})
+      : size = _nextPowerOf2(size),
+        mask = _nextPowerOf2(size) - 1,
+        _table = List<TTEntry?>.filled(_nextPowerOf2(size), null);
+
+  static int _nextPowerOf2(int n) {
+    if (n <= 1) return 1;
+    int p = 1;
+    while (p < n) {
+      p <<= 1;
+    }
+    return p;
+  }
+
+  /// Increments search age for the new search iteration, allowing older entries
+  /// to be safely replaced.
+  void newSearch() {
+    age++;
+  }
+
+  /// Clears all entries in the table and resets the age counter.
+  void clear() {
+    _table.fillRange(0, _table.length, null);
+    age = 0;
+  }
+
+  /// Looks up a cached entry matching [hash].
+  TTEntry? get(int hash) {
+    final entry = _table[hash & mask];
+    if (entry != null && entry.hash == hash) {
+      return entry;
+    }
+    return null;
+  }
+
+  /// Inserts or updates an entry in the table using a depth-preferred with aging scheme.
+  void set({
+    required int hash,
+    required int depth,
+    required int value,
+    required TTBound bound,
+    Move? bestMove,
+  }) {
+    final idx = hash & mask;
+    final existing = _table[idx];
+    if (existing == null || existing.age != age || depth >= existing.depth) {
+      _table[idx] = TTEntry(
+        hash: hash,
+        depth: depth,
+        value: value,
+        bound: bound,
+        bestMove: bestMove ?? existing?.bestMove,
+        age: age,
+      );
+    } else if (bestMove != null && existing.bestMove == null) {
+      _table[idx] = TTEntry(
+        hash: existing.hash,
+        depth: existing.depth,
+        value: existing.value,
+        bound: existing.bound,
+        bestMove: bestMove,
+        age: existing.age,
+      );
+    }
+  }
+}
+
+class Engine({
+  required var Game game,
+  TranspositionTable? tt,
+}) {
+  final TranspositionTable tt = tt ?? TranspositionTable();
 
   Future<EngineResult> search({
     int maxDepth = 50,
@@ -13,19 +113,31 @@ class Engine {
     int timeBuffer = 2000,
     int debug = 0,
     int printBest = 0,
+    bool clearTable = false,
   }) async {
     if (game.gameOver) {
       print(game.drawn ? 'Draw' : 'Checkmate');
       return const EngineResult();
     }
+    if (clearTable) tt.clear();
+    tt.newSearch();
+
     int endTime = DateTime.now().millisecondsSinceEpoch + timeLimit;
     int endBuffer = endTime + timeBuffer;
     int depthSearched = 0;
-    List<Move> moves = orderMoves(game.generateLegalMoves());
+
+    final rootHash = game.state.hash;
+    final rootEntry = tt.get(rootHash);
+    List<Move> moves = orderMoves(
+      game.generateLegalMoves(),
+      rootEntry?.bestMove,
+    );
+
     Map<Move, int> evals = {};
     for (Move m in moves) {
       evals[m] = 0;
     }
+
     for (int depth = 1; depth < maxDepth; depth++) {
       if (debug > 0) print('----- DEPTH $depth -----');
       for (Move m in moves) {
@@ -44,9 +156,20 @@ class Engine {
       }
       moves.sort((a, b) => evals[b]!.compareTo(evals[a]!));
       depthSearched = depth;
+
+      // Store root position in TT
+      tt.set(
+        hash: rootHash,
+        depth: depth,
+        value: evals[moves.first]!,
+        bound: .exact,
+        bestMove: moves.first,
+      );
+
       int now = DateTime.now().millisecondsSinceEpoch;
       if (now >= endTime) break;
     }
+
     if (printBest > 0) {
       print('-- Best Moves --');
       for (Move m in moves.take(printBest)) {
@@ -62,7 +185,6 @@ class Engine {
   }
 
   int negamax(int depth, int alpha, int beta, Colour player, [int debug = 0]) {
-    int value = -Bishop.mateUpper;
     if (game.drawn) return 0;
     final result = game.result;
     if (result is WonGame) {
@@ -76,19 +198,58 @@ class Engine {
         return -Bishop.mateUpper;
       }
     }
-    if (depth == 0) return quiescence(alpha, beta, player);
-    moves = orderMoves(moves);
-    if (moves.isNotEmpty) {
-      int a = alpha;
-      for (Move m in moves) {
-        game.makeMove(m, false);
-        int v = -negamax(depth - 1, -beta, -a, player.opponent, debug - 1);
-        game.undo();
-        value = max(v, value);
-        a = max(a, value);
-        if (a >= beta) break;
-      }
+
+    final hash = game.state.hash;
+    final ttEntry = tt.get(hash);
+
+    // 1. TT Cutoff
+    if (ttEntry != null && ttEntry.depth >= depth) {
+      final isCutoff = switch (ttEntry.bound) {
+        .exact => true,
+        .lowerBound => ttEntry.value >= beta,
+        .upperBound => ttEntry.value <= alpha,
+      };
+      if (isCutoff) return ttEntry.value;
     }
+
+    if (depth == 0) return quiescence(alpha, beta, player);
+
+    // 2. Move Ordering using TT bestMove
+    final hashMove = ttEntry?.bestMove;
+    moves = orderMoves(moves, hashMove);
+
+    int value = -Bishop.mateUpper;
+    int a = alpha;
+    Move? bestMove;
+
+    for (Move m in moves) {
+      game.makeMove(m, false);
+      int v = -negamax(depth - 1, -beta, -a, player.opponent, debug - 1);
+      game.undo();
+
+      if (v > value) {
+        value = v;
+        bestMove = m;
+      }
+      a = max(a, value);
+      if (a >= beta) break;
+    }
+
+    // 3. Store in TT
+    final TTBound bound = switch (value) {
+      _ when value >= beta => .lowerBound,
+      _ when value <= alpha => .upperBound,
+      _ => .exact,
+    };
+
+    tt.set(
+      hash: hash,
+      depth: depth,
+      value: value,
+      bound: bound,
+      bestMove: bestMove,
+    );
+
     return value;
   }
 
@@ -145,9 +306,13 @@ class Engine {
   }
 
   /// Assigns a heuristic score to [move] for move ordering.
-  /// Captures are prioritized using MVV-LVA (Most Valuable Victim - Least Valuable Attacker),
-  /// followed by promotions and castling.
-  int scoreMove(Move move) {
+  /// The transposition table move [hashMove] is prioritized above all others,
+  /// followed by MVV-LVA captures, promotions, and castling.
+  int scoreMove(Move move, [Move? hashMove]) {
+    if (hashMove != null && move == hashMove) {
+      return 100000;
+    }
+
     int score = 0;
     if (move.capture) {
       final victimValue = switch (move) {
@@ -188,20 +353,18 @@ class Engine {
   }
 
   /// Orders [moves] using [scoreMove] to improve alpha-beta pruning efficiency.
-  List<Move> orderMoves(List<Move> moves) {
+  List<Move> orderMoves(List<Move> moves, [Move? hashMove]) {
     if (moves.length <= 1) return moves;
-    final scored = [for (final m in moves) (m, scoreMove(m))];
+    final scored = [for (final m in moves) (m, scoreMove(m, hashMove))];
     scored.sort((a, b) => b.$2.compareTo(a.$2));
     return [for (final s in scored) s.$1];
   }
 }
 
-class EngineResult {
-  final Move? move;
-  final int? eval;
-  final int? depth;
-
+class const EngineResult({
+  final Move? move,
+  final int? eval,
+  final int? depth,
+}) {
   bool get hasMove => move != null;
-
-  const EngineResult({this.move, this.eval, this.depth});
 }
