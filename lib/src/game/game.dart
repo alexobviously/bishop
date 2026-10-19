@@ -443,7 +443,8 @@ class Game {
           continue;
         }
 
-        int numMidSqs = (targetFile - castlingFile!).abs();
+        int castlingFile = size.file(from);
+        int numMidSqs = (targetFile - castlingFile).abs();
         bool valid = true;
         if (!options.ignorePieces) {
           int numRookMidSquares = (targetFile - rookFile).abs();
@@ -458,7 +459,7 @@ class Game {
             }
           }
           for (int j = 1; j <= numMidSqs; j++) {
-            int midFile = castlingFile! + (i == 0 ? j : -j);
+            int midFile = castlingFile + (i == 0 ? j : -j);
 
             // For some Chess960 positions.
             // See also https://github.com/alexobviously/bishop/issues/11
