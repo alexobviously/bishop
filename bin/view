@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -e
+
+# Convenience alias to run the Bishop ASCII board viewer.
+#
+# Usage:
+#   bin/view [options] [FEN]
+
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+exec dart run "$ROOT_DIR/bin/view.dart" "$@"

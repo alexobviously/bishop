@@ -238,7 +238,7 @@ class BishopState {
 
   /// Generates an ASCII representation of the board.
   String ascii({bool unicode = false, BuiltVariant? variant}) =>
-      boardToAscii(board, variant: variant ?? meta?.variant);
+      boardToAscii(board, variant: variant ?? meta?.variant, unicode: unicode);
 
   /// Returns a map of all captured pieces.
   /// This assumes that the game started with the same number of pieces as
