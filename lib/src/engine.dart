@@ -27,7 +27,8 @@ class const TTEntry({
 /// A fixed-size transposition table using Zobrist hashing to cache evaluations,
 /// avoid re-searching identical subtrees, and order best moves first.
 class TranspositionTable {
-  static const int defaultSize = 1 << 20; // 1,048,576 entries (~64 MB when saturated)
+  static const int defaultSize =
+      1 << 20; // 1,048,576 entries (~64 MB when saturated)
 
   final int size;
   final int mask;
@@ -35,9 +36,9 @@ class TranspositionTable {
   int age = 0;
 
   TranspositionTable({int size = defaultSize})
-      : size = _nextPowerOf2(size),
-        mask = _nextPowerOf2(size) - 1,
-        _table = List<TTEntry?>.filled(_nextPowerOf2(size), null);
+    : size = _nextPowerOf2(size),
+      mask = _nextPowerOf2(size) - 1,
+      _table = List<TTEntry?>.filled(_nextPowerOf2(size), null);
 
   static int _nextPowerOf2(int n) {
     if (n <= 1) return 1;
@@ -107,6 +108,32 @@ class Engine({
 }) {
   final TranspositionTable tt = tt ?? TranspositionTable();
 
+  /// Maximum search ply supported for heuristics like killer moves.
+  static const int maxPly = 64;
+
+  /// Killer moves table: stores up to two quiet moves per ply that caused a beta cutoff.
+  final List<List<Move?>> _killers = List.generate(maxPly, (_) => [null, null]);
+
+  /// Returns the killer moves stored for [ply].
+  List<Move?> killersFor(int ply) => ply >= 0 && ply < maxPly
+      ? List.unmodifiable(_killers[ply])
+      : const [null, null];
+
+  /// Clears all entries in the killer moves table.
+  void clearKillers() {
+    for (int i = 0; i < maxPly; i++) {
+      _killers[i][0] = null;
+      _killers[i][1] = null;
+    }
+  }
+
+  void _storeKiller(int ply, Move move) {
+    if (_killers[ply][0] != move) {
+      _killers[ply][1] = _killers[ply][0];
+      _killers[ply][0] = move;
+    }
+  }
+
   Future<EngineResult> search({
     int maxDepth = 50,
     int timeLimit = 5000,
@@ -120,6 +147,7 @@ class Engine({
       return const EngineResult();
     }
     if (clearTable) tt.clear();
+    clearKillers();
     tt.newSearch();
 
     int endTime = DateTime.now().millisecondsSinceEpoch + timeLimit;
@@ -147,6 +175,7 @@ class Engine({
           -Bishop.mateUpper,
           Bishop.mateUpper,
           game.turn.opponent,
+          1,
           debug,
         );
         game.undo();
@@ -184,7 +213,14 @@ class Engine({
     );
   }
 
-  int negamax(int depth, int alpha, int beta, Colour player, [int debug = 0]) {
+  int negamax(
+    int depth,
+    int alpha,
+    int beta,
+    Colour player, [
+    int ply = 0,
+    int debug = 0,
+  ]) {
     if (game.drawn) return 0;
     final result = game.result;
     if (result is WonGame) {
@@ -214,9 +250,9 @@ class Engine({
 
     if (depth == 0) return quiescence(alpha, beta, player);
 
-    // 2. Move Ordering using TT bestMove
+    // 2. Move Ordering using TT bestMove and Killer Moves
     final hashMove = ttEntry?.bestMove;
-    moves = orderMoves(moves, hashMove);
+    moves = orderMoves(moves, hashMove, ply);
 
     int value = -Bishop.mateUpper;
     int a = alpha;
@@ -224,7 +260,14 @@ class Engine({
 
     for (Move m in moves) {
       game.makeMove(m, false);
-      int v = -negamax(depth - 1, -beta, -a, player.opponent, debug - 1);
+      int v = -negamax(
+        depth - 1,
+        -beta,
+        -a,
+        player.opponent,
+        ply + 1,
+        debug - 1,
+      );
       game.undo();
 
       if (v > value) {
@@ -232,7 +275,13 @@ class Engine({
         bestMove = m;
       }
       a = max(a, value);
-      if (a >= beta) break;
+      if (a >= beta) {
+        // Beta cutoff occurred: record quiet killer move
+        if (!m.capture && ply < maxPly) {
+          _storeKiller(ply, m);
+        }
+        break;
+      }
     }
 
     // 3. Store in TT
@@ -307,8 +356,8 @@ class Engine({
 
   /// Assigns a heuristic score to [move] for move ordering.
   /// The transposition table move [hashMove] is prioritized above all others,
-  /// followed by MVV-LVA captures, promotions, and castling.
-  int scoreMove(Move move, [Move? hashMove]) {
+  /// followed by MVV-LVA captures, killer moves, promotions, and castling.
+  int scoreMove(Move move, [Move? hashMove, int ply = 0]) {
     if (hashMove != null && move == hashMove) {
       return 100000;
     }
@@ -334,6 +383,12 @@ class Engine({
 
       // MVV-LVA: Most Valuable Victim - Least Valuable Attacker
       score += 10000 + (victimValue * 10) - (attackerValue ~/ 10);
+    } else if (ply < maxPly) {
+      if (move == _killers[ply][0]) {
+        score += 9000;
+      } else if (move == _killers[ply][1]) {
+        score += 8000;
+      }
     }
 
     if (move.promotion) {
@@ -353,9 +408,9 @@ class Engine({
   }
 
   /// Orders [moves] using [scoreMove] to improve alpha-beta pruning efficiency.
-  List<Move> orderMoves(List<Move> moves, [Move? hashMove]) {
+  List<Move> orderMoves(List<Move> moves, [Move? hashMove, int ply = 0]) {
     if (moves.length <= 1) return moves;
-    final scored = [for (final m in moves) (m, scoreMove(m, hashMove))];
+    final scored = [for (final m in moves) (m, scoreMove(m, hashMove, ply))];
     scored.sort((a, b) => b.$2.compareTo(a.$2));
     return [for (final s in scored) s.$1];
   }
