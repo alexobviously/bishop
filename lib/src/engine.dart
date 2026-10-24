@@ -127,7 +127,9 @@ class Engine({
     }
   }
 
-  void _storeKiller(int ply, Move move) {
+  /// Records [move] as a killer move at [ply].
+  void storeKiller(int ply, Move move) {
+    if (ply < 0 || ply >= maxPly) return;
     if (_killers[ply][0] != move) {
       _killers[ply][1] = _killers[ply][0];
       _killers[ply][0] = move;
@@ -278,7 +280,7 @@ class Engine({
       if (a >= beta) {
         // Beta cutoff occurred: record quiet killer move
         if (!m.capture && ply < maxPly) {
-          _storeKiller(ply, m);
+          storeKiller(ply, m);
         }
         break;
       }
