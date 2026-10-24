@@ -1,3 +1,9 @@
+### 1.5.0
+- Upgraded to Dart SDK 3.13.4, modernised code somewhat (still in progress), added a bunch of lints.
+- Fixed a class of issues where queen side castling rights could be calculated incorrectly (#85).
+- Fixed parsing PGNs without a space between the move number and the move (e.g. `1.d4` instead of `1. d4`), as found in e.g. PGN Mentor format (#76).
+- Some improvements to built-in default engine to make it more useful: MVV-LVA ordering, quiescence search, transposition tables, killer move heuristic.
+
 ### 1.4.4
 - Fixed Chess960 short castling in the case where the king is on B and rook is on C.
 
