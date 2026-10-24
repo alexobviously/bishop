@@ -57,9 +57,31 @@ PgnData parsePgn(String pgn) {
     }
     if (substr[0] == '{') {
       int commentEnd = substr.indexOf('}');
-      String comment = substr.substring(1, commentEnd - 1).trim();
-      comments[moves.length] = comment;
-      i += commentEnd + 1;
+      if (commentEnd != -1) {
+        String comment = substr.substring(1, commentEnd).trim();
+        comments[moves.length] = comment;
+        i += commentEnd + 1;
+      } else {
+        i = game.length;
+      }
+      continue;
+    }
+    // TODO: support variations
+    if (substr[0] == '(') {
+      int depth = 0;
+      int j = 0;
+      while (j < substr.length) {
+        if (substr[j] == '(') depth++;
+        if (substr[j] == ')') {
+          depth--;
+          if (depth == 0) {
+            j++;
+            break;
+          }
+        }
+        j++;
+      }
+      i += j;
       continue;
     }
     int end = substr.indexOf(' ');
@@ -67,10 +89,21 @@ PgnData parsePgn(String pgn) {
       end = substr.length;
     }
     String move = substr.substring(0, end);
-    if (!['1-0', '0-1', '1/2-1/2', '½-½'].contains(move)) {
+    i += end + 1;
+
+    // TODO: support NAGs
+    if (move.startsWith(r'$')) {
+      continue;
+    }
+    // TODO: support move annotations
+    move = move.replaceAll(RegExp(r'[!?]'), '');
+    if (move.isEmpty) {
+      continue;
+    }
+
+    if (!['1-0', '0-1', '1/2-1/2', '½-½', '*'].contains(move)) {
       moves.add(move);
     }
-    i += end + 1;
   }
 
   return PgnData(metadata: metadata, moves: moves, comments: comments);
