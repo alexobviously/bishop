@@ -25,16 +25,25 @@ void main() {
       final d2d4 = moves.firstWhere(
         (m) => game.toAlgebraic(m) == 'd2d4',
       );
+      final g1f3 = moves.firstWhere(
+        (m) => game.toAlgebraic(m) == 'g1f3',
+      );
 
-      // Artificially store e2e4 as killer 1 and d2d4 as killer 2 at ply 1
-      engine.killersFor(1); // verify bounds
-      // We can trigger negamax beta cutoff or test scoreMove directly
-      final scoreE4 = engine.scoreMove(e2e4);
-      expect(scoreE4, 0); // No killers at ply 0
+      // Initially at ply 0 (no killers active)
+      expect(engine.scoreMove(e2e4, null, 0), equals(0));
 
-      // Score with killers at ply 1
-      // Simulate killer move storage via beta cutoff or internal helper
-      // Test scoreMove with killers present
+      // Store d2d4 first, then e2e4 to test slot shifting:
+      // e2e4 becomes Killer 1 (slot 0), d2d4 becomes Killer 2 (slot 1)
+      engine.storeKiller(1, d2d4);
+      engine.storeKiller(1, e2e4);
+
+      expect(engine.scoreMove(e2e4, null, 1), equals(9000));
+      expect(engine.scoreMove(d2d4, null, 1), equals(8000));
+      expect(engine.scoreMove(g1f3, null, 1), equals(0));
+
+      final ordered = engine.orderMoves(moves, null, 1);
+      expect(ordered.first, equals(e2e4));
+      expect(ordered[1], equals(d2d4));
     });
 
     test(
@@ -79,29 +88,41 @@ void main() {
       }
     });
 
-    test('Killers rank below captures and hash move, but above regular quiet moves', () {
-      final capGame = Game(
-        fen: 'rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
-      );
-      final eng = Engine(game: capGame);
-      final moves = capGame.generateLegalMoves();
+    test(
+      'Killers rank below captures and hash move, but above regular quiet moves',
+      () {
+        final capGame = Game(
+          fen: 'rnbqkbnr/ppp1pppp/8/3p4/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2',
+        );
+        final eng = Engine(game: capGame);
+        final moves = capGame.generateLegalMoves();
 
-      final captureMove = moves.firstWhere((m) => m.capture); // exd5
-      final quietMove = moves.firstWhere(
-        (m) => !m.capture && !m.castling && game.toAlgebraic(m) == 'g1f3',
-      );
-      final anotherQuiet = moves.firstWhere(
-        (m) => !m.capture && !m.castling && game.toAlgebraic(m) == 'b1c3',
-      );
+        final captureMove = moves.firstWhere((m) => m.capture); // exd5
+        final quietMove = moves.firstWhere(
+          (m) => !m.capture && !m.castling && capGame.toAlgebraic(m) == 'g1f3',
+        );
+        final anotherQuiet = moves.firstWhere(
+          (m) => !m.capture && !m.castling && capGame.toAlgebraic(m) == 'b1c3',
+        );
 
-      // If quietMove is Killer 1 at ply 2
-      // We search depth to let eng populate or test relative ordering
-      final captureScore = eng.scoreMove(captureMove);
-      final baseQuietScore = eng.scoreMove(anotherQuiet);
+        // Store quietMove as Killer 1 at ply 2
+        eng.storeKiller(2, quietMove);
 
-      expect(captureScore, greaterThan(10000));
-      expect(baseQuietScore, equals(0));
-    });
+        final hashScore = eng.scoreMove(quietMove, quietMove, 2);
+        final captureScore = eng.scoreMove(captureMove, null, 2);
+        final killerScore = eng.scoreMove(quietMove, null, 2);
+        final baseQuietScore = eng.scoreMove(anotherQuiet, null, 2);
+
+        expect(hashScore, equals(100000));
+        expect(captureScore, greaterThan(10000));
+        expect(killerScore, equals(9000));
+        expect(baseQuietScore, equals(0));
+
+        expect(hashScore, greaterThan(captureScore));
+        expect(captureScore, greaterThan(killerScore));
+        expect(killerScore, greaterThan(baseQuietScore));
+      },
+    );
 
     test('Engine finds checkmate with killer heuristic active', () async {
       // Mate in 1: Scholar's mate position
