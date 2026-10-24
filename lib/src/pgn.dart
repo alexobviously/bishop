@@ -43,7 +43,7 @@ PgnData parsePgn(String pgn) {
   int i = 0;
   List<String> moves = [];
   Map<int, String> comments = {};
-  final numRegex = RegExp(r'([0-9]+\.+ )');
+  final numRegex = RegExp(r'([0-9]+\.+\s*)');
   while (i < game.length) {
     String substr = game.substring(i);
     if (substr[0] == ' ') {
