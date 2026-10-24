@@ -520,4 +520,6 @@ class Variant {
   factory miniRandom() => SmallVariants.miniRandom();
   factory micro() => SmallVariants.micro();
   factory nano() => SmallVariants.nano();
+  factory shatranj() => CommonVariants.shatranj();
+  factory makruk() => CommonVariants.makruk();
 }

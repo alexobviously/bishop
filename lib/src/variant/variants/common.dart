@@ -131,4 +131,30 @@ class CommonVariants {
         gameEndConditions: const GameEndConditions(stalemate: EndType.lose)
             .symmetric(),
       );
+
+  // TODO: makruk counting (https://github.com/alexobviously/bishop/issues/35)
+
+  /// Traditional Thai chess variant.
+  /// Currently doesn't include the counting rules!
+  /// https://en.wikipedia.org/wiki/Makruk
+  static Variant makruk() => .standard()
+      .withPieces({
+        'B': .fromBetza('FfW'), // Khon (Nobleman / Silver)
+        'S': .fromBetza('FfW'), // Khon alias
+        'Q': .ferz().copyWith(promoOptions: .promoPiece), // Met (Seed / Ferz)
+        'M': .ferz().copyWith(promoOptions: .promoPiece), // Met alias
+        'P': .simplePawn().copyWith(promoOptions: .promotesToOne('Q')),
+      })
+      .copyWith(
+        name: 'Makruk',
+        description: 'Traditional Thai chess.',
+        startPosition: 'rnbkqbnr/8/pppppppp/8/8/PPPPPPPP/8/RNBKQBNR w - - 0 1',
+        castlingOptions: .none,
+        materialConditions: .none,
+        enPassant: false,
+        promotionOptions: .ranks([Bishop.rank6, Bishop.rank3]),
+        gameEndConditions: const GameEndConditions(
+          stalemate: .draw,
+        ).symmetric(),
+      );
 }
