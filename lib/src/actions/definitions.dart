@@ -1,7 +1,7 @@
 part of 'actions.dart';
 
 /// Some common actions.
-class ActionDefinitions {
+abstract class ActionDefinitions {
   /// Merges several [actions] into a single definition.
   static ActionDefinition merge(List<ActionDefinition> actions) =>
       (ActionTrigger trigger) =>

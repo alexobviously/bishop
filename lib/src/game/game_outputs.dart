@@ -207,9 +207,6 @@ extension GameOutputs on Game {
     return moves;
   }
 
-  @Deprecated('Use Game.moveHistorySan')
-  List<String> sanMoves() => moveHistorySan;
-
   String pgn({
     Map<String, String>? metadata,
     bool includeVariant = false,

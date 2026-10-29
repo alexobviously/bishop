@@ -1,8 +1,6 @@
 part of 'actions.dart';
 
-abstract class ActionEffect {
-  const ActionEffect();
-}
+abstract class const ActionEffect();
 
 /// Causes [square] to be set to [content].
 class EffectModifySquare extends ActionEffect {
