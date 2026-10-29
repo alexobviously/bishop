@@ -93,9 +93,7 @@ extension GameOutputs on Game {
       // if queenside is the only castling option, render it as 'O-O'
       String kingside = 'O-O';
       String queenside = variant.castlingOptions.kingside ? 'O-O-O' : kingside;
-      san = ([Castling.k, Castling.bk].contains(move.castlingDir))
-          ? kingside
-          : queenside;
+      san = move.castlingDir == .kingside ? kingside : queenside;
     } else {
       if (move is DropMove) {
         PieceDefinition pieceDef = variant.pieces[move.piece];
@@ -329,7 +327,7 @@ extension GameOutputs on Game {
     if (variant.outputOptions.castlingFormat == CastlingFormat.shredder) {
       castling = replaceMultiple(
         castling,
-        Castling.symbols.keys.toList(),
+        CastlingRights.symbols.keys.toList(),
         castlingFileSymbols,
       );
     }

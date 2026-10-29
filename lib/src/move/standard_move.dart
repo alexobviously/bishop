@@ -20,7 +20,7 @@ class const StandardMove({
   @override final int? promoPiece,
 
   /// If this is a castling move, in which direction is castling happening?
-  final CastlingRights? castlingDir,
+  final CastlingDirection? castlingDir,
 
   /// The square where the castling piece (e.g. a rook), is located.
   final int? castlingPieceSquare,
@@ -59,7 +59,7 @@ class const StandardMove({
     int? capturedPiece,
     int? promoSource,
     int? promoPiece,
-    CastlingRights? castlingDir,
+    CastlingDirection? castlingDir,
     int? castlingPieceSquare,
     bool? enPassant,
     bool? setEnPassant,

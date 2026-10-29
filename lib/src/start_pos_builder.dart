@@ -98,15 +98,15 @@ class RandomChessStartPosBuilder implements StartPositionBuilder {
     }
 
     // Place rooks and king
-    CastlingRights castlingRights = 0;
+    CastlingRights castlingRights = .none;
     if (numRooks == 0) placePiece(squares.first, king);
     if (numRooks == 1) {
-      castlingRights = qsFirst ? Castling.bothQ : Castling.bothK;
+      castlingRights = qsFirst ? .bothQ : .bothK;
       placePiece(squares.first, qsFirst ? rook : king);
       placePiece(squares.first, qsFirst ? king : rook);
     }
     if (numRooks == 2) {
-      castlingRights = Castling.mask;
+      castlingRights = .mask;
       placePiece(squares.first, rook);
       placePiece(squares.first, king);
       placePiece(squares.first, rook);
