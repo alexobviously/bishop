@@ -8,13 +8,10 @@ const List<MoveFormatter> defaultMoveFormatters = [
   GatingMoveFormatter(),
 ];
 
-enum CheckType {
+enum CheckType(final String symbol) {
   none(''),
   check('+'),
   checkmate('#');
-
-  final String symbol;
-  CheckType(this.symbol);
 }
 
 typedef MoveFormatterFunction<T extends Move> = String Function(
@@ -28,16 +25,13 @@ typedef MoveFormatterCallback = String Function(
   CheckType? checkType,
 );
 
-abstract class MoveFormatter<T extends Move> {
-  const MoveFormatter();
+abstract class const MoveFormatter<T extends Move>() {
   MoveFormatterFunction<T> algebraic(BuiltVariant variant);
   MoveFormatterFunction<T> pretty(BuiltVariant variant);
   Type get type => T;
 }
 
-class PassMoveFormatter extends MoveFormatter<PassMove> {
-  const PassMoveFormatter();
-
+class const PassMoveFormatter() extends MoveFormatter<PassMove> {
   @override
   MoveFormatterFunction<PassMove> algebraic(BuiltVariant variant) =>
       (_, _, _) => 'pass';
@@ -47,9 +41,7 @@ class PassMoveFormatter extends MoveFormatter<PassMove> {
       algebraic(variant);
 }
 
-class DropMoveFormatter extends MoveFormatter<DropMove> {
-  const DropMoveFormatter();
-
+class const DropMoveFormatter() extends MoveFormatter<DropMove> {
   @override
   MoveFormatterFunction<DropMove> algebraic(BuiltVariant variant) =>
       (move, _, _) =>
@@ -64,9 +56,7 @@ class DropMoveFormatter extends MoveFormatter<DropMove> {
       );
 }
 
-class GatingMoveFormatter extends MoveFormatter<GatingMove> {
-  const GatingMoveFormatter();
-
+class const GatingMoveFormatter() extends MoveFormatter<GatingMove> {
   @override
   MoveFormatterFunction<GatingMove> algebraic(BuiltVariant variant) =>
       (move, formatter, checkType) => formatGatingMoveAlgebraic(

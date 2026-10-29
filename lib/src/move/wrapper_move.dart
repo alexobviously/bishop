@@ -2,9 +2,9 @@ part of 'move.dart';
 
 /// A type of move that wraps another move and extends its functionality.
 /// Currently [child] is limited to StandardMoves only.
-class WrapperMove implements Move {
-  final StandardMove child;
-  const WrapperMove({required this.child});
+class const WrapperMove({
+  required final StandardMove child,
+}) implements Move {
 
   @override
   bool get capture => child.capture;

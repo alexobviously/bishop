@@ -3,40 +3,34 @@ part of 'move.dart';
 /// A representation of a single move.
 /// This is a move that is made in a game, not a definition of a type of move
 /// that can be made by a piece. For that, see `MoveDefinition`.
-class StandardMove extends Move {
+class const StandardMove({
   /// The board location this move starts at.
-  @override
-  final int from;
+  @override required final int from,
 
   /// The board location this move ends at.
-  @override
-  final int to;
+  @override required final int to,
 
   /// The piece (including colour and flags) that is being captured, if one is.
-  @override
-  final int? capturedPiece;
+  @override final int? capturedPiece,
 
   /// The piece that exists before the promotion.
-  final int? promoSource; // the piece type that got promoted
+  final int? promoSource,
 
   /// The piece (type only) that is being promoted to.
-  @override
-  final int? promoPiece; // this piece type that was promoted to
+  @override final int? promoPiece,
 
   /// If this is a castling move, in which direction is castling happening?
-  final CastlingRights? castlingDir;
+  final CastlingRights? castlingDir,
 
   /// The square where the castling piece (e.g. a rook), is located.
-  final int? castlingPieceSquare;
+  final int? castlingPieceSquare,
 
   /// If this move is en passant.
-  @override
-  final bool enPassant;
+  @override final bool enPassant = false,
 
   /// If this move sets the en passant flag.
-  @override
-  final bool setEnPassant;
-
+  @override final bool setEnPassant = false,
+}) extends Move {
   /// Whether a piece is captured as a result of this move.
   @override
   bool get capture => capturedPiece != null;
@@ -58,18 +52,6 @@ class StandardMove extends Move {
     if (setEnPassant) params.add('setEnPassant');
     return 'Move(${params.join(', ')})';
   }
-
-  const StandardMove({
-    required this.from,
-    required this.to,
-    this.capturedPiece,
-    this.promoSource,
-    this.promoPiece,
-    this.castlingDir,
-    this.castlingPieceSquare,
-    this.enPassant = false,
-    this.setEnPassant = false,
-  });
 
   StandardMove copyWith({
     int? from,

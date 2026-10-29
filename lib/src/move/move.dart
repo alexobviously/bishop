@@ -9,8 +9,7 @@ part 'static_move.dart';
 part 'pass_move.dart';
 part 'wrapper_move.dart';
 
-abstract class Move {
-  const Move();
+abstract class const Move() {
 
   /// The board location this move starts at.
   int get from;
