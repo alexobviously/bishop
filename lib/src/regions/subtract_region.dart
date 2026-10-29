@@ -1,12 +1,10 @@
 part of 'regions.dart';
 
 /// A region that consists of [positive], with [negative] cut out of it.
-class SubtractRegion extends BoardRegion {
-  final BoardRegion positive;
-  final BoardRegion negative;
-
-  const SubtractRegion(this.positive, this.negative);
-
+class const SubtractRegion(
+  final BoardRegion positive,
+  final BoardRegion negative,
+) extends BoardRegion {
   factory fromJson(Map<String, dynamic> json) => SubtractRegion(
     BoardRegion.fromJson(json['+']),
     BoardRegion.fromJson(json['-']),

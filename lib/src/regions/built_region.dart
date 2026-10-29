@@ -1,12 +1,10 @@
 part of 'regions.dart';
 
 /// A region that is created from a `BoardRegion` when `BuiltVariant` is built.
-class BuiltRegion implements Region {
-  final List<int> boardSquares;
-  final BoardSize size;
-
-  const BuiltRegion(this.boardSquares, this.size);
-
+class const BuiltRegion(
+  final List<int> boardSquares,
+  final BoardSize size,
+) implements Region {
   bool containsSquare(int square) => boardSquares.contains(square);
 
   @override

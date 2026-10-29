@@ -1,11 +1,9 @@
 part of 'regions.dart';
 
 /// A region that contains all of the squares of each region in [regions].
-class UnionRegion extends BoardRegion {
-  final List<BoardRegion> regions;
-
-  const UnionRegion(this.regions);
-
+class const UnionRegion(
+  final List<BoardRegion> regions,
+) extends BoardRegion {
   factory fromJson(Map<String, dynamic> json) => UnionRegion(
     (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
   );

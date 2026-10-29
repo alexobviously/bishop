@@ -2,11 +2,9 @@ part of 'regions.dart';
 
 /// A region that contains the intersection of [regions], i.e. all squares that
 /// are in all of the [regions].
-class IntersectRegion extends BoardRegion {
-  final List<BoardRegion> regions;
-
-  const IntersectRegion(this.regions);
-
+class const IntersectRegion(
+  final List<BoardRegion> regions,
+) extends BoardRegion {
   factory fromJson(Map<String, dynamic> json) => IntersectRegion(
     (json['regions'] as List).map((e) => BoardRegion.fromJson(e)).toList(),
   );

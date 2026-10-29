@@ -1,30 +1,23 @@
 part of 'regions.dart';
 
 /// A region on a board used to define area-specific piece behaviour.
-class RectRegion extends BoardRegion {
+class const RectRegion({
   /// The rank the region starts at, inclusive.
   /// If null, the first rank will be used.
-  final int? startRank;
+  final int? startRank,
 
   /// The rank the region ends at, inclusive.
   /// If null, the last rank will be used.
-  final int? endRank;
+  final int? endRank,
 
   /// The file the region starts at, inclusive.
   /// If null, the first file will be used.
-  final int? startFile;
+  final int? startFile,
 
   /// The file the region ends at, inclusive.
   /// If null, the last file will be used.
-  final int? endFile;
-
-  const RectRegion({
-    this.startRank,
-    this.endRank,
-    this.startFile,
-    this.endFile,
-  });
-
+  final int? endFile,
+}) extends BoardRegion {
   factory lrbt(int? l, int? r, int? b, int? t) =>
       RectRegion(startFile: l, endFile: r, startRank: b, endRank: t);
 
