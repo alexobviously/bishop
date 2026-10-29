@@ -1,22 +1,17 @@
 import 'package:bishop/bishop.dart';
 
 /// Defines whether a piece can promote or be promoted to.
-class PiecePromoOptions {
+class const PiecePromoOptions({
   /// Whether this piece can be promoted.
-  final bool canPromote;
+  final bool canPromote = false,
 
   /// Whether this piece can be promoted to.
-  final bool canPromoteTo;
+  final bool canPromoteTo = false,
 
   /// If this is specified then only pieces in this list will be available as
   /// promotion options for this piece.
-  final List<String>? promotesTo;
-
-  const PiecePromoOptions({
-    this.canPromote = false,
-    this.canPromoteTo = false,
-    this.promotesTo,
-  });
+  final List<String>? promotesTo,
+}) {
 
   factory fromJson(Map<String, dynamic> json) => PiecePromoOptions(
     canPromote: json['canPromote'] ?? false,
@@ -62,21 +57,13 @@ class PiecePromoOptions {
 typedef PromotionSetup = PromotionBuilder Function(BuiltVariant variant);
 typedef PromotionBuilder = List<StandardMove>? Function(PromotionParams params);
 
-class PromotionParams {
-  final StandardMove move;
-  final BishopState state;
-  final BuiltVariant variant;
-  final PieceType pieceType;
-  final List<int> promoPieces;
-
-  const PromotionParams({
-    required this.move,
-    required this.state,
-    required this.variant,
-    required this.pieceType,
-    required this.promoPieces,
-  });
-}
+class const PromotionParams({
+  required final StandardMove move,
+  required final BishopState state,
+  required final BuiltVariant variant,
+  required final PieceType pieceType,
+  required final List<int> promoPieces,
+});
 
 class Promotion {
   /// Generates a move for each piece in [variant.promotionPieces] for the [move] move.

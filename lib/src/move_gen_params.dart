@@ -1,25 +1,14 @@
-class MoveGenParams {
-  final bool captures;
-  final bool quiet;
-  final bool castling;
-  final bool legal;
-  final bool ignorePieces;
-  final int? pieceType;
-  final int? onlySquare;
-  final bool onlyOne;
-
+class const MoveGenParams({
+  required final bool captures,
+  required final bool quiet,
+  required final bool castling,
+  required final bool legal,
+  final bool ignorePieces = false,
+  final int? pieceType,
+  final int? onlySquare,
+  final bool onlyOne = false,
+}) {
   bool get onlyPiece => pieceType != null;
-
-  const MoveGenParams({
-    required this.captures,
-    required this.quiet,
-    required this.castling,
-    required this.legal,
-    this.ignorePieces = false,
-    this.pieceType,
-    this.onlySquare,
-    this.onlyOne = false,
-  });
   static const normal = MoveGenParams(
     captures: true,
     quiet: true,
