@@ -395,11 +395,11 @@ class Game {
         pieceType.castling &&
         !inCheck) {
       bool kingside = colour == Bishop.white
-          ? state.castlingRights.wk
-          : state.castlingRights.bk;
+          ? state.castlingRights.has(.wk)
+          : state.castlingRights.has(.bk);
       bool queenside = colour == Bishop.white
-          ? state.castlingRights.wq
-          : state.castlingRights.bq;
+          ? state.castlingRights.has(.wq)
+          : state.castlingRights.has(.bq);
       int royalRank = size.rank(from);
 
       for (int i = 0; i < 2; i++) {
@@ -487,14 +487,14 @@ class Game {
           }
         }
         if (valid) {
-          int castlingDir = i == 0 ? Castling.k : Castling.q;
+          final CastlingDirection castlingDir = i == 0 ? .kingside : .queenside;
           StandardMove m = StandardMove(
             from: from,
             to: targetSq,
             castlingDir: castlingDir,
             castlingPieceSquare: rookSq,
           );
-          if (variant.gatingMode != GatingMode.fixed) moves.add(m);
+          if (variant.gatingMode != .fixed) moves.add(m);
           if (variant.gating) {
             int gRank = size.rank(m.from);
             if ((gRank == Bishop.rank1 && colour == Bishop.white) ||

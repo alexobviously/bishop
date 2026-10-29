@@ -34,7 +34,7 @@ void main() {
         fen: 'rnbqk1nr/ppp1ppb1/6p1/3p4/8/2N5/PPPPPPP1/R1BQKBNR w KQkq - 0 5',
       );
       g.makeMoveString('h1h8');
-      expect(g.state.castlingRights, castlingRights('Qq'));
+      expect(g.state.castlingRights, CastlingRights.fromString('Qq'));
     });
     // https://github.com/alexobviously/bishop/issues/85
     test(
@@ -53,7 +53,7 @@ void main() {
         );
         expect(
           castlingMoves.any(
-            (m) => m is StandardMove && m.castlingDir == Castling.q,
+            (m) => m is StandardMove && m.castlingDir == .queenside,
           ),
           isTrue,
           reason: 'Queenside castling (O-O-O) must be generated',
@@ -71,7 +71,7 @@ void main() {
         final castlingMoves = g.generateLegalMoves().castlingMoves;
         expect(
           castlingMoves.any(
-            (m) => m is StandardMove && m.castlingDir == Castling.q,
+            (m) => m is StandardMove && m.castlingDir == .queenside,
           ),
           isTrue,
           reason:

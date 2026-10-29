@@ -232,7 +232,7 @@ extension GameMovement on Game {
       halfMoves++;
     }
 
-    int castlingRights = state.castlingRights;
+    CastlingRights castlingRights = state.castlingRights;
     List<int> royalSquares = List.from(state.royalSquares);
     List<int> castlingSquares = List.from(state.castlingSquares);
 
@@ -262,11 +262,15 @@ extension GameMovement on Game {
 
     if (move.castling) {
       move = move as StandardMove;
-      bool kingside = move.castlingDir == Castling.k;
-      int castlingFile = kingside
-          ? variant.castlingOptions.kTarget!
-          : variant.castlingOptions.qTarget!;
-      int rookFile = kingside ? castlingFile - 1 : castlingFile + 1;
+      final castlingDir = move.castlingDir!;
+      final castlingFile = switch (castlingDir) {
+        .kingside => variant.castlingOptions.kTarget!,
+        .queenside => variant.castlingOptions.qTarget!,
+      };
+      int rookFile = switch (castlingDir) {
+        .kingside => castlingFile - 1,
+        .queenside => castlingFile + 1,
+      };
       int rookSq = size.square(rookFile, fromRank);
       int castlingSq = size.square(castlingFile, fromRank);
       int rook = board[move.castlingPieceSquare!];
@@ -301,15 +305,15 @@ extension GameMovement on Game {
       if (fromSq.type == variant.rookPiece) {
         int fromFile = size.file(move.from);
         bool onFirstRank = size.rank(move.from) == size.firstRank(colour);
-        int ks = colour == Bishop.white ? Castling.k : Castling.bk;
-        int qs = colour == Bishop.white ? Castling.q : Castling.bq;
+        CastlingRights ks = colour == Bishop.white ? .wk : .bk;
+        CastlingRights qs = colour == Bishop.white ? .wq : .bq;
         if (fromFile == castlingTargetK &&
             onFirstRank &&
-            castlingRights.hasRight(ks)) {
+            castlingRights.has(ks)) {
           castlingRights = castlingRights.flip(ks);
         } else if (fromFile == castlingTargetQ &&
             onFirstRank &&
-            castlingRights.hasRight(qs)) {
+            castlingRights.has(qs)) {
           castlingRights = castlingRights.flip(qs);
         }
       }
@@ -319,15 +323,15 @@ extension GameMovement on Game {
         int toFile = size.file(move.to);
         int opponent = colour.opponent;
         bool onFirstRank = size.rank(move.to) == size.firstRank(opponent);
-        int ks = opponent == Bishop.white ? Castling.k : Castling.bk;
-        int qs = opponent == Bishop.white ? Castling.q : Castling.bq;
+        CastlingRights ks = opponent == Bishop.white ? .wk : .bk;
+        CastlingRights qs = opponent == Bishop.white ? .wq : .bq;
         if (toFile == castlingTargetK &&
             onFirstRank &&
-            castlingRights.hasRight(ks)) {
+            castlingRights.has(ks)) {
           castlingRights = castlingRights.flip(ks);
         } else if (toFile == castlingTargetQ &&
             onFirstRank &&
-            castlingRights.hasRight(qs)) {
+            castlingRights.has(qs)) {
           castlingRights = castlingRights.flip(qs);
         }
       }
@@ -337,8 +341,8 @@ extension GameMovement on Game {
       castlingRights = castlingRights.remove(colour.opponent);
     }
     if (castlingRights != state.castlingRights) {
-      hash ^= zobrist.table[zobrist.castling][state.castlingRights];
-      hash ^= zobrist.table[zobrist.castling][castlingRights];
+      hash ^= zobrist.table[zobrist.castling][state.castlingRights.value];
+      hash ^= zobrist.table[zobrist.castling][castlingRights.value];
     }
     if (variant.hasWinRegions) {
       int p = board[move.to].piece;

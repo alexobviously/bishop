@@ -4,6 +4,7 @@
 - Fixed parsing PGNs without a space between the move number and the move (e.g. `1.d4` instead of `1. d4`), as found in e.g. PGN Mentor format (#76).
 - Made PGN parser discard variations, NAGs (!!, !?, etc) and annotations _for now_. This allows more complex PGNs to be parsed, even though we don't support those things yet (#73).
 - Some improvements to built-in default engine to make it more useful: MVV-LVA ordering, quiescence search, transposition tables, killer move heuristic.
+- BREAKING: `CastlingRights` is now an extension type and the implementation details have changed a bit (for the better!)
 
 ### 1.4.4
 - Fixed Chess960 short castling in the case where the king is on B and rook is on C.

@@ -230,13 +230,13 @@ class const ParseFenResult(
 );
 
 class const CastlingSetup({
-  required final int castlingRights,
+  required final CastlingRights castlingRights,
   final int? castlingFile,
   final int? castlingTargetK,
   final int? castlingTargetQ,
   final List<String>? castlingFileSymbols,
 }) {
-  static const none = CastlingSetup(castlingRights: 0);
+  static const none = CastlingSetup(castlingRights: .none);
 }
 
 CastlingSetup setupCastling({
@@ -257,22 +257,22 @@ CastlingSetup setupCastling({
   int? castlingTargetK;
   int? castlingTargetQ;
   final size = variant.boardSize;
-  CastlingRights cr = 0;
+  CastlingRights cr = .none;
   for (String c in castlingString.split('')) {
     // there is probably a better way to do all of this
     bool white = c == c.toUpperCase();
     castlingFile = size.file(castlingSquares[white ? 0 : 1]);
-    if (Castling.symbols.containsKey(c)) {
-      cr += Castling.symbols[c]!;
+    if (CastlingRights.symbols.containsKey(c)) {
+      cr |= CastlingRights.symbols[c]!;
     } else {
       int cFile = fileFromSymbol(c);
       bool kingside = cFile > size.file(castlingSquares[white ? 0 : 1]);
       if (kingside) {
         castlingTargetK = cFile;
-        cr += white ? Castling.k : Castling.bk;
+        cr |= white ? .wk : .bk;
       } else {
         castlingTargetQ = cFile;
-        cr += white ? Castling.q : Castling.bq;
+        cr |= white ? .wq : .bq;
       }
     }
   }
@@ -298,7 +298,7 @@ CastlingSetup setupCastling({
       }
     }
   }
-  if (variant.outputOptions.castlingFormat == CastlingFormat.shredder) {
+  if (variant.outputOptions.castlingFormat == .shredder) {
     // Actually if these are null then we should never need the file symbol,
     // but let's set it to something anyway.
     String k = castlingTargetK != null ? fileSymbol(castlingTargetK) : 'k';
