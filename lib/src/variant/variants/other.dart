@@ -12,8 +12,8 @@ abstract class OtherGames {
         ' it again to win.',
     boardSize: const BoardSize(9, 9),
     startPosition: 'nnnnnnnnn/9/9/9/9/9/9/9/NNNNNNNNN w - - 0 1',
-    pieceTypes: {'N': PieceType.knight()},
-    promotionOptions: PromotionOptions.none,
+    pieceTypes: {'N': .knight()},
+    promotionOptions: .none,
     actions: [
       ActionExitRegionEnding(
         region: RectRegion.square(Bishop.fileE, Bishop.rank5),
@@ -27,10 +27,9 @@ abstract class OtherGames {
     name: 'Clobber',
     startPosition: 'PpPpP/pPpPp/PpPpP/pPpPp/PpPpP/pPpPp w - - 0 1',
     boardSize: const BoardSize(5, 6),
-    pieceTypes: {'P': PieceType.fromBetza('cW')},
-    gameEndConditions: const GameEndConditions(stalemate: EndType.lose)
-        .symmetric(),
-    promotionOptions: PromotionOptions.none,
+    pieceTypes: {'P': .fromBetza('cW')},
+    gameEndConditions: const GameEndConditions(stalemate: .lose).symmetric(),
+    promotionOptions: .none,
   );
 
   /// https://en.wikipedia.org/wiki/Clobber#Variants
@@ -47,7 +46,7 @@ abstract class OtherGames {
   static Variant breakthrough() => Variant(
     name: 'Breakthrough',
     startPosition: 'pppppppp/pppppppp/8/8/8/8/PPPPPPPP/PPPPPPPP w - - 0 1',
-    pieceTypes: {'P': PieceType.fromBetza('fmWfF')},
+    pieceTypes: {'P': .fromBetza('fmWfF')},
   ).withCampMate(winPieces: ['P']);
 
   /// https://en.wikipedia.org/wiki/Five_Field_Kono
@@ -56,12 +55,12 @@ abstract class OtherGames {
     boardSize: const BoardSize(5, 5),
     startPosition: 'ppppp/p3p/5/P3P/PPPPP w - - 0 1',
     // startPosition: 'PPPPP/4P/1P3/5/4p w - - 0 1',
-    pieceTypes: {'P': PieceType.fromBetza('mF')},
+    pieceTypes: {'P': .fromBetza('mF')},
     regions: {
       'w': SetRegion(['a5', 'b5', 'c5', 'd5', 'e5', 'a4', 'e4']),
       'b': SetRegion(['a1', 'b1', 'c1', 'd1', 'e1', 'a2', 'e2']),
     },
-    promotionOptions: PromotionOptions.none,
+    promotionOptions: .none,
   ).withAction(ActionFillRegionEnding('w', 'b'));
 
   /// https://www.chessvariants.com/programs.dir/joust.html
@@ -71,9 +70,8 @@ abstract class OtherGames {
         'The square a piece moves from is removed from the board'
         'after each move.',
     startPosition: '8/8/8/4n3/3N4/8/8/8 w - - 0 1',
-    pieceTypes: {'N': PieceType.fromBetza('mN')},
-    gameEndConditions: const GameEndConditions(stalemate: EndType.lose)
-        .symmetric(),
-    promotionOptions: PromotionOptions.none,
+    pieceTypes: {'N': .fromBetza('mN')},
+    gameEndConditions: const GameEndConditions(stalemate: .lose).symmetric(),
+    promotionOptions: .none,
   ).withBlocker().withAction(ActionBlockOrigin());
 }

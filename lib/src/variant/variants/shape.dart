@@ -31,9 +31,9 @@ abstract class ShapeVariants {
         '/*10*/*10*/*10*/*PPPPPPPPPP*/*CRNBQKBNRC*/W**********W w - - 0 1',
     pieceTypes: {
       ...Bishop.chessPieces,
-      'P': PieceType.longMovePawn(3),
-      'C': PieceType.fromBetza('DAW', value: 400), // Champion
-      'W': PieceType.fromBetza('FC', value: 400), // Wizard
+      'P': .longMovePawn(3),
+      'C': .fromBetza('DAW', value: 400), // Champion
+      'W': .fromBetza('FC', value: 400), // Wizard
     },
     enPassant: true,
     castlingOptions: const CastlingOptions(

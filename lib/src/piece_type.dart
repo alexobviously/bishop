@@ -57,7 +57,7 @@ class PieceType {
     required this.moves,
     this.royal = false,
     bool? castling,
-    this.promoOptions = PiecePromoOptions.promoPiece,
+    this.promoOptions = .promoPiece,
     this.enPassantable = false,
     this.noSanSymbol = false,
     this.value = Bishop.defaultPieceValue,
@@ -106,7 +106,7 @@ class PieceType {
       'betza': betza,
       if (verbose || royal) 'royal': royal,
       if (verbose || castling != royal) 'castling': castling,
-      if (verbose || promoOptions != PiecePromoOptions.promoPiece)
+      if (verbose || promoOptions != .promoPiece)
         'promoOptions': promoOptions.toJson(),
       if (verbose || enPassantable) 'enPassantable': enPassantable,
       if (verbose || noSanSymbol) 'noSanSymbol': true,
@@ -172,11 +172,10 @@ class PieceType {
   }
 
   /// Returns a copy of the piece type with `PiecePromoOptions.none`.
-  PieceType withNoPromotion() => copyWith(promoOptions: PiecePromoOptions.none);
+  PieceType withNoPromotion() => copyWith(promoOptions: .none);
 
   /// Returns a copy of the piece type with `PiecePromoOptions.promotable`.
-  PieceType promotable() =>
-      copyWith(promoOptions: PiecePromoOptions.promotable);
+  PieceType promotable() => copyWith(promoOptions: .promotable);
 
   /// Returns a copy of the piece type with [value].
   PieceType withValue(int value) => copyWith(value: value);
@@ -194,12 +193,11 @@ class PieceType {
   PieceType withImmortality() => withAction(ActionImmortality());
 
   /// Returns a royal version of the piece type.
-  PieceType withRoyal() =>
-      copyWith(royal: true, promoOptions: PiecePromoOptions.none);
+  PieceType withRoyal() => copyWith(royal: true, promoOptions: .none);
 
   factory empty() => const PieceType(
     moves: [],
-    promoOptions: PiecePromoOptions.none,
+    promoOptions: .none,
   );
 
   /// Generate a piece type with all of its moves from [Betza notation](https://www.gnu.org/software/xboard/Betza.html).
@@ -207,7 +205,7 @@ class PieceType {
     String betza, {
     bool royal = false,
     bool? castling,
-    PiecePromoOptions promoOptions = PiecePromoOptions.promoPiece,
+    PiecePromoOptions promoOptions = .promoPiece,
     bool enPassantable = false,
     bool noSanSymbol = false,
     int value = Bishop.defaultPieceValue,
@@ -241,14 +239,14 @@ class PieceType {
   factory king() => PieceType.fromBetza(
     'K',
     royal: true,
-    promoOptions: PiecePromoOptions.none,
+    promoOptions: .none,
   );
 
   /// A king that cannot move.
   factory staticKing() => PieceType.fromBetza(
     '',
     royal: true,
-    promoOptions: PiecePromoOptions.none,
+    promoOptions: .none,
   );
 
   /// A non-royal king.
@@ -258,7 +256,7 @@ class PieceType {
     'fmW' // moves forward one square
     'fceF' // captures diagonally forward one square
     'ifmnD', // on the first move, moves forward two squares
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     enPassantable: true,
     noSanSymbol: true,
     value: 100,
@@ -267,7 +265,7 @@ class PieceType {
   /// An 'inverted' pawn that moves diagonally and captures fowards.
   factory berolinaPawn() => PieceType.fromBetza(
     'fmFfceWifmnA',
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     enPassantable: true,
     noSanSymbol: true,
     value: 125, // idk exactly but seems better than a normal pawn
@@ -278,7 +276,7 @@ class PieceType {
   // before the normal move part in the betza string. (todo: fix)
   factory longMovePawn(int moveLength) => PieceType.fromBetza(
     'fmWfceFifmW$moveLength',
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     enPassantable: true,
     noSanSymbol: true,
     value: 100,
@@ -287,7 +285,7 @@ class PieceType {
   /// A pawn with no double move and no en passant.
   factory simplePawn() => PieceType.fromBetza(
     'fmWfcF',
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     noSanSymbol: true,
     value: 100,
   );

@@ -1,53 +1,50 @@
 part of '../variant.dart';
 
 class MiscVariants {
-  @Deprecated('Use FairyVariants.hoppelPoppel()')
-  static Variant hoppelPoppel() => FairyVariants.hoppelPoppel();
-
-  static Variant spawn() => Variant.standard().copyWith(
+  static Variant spawn() => .standard().copyWith(
     name: 'Spawn Chess',
     description: 'Moving the exposed king adds a pawn to the player\'s hand.',
     startPosition: 'rnb1nbnr/8/3k4/8/8/4K3/8/RNBN1BNR[PPpp] w - - 0 1',
-    handOptions: HandOptions.enabledOnly,
-    castlingOptions: CastlingOptions.none,
+    handOptions: .enabledOnly,
+    castlingOptions: .none,
     pieceTypes: {
-      'P': PieceType.pawn(),
-      'N': PieceType.knight(),
-      'B': PieceType.fromBetza('B2'),
-      'R': PieceType.fromBetza('R3'),
-      'Q': PieceType.queen(),
-      'K': PieceType.king().withAction(ActionAddToHand('P')),
+      'P': .pawn(),
+      'N': .knight(),
+      'B': .fromBetza('B2'),
+      'R': .fromBetza('R3'),
+      'Q': .queen(),
+      'K': .king().withAction(ActionAddToHand('P')),
     },
   );
 
   /// https://www.chessvariants.org/winning.dir/kinglet.html
-  static Variant kinglet() => Variant.standard().copyWith(
+  static Variant kinglet() => .standard().copyWith(
     name: 'Kinglet Chess',
     description: 'The first player to capture all the opponent\'s pawns wins.',
     pieceTypes: {
-      'P': PieceType.pawn(),
-      'N': PieceType.knight().withNoPromotion(),
-      'B': PieceType.bishop().withNoPromotion(),
-      'R': PieceType.rook().withNoPromotion(),
-      'Q': PieceType.queen().withNoPromotion(),
-      'K': PieceType.fromBetza('K', castling: true),
+      'P': .pawn(),
+      'N': .knight().withNoPromotion(),
+      'B': .bishop().withNoPromotion(),
+      'R': .rook().withNoPromotion(),
+      'Q': .queen().withNoPromotion(),
+      'K': .fromBetza('K', castling: true),
     },
     actions: [ActionCheckPieceCount(pieceType: 'P')],
   );
 
   /// https://www.chessvariants.org/winning.dir/extinction.html
-  static Variant extinction() => Variant.standard().copyWith(
+  static Variant extinction() => .standard().copyWith(
     name: 'Extinction Chess',
     description:
         'The first player that does not have pieces of all '
         'types loses the game.',
     pieceTypes: {
-      'P': PieceType.pawn(),
-      'N': PieceType.knight(),
-      'B': PieceType.bishop(),
-      'R': PieceType.rook(),
-      'Q': PieceType.queen(),
-      'K': PieceType.fromBetza('K', castling: true),
+      'P': .pawn(),
+      'N': .knight(),
+      'B': .bishop(),
+      'R': .rook(),
+      'Q': .queen(),
+      'K': .fromBetza('K', castling: true),
     },
     actions: [
       ActionCheckPieceCount(pieceType: 'P'),
@@ -59,18 +56,18 @@ class MiscVariants {
     ],
   );
 
-  static Variant threeKings() => Variant.standard()
+  static Variant threeKings() => .standard()
       .copyWith(
         name: 'Three Kings Chess',
         description:
             'Each player has three kings, but only one has to '
             'be captured for them to win.',
         startPosition: 'knbqkbnk/pppppppp/8/8/8/8/PPPPPPPP/KNBQKBNK w - - 0 1',
-        castlingOptions: CastlingOptions.none,
+        castlingOptions: .none,
         actions: [ActionCheckPieceCount(pieceType: 'K', count: 3)],
       )
       .withPieces({
-        'K': PieceType.fromBetza('K', promoOptions: PiecePromoOptions.none),
+        'K': .fromBetza('K', promoOptions: .none),
       });
 
   // https://www.chessvariants.com/diffobjective.dir/utchess.html#domination
@@ -101,7 +98,8 @@ class MiscVariants {
         return effects;
       },
     );
-    return Variant.standard().copyWith(
+
+    return .standard().copyWith(
       name: 'Domination',
       actions: [
         action,
@@ -117,7 +115,7 @@ class MiscVariants {
       startRank: Bishop.rank2,
       endRank: Bishop.rank5,
     );
-    return Variant(
+    return .standard().copyWith(
       name: 'Dart',
       boardSize: const BoardSize(6, 6),
       startPosition: 'knrppp/nbp3/rp3P/p3PR/3PBN/PPPRNK[XXXxxx] w - - 0 1',
@@ -127,12 +125,12 @@ class MiscVariants {
         dropBuilder: RegionDropBuilder.single(dropRegion),
       ),
       pieceTypes: {
-        'P': PieceType.simplePawn(),
-        'N': PieceType.knight(),
-        'B': PieceType.bishop(),
-        'R': PieceType.rook(),
-        'K': PieceType.king(),
-        'X': PieceType.blocker(), // a 'dart'
+        'P': .simplePawn(),
+        'N': .knight(),
+        'B': .bishop(),
+        'R': .rook(),
+        'K': .king(),
+        'X': .blocker(), // a 'dart'
       },
       halfMoveDraw: 100,
     );
@@ -140,7 +138,7 @@ class MiscVariants {
 
   /// Capturing pieces, except for kings, change colour.
   /// https://en.wikipedia.org/wiki/Andernach_chess
-  static Variant andernach() => Variant.standard()
+  static Variant andernach() => .standard()
       .copyWith(
         name: 'Andernach Chess',
         description: 'Capturing pieces, except for kings, change colour.',
@@ -153,7 +151,7 @@ class MiscVariants {
         'knbrp3/bqpp4/npp5/rp1p3P/p3P1PR/5PPN/4PPQB/3PRBNK w - - 0 1',
     pieceTypes: {
       ...Variant.standard().pieceTypes,
-      'P': PieceType.fromBetza('mlfFcflW', noSanSymbol: true).promotable(),
+      'P': .fromBetza('mlfFcflW', noSanSymbol: true).promotable(),
     },
     promotionOptions: const RegionPromotion(whiteId: 'wp', blackId: 'bp'),
     regions: {
@@ -164,23 +162,23 @@ class MiscVariants {
   );
 
   /// https://www.chessvariants.com/diffobjective.dir/knightmate.html
-  static Variant knightmate() => Variant.standard()
+  static Variant knightmate() => .standard()
       .withPieces({
-        'K': PieceType.commoner(),
-        'N': PieceType.knight().withRoyal(),
+        'K': .commoner(),
+        'N': .knight().withRoyal(),
       })
       .copyWith(
         name: 'Knightmate',
         startPosition:
             'rkbqnbkr/pppppppp/8/8/8/8/PPPPPPPP/RKBQNBKR w KQkq - 0 1',
-        materialConditions: MaterialConditions.none, // it's different
+        materialConditions: .none, // it's different
       );
 
   /// https://www.chessvariants.com/other.dir/pocket.html
-  static Variant pocketKnight() => Variant.standard().copyWith(
+  static Variant pocketKnight() => .standard().copyWith(
     name: 'Pocket Knight',
     startPosition:
         'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[Nn] w KQkq - 0 1',
-    handOptions: HandOptions.enabledOnly,
+    handOptions: .enabledOnly,
   );
 }

@@ -3,49 +3,49 @@ part of '../variant.dart';
 /// Variants where the focus is on novel piece types.
 class FairyVariants {
   /// Knights capture like bishops, bishops capture like knights.
-  static Variant hoppelPoppel() => Variant.standard()
+  static Variant hoppelPoppel() => .standard()
       .withPieces({
-        'N': PieceType.knibis(),
-        'B': PieceType.biskni(),
+        'N': .knibis(),
+        'B': .biskni(),
       })
       .copyWith(
         name: 'Hoppel-Poppel',
-        materialConditions: MaterialConditions.none,
+        materialConditions: .none,
       );
 
   /// Rooks capture like knights, knights capture like rooks.
-  static Variant newZealand() => Variant.standard()
+  static Variant newZealand() => .standard()
       .withPieces({
-        'R': PieceType.rookni(),
-        'N': PieceType.kniroo(),
+        'R': .rookni(),
+        'N': .kniroo(),
       })
       .copyWith(
         name: 'New Zealand Chess',
-        materialConditions: MaterialConditions.none,
+        materialConditions: .none,
       );
 
   /// https://en.wikipedia.org/wiki/Grasshopper_chess
   static Variant grasshopper() => Variant.standard()
-      .withPiece('G', PieceType.grasshopper())
+      .withPiece('G', .grasshopper())
       .copyWith(
         name: 'Grasshopper Chess',
         startPosition:
             'rnbqkbnr/gggggggg/pppppppp/8/8/PPPPPPPP/GGGGGGGG/RNBQKBNR'
             ' w KQkq - 0 1',
-        materialConditions: MaterialConditions.none,
+        materialConditions: .none,
       );
 
   /// Knights are replaced with nightriders.
-  static Variant nightrider() => Variant.standard()
+  static Variant nightrider() => .standard()
       .copyWith(
         name: 'Nightrider Chess',
-        materialConditions: MaterialConditions.none,
+        materialConditions: .none,
       )
-      .withPiece('N', PieceType.nightrider());
+      .withPiece('N', .nightrider());
 
   /// https://en.wikipedia.org/wiki/Berolina_pawn#Berolina_chess
-  static Variant berolina() => Variant.standard()
-      .withPiece('P', PieceType.berolinaPawn())
+  static Variant berolina() => .standard()
+      .withPiece('P', .berolinaPawn())
       .copyWith(name: 'Berolina Chess');
 
   /// https://en.wikipedia.org/wiki/Wolf_chess
@@ -57,22 +57,15 @@ class FairyVariants {
         '/8/8/1PP2PP1/PSSPPSSP/KNBBRFWQ w - - 0 1',
     pieceTypes: {
       ...Bishop.chessPieces,
-      'W': PieceType.chancellor(), // Wolf
-      'F': PieceType.archbishop(), // Fox
-      'S': PieceType.fromBetza(
+      'W': .chancellor(), // Wolf
+      'F': .archbishop(), // Fox
+      'S': .fromBetza(
         'fKifmnD',
         enPassantable: true,
-        promoOptions: PiecePromoOptions.promotesTo([
-          'B',
-          'N',
-          'R',
-          'Q',
-          'W',
-          'F',
-        ]),
+        promoOptions: .promotesTo(['B', 'N', 'R', 'Q', 'W', 'F']),
       ), // Sergeant
-      'N': PieceType.nightrider(),
-      'E': PieceType.fromBetza('QN0', value: 1400), // Elephant
+      'N': .nightrider(),
+      'E': .fromBetza('QN0', value: 1400), // Elephant
     },
     enPassant: true,
   );

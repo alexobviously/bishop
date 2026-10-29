@@ -224,27 +224,18 @@ ParseFenResult parseFen({
   return ParseFenResult(state, castling);
 }
 
-class ParseFenResult {
-  final BishopState state;
-  final CastlingSetup castling;
-  const ParseFenResult(this.state, this.castling);
-}
+class const ParseFenResult(
+  final BishopState state,
+  final CastlingSetup castling,
+);
 
-class CastlingSetup {
-  final int castlingRights;
-  final int? castlingFile;
-  final int? castlingTargetK;
-  final int? castlingTargetQ;
-  final List<String>? castlingFileSymbols;
-
-  const CastlingSetup({
-    required this.castlingRights,
-    this.castlingFile,
-    this.castlingTargetK,
-    this.castlingTargetQ,
-    this.castlingFileSymbols,
-  });
-
+class const CastlingSetup({
+  required final int castlingRights,
+  final int? castlingFile,
+  final int? castlingTargetK,
+  final int? castlingTargetQ,
+  final List<String>? castlingFileSymbols,
+}) {
   static const none = CastlingSetup(castlingRights: 0);
 }
 

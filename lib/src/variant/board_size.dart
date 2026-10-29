@@ -1,13 +1,13 @@
 part of 'variant.dart';
 
 /// Specifies the dimensions of a board.
-class BoardSize {
+class const BoardSize(
   /// The horizontal size, i.e. number of files on the board.
-  final int h;
+  final int h,
 
   /// The vertical size, i.e. number of ranks on the board.
-  final int v;
-
+  final int v,
+) {
   /// The total number of squares on a board of this size.
   int get numSquares => h * v;
 
@@ -28,8 +28,6 @@ class BoardSize {
 
   /// The number of indices required to travel one square north.
   int get north => h * 2;
-
-  const BoardSize(this.h, this.v);
 
   /// Builds a BoardSize from a string like '8x8'.
   factory fromString(String str) {

@@ -7,9 +7,9 @@ class SmallVariants {
     return standard
         .copyWith(
           name: 'Mini Chess',
-          boardSize: BoardSize.mini,
+          boardSize: .mini,
           startPosition: 'rbnkbr/pppppp/6/6/PPPPPP/RBNKBR w KQkq - 0 1',
-          castlingOptions: CastlingOptions.mini,
+          castlingOptions: .mini,
           enPassant: false,
         )
         .withPiece('P', PieceType.simplePawn());
@@ -19,9 +19,9 @@ class SmallVariants {
     Variant mini = Variant.mini();
     return mini.copyWith(
       name: 'Mini Random',
-      startPosBuilder: const RandomChessStartPosBuilder(size: BoardSize.mini),
-      castlingOptions: CastlingOptions.miniRandom,
-      outputOptions: OutputOptions.chess960,
+      startPosBuilder: const RandomChessStartPosBuilder(size: .mini),
+      castlingOptions: .miniRandom,
+      outputOptions: .chess960,
     );
   }
 
@@ -31,7 +31,7 @@ class SmallVariants {
       name: 'Micro Chess',
       boardSize: const BoardSize(5, 5),
       startPosition: 'rnbqk/ppppp/5/PPPPP/RNBQK w Qq - 0 1',
-      castlingOptions: CastlingOptions.micro,
+      castlingOptions: .micro,
     );
   }
 
@@ -41,7 +41,7 @@ class SmallVariants {
       name: 'Nano Chess',
       boardSize: const BoardSize(4, 5),
       startPosition: 'knbr/p3/4/3P/RBNK w Qk - 0 1',
-      castlingOptions: CastlingOptions.nano,
+      castlingOptions: .nano,
     );
   }
 }
