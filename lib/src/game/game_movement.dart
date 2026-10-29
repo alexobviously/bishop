@@ -138,10 +138,6 @@ extension GameMovement on Game {
     );
   }
 
-  @Deprecated('Use makeStandardMove')
-  BishopState? moveNormalMove(BishopState state, Move move) =>
-      makeStandardMove(state, move);
-
   BishopState? makeStandardMove(BishopState state, Move move) {
     if (move is! StandardMove && move is! DropMove) {
       return null;

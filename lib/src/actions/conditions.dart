@@ -1,7 +1,7 @@
 part of 'actions.dart';
 
 /// Some common conditions for actions.
-class Conditions {
+abstract class Conditions {
   /// Merges multiple [conditions] into one.
   static ActionCondition merge(List<ActionCondition> conditions) =>
       conditions.length == 1

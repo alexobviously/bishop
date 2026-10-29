@@ -35,7 +35,7 @@ class Action {
   final ActionDefinition action;
 
   const Action({
-    this.event = ActionEvent.afterMove,
+    this.event = .afterMove,
     this.precondition,
     this.condition,
     required this.action,
