@@ -2,7 +2,7 @@ import 'package:bishop/bishop.dart';
 
 typedef DropBuilderFunction = List<Move> Function(MoveParams params);
 
-class Drops {
+abstract class Drops {
   static DropBuilderFunction standard({bool restrictPromoPieces = true}) =>
       (MoveParams params) {
         final state = params.state;

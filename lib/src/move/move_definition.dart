@@ -1,19 +1,14 @@
 import 'package:bishop/bishop.dart';
 
-abstract class MoveDefinition {
+abstract class const MoveDefinition({
   /// Modality indicates whether the move is quiet move, capture, or both.
-  final Modality modality;
+  final Modality modality = Modality.both,
 
   /// If true, this move is only possible as the piece's first move.
   /// Moves of this type will also set the en passant square.
   /// For example, a standard pawn's double move.
-  final bool firstOnly;
-
-  const MoveDefinition({
-    this.modality = Modality.both,
-    this.firstOnly = false,
-  });
-
+  final bool firstOnly = false,
+}) {
   factory fromBetza(Atom atom, Direction d) {
     if (atom.base == '*') {
       return TeleportMoveDefinition(modality: atom.modality);
@@ -30,61 +25,53 @@ abstract class MoveDefinition {
   bool excludeMove(int from, int to, int dirMult, BoardSize size) => false;
 }
 
-class TeleportMoveDefinition extends MoveDefinition {
-  const TeleportMoveDefinition({super.modality});
+class const TeleportMoveDefinition({
+  super.modality,
+}) extends MoveDefinition {
   @override
   TeleportMoveDefinition normalise(BoardSize size) => this;
 }
 
 /// Specifies a group of moves.
-class StandardMoveDefinition extends MoveDefinition {
+class const StandardMoveDefinition({
   /// Where does this move go?
   /// Analogous to a basic directional atom in Betza notation.
-  final Direction direction;
+  required final Direction direction,
 
   /// How far this move can go in the [direction].
   /// Set this to 0 for infinite (to the edge of the board).
-  final int range;
+  final int range = 1,
+
+  super.modality = Modality.both,
 
   /// Whether this move an enact en passant.
-  final bool enPassant;
+  final bool enPassant = false,
+
+  super.firstOnly = false,
 
   /// If true, these moves can be blocked by a piece standing in the path.
   /// For example, a Xiangqi horse's move or a standard pawn's double move.
-  final bool lame;
+  final bool lame = false,
 
   /// The distance after hopping that the piece can land at.
   /// -1 means this is not a hop move.
   /// 0 means any distance is acceptable (e.g. Xiangqi cannon).
   /// Currently only -1, 0 and 1 are supported by Betza notation ('p' and 'g').
-  final int hopDistance;
+  final int hopDistance = -1,
 
   /// The number to add to a square id to translate in the direction specified
   /// by this move.
   /// Don't set this yourself, it will be calculated when `Variant.normalise()`
   /// is called.
-  final int normalised;
-  final Direction? lameDirection;
-  final int? lameNormalised;
-
+  final int normalised = 0,
+  final Direction? lameDirection,
+  final int? lameNormalised,
+}) extends MoveDefinition {
   bool get slider => range != 1;
   bool get unlimitedSlider => range == 0;
   bool get limitedSlider => range > 1;
   bool get hopper => slider && hopDistance > -1;
   bool get limitedHopper => slider && hopDistance > 0;
-
-  const StandardMoveDefinition({
-    required this.direction,
-    this.range = 1,
-    super.modality = Modality.both,
-    this.enPassant = false,
-    super.firstOnly = false,
-    this.lame = false,
-    this.hopDistance = -1,
-    this.normalised = 0,
-    this.lameDirection,
-    this.lameNormalised,
-  });
 
   /// Build a move definition from a betza [atom] and a [direction].
   factory fromBetza(Atom atom, Direction direction) => StandardMoveDefinition(
@@ -170,13 +157,13 @@ class StandardMoveDefinition extends MoveDefinition {
 }
 
 /// Represents a direction on a chessboard.
-class Direction {
+class const Direction(
   /// Squares travelled horizontally.
-  final int h;
+  final int h,
 
   /// Squares travelled vertically.
-  final int v;
-  const Direction(this.h, this.v);
+  final int v,
+) {
 
   factory fromString(String str) {
     final parts = str.split(',');

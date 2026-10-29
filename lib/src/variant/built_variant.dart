@@ -1,62 +1,33 @@
 part of 'variant.dart';
 
-class BuiltVariant {
-  final Variant data;
-
-  final List<PieceDefinition> pieces;
-  final Map<String, PieceDefinition> pieceLookup;
-  final Map<String, int> pieceIndexLookup;
-  final List<int> promotionPieces;
-  final List<int> promotablePieces;
-  final Map<int, int>? promoLimits;
-  final Map<int, List<int>>? promoMap;
-  final PromotionBuilder? promotionBuilder;
-  final DropBuilderFunction? dropBuilder;
-  final MoveChecker? passChecker;
-  final PieceMoveChecker? firstMoveChecker;
-  final int royalPiece;
-  final int epPiece;
-  final int castlingPiece;
-  final int rookPiece;
-  final MaterialConditions<int> materialConditions;
-  final Map<String, BuiltRegion> regions;
-  final Map<int, List<String>> winRegions;
-  final List<Action> actions;
-  final Map<ActionEvent, List<Action>> actionsByEvent;
-  final StateTransformFunction? stateTransformer;
-  final List<MoveGenFunction> moveGenerators;
-  final Map<Type, MoveProcessorFunction> moveProcessors;
-  final Map<Type, MoveFormatterFunction> algebraicMoveFormatters;
-  final Map<Type, MoveFormatterFunction> prettyMoveFormatters;
-
-  const BuiltVariant({
-    required this.data,
-    required this.pieces,
-    required this.pieceLookup,
-    required this.pieceIndexLookup,
-    required this.promotionPieces,
-    required this.promotablePieces,
-    this.promoLimits,
-    this.promoMap,
-    this.promotionBuilder,
-    this.dropBuilder,
-    this.passChecker,
-    this.firstMoveChecker,
-    required this.epPiece,
-    required this.castlingPiece,
-    required this.rookPiece,
-    required this.royalPiece,
-    required this.materialConditions,
-    required this.regions,
-    required this.winRegions,
-    required this.actions,
-    required this.actionsByEvent,
-    this.stateTransformer,
-    this.moveGenerators = const [],
-    this.moveProcessors = const {},
-    this.algebraicMoveFormatters = const {},
-    this.prettyMoveFormatters = const {},
-  });
+class const BuiltVariant({
+  required final Variant data,
+  required final List<PieceDefinition> pieces,
+  required final Map<String, PieceDefinition> pieceLookup,
+  required final Map<String, int> pieceIndexLookup,
+  required final List<int> promotionPieces,
+  required final List<int> promotablePieces,
+  final Map<int, int>? promoLimits,
+  final Map<int, List<int>>? promoMap,
+  final PromotionBuilder? promotionBuilder,
+  final DropBuilderFunction? dropBuilder,
+  final MoveChecker? passChecker,
+  final PieceMoveChecker? firstMoveChecker,
+  required final int epPiece,
+  required final int castlingPiece,
+  required final int rookPiece,
+  required final int royalPiece,
+  required final MaterialConditions<int> materialConditions,
+  required final Map<String, BuiltRegion> regions,
+  required final Map<int, List<String>> winRegions,
+  required final List<Action> actions,
+  required final Map<ActionEvent, List<Action>> actionsByEvent,
+  final StateTransformFunction? stateTransformer,
+  final List<MoveGenFunction> moveGenerators = const [],
+  final Map<Type, MoveProcessorFunction> moveProcessors = const {},
+  final Map<Type, MoveFormatterFunction> algebraicMoveFormatters = const {},
+  final Map<Type, MoveFormatterFunction> prettyMoveFormatters = const {},
+}) {
 
   BuiltVariant copyWith({
     Variant? data,

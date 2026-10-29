@@ -1,39 +1,31 @@
 part of 'regions.dart';
 
 /// Defines an effect that a region will have on a piece type.
-class RegionEffect {
+class const RegionEffect({
   /// Corresponds to a `BoardRegion.id`.
-  final String? whiteRegion;
+  final String? whiteRegion,
 
   /// Corresponds to a `BoardRegion.id`.
-  final String? blackRegion;
+  final String? blackRegion,
 
   /// If a piece type is provided, it will replace the piece this effect
   /// belongs to whenever the piece is in the region.
-  final PieceType? pieceType;
+  final PieceType? pieceType,
 
   /// If true, pieces with this region effect applied to them will not be
   /// able to leave the region.
-  final bool restrictMovement;
+  final bool restrictMovement = false,
 
   /// If true, a piece with this region effect entering this region will
   /// win the game.
-  final bool winGame;
-
+  final bool winGame = false,
+}) {
   /// Returns [whiteRegion] for white and [blackRegion] for black.
   String? regionForPlayer(int player) => player == Bishop.white
       ? whiteRegion
       : player == Bishop.black
       ? blackRegion
       : null;
-
-  const RegionEffect({
-    this.whiteRegion,
-    this.blackRegion,
-    this.pieceType,
-    this.restrictMovement = false,
-    this.winGame = false,
-  });
 
   factory fromJson(Map<String, dynamic> json) => RegionEffect(
     whiteRegion: json['whiteRegion'],

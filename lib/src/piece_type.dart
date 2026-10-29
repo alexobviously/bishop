@@ -1,44 +1,47 @@
 import 'package:bishop/bishop.dart';
 
 /// Specifies a piece type, with all of its moves and attributes.
-class PieceType {
+class const PieceType({
   /// A Betza notation string that defines the piece.
   /// See: https://www.gnu.org/software/xboard/Betza.html
-  final String? betza;
+  final String? betza,
 
   /// All of the different move groups this piece can make.
-  final List<MoveDefinition> moves;
+  required final List<MoveDefinition> moves,
 
   /// Royal pieces can be checkmated, and can castle,
   /// unless [castling] is false.
-  final bool royal;
+  final bool royal = false,
 
   /// Whether this is a castling piece.
   /// If not specified, it will be the same as [royal].
-  final bool castling;
+  bool? castling,
 
   /// Defines the promotion behaviour of this piece type.
-  final PiecePromoOptions promoOptions;
+  final PiecePromoOptions promoOptions = .promoPiece,
 
   /// Whether this piece can set the en passant flag.
-  final bool enPassantable;
+  final bool enPassantable = false,
 
   /// If true, the piece symbol will be omitted in SAN representations of moves.
   /// For example, pawn moves should be like 'b4', rather than 'Pb4'.
-  final bool noSanSymbol;
+  final bool noSanSymbol = false,
 
   /// The value of the piece, in centipawns (a pawn is 100).
   /// Can be overridden in a `Variant`.
-  final int value;
+  final int value = Bishop.defaultPieceValue,
 
   /// Regions in which the behaviour of the piece is altered.
-  final List<RegionEffect> regionEffects;
+  final List<RegionEffect> regionEffects = const [],
 
-  final List<Action> actions;
+  final List<Action> actions = const [],
 
   /// Contains precomputed flags that help move generation run faster.
   /// You don't need to set this yourself, it is generated during `normalise()`.
-  final PieceOptimisationData? optimisationData;
+  final PieceOptimisationData? optimisationData,
+}) {
+  final bool castling;
+  this : castling = castling ?? royal;
 
   /// Region effects that change the piece type.
   List<RegionEffect> get changePieceRegionEffects =>
@@ -51,20 +54,6 @@ class PieceType {
   /// Region effects that win the game.
   List<RegionEffect> get winRegionEffects =>
       regionEffects.where((e) => e.winGame).toList();
-
-  const PieceType({
-    this.betza,
-    required this.moves,
-    this.royal = false,
-    bool? castling,
-    this.promoOptions = PiecePromoOptions.promoPiece,
-    this.enPassantable = false,
-    this.noSanSymbol = false,
-    this.value = Bishop.defaultPieceValue,
-    this.regionEffects = const [],
-    this.actions = const [],
-    this.optimisationData,
-  }) : castling = castling ?? royal;
 
   factory fromJson(
     Map<String, dynamic> json, {
@@ -106,7 +95,7 @@ class PieceType {
       'betza': betza,
       if (verbose || royal) 'royal': royal,
       if (verbose || castling != royal) 'castling': castling,
-      if (verbose || promoOptions != PiecePromoOptions.promoPiece)
+      if (verbose || promoOptions != .promoPiece)
         'promoOptions': promoOptions.toJson(),
       if (verbose || enPassantable) 'enPassantable': enPassantable,
       if (verbose || noSanSymbol) 'noSanSymbol': true,
@@ -172,11 +161,10 @@ class PieceType {
   }
 
   /// Returns a copy of the piece type with `PiecePromoOptions.none`.
-  PieceType withNoPromotion() => copyWith(promoOptions: PiecePromoOptions.none);
+  PieceType withNoPromotion() => copyWith(promoOptions: .none);
 
   /// Returns a copy of the piece type with `PiecePromoOptions.promotable`.
-  PieceType promotable() =>
-      copyWith(promoOptions: PiecePromoOptions.promotable);
+  PieceType promotable() => copyWith(promoOptions: .promotable);
 
   /// Returns a copy of the piece type with [value].
   PieceType withValue(int value) => copyWith(value: value);
@@ -194,12 +182,11 @@ class PieceType {
   PieceType withImmortality() => withAction(ActionImmortality());
 
   /// Returns a royal version of the piece type.
-  PieceType withRoyal() =>
-      copyWith(royal: true, promoOptions: PiecePromoOptions.none);
+  PieceType withRoyal() => copyWith(royal: true, promoOptions: .none);
 
   factory empty() => const PieceType(
     moves: [],
-    promoOptions: PiecePromoOptions.none,
+    promoOptions: .none,
   );
 
   /// Generate a piece type with all of its moves from [Betza notation](https://www.gnu.org/software/xboard/Betza.html).
@@ -207,7 +194,7 @@ class PieceType {
     String betza, {
     bool royal = false,
     bool? castling,
-    PiecePromoOptions promoOptions = PiecePromoOptions.promoPiece,
+    PiecePromoOptions promoOptions = .promoPiece,
     bool enPassantable = false,
     bool noSanSymbol = false,
     int value = Bishop.defaultPieceValue,
@@ -241,14 +228,14 @@ class PieceType {
   factory king() => PieceType.fromBetza(
     'K',
     royal: true,
-    promoOptions: PiecePromoOptions.none,
+    promoOptions: .none,
   );
 
   /// A king that cannot move.
   factory staticKing() => PieceType.fromBetza(
     '',
     royal: true,
-    promoOptions: PiecePromoOptions.none,
+    promoOptions: .none,
   );
 
   /// A non-royal king.
@@ -258,7 +245,7 @@ class PieceType {
     'fmW' // moves forward one square
     'fceF' // captures diagonally forward one square
     'ifmnD', // on the first move, moves forward two squares
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     enPassantable: true,
     noSanSymbol: true,
     value: 100,
@@ -267,7 +254,7 @@ class PieceType {
   /// An 'inverted' pawn that moves diagonally and captures fowards.
   factory berolinaPawn() => PieceType.fromBetza(
     'fmFfceWifmnA',
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     enPassantable: true,
     noSanSymbol: true,
     value: 125, // idk exactly but seems better than a normal pawn
@@ -278,7 +265,7 @@ class PieceType {
   // before the normal move part in the betza string. (todo: fix)
   factory longMovePawn(int moveLength) => PieceType.fromBetza(
     'fmWfceFifmW$moveLength',
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     enPassantable: true,
     noSanSymbol: true,
     value: 100,
@@ -287,7 +274,7 @@ class PieceType {
   /// A pawn with no double move and no en passant.
   factory simplePawn() => PieceType.fromBetza(
     'fmWfcF',
-    promoOptions: PiecePromoOptions.promotable,
+    promoOptions: .promotable,
     noSanSymbol: true,
     value: 100,
   );
@@ -365,19 +352,13 @@ class PieceType {
 
 /// A definition of a `PieceType`, specific to a `Variant`.
 /// You don't ever need to build these, they are generated in variant initialisation.
-class PieceDefinition {
-  final PieceType type;
-  final String symbol;
-  final int value;
-
+class const PieceDefinition({
+  required final PieceType type,
+  required final String symbol,
+  required final int value,
+}) {
   @override
   String toString() => 'PieceDefinition($symbol)';
-
-  const PieceDefinition({
-    required this.type,
-    required this.symbol,
-    required this.value,
-  });
 
   factory empty() =>
       PieceDefinition(type: PieceType.empty(), symbol: '.', value: 0);
@@ -388,16 +369,11 @@ class PieceDefinition {
 }
 
 /// Contains precomputed flags that help move generation run faster.
-class PieceOptimisationData {
-  final bool hasOrthogonal;
-  final bool hasDiagonal;
-  final bool hasOblique;
-
-  const PieceOptimisationData({
-    required this.hasOrthogonal,
-    required this.hasDiagonal,
-    required this.hasOblique,
-  });
+class const PieceOptimisationData({
+  required final bool hasOrthogonal,
+  required final bool hasDiagonal,
+  required final bool hasOblique,
+}) {
 
   /// Determines whether this piece should be excluded from move generation.
   bool excludePiece(int from, int to, BoardSize size) {

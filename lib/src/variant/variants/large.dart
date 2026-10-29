@@ -10,11 +10,11 @@ abstract class LargeVariants {
       startPosition:
           'rnabqkbcnr/pppppppppp/10/10/10/10/PPPPPPPPPP'
           '/RNABQKBCNR w KQkq - 0 1',
-      castlingOptions: CastlingOptions.capablanca,
+      castlingOptions: .capablanca,
       pieceTypes: {
         ...standard.pieceTypes,
-        'A': PieceType.archbishop(),
-        'C': PieceType.chancellor(),
+        'A': .archbishop(),
+        'C': .chancellor(),
       },
     );
   }
@@ -27,8 +27,8 @@ abstract class LargeVariants {
       startPosition:
           'r8r/1nbqkcabn1/pppppppppp/10/10/10/10/PPPPPPPPPP'
           '/1NBQKCABN1/R8R w - - 0 1',
-      castlingOptions: CastlingOptions.none,
-      promotionOptions: PromotionOptions.optional(
+      castlingOptions: .none,
+      promotionOptions: .optional(
         ranks: [Bishop.rank8, Bishop.rank3],
         pieceLimits: {
           'Q': 1, 'A': 1, 'C': 1, //
@@ -37,8 +37,8 @@ abstract class LargeVariants {
       ),
       pieceTypes: {
         ...standard.pieceTypes,
-        'C': PieceType.chancellor(), // marshal
-        'A': PieceType.archbishop(), // cardinal
+        'C': .chancellor(), // marshal
+        'A': .archbishop(), // cardinal
       },
     );
   }
@@ -47,16 +47,16 @@ abstract class LargeVariants {
   /// https://www.chessvariants.com/rules/opulent-chess
   static Variant opulent() => grand()
       .withPieces({
-        'N': PieceType.fromBetza('NW', value: 400),
-        'W': PieceType.fromBetza('FC', value: 400), // Wizard
-        'L': PieceType.fromBetza('HFD', value: 400), // Lion
+        'N': .fromBetza('NW', value: 400),
+        'W': .fromBetza('FC', value: 400), // Wizard
+        'L': .fromBetza('HFD', value: 400), // Lion
       })
       .copyWith(
         name: 'Opulent Chess',
         startPosition:
             'rw6wr/clbnqknbla/pppppppppp/10/10/10/10'
             '/PPPPPPPPPP/CLBNQKNBLA/RW6WR w - - 0 1',
-        promotionOptions: PromotionOptions.optional(
+        promotionOptions: .optional(
           ranks: [Bishop.rank8, Bishop.rank3],
           pieceLimits: {
             'Q': 1, 'A': 1, 'C': 1,
@@ -76,7 +76,7 @@ abstract class LargeVariants {
           '/ERNBQKBNRE/C8C w KQkq - 0 1',
       pieceTypes: {
         ...standard.pieceTypes,
-        'E': PieceType.fromBetza('FA'),
+        'E': .fromBetza('FA'),
         'C': Xiangqi.cannon(),
       },
       castlingOptions: const CastlingOptions(
@@ -100,10 +100,10 @@ abstract class LargeVariants {
         '/PPPPPPPPPP/1RNBQKBNR1/2CWAMWC2 w - - 0 1',
     pieceTypes: {
       ...Bishop.chessPieces,
-      'A': PieceType.archbishop(),
-      'M': PieceType.chancellor(), // Marshall
-      'C': PieceType.fromBetza('DAW', value: 400), // Champion
-      'W': PieceType.fromBetza('CF', value: 400), // Wizard
+      'A': .archbishop(),
+      'M': .chancellor(), // Marshall
+      'C': .fromBetza('DAW', value: 400), // Champion
+      'W': .fromBetza('CF', value: 400), // Wizard
     },
   );
 }

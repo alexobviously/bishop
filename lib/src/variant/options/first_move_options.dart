@@ -1,8 +1,6 @@
 part of '../variant.dart';
 
-abstract class FirstMoveOptions {
-  const FirstMoveOptions();
-
+abstract class const FirstMoveOptions() {
   PieceMoveChecker? build(BuiltVariant variant);
 
   factory pair(
@@ -20,12 +18,10 @@ abstract class FirstMoveOptions {
   static const standard = InitialStateFirstMoveOptions();
 }
 
-class FirstMoveOptionsPair implements FirstMoveOptions {
-  final FirstMoveOptions? white;
-  final FirstMoveOptions? black;
-
-  const FirstMoveOptionsPair(this.white, this.black);
-
+class const FirstMoveOptionsPair(
+  final FirstMoveOptions? white,
+  final FirstMoveOptions? black,
+) implements FirstMoveOptions {
   @override
   PieceMoveChecker? build(BuiltVariant variant) {
     final List<PieceMoveChecker?> built = [
@@ -36,10 +32,8 @@ class FirstMoveOptionsPair implements FirstMoveOptions {
   }
 }
 
-class FirstMoveOptionsSet implements FirstMoveOptions {
-  final Map<String, FirstMoveOptions> set;
-  const FirstMoveOptionsSet(this.set);
-
+class const FirstMoveOptionsSet(final Map<String, FirstMoveOptions> set)
+    implements FirstMoveOptions {
   @override
   PieceMoveChecker build(BuiltVariant variant) {
     final Map<int, PieceMoveChecker?> builtSet = set.map(
@@ -49,17 +43,14 @@ class FirstMoveOptionsSet implements FirstMoveOptions {
   }
 }
 
-class RanksFirstMoveOptions implements FirstMoveOptions {
-  final List<int> ranks;
-  const RanksFirstMoveOptions(this.ranks);
-
+class const RanksFirstMoveOptions(final List<int> ranks)
+    implements FirstMoveOptions {
   @override
   PieceMoveChecker build(BuiltVariant variant) =>
       (params) => ranks.contains(params.size.rank(params.from));
 }
 
-class InitialStateFirstMoveOptions implements FirstMoveOptions {
-  const InitialStateFirstMoveOptions();
+class const InitialStateFirstMoveOptions() implements FirstMoveOptions {
   @override
   PieceMoveChecker build(BuiltVariant variant) =>
       (params) => params.piece.inInitialState;

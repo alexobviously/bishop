@@ -1,6 +1,6 @@
 import 'package:bishop/bishop.dart';
 
-class Betza {
+abstract class Betza {
   static const Map<String, Direction> atomMap = {
     'W': Direction(1, 0),
     'F': Direction(1, 1),

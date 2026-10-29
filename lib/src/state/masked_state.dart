@@ -1,37 +1,31 @@
 part of 'state.dart';
 
-class MaskedState extends BishopState {
-  final List<int> mask;
-  final bool maskedHands;
-  final bool maskedGates;
-
+class const MaskedState({
+  required final List<int> mask,
+  final bool maskedHands = false,
+  final bool maskedGates = false,
+  required super.board,
+  super.move,
+  super.meta,
+  required super.turn,
+  required super.halfMoves,
+  required super.fullMoves,
+  required super.castlingRights,
+  super.epSquare,
+  required super.royalSquares,
+  required super.castlingSquares,
+  required super.virginFiles,
+  super.hands,
+  super.gates,
+  required super.pieces,
+  super.checks = const [0, 0],
+  super.result,
+  super.hash = 0,
+}) extends BishopState {
   Iterable<int> get visibleSquares =>
       mask.asMap().entries.where((e) => e.value > 0).map((e) => e.key);
   Iterable<int> get invisibleSquares =>
       mask.asMap().entries.where((e) => e.value < 1).map((e) => e.key);
-
-  const MaskedState({
-    required this.mask,
-    this.maskedHands = false,
-    this.maskedGates = false,
-    required super.board,
-    super.move,
-    super.meta,
-    required super.turn,
-    required super.halfMoves,
-    required super.fullMoves,
-    required super.castlingRights,
-    super.epSquare,
-    required super.royalSquares,
-    required super.castlingSquares,
-    required super.virginFiles,
-    super.hands,
-    super.gates,
-    required super.pieces,
-    super.checks = const [0, 0],
-    super.result,
-    super.hash = 0,
-  });
 
   factory mask({
     required List<int> mask,

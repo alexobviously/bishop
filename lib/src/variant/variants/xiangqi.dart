@@ -9,41 +9,40 @@ class Xiangqi {
       'rcnkncr/p1ppp1p/7/7/7/P1PPP1P/RCNKNCR w - - 0 1';
   static const defaultFenManchu =
       'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/9/9/M1BAKAB2 w - - 0 1';
-  static PieceType general() => PieceType.fromBetza(
+  static PieceType general() => .fromBetza(
     'W',
     royal: true,
-    promoOptions: PiecePromoOptions.none,
+    promoOptions: .none,
     regionEffects: [palaceMovement()],
   );
   static PieceType advisor() =>
-      PieceType.fromBetza('F', value: 200, regionEffects: [palaceMovement()]);
+      .fromBetza('F', value: 200, regionEffects: [palaceMovement()]);
   static PieceType elephant() =>
-      PieceType.fromBetza('nA', value: 200, regionEffects: [sideMovement()]);
-  static PieceType horse() => PieceType.fromBetza('nN', value: 400);
-  static PieceType chariot() => PieceType.fromBetza('R', value: 900);
-  static PieceType cannon() => PieceType.fromBetza('mRcpR', value: 450);
-  static PieceType soldier() => PieceType.fromBetza(
+      .fromBetza('nA', value: 200, regionEffects: [sideMovement()]);
+  static PieceType horse() => .fromBetza('nN', value: 400);
+  static PieceType chariot() => .fromBetza('R', value: 900);
+  static PieceType cannon() => .fromBetza('mRcpR', value: 450);
+  static PieceType soldier() => .fromBetza(
     'fsW',
     value:
         100, // TODO: this should be 200 but multi-value pieces aren't supported
     regionEffects: [
-      RegionEffect.changePiece(
+      .changePiece(
         whiteRegion: 'redSide',
         blackRegion: 'blackSide',
         pieceType: weakSoldier(),
       ),
     ],
   );
-  static PieceType weakSoldier() => PieceType.fromBetza('fW', value: 100);
-  static PieceType strongSoldier() => PieceType.fromBetza('fsW');
-  static PieceType manchuSuperPiece() =>
-      PieceType.fromBetza('RcpRnN', value: 1500);
+  static PieceType weakSoldier() => .fromBetza('fW', value: 100);
+  static PieceType strongSoldier() => .fromBetza('fsW');
+  static PieceType manchuSuperPiece() => .fromBetza('RcpRnN', value: 1500);
 
   static Variant variant() => xiangqi();
 
   static Variant xiangqi() => Variant(
     name: 'Xiangqi',
-    boardSize: BoardSize.xiangqi,
+    boardSize: .xiangqi,
     pieceTypes: {
       'K': general(),
       'A': advisor(),
@@ -53,8 +52,8 @@ class Xiangqi {
       'C': cannon(),
       'P': soldier(),
     },
-    materialConditions: MaterialConditions.none,
-    promotionOptions: PromotionOptions.none,
+    materialConditions: .none,
+    promotionOptions: .none,
     startPosition: defaultFen,
     regions: {
       'redSide': const RectRegion(
@@ -78,7 +77,7 @@ class Xiangqi {
         endFile: Bishop.fileF,
       ),
     },
-    actions: [Action.flyingGenerals()],
+    actions: [.flyingGenerals()],
   );
 
   static Variant mini() => Variant(
@@ -94,9 +93,9 @@ class Xiangqi {
       'P': strongSoldier(),
     },
     startPosition: defaultFenMini,
-    castlingOptions: CastlingOptions.none,
-    materialConditions: MaterialConditions.none,
-    promotionOptions: PromotionOptions.none,
+    castlingOptions: .none,
+    materialConditions: .none,
+    promotionOptions: .none,
     regions: {
       'redPalace': const RectRegion(
         startRank: Bishop.rank1,
@@ -111,7 +110,7 @@ class Xiangqi {
         endFile: Bishop.fileE,
       ),
     },
-    actions: [Action.flyingGenerals()],
+    actions: [.flyingGenerals()],
   );
 
   static Variant manchu() {
@@ -130,7 +129,7 @@ class Xiangqi {
   }
 
   static RegionEffect palaceMovement() =>
-      RegionEffect.movement(white: 'redPalace', black: 'blackPalace');
+      .movement(white: 'redPalace', black: 'blackPalace');
   static RegionEffect sideMovement() =>
-      RegionEffect.movement(white: 'redSide', black: 'blackSide');
+      .movement(white: 'redSide', black: 'blackSide');
 }

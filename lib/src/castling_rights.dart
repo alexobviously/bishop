@@ -26,7 +26,7 @@ CastlingRights castlingRights(String crString) {
   return cr;
 }
 
-class Castling {
+abstract class Castling {
   static const int k = 1;
   static const int q = 2;
   static const int black = 4;

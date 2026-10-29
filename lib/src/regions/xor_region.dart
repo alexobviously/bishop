@@ -2,12 +2,10 @@ part of 'regions.dart';
 
 /// A region that contains all squares that are in [left] or [right], but not
 /// in both of them, i.e. XOR.
-class XorRegion extends BoardRegion {
-  final BoardRegion left;
-  final BoardRegion right;
-
-  const XorRegion(this.left, this.right);
-
+class const XorRegion(
+  final BoardRegion left,
+  final BoardRegion right,
+) extends BoardRegion {
   factory fromJson(Map<String, dynamic> json) => XorRegion(
     BoardRegion.fromJson(json['l']),
     BoardRegion.fromJson(json['r']),

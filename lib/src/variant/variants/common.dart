@@ -5,43 +5,43 @@ class CommonVariants {
   static Variant chess960() => Variant.standard().copyWith(
     name: 'Chess960',
     startPosBuilder: Chess960StartPosBuilder(),
-    castlingOptions: CastlingOptions.chess960,
-    outputOptions: OutputOptions.chess960,
+    castlingOptions: .chess960,
+    outputOptions: .chess960,
   );
 
-  static Variant crazyhouse() => Variant.standard().copyWith(
+  static Variant crazyhouse() => .standard().copyWith(
     name: 'Crazyhouse',
-    handOptions: HandOptions.captures,
+    handOptions: .captures,
   );
 
   static Variant seirawan() {
-    Variant standard = Variant.standard();
+    final standard = Variant.standard();
     return standard.copyWith(
       name: 'Seirawan Chess',
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR[HEhe] w KQkqABCDEFGHabcdefgh - 0 1',
-      gatingMode: GatingMode.flex,
-      outputOptions: OutputOptions.seirawan,
+      gatingMode: .flex,
+      outputOptions: .seirawan,
       pieceTypes: {
         ...standard.pieceTypes,
-        'H': PieceType.archbishop(), // hawk
-        'E': PieceType.chancellor(), // elephant
+        'H': .archbishop(), // hawk
+        'E': .chancellor(), // elephant
       },
-      materialConditions: MaterialConditions.standard.copyWith(
+      materialConditions: .standard.copyWith(
         soloMaters: ['P', 'Q', 'R', 'E', 'H'],
       ),
     );
   }
 
-  static Variant threeCheck() => Variant.standard().copyWith(
+  static Variant threeCheck() => .standard().copyWith(
     name: 'Three Check',
-    gameEndConditions: GameEndConditionSet.threeCheck,
+    gameEndConditions: .threeCheck,
   );
 
-  static Variant kingOfTheHill() => Variant.standard()
+  static Variant kingOfTheHill() => .standard()
       .copyWith(name: 'King of the Hill')
       .withPiece(
         'K',
-        PieceType.king().withRegionEffect(
+        .king().withRegionEffect(
           RegionEffect.winGame(white: 'hill', black: 'hill'),
         ),
       )
@@ -56,7 +56,7 @@ class CommonVariants {
       );
 
   static Variant atomic({bool allowExplosionDraw = false}) =>
-      Variant.standard().copyWith(
+      .standard().copyWith(
         name: 'Atomic Chess',
         actions: [
           ActionExplosionRadius(1, immunePieces: ['P']),
@@ -67,7 +67,7 @@ class CommonVariants {
   static Variant horde() => Variant.standard().copyWith(
     name: 'Horde Chess',
     startPosition: 'rnbqkbnr/pppppppp/8/1PP2PP1/PPPPPPPP/PPPPPPPP/PPPPPPPP/PPPPPPPP w kq - 0 1',
-    firstMoveOptions: FirstMoveOptions.ranks(
+    firstMoveOptions: .ranks(
       [Bishop.rank1, Bishop.rank2], // white
       [Bishop.rank7, Bishop.rank8], // black
     ),
@@ -79,8 +79,8 @@ class CommonVariants {
         description:
             'The first player to run their king to the finish line wins.',
         startPosition: '8/8/8/8/8/8/krbnNBRK/qrbnNBRQ w - - 0 1',
-        castlingOptions: CastlingOptions.none,
-        materialConditions: MaterialConditions.none,
+        castlingOptions: .none,
+        materialConditions: .none,
         forbidChecks: true,
       )
       .withCampMate(
@@ -94,41 +94,41 @@ class CommonVariants {
       .copyWith(
         name: 'Antichess',
         description: 'Lose all your pieces to win.',
-        gameEndConditions: GameEndConditionSet.antichess,
-        forcedCapture: ForcedCapture.any,
-        castlingOptions: CastlingOptions.none,
-        materialConditions: MaterialConditions.none,
+        gameEndConditions: .antichess,
+        forcedCapture: .any,
+        castlingOptions: .none,
+        materialConditions: .none,
       )
-      .withPiece('K', PieceType.fromBetza('K', value: 400))
+      .withPiece('K', .fromBetza('K', value: 400))
       .invertPieceValues();
 
   /// Not production ready yet. Work in progress.
-  static Variant duck() => Variant.standard()
+  static Variant duck() => .standard()
       .withPieces({
-        '*': PieceType.duck(),
-        'K': PieceType.commoner(),
+        '*': .duck(),
+        'K': .commoner(),
       })
       .withAction(ActionCheckPieceCount(pieceType: 'K'))
       .copyWith(
         name: 'Duck Chess',
-        materialConditions: MaterialConditions.none,
+        materialConditions: .none,
       );
 
   /// https://en.wikipedia.org/wiki/Shatranj
-  static Variant shatranj() => Variant.standard()
+  static Variant shatranj() => .standard()
       .withPieces({
-        'B': PieceType.alfil(),
-        'Q': PieceType.ferz(),
-        'P': PieceType.simplePawn().copyWith(
-          promoOptions: PiecePromoOptions.promotesToOne('Q'),
+        'B': .alfil(),
+        'Q': .ferz(),
+        'P': .simplePawn().copyWith(
+          promoOptions: .promotesToOne('Q'),
         ),
       })
       .copyWith(
         name: 'Shatranj',
-        castlingOptions: CastlingOptions.none,
-        materialConditions: MaterialConditions.none,
+        castlingOptions: .none,
+        materialConditions: .none,
         enPassant: false,
-        gameEndConditions: const GameEndConditions(stalemate: EndType.lose)
+        gameEndConditions: const GameEndConditions(stalemate: .lose)
             .symmetric(),
       );
 

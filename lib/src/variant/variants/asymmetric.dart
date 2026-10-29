@@ -1,22 +1,23 @@
 part of '../variant.dart';
 
 class Orda {
-  static PieceType kheshig() => PieceType.fromBetza('KN', value: 700);
-  static Variant orda() => Variant.standard()
+  static PieceType kheshig() => .fromBetza('KN', value: 700);
+
+  static Variant orda() => .standard()
       .copyWith(
         name: 'Orda',
         startPosition: 'lhaykahl/8/pppppppp/8/8/8/PPPPPPPP/RNBQKBNR w KQ - 0 1',
-        materialConditions: MaterialConditions.none,
+        materialConditions: .none,
         pieceTypes: {
-          'K': PieceType.king(),
-          'P': PieceType.pawn(),
-          'N': PieceType.knight().withNoPromotion(),
-          'B': PieceType.bishop().withNoPromotion(),
-          'R': PieceType.rook().withNoPromotion(),
-          'Q': PieceType.queen(),
-          'L': PieceType.kniroo().withNoPromotion(), // Lancer
+          'K': .king(),
+          'P': .pawn(),
+          'N': .knight().withNoPromotion(),
+          'B': .bishop().withNoPromotion(),
+          'R': .rook().withNoPromotion(),
+          'Q': .queen(),
+          'L': .kniroo().withNoPromotion(), // Lancer
           'H': kheshig(),
-          'A': PieceType.knibis().withNoPromotion(), // Archer
+          'A': .knibis().withNoPromotion(), // Archer
           'Y': Shogi.silver().withNoPromotion(), // Yurt
         },
         // TODO: set asymmetric castling options when available
@@ -24,19 +25,19 @@ class Orda {
       )
       .withCampMate();
 
-  static Variant ordaMirror() => Variant.standard()
+  static Variant ordaMirror() => .standard()
       .copyWith(
         name: 'Orda Mirror',
         startPosition: 'lhafkahl/8/pppppppp/8/8/PPPPPPPP/8/LHAFKAHL w - - 0 1',
-        castlingOptions: CastlingOptions.none,
-        materialConditions: MaterialConditions.none,
+        castlingOptions: .none,
+        materialConditions: .none,
         pieceTypes: {
-          'K': PieceType.king(),
-          'P': PieceType.pawn(),
-          'L': PieceType.kniroo(), // Lancer
+          'K': .king(),
+          'P': .pawn(),
+          'L': .kniroo(), // Lancer
           'H': kheshig(),
-          'A': PieceType.knibis(), // Archer
-          'F': PieceType.fromBetza('mQcN', value: 500), // Falcon
+          'A': .knibis(), // Archer
+          'F': .fromBetza('mQcN', value: 500), // Falcon
         },
       )
       .withCampMate();

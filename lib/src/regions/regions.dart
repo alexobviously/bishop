@@ -12,15 +12,13 @@ part 'subtract_region.dart';
 part 'union_region.dart';
 part 'xor_region.dart';
 
-abstract class Region {
-  const Region();
+abstract class const Region() {
   bool contains(int file, int rank);
   Iterable<int> squares(BoardSize size);
   Region translate(int x, int y);
 }
 
-abstract class BoardRegion extends Region {
-  const BoardRegion();
+abstract class const BoardRegion() extends Region {
   factory fromJson(Map<String, dynamic> json) {
     String? type = json['type'];
     if (type != null) {
@@ -66,7 +64,7 @@ abstract class BoardRegion extends Region {
   XorRegion operator ^(BoardRegion other) => XorRegion(this, other);
 }
 
-class BoardRegionAdapter extends BishopTypeAdapter<BoardRegion> {
+class const BoardRegionAdapter() extends BishopTypeAdapter<BoardRegion> {
   @override
   BoardRegion build(Map<String, dynamic>? params) =>
       BoardRegion.fromJson(params!);

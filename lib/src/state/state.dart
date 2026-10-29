@@ -5,73 +5,73 @@ part 'state_meta.dart';
 part 'state_transformer.dart';
 
 /// A record of the game's state at a particular move.
-class BishopState {
+class const BishopState({
   /// The contents of each square on the board.
-  final List<int> board;
+  required final List<int> board,
 
   /// The previous move that was played. If null, the game has just started.
-  final Move? move;
+  final Move? move,
 
   /// Contains the string representations of [move], and the variant.
   /// Since these can be expensive to calculate, this will only be present in
   /// mainline moves, i.e. moves actually made by a player, rather than ones
   /// being generated for move legalisation.
-  final StateMeta? meta;
+  final StateMeta? meta,
 
   /// The player who can make the next move.
-  final Colour turn;
+  required final Colour turn,
 
   /// How many half moves have been played since the last capture or pawn move.
-  final int halfMoves;
+  required final int halfMoves,
 
   // todo: refactor so we store number of half moves instead
   /// How many full moves have been played in the entire game.
-  final int fullMoves;
+  required final int fullMoves,
 
   /// The current castling rights of both players.
-  final CastlingRights castlingRights;
+  required final CastlingRights castlingRights,
 
   /// The en passant square, if one is available.
-  final int? epSquare;
+  final int? epSquare,
 
   /// The squares the kings (or equivalent) currently reside on.
   /// Index 0 - white, index 1 - black.
-  final List<int> royalSquares;
+  required final List<int> royalSquares,
 
   /// The squares that the castling pieces currently reside on.
   /// This will usually be equivalent to [royalSquares].
-  final List<int> castlingSquares;
+  required final List<int> castlingSquares,
 
   /// A list of files that have been untouched for each player.
   /// For use with e.g. Seirawan chess, where pieces can only be gated on files
   /// that haven't had their pieces move yet.
   /// Only works for variants where all non-pawn pieces start on the back rank.
-  final List<List<int>> virginFiles;
+  required final List<List<int>> virginFiles,
 
   /// Two lists of pieces, for each player's hand.
   /// Index 0 - white, index 1 - black.
-  final List<Hand>? hands;
+  final List<Hand>? hands,
 
   /// Two lists of pieces, for each player's gate.
   /// Index 0 - white, index 1 - black.
-  final List<Hand>? gates;
+  final List<Hand>? gates,
 
   /// A list of pieces each player has.
-  final List<int> pieces;
+  required final List<int> pieces,
 
   /// The number of times each player has been checked.
   /// For use with variants such as three-check.
-  final List<int> checks;
+  final List<int> checks = const [0, 0],
 
   /// This should be null most of the time. Used to indicate special case
   /// win conditions that have been met by a preceding move.
-  final GameResult? result;
+  final GameResult? result,
 
   /// The Zobrist hash of the game state.
   /// Needs to be set after construction of the first hash, but otherwise is
   /// updated in `Game.makeMove()`.
-  final int hash;
-
+  final int hash = 0,
+}) {
   int get moveNumber => fullMoves - (turn == Bishop.white ? 1 : 0);
   bool get invalidMove => result is InvalidMoveResult;
 
@@ -92,26 +92,6 @@ class BishopState {
 
   @override
   String toString() => 'State(turn: $turn, moves: $fullMoves, hash: $hash)';
-
-  const BishopState({
-    required this.board,
-    this.move,
-    this.meta,
-    required this.turn,
-    required this.halfMoves,
-    required this.fullMoves,
-    required this.castlingRights,
-    this.epSquare,
-    required this.royalSquares,
-    required this.castlingSquares,
-    required this.virginFiles,
-    this.hands,
-    this.gates,
-    required this.pieces,
-    this.checks = const [0, 0],
-    this.result,
-    this.hash = 0,
-  });
 
   BishopState copyWith({
     List<int>? board,

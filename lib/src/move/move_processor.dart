@@ -1,15 +1,10 @@
 import 'package:bishop/bishop.dart';
 
-class MoveProcessorParams<T extends Move> {
-  final BishopState state;
-  final T move;
-  final Zobrist zobrist;
-  const MoveProcessorParams({
-    required this.state,
-    required this.move,
-    required this.zobrist,
-  });
-}
+class const MoveProcessorParams<T extends Move>({
+  required final BishopState state,
+  required final T move,
+  required final Zobrist zobrist,
+});
 
 typedef MoveProcessorFunction<T extends Move> = BishopState? Function(
   MoveProcessorParams params,
@@ -28,9 +23,9 @@ abstract class MoveProcessor<T extends Move> {
 /// A move processor that modifies the state using the effects system.
 /// You should probably use this or [ActionMoveProcessor] unless you have
 /// a complex special case
-class EffectMoveProcessor<T extends Move> implements MoveProcessor<T> {
-  final EffectMoveFunction<T> Function(BuiltVariant variant) builder;
-  const EffectMoveProcessor(this.builder);
+class const EffectMoveProcessor<T extends Move>(
+  final EffectMoveFunction<T> Function(BuiltVariant variant) builder,
+) implements MoveProcessor<T> {
   @override
   Type get type => T;
 
@@ -46,10 +41,10 @@ class EffectMoveProcessor<T extends Move> implements MoveProcessor<T> {
 }
 
 /// A move processor that modifies the state using an [action].
-class ActionMoveProcessor<T extends Move> extends EffectMoveProcessor<T> {
-  final ActionDefinition action;
-  ActionMoveProcessor(this.action)
-    : super(
+class ActionMoveProcessor<T extends Move>(
+  final ActionDefinition action,
+) extends EffectMoveProcessor<T> {
+  this : super(
         (variant) =>
             (params) => action(
               ActionTrigger(
@@ -70,16 +65,12 @@ class ActionMoveProcessor<T extends Move> extends EffectMoveProcessor<T> {
 /// On moving, the piece will be detonated, destroying all pieces in [area]
 /// around it. Essentially this is like an atomic move without moving.
 /// Used for Beirut Chess.
-class DetonateMoveProcessor extends ActionMoveProcessor<StaticMove> {
-  final Area area;
-  final List<String>? immunePieces;
-  final bool alwaysSuicide;
-
-  DetonateMoveProcessor({
-    this.area = Area.radius1,
-    this.immunePieces,
-    this.alwaysSuicide = true,
-  }) : super(
+class DetonateMoveProcessor({
+  final Area area = Area.radius1,
+  final List<String>? immunePieces,
+  final bool alwaysSuicide = true,
+}) extends ActionMoveProcessor<StaticMove> {
+  this : super(
          ActionDefinitions.explosion(
            area,
            immunePieces: immunePieces,

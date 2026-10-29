@@ -117,10 +117,6 @@ extension GameEndings on Game {
       variant.halfMoveDraw != null && state.halfMoves >= variant.halfMoveDraw!;
 
   /// True if the game state is any kind of draw.
-  @Deprecated('Use `drawn`')
-  bool get inDraw => drawn;
-
-  /// True if the game state is any kind of draw.
   bool get drawn => result is DrawnGame;
 
   /// True if the game state is any kind of win/loss.

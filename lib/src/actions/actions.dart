@@ -15,31 +15,25 @@ typedef ActionDefinition = List<ActionEffect> Function(ActionTrigger trigger);
 /// A function that validates an `ActionTrigger`.
 typedef ActionCondition = bool Function(ActionTrigger trigger);
 
-class Action {
+class const Action({
   /// The type of event that will trigger this action.
-  final ActionEvent event;
+  final ActionEvent event = .afterMove,
 
   /// The [precondition] is checked before any action in the group is executed.
   /// In other words, the [precondition] will act on the state of the game,
   /// ignoring any changes that happen as a result of actions executed before
   /// this one, that are triggered by the same event.
-  final ActionCondition? precondition;
+  final ActionCondition? precondition,
 
   /// The [condition] is checked before executing the action in its sequence, i.e.
   /// effects applied by actions occurring before this in the sequence will be
   /// taken into account by the [condition], in contrast with [precondition].
-  final ActionCondition? condition;
+  final ActionCondition? condition,
 
   /// A function that generates a `List<ActionEffect>` based on an
   /// `ActionTrigger` passed to it.
-  final ActionDefinition action;
-
-  const Action({
-    this.event = ActionEvent.afterMove,
-    this.precondition,
-    this.condition,
-    required this.action,
-  });
+  required final ActionDefinition action,
+}) {
 
   Action copyWith({
     ActionEvent? event,

@@ -1,14 +1,12 @@
 part of 'regions.dart';
 
-class Area implements Region {
-  final List<Direction> directions;
-
+class const Area({
+  required final List<Direction> directions,
+}) implements Region {
   int get minX => directions.map((e) => e.h).reduce(min);
   int get minY => directions.map((e) => e.v).reduce(min);
   int get maxX => directions.map((e) => e.h).reduce(max);
   int get maxY => directions.map((e) => e.v).reduce(max);
-
-  const Area({required this.directions});
 
   factory fromStrings(List<String> directions) =>
       Area(directions: directions.map(Direction.fromString).toList());

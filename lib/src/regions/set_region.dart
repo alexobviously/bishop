@@ -1,9 +1,8 @@
 part of 'regions.dart';
 
-class DirectionSetRegion extends BoardRegion {
-  final Iterable<Direction> directions;
-  const DirectionSetRegion(this.directions);
-
+class const DirectionSetRegion(
+  final Iterable<Direction> directions,
+) extends BoardRegion {
   factory fromJson(Map<String, dynamic> json) => DirectionSetRegion(
     (json['squares'] as List)
         .map<Direction>((e) => Direction.fromString(e))
@@ -32,10 +31,10 @@ class DirectionSetRegion extends BoardRegion {
   String toString() => 'DirectionSetRegion($directions)';
 }
 
-class SetRegion extends DirectionSetRegion {
-  final Iterable<String> squareNames;
-  SetRegion(this.squareNames)
-    : super(squareNames.map(Direction.fromSquareName).toSet());
+class SetRegion(
+  final Iterable<String> squareNames,
+) extends DirectionSetRegion {
+  this : super(squareNames.map(Direction.fromSquareName).toSet());
 
   factory fromJson(Map<String, dynamic> json) =>
       SetRegion((json['squares'] as List).cast<String>().toSet());

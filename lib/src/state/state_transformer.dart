@@ -9,12 +9,10 @@ abstract class StateTransformer {
   StateTransformFunction? build(BuiltVariant variant);
 }
 
-class StateTransformerPair implements StateTransformer {
-  final StateTransformer? white;
-  final StateTransformer? black;
-
-  const StateTransformerPair(this.white, this.black);
-
+class const StateTransformerPair(
+  final StateTransformer? white,
+  final StateTransformer? black,
+) implements StateTransformer {
   @override
   StateTransformFunction? build(BuiltVariant variant) {
     final List<StateTransformFunction?> built = [
@@ -26,20 +24,18 @@ class StateTransformerPair implements StateTransformer {
   }
 }
 
-class MaskStateTransformer implements StateTransformer {
-  final List<int> Function(BishopState state) maskBuilder;
-  const MaskStateTransformer(this.maskBuilder);
-
+class const MaskStateTransformer(
+  final List<int> Function(BishopState state) maskBuilder,
+) implements StateTransformer {
   @override
   StateTransformFunction build(BuiltVariant variant) =>
       (state, [player]) =>
           MaskedState.mask(mask: maskBuilder(state), state: state);
 }
 
-class VisionAreaStateTransformer implements StateTransformer {
-  final Area area;
-  const VisionAreaStateTransformer({this.area = Area.radius1});
-
+class const VisionAreaStateTransformer({
+  final Area area = Area.radius1,
+}) implements StateTransformer {
   @override
   StateTransformFunction<MaskedState> build(BuiltVariant variant) =>
       (state, [player]) => player == null
@@ -58,14 +54,10 @@ class VisionAreaStateTransformer implements StateTransformer {
         );
 }
 
-class HideFlagsStateTransformer implements StateTransformer {
-  final bool forSelf;
-  final bool forOpponent;
-
-  const HideFlagsStateTransformer({
-    this.forSelf = false,
-    this.forOpponent = true,
-  });
+class const HideFlagsStateTransformer({
+  final bool forSelf = false,
+  final bool forOpponent = true,
+}) implements StateTransformer {
 
   @override
   StateTransformFunction build(BuiltVariant variant) =>
