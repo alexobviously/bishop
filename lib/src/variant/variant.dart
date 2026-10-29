@@ -26,90 +26,95 @@ part 'variants/xiangqi.dart';
 
 /// Specifies the rules and pieces to be used, size of the board,
 /// information on how FENs are outputted, and so on and so on.
-class Variant {
+class const Variant({
   /// A human-friendly name.
-  final String name;
+  required final String name,
 
   /// An optional description of the variant.
-  final String description;
+  final String description = '',
 
   /// The size of the board.
-  final BoardSize boardSize;
+  final BoardSize boardSize = BoardSize.standard,
 
   /// The pieces to be used in this variant, in the form symbol: pieceType.
   /// Symbols are single uppercase letters, such as 'P' (pawn) or 'N' (knight).
-  final Map<String, PieceType> pieceTypes;
+  required final Map<String, PieceType> pieceTypes,
 
   /// The castling rules for this VariantData.
-  final CastlingOptions castlingOptions;
+  final CastlingOptions castlingOptions = .none,
 
   /// Defines the promotion behaviour in the game.
-  final PromotionOptions promotionOptions;
+  final PromotionOptions promotionOptions = .standard,
 
   /// Material conditions that define how insufficient material draws should be decided.
-  final MaterialConditions<String> materialConditions;
+  final MaterialConditions<String> materialConditions = .none,
 
-  final GameEndConditionSet gameEndConditions;
+  final GameEndConditionSet gameEndConditions = .standard,
 
-  final OutputOptions outputOptions;
+  final OutputOptions outputOptions = .standard,
 
   /// If the variant has a fixed starting position, specify it here as a full [FEN string](https://en.wikipedia.org/wiki/Forsyth–Edwards_Notation).
-  final String? startPosition;
+  final String? startPosition,
 
   /// If this variant can start in a number of different positions, such as Chess960,
   /// provide a function that does this. See [VariantData.chess960()] for an example.
-  final StartPositionBuilder? startPosBuilder;
+  final StartPositionBuilder? startPosBuilder,
 
   /// Is en passant allowed in this variant?
-  final bool enPassant;
+  final bool enPassant = false,
 
-  final FirstMoveOptions firstMoveOptions;
+  final FirstMoveOptions firstMoveOptions = .standard,
 
   /// Set this to 100 for the 50-move rule in standard chess.
-  final int? halfMoveDraw;
+  final int? halfMoveDraw,
 
   /// Set this to 3 for the threefold repeition rule in standard chess.
-  final int? repetitionDraw;
+  final int? repetitionDraw,
 
   /// If this is true, it is impossible to make a move that checks anyone.
-  final bool forbidChecks;
+  final bool forbidChecks = false,
 
   /// If this is set, non-capturing moves cannot be played while capturing
   /// moves are available. Examples are Antichess and Draughts.
-  final ForcedCapture? forcedCapture;
+  final ForcedCapture? forcedCapture,
 
   /// Are hands enabled in this variant? For example, Crazyhouse.
-  final HandOptions handOptions;
+  final HandOptions handOptions = .disabled,
 
   /// What type of gating, if any, is used in this variant?
-  final GatingMode gatingMode;
+  final GatingMode gatingMode = .none,
 
-  final PassOptions passOptions;
+  final PassOptions passOptions = .none,
 
   /// The relative values of pieces. These are usually already set in the [PieceType]
   /// definitions, so only use this if you want to override those.
   /// For example, you have a variant where a pawn is worth 200 instead of 100,
   /// but you still want to use the normal pawn definition.
-  final Map<String, int>? pieceValues;
+  final Map<String, int>? pieceValues,
 
   /// A map of region definitions for the board, for use with `RegionEffects`
   /// in piece definitions. The keys used here are used to reference the regions
   /// in effects.
-  final Map<String, BoardRegion> regions;
+  final Map<String, BoardRegion> regions = const {},
 
-  final List<Action> actions;
-  final StateTransformer? stateTransformer;
-  final List<MoveGenerator> moveGenerators;
-  final List<MoveProcessor> moveProcessors;
-  final List<MoveFormatter> moveFormatters;
-
-  final List<BishopTypeAdapter> adapters;
+  final List<Action> actions = const [],
+  final StateTransformer? stateTransformer,
+  final List<MoveGenerator> moveGenerators = const [],
+  final List<MoveProcessor> moveProcessors = const [],
+  final List<MoveFormatter> moveFormatters = const [],
+  final List<BishopTypeAdapter> adapters = const [],
+}) {
+  this
+    : assert(
+        startPosition != null || startPosBuilder != null,
+        'Variant needs either a startPosition or startPosBuilder',
+      );
 
   /// Whether this variant involves castling.
   bool get castling => castlingOptions.enabled;
 
   /// Whether this variant involves gating.
-  bool get gating => gatingMode > GatingMode.none;
+  bool get gating => gatingMode > .none;
 
   /// All piece symbols in use by this variant.
   List<String> get pieceSymbols => pieceTypes.keys.toList();
@@ -131,40 +136,6 @@ class Variant {
 
   @override
   String toString() => name;
-
-  const Variant({
-    required this.name,
-    this.description = '',
-    this.boardSize = BoardSize.standard,
-    required this.pieceTypes,
-    this.castlingOptions = CastlingOptions.none,
-    this.promotionOptions = PromotionOptions.standard,
-    this.materialConditions = MaterialConditions.none,
-    this.gameEndConditions = GameEndConditionSet.standard,
-    this.outputOptions = OutputOptions.standard,
-    this.startPosition,
-    this.startPosBuilder,
-    this.enPassant = false,
-    this.firstMoveOptions = FirstMoveOptions.standard,
-    this.halfMoveDraw,
-    this.repetitionDraw,
-    this.forbidChecks = false,
-    this.forcedCapture,
-    this.handOptions = HandOptions.disabled,
-    this.gatingMode = GatingMode.none,
-    this.pieceValues,
-    this.passOptions = PassOptions.none,
-    this.regions = const {},
-    this.actions = const [],
-    this.stateTransformer,
-    this.moveGenerators = const [],
-    this.moveProcessors = const [],
-    this.moveFormatters = const [],
-    this.adapters = const [],
-  }) : assert(
-         startPosition != null || startPosBuilder != null,
-         'Variant needs either a startPosition or startPosBuilder',
-       );
 
   factory fromJson(
     Map<String, dynamic> json, {
@@ -188,14 +159,14 @@ class Variant {
               : null) ??
           PromotionOptions.standard,
       materialConditions: json.containsKey('materialConditions')
-          ? MaterialConditions.fromJson(json['materialConditions'])
-          : MaterialConditions.none,
+          ? .fromJson(json['materialConditions'])
+          : .none,
       gameEndConditions: json.containsKey('gameEndConditions')
-          ? GameEndConditionSet.fromJson(json['gameEndConditions'])
-          : GameEndConditionSet.standard,
+          ? .fromJson(json['gameEndConditions'])
+          : .standard,
       outputOptions: json.containsKey('outputOptions')
-          ? OutputOptions.fromJson(json['outputOptions'])
-          : OutputOptions.standard,
+          ? .fromJson(json['outputOptions'])
+          : .standard,
       startPosition: json['startPosition'],
       startPosBuilder: json.containsKey('startPosBuilder')
           ? BishopSerialisation.build<StartPositionBuilder>(
@@ -216,11 +187,11 @@ class Variant {
       repetitionDraw: json['repetitionDraw'],
       forbidChecks: json['forbidChecks'] ?? false,
       forcedCapture: json['forcedCapture'] != null
-          ? ForcedCapture.fromName(json['forcedCapture'])
+          ? .fromName(json['forcedCapture'])
           : null,
       handOptions: json.containsKey('handOptions')
-          ? HandOptions.fromJson(json['handOptions'])
-          : HandOptions.disabled,
+          ? .fromJson(json['handOptions'])
+          : .disabled,
       gatingMode: GatingMode.values.firstWhere(
         (e) => e.name == (json['gatingMode'] ?? 'none'),
       ),
@@ -278,9 +249,9 @@ class Variant {
         adapters: allAdapters,
       ),
       'materialConditions': materialConditions.toJson(),
-      if (verbose || gameEndConditions != GameEndConditionSet.standard)
+      if (verbose || gameEndConditions != .standard)
         'gameEndConditions': gameEndConditions.toJson(),
-      if (verbose || outputOptions != OutputOptions.standard)
+      if (verbose || outputOptions != .standard)
         'outputOptions': outputOptions.toJson(),
       'startPosition': startPosition,
       if (startPosBuilder != null)
@@ -304,8 +275,7 @@ class Variant {
           verbose: verbose,
           adapters: allAdapters,
         ),
-      if (verbose || gatingMode != GatingMode.none)
-        'gatingMode': gatingMode.name,
+      if (verbose || gatingMode != .none) 'gatingMode': gatingMode.name,
       if (pieceValues != null) 'pieceValues': pieceValues,
       if (verbose || passOptions is! NoPass)
         'passOptions': BishopSerialisation.export<PassOptions>(
@@ -484,22 +454,22 @@ class Variant {
   factory standard() {
     return Variant(
       name: 'Chess',
-      boardSize: BoardSize.standard,
+      boardSize: .standard,
       startPosition: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      castlingOptions: CastlingOptions.standard,
-      materialConditions: MaterialConditions.standard,
-      outputOptions: OutputOptions.standard,
-      promotionOptions: PromotionOptions.standard,
+      castlingOptions: .standard,
+      materialConditions: .standard,
+      outputOptions: .standard,
+      promotionOptions: .standard,
       enPassant: true,
       halfMoveDraw: 100,
       repetitionDraw: 3,
       pieceTypes: {
-        'P': PieceType.pawn(),
-        'N': PieceType.knight(),
-        'B': PieceType.bishop(),
-        'R': PieceType.rook(),
-        'Q': PieceType.queen(),
-        'K': PieceType.king(),
+        'P': .pawn(),
+        'N': .knight(),
+        'B': .bishop(),
+        'R': .rook(),
+        'Q': .queen(),
+        'K': .king(),
       },
     );
   }
