@@ -38,7 +38,7 @@ ParseFenResult parseFen({
     0,
   );
   List<int> checks = [0, 0];
-  if (variant.handsEnabled || variant.gatingMode == GatingMode.flex) {
+  if (variant.handsEnabled || variant.gatingMode == .flex) {
     List<List<int>> temp = List.generate(Bishop.numPlayers, (_) => []);
     RegExp handRegex = RegExp(r'\[([A-Za-z]+)\]');
     RegExpMatch? handMatch = handRegex.firstMatch(sections[0]);
@@ -47,8 +47,8 @@ ParseFenResult parseFen({
       String hand = handMatch.group(1)!;
       for (String c in hand.split('')) {
         String upper = c.toUpperCase();
-        int colour = c == upper ? Bishop.white : Bishop.black;
-        if (c == '*') colour = Bishop.neutralPassive;
+        Colour colour = c == upper ? .white : .black;
+        if (c == '*') colour = .neutralPassive;
         if (pieceLookup.containsKey(upper)) {
           int piece = pieceLookup[upper]!;
           temp[colour].add(piece);
@@ -114,7 +114,7 @@ ParseFenResult parseFen({
           // it's a piece
           int piece = pieceLookup[symbol]!;
           gates[1 - i][squareIndex] = piece;
-          pieces[makePiece(piece, 1 - i)]++;
+          pieces[makePiece(piece, Colour(1 - i))]++;
           squareIndex++;
         }
       }
@@ -195,8 +195,8 @@ ParseFenResult parseFen({
     }
   }
 
-  int turn = turnStr == 'w' ? Bishop.white : Bishop.black;
-  int? ep = epStr == '-' ? null : size.squareNumber(epStr);
+  final turn = turnStr == 'w' ? Bishop.white : Bishop.black;
+  final ep = epStr == '-' ? null : size.squareNumber(epStr);
   final castling = variant.castling
       ? setupCastling(
           castlingString: castlingStr,

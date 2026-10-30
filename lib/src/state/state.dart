@@ -239,6 +239,6 @@ class const BishopState({
     return meta!.variant.pieceSymbol(board[sq].type, board[sq].colour);
   }
 
-  BishopState transform([int? player]) =>
+  BishopState transform([Colour? player]) =>
       meta?.variant.transformState(this, player) ?? this;
 }

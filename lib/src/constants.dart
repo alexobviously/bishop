@@ -1,11 +1,15 @@
-// ignore_for_file: constant_identifier_names
-
 import 'package:bishop/bishop.dart';
 
-typedef Colour = int;
-
-extension Opponent on Colour {
-  Colour get opponent => 1 - this;
+extension type const Colour(int value) implements int {
+  static const Colour white = Colour(0);
+  static const Colour black = Colour(1);
+  static const Colour neutralHostile = Colour(2);
+  static const Colour neutralPassive = Colour(3);
+  static const List<Colour> colours = [white, black];
+  Colour get opponent => Colour(1 - value);
+  bool get isWhite => value == white.value;
+  bool get isBlack => value == black.value;
+  bool get isNeutral => value >= neutralHostile.value;
 }
 
 typedef Hand = List<int>;
@@ -14,11 +18,11 @@ typedef Hand = List<int>;
 class Bishop {
   static const version = '1.4.3';
 
-  static const Colour white = 0;
-  static const Colour black = 1;
+  static const Colour white = .white;
+  static const Colour black = .black;
   static const List<Colour> colours = [white, black];
-  static const Colour neutralHostile = 2;
-  static const Colour neutralPassive = 3;
+  static const Colour neutralHostile = .neutralHostile;
+  static const Colour neutralPassive = .neutralPassive;
 
   static const int boardStart = 0;
   static const int invalid = -1;

@@ -2,7 +2,7 @@ part of 'state.dart';
 
 typedef StateTransformFunction<T extends BishopState> = T? Function(
   BishopState state, [
-  int? player,
+  Colour? player,
 ]);
 
 abstract class StateTransformer {
@@ -58,7 +58,6 @@ class const HideFlagsStateTransformer({
   final bool forSelf = false,
   final bool forOpponent = true,
 }) implements StateTransformer {
-
   @override
   StateTransformFunction build(BuiltVariant variant) =>
       (state, [player]) => player == null
