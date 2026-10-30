@@ -213,8 +213,8 @@ extension GameOutputs on Game {
     metadata ??= {};
     List<String> moves = moveHistorySan;
     int firstMove = state.fullMoves - (moves.length ~/ 2);
-    int firstTurn = history.first.turn;
-    int turn = firstTurn;
+    final firstTurn = history.first.turn;
+    Colour turn = firstTurn;
     String pgn = '';
     for (int i = 0; i < moves.length; i++) {
       if (i == 0 || turn == Bishop.white) {

@@ -98,10 +98,10 @@ class const BoardSize(
   }
 
   /// Get the first rank for player [colour].
-  int firstRank(int colour) => colour == Bishop.white ? Bishop.rank1 : maxRank;
+  int firstRank(Colour colour) => colour == .white ? Bishop.rank1 : maxRank;
 
   /// Get the last rank (i.e. promotion rank) for player [colour].
-  int lastRank(int colour) => firstRank(colour.opponent);
+  int lastRank(Colour colour) => firstRank(colour.opponent);
 
   // Returns true if [square] is within the bounds of [region].
   bool inRegion(int square, Region region) =>

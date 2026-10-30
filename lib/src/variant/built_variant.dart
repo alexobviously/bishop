@@ -28,7 +28,6 @@ class const BuiltVariant({
   final Map<Type, MoveFormatterFunction> algebraicMoveFormatters = const {},
   final Map<Type, MoveFormatterFunction> prettyMoveFormatters = const {},
 }) {
-
   BuiltVariant copyWith({
     Variant? data,
     List<PieceDefinition>? pieces,
@@ -266,13 +265,13 @@ class const BuiltVariant({
   List<int> pieceIndices(List<String> symbols) =>
       symbols.map(pieceIndex).where((p) => p >= 0).toList();
 
-  String pieceSymbol(int type, [int colour = Bishop.white]) =>
+  String pieceSymbol(int type, [Colour colour = .white]) =>
       pieces[type].char(colour);
 
   int pieceFromSymbol(String symbol) {
     String upper = symbol.toUpperCase();
     int type = pieceIndex(upper);
-    int colour = symbol == upper ? Bishop.white : Bishop.black;
+    Colour colour = symbol == upper ? .white : .black;
     return makePiece(type, colour);
   }
 
@@ -478,7 +477,7 @@ class const BuiltVariant({
       ) ??
       false;
 
-  BishopState transformState(BishopState state, [int? player]) =>
+  BishopState transformState(BishopState state, [Colour? player]) =>
       stateTransformer?.call(state, player) ?? state;
 
   // String toAlgebraic(Move move, BishopState state) =>

@@ -13,7 +13,7 @@ typedef Square = int;
 /// square representation.
 extension SquareLogic on int {
   /// Colour only.
-  int get colour => this & 3;
+  Colour get colour => Colour(this & 3);
 
   /// Piece type only.
   int get type => (this >> 2) & 255;
@@ -62,7 +62,7 @@ int makeFlags(List<int> flags) => flags.fold<int>(0, (p, e) => p + (1 << e));
 
 int makePiece(
   int piece,
-  int colour, {
+  Colour colour, {
   int internalType = 0,
   bool initialState = false,
   int flags = 0,

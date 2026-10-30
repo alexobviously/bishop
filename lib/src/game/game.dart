@@ -99,7 +99,7 @@ class Game {
       generatePlayerMoves(state.turn.opponent, MoveGenParams.premoves);
 
   /// Generates all moves for the specified [player]. See [MoveGenParams] for possibilities.
-  List<Move> generatePlayerMoves(int player, [MoveGenParams? params]) {
+  List<Move> generatePlayerMoves(Colour player, [MoveGenParams? params]) {
     params ??= MoveGenParams.normal;
     List<Move> moves = [];
     for (int i = 0; i < board.length; i++) {
@@ -136,7 +136,7 @@ class Game {
     return moves;
   }
 
-  PassMove? generatePass(int colour, [bool legal = true]) {
+  PassMove? generatePass(Colour colour, [bool legal = true]) {
     if (state.move is PassMove) return null;
     if (!variant.canPass(state: state, colour: colour)) {
       return null;
@@ -154,7 +154,7 @@ class Game {
   }
 
   /// Generates drop moves for [colour]. Used for variants with hands, e.g. Crazyhouse.
-  List<Move> generateDrops(int colour, [bool legal = true]) {
+  List<Move> generateDrops(Colour colour, [bool legal = true]) {
     List<Move> drops =
         variant.generateDrops(state: state, colour: colour) ?? [];
 
@@ -628,7 +628,7 @@ class Game {
 
   /// Checks if [square] is attacked by [player].
   /// Works by generating all legal moves for the other player, and therefore is slow.
-  bool isAttacked(int square, int player) {
+  bool isAttacked(int square, Colour player) {
     List<Move> attacks = generatePlayerMoves(
       player,
       MoveGenParams.squareAttacks(square),
@@ -637,20 +637,21 @@ class Game {
   }
 
   /// Check if [player]'s king is currently attacked.
-  bool kingAttacked(int player) => state.royalSquares[player] != Bishop.invalid
+  bool kingAttacked(Colour player) =>
+      state.royalSquares[player] != Bishop.invalid
       ? isAttacked(state.royalSquares[player], player.opponent)
       : false;
 
   /// Finds all the pieces for [player] attacking [square].
   /// Returns a list of the squares those pieces are on.
-  Set<int> getAttackers(int square, int player) => generatePlayerMoves(
+  Set<int> getAttackers(int square, Colour player) => generatePlayerMoves(
     player,
     MoveGenParams.squareAttacks(square, false),
   ).map((e) => e.from).toSet();
 
   /// Finds all pieces attacking [player]'s king.
   /// Returns a list of the squares those pieces are on.
-  Set<int> getKingAttackers(int player) =>
+  Set<int> getKingAttackers(Colour player) =>
       getAttackers(state.royalSquares[player], player.opponent);
 
   /// Check the number of times the current position has occurred in the hash table.

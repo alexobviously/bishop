@@ -172,7 +172,7 @@ extension GameMovement on Game {
             fromSq.colour != Bishop.neutralPassive)) {
       return null;
     }
-    final int colour = turn;
+    final colour = turn;
     // Remove the moved piece, if this piece came from on the board.
     if (move.from >= Bishop.boardStart) {
       hash ^= zobrist.table[move.from][fromSq.piece];
@@ -321,10 +321,10 @@ extension GameMovement on Game {
       if (move.capture && move.capturedPiece!.type == variant.rookPiece) {
         // rook captured
         int toFile = size.file(move.to);
-        int opponent = colour.opponent;
+        final opponent = colour.opponent;
         bool onFirstRank = size.rank(move.to) == size.firstRank(opponent);
-        CastlingRights ks = opponent == Bishop.white ? .wk : .bk;
-        CastlingRights qs = opponent == Bishop.white ? .wq : .bq;
+        CastlingRights ks = opponent == .white ? .wk : .bk;
+        CastlingRights qs = opponent == .white ? .wq : .bq;
         if (toFile == castlingTargetK &&
             onFirstRank &&
             castlingRights.has(ks)) {
@@ -354,7 +354,7 @@ extension GameMovement on Game {
     BishopState newState = BishopState(
       board: board,
       move: move,
-      turn: 1 - state.turn,
+      turn: state.turn.opponent,
       halfMoves: halfMoves,
       fullMoves: state.turn == Bishop.black
           ? state.fullMoves + 1
@@ -377,9 +377,10 @@ extension GameMovement on Game {
   BishopState? makePassMove(BishopState state, PassMove move) {
     int hash = state.hash;
     hash ^= zobrist.table[zobrist.turn][Zobrist.meta];
+
     return state.copyWith(
       move: move,
-      turn: 1 - state.turn,
+      turn: state.turn.opponent,
       hash: hash,
     );
   }

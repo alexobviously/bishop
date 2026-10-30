@@ -20,14 +20,14 @@ class const EffectSetCustomState(
 
 /// Causes [piece] to be added to [player]'s hand.
 class const EffectAddToHand(
-  final int player,
+  final Colour player,
   final int piece,
 ) extends ActionEffect;
 
 /// Causes [piece] to be removed from [player]'s hand.
 /// If such a piece doesn't exist to be removed, nothing will happen.
 class const EffectRemoveFromHand(
-  final int player,
+  final Colour player,
   final int piece,
 ) extends ActionEffect;
 

@@ -106,7 +106,7 @@ abstract class Conditions {
 
   static ActionCondition playerHasPieceCount({
     required String pieceType,
-    required int player,
+    required Colour player,
     int count = 1,
     bool draw = false,
   }) => (ActionTrigger trigger) {
